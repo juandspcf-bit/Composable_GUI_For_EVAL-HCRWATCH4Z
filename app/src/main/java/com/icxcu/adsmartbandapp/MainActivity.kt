@@ -137,7 +137,7 @@ class MainActivity : ComponentActivity() {
                     bluetoothLEManager = BluetoothLEManagerImp(this@MainActivity, mViewModel)
                     val navController = rememberNavController()
                     val navLambdaDataScreen = { name:String, address:String ->
-                        if(mViewModel.liveStatusResults.value==1){
+                        if(mViewModel.liveStatusResults.value==1 || mViewModel.liveStatusResults.value==-1){
                             navController.navigate(Routes.DataHome
                                 .route + "/${name}/${address}")
                         }
@@ -146,7 +146,7 @@ class MainActivity : ComponentActivity() {
                     val navLambdaBackHome = {
                         navController.popBackStack()
                         mViewModel.liveBasicBluetoothAdapter.value = mutableListOf()
-                        mViewModel.liveStatusResults.value = -1
+                        mViewModel.liveStatusResults.value = -2
                     }
 
                     val basicBluetoothAdapters by mViewModel
@@ -155,7 +155,7 @@ class MainActivity : ComponentActivity() {
 
                     val statusResultState by mViewModel
                         .liveStatusResults
-                        .observeAsState(-1)
+                        .observeAsState(-2)
                     NavHost(
                         navController = navController,
                         startDestination = Routes.BluetoothScanner.route
@@ -164,7 +164,7 @@ class MainActivity : ComponentActivity() {
                             BluetoothScanScreen(
                                 basicBluetoothAdapters =basicBluetoothAdapters,
                                 statusResultState = statusResultState,
-                                mViewModel,
+                                mViewModel.leScanCallback,
                                 bluetoothLEManager,
                                 navLambdaDataScreen
                             )
@@ -192,13 +192,6 @@ class MainActivity : ComponentActivity() {
                         }
                         }
 
-
-/*
-                    BluetoothScanScreen(
-                        mViewModel,
-                        bluetoothLEManager
-                    )
-*/
 
 
                     }

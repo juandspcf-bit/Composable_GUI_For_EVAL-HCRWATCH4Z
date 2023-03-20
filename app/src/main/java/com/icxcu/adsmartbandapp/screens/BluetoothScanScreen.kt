@@ -1,5 +1,6 @@
 package com.icxcu.adsmartbandapp.screens
 
+import android.bluetooth.le.ScanCallback
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -25,13 +26,13 @@ import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 fun BluetoothScanScreen(
     basicBluetoothAdapters: List<BasicBluetoothAdapter>,
     statusResultState: Int,
-    bluetoothScannerViewModel: BluetoothScannerViewModel,
+    leScanCallback: ScanCallback,
     bluetoothLEManager: BluetoothManager,
     navLambda: (String, String) -> Unit,
 ) {
 
     var textState by remember {
-        mutableStateOf("Star Scan")
+        mutableStateOf("start scanning")
     }
 
 
@@ -59,7 +60,7 @@ fun BluetoothScanScreen(
                         val scanLocalBluetooth = bluetoothLEManager.scanLocalBluetooth()
                         bluetoothLEManager.scanLeDevice(
                             scanLocalBluetooth,
-                            bluetoothScannerViewModel.leScanCallback
+                            leScanCallback
                         )
 
                     },
@@ -136,6 +137,13 @@ fun BluetoothScanScreen(
                     navLambda
                 )}
                 -1 ->{
+                    textState="start scanning"
+                    ListAlbumData(
+                        basicBluetoothAdapter = basicBluetoothAdapters,
+                        modifier = Modifier.fillMaxSize(),
+                        navLambda)
+                }
+                -2 ->{
                     textState="start scanning"
                     Text(
                         text = "click find bluetooth",
