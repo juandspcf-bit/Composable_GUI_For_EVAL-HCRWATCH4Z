@@ -6,6 +6,6 @@ import androidx.lifecycle.ViewModelProvider
 
 class MainViewModelFactory(val application: Application) :ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return MainViewModel() as T
+        return BluetoothScannerViewModel(application) as T
     }
 }
