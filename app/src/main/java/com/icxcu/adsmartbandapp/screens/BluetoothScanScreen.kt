@@ -161,13 +161,19 @@ fun BluetoothScanScreen(
                         navLambda)
                 }
                 -2 ->{
-                    textState="start scanning"
-                    Text(
-                        text = "click find bluetooth",
-                        style = MaterialTheme.typography.h3,
-                        color = Color.White
-                    )
-                    PullRefreshIndicator(refreshing, state, Modifier.align(Alignment.TopCenter))
+                    Box(contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxSize()
+                            .background(Color.Green)) {
+
+                        textState="start scanning"
+                        Text(
+                            text = "click find bluetooth",
+                            style = MaterialTheme.typography.h3,
+                            color = Color.White
+                        )
+                        //PullRefreshIndicator(refreshing, state, Modifier.align(Alignment.TopCenter))
+                    }
+
 
                 }
 
