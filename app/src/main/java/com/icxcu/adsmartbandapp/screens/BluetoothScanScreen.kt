@@ -9,6 +9,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -21,7 +24,10 @@ import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
 import com.icxcu.adsmartbandapp.data.BasicBluetoothAdapter
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BluetoothScanScreen(
     basicBluetoothAdapters: List<BasicBluetoothAdapter>,
@@ -34,7 +40,17 @@ fun BluetoothScanScreen(
     var textState by remember {
         mutableStateOf("start scanning")
     }
+    val refreshScope = rememberCoroutineScope()
+    var refreshing by remember { mutableStateOf(false) }
+    var itemCount by remember { mutableStateOf(15) }
 
+    fun refresh() = refreshScope.launch {
+        refreshing = true
+        delay(1500)
+        itemCount += 5
+        refreshing = false
+    }
+    val state = rememberPullRefreshState(refreshing, ::refresh)
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
 
@@ -106,7 +122,8 @@ fun BluetoothScanScreen(
                     height = Dimension.fillToConstraints
                     width = Dimension.fillToConstraints
                 }
-                .background(Color(0xff1d2a35))) {
+                .background(Color(0xff1d2a35)).pullRefresh(state)) {
+
 
 
 
@@ -150,6 +167,8 @@ fun BluetoothScanScreen(
                         style = MaterialTheme.typography.h3,
                         color = Color.White
                     )
+                    PullRefreshIndicator(refreshing, state, Modifier.align(Alignment.TopCenter))
+
                 }
 
             }
