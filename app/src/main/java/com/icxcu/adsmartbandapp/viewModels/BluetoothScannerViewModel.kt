@@ -21,7 +21,7 @@ class BluetoothScannerViewModel(var application: Application) : ViewModel() {
     val liveBasicBluetoothAdapter = MutableLiveData<MutableList<BasicBluetoothAdapter>>(
         mutableListOf()
     )
-    val liveStatusResults = MutableLiveData<Int>(-1)
+    val liveStatusResults = MutableLiveData<Int>(-2)
     private var partialList: MutableList<BasicBluetoothAdapter> = mutableListOf()
 
     val leScanCallback: ScanCallback = object : ScanCallback() {
