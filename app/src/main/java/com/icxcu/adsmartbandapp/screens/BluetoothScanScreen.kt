@@ -56,7 +56,7 @@ fun BluetoothScanScreen(
             leScanCallback
         )
     }
-    val state = rememberPullRefreshState(refreshing, ::refresh2, refreshThreshold=200.dp)
+    val state = rememberPullRefreshState(refreshing, ::refresh2, refreshingOffset=100.dp)
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
 
         val (rowBar, divider, listData) = createRefs()

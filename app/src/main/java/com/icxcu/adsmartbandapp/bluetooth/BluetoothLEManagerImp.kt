@@ -1,6 +1,7 @@
 package com.icxcu.adsmartbandapp.bluetooth
 
 import android.Manifest
+import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.BluetoothLeScanner
@@ -19,7 +20,7 @@ import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import kotlinx.coroutines.*
 
 class BluetoothLEManagerImp(
-    private var mainActivity: MainActivity,
+    private var mainActivity: Activity,
     private var mViewModel: BluetoothScannerViewModel
 ):com.icxcu.adsmartbandapp.bluetooth.BluetoothManager {
     private var scanning = false

@@ -28,6 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothLEManagerImp
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
+import com.icxcu.adsmartbandapp.initialsetup.SetPermissions
 import com.icxcu.adsmartbandapp.screens.BluetoothScanScreen
 import com.icxcu.adsmartbandapp.screens.DataHome
 import com.icxcu.adsmartbandapp.screens.Routes
@@ -58,8 +59,6 @@ class MainActivity : ComponentActivity() {
             Manifest.permission.ACCESS_FINE_LOCATION,
         )
     }
-    private val askPermissions = arrayListOf<String>()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,52 +86,8 @@ class MainActivity : ComponentActivity() {
                     }
 
 
-                    var allPermissionGranted by remember {
-                        mutableStateOf(false)
-                    }
+                    SetPermissions(this@MainActivity, permissionsRequired)
 
-                    val permissionsLauncher =
-                        rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()) { permissionsMap ->
-
-                            Toast.makeText(
-                                this@MainActivity,
-                                "permissionsMap $permissionsMap",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            Log.d("Permissions", "onCreate: $permissionsMap")
-
-                            // if the map does NOT contain false,
-                            // all the permissions are granted
-                            allPermissionGranted = !permissionsMap.containsValue(false)
-                        }
-
-                    // add the permissions that are NOT granted
-                    for (permission in permissionsRequired) {
-                        if (ContextCompat.checkSelfPermission(
-                                this@MainActivity,
-                                permission
-                            ) != PackageManager.PERMISSION_GRANTED
-                        ) {
-                            askPermissions.add(permission)
-                        }
-                    }
-
-                    // if the list if empty, all permissions are granted
-                    allPermissionGranted = askPermissions.isEmpty()
-
-                    val scope = CoroutineScope(Dispatchers.Main)
-
-                    LaunchedEffect(key1 = Unit) {
-                        scope.launch {
-                            delay(100)
-                            if (!allPermissionGranted) {
-                                // ask for permission
-                                permissionsLauncher.launch(askPermissions.toTypedArray())
-                            }
-
-
-                        }
-                    }
 
                     bluetoothLEManager = BluetoothLEManagerImp(this@MainActivity, mViewModel)
                     val navController = rememberNavController()
