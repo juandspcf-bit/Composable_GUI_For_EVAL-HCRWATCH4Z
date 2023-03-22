@@ -6,10 +6,10 @@ like lazy list. The most advanced composable so far is the [PullRefreshIndicator
 commits.
 
 #### Home Screen
-![Home screen](../../Pictures/GitHubAssets/Screenshot_20230322_212406.png)
+![Home screen](https://drive.google.com/file/d/153usUUFJuNJcybiCrEGz6wh9TSEDZBYr/preview)
 
 ### Scanning
-![Scanning](../../Pictures/GitHubAssets/Screenshot_20230322_212533.png)
+![Scanning](https://drive.google.com/file/d/103n35t1aSYMCepMUghXfEm6eO9xThAdL/preview)
 
 ### Home Data
-![Home Data](../../Pictures/GitHubAssets/Screenshot_20230322_212456.png)
+![Home Data](https://drive.google.com/file/d/185dO8c2BA5grcxVAK_yhvgDXxXFxrI-R/preview)
