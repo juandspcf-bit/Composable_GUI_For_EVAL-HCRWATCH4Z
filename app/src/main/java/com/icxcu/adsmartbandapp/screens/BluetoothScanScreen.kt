@@ -38,7 +38,7 @@ fun BluetoothScanScreen(
 ) {
 
     var textState by remember {
-        mutableStateOf("start scanning")
+        mutableStateOf("Swipe  down to scan devices")
     }
     val refreshScope = rememberCoroutineScope()
     var refreshing by remember { mutableStateOf(false) }
@@ -67,7 +67,7 @@ fun BluetoothScanScreen(
                 .fillMaxWidth()
                 .background(Color(0xff0d1721))) {
             Text(
-                text = "Swipe  down to scan devices",
+                text = textState,
                 style = MaterialTheme.typography.h4,
                 color = Color.White
                 , modifier = Modifier
@@ -119,13 +119,13 @@ fun BluetoothScanScreen(
                 }
                 1 -> {
                     refreshing=false
-                    textState="start scanning"
+                    textState="Swipe  down to scan devices"
                 }
                 -1 ->{
-                    textState="start scanning"
+                    textState="Swipe  down to scan devices"
                 }
                 -2 ->{
-                    textState="start scanning"
+                    textState="Swipe  down to scan devices"
                     Icon(
                         painter = painterResource(R.drawable.baseline_bluetooth_24),
                         contentDescription = "frost",
