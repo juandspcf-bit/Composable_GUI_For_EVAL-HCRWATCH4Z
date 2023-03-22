@@ -5,6 +5,11 @@ like lazy list. The most advanced composable so far is the [PullRefreshIndicator
 ) compose function. Because PullRefreshIndicator is experimental is likely to be changed in futures
 commits.
 
+#### Home Screen
+![Home screen](../../Pictures/GitHubAssets/Screenshot_20230322_212406.png)
 
+### Scanning
+![Scanning](../../Pictures/GitHubAssets/Screenshot_20230322_212533.png)
 
-
+### Home Data
+![Home Data](../../Pictures/GitHubAssets/Screenshot_20230322_212456.png)
