@@ -18,6 +18,7 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.modifier.modifierLocalConsumer
@@ -117,7 +118,7 @@ fun BluetoothScanScreen(
 
             }
 
-            PullRefreshIndicator(refreshing, state, Modifier.align(Alignment.TopCenter))
+            PullRefreshIndicator(refreshing, state, Modifier.align(Alignment.TopCenter).size(50.dp), scale = true)
             when (statusResultState) {
                 0 -> {
                     textState="scanning"
