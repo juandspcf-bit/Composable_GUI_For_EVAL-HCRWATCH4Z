@@ -149,4 +149,71 @@ class BluetoothLEManagerImp(
         }
     }
 
+
+
+    suspend fun scanLeDevice2(bluetoothLeScanner: BluetoothLeScanner?, leScanCallback: ScanCallback) {
+        if (!scanning) {
+
+            val coroutineScope = CoroutineScope(Dispatchers.Main)
+
+            if (jobs?.isActive == true)
+                return
+
+            jobs = coroutineScope.launch {
+                delay(SCAN_PERIOD)
+                if(isActive){
+                    scanning = false
+                    statusResults = 1
+                    mViewModel.liveStatusResults.value = statusResults
+
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        if (ActivityCompat.checkSelfPermission(
+                                mainActivity,
+                                Manifest.permission.BLUETOOTH_SCAN
+                            ) != PackageManager.PERMISSION_GRANTED
+                        ) {
+                            return@launch
+                        }
+                        bluetoothLeScanner?.stopScan(leScanCallback)
+                    }
+                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                        bluetoothLeScanner?.stopScan(leScanCallback)
+                    }
+
+                }
+
+
+            }
+
+            scanning = true
+            statusResults = 0
+            mViewModel.liveStatusResults.value = statusResults
+            mViewModel.liveBasicBluetoothAdapter.value = mutableListOf()
+            bluetoothLeScanner?.startScan(leScanCallback)
+
+        } else {
+            scanning = false
+            statusResults = -1
+            mViewModel.liveStatusResults.value = statusResults
+            jobs?.cancel()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (ActivityCompat.checkSelfPermission(
+                        mainActivity,
+                        Manifest.permission.BLUETOOTH_SCAN
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    return
+                }
+
+                bluetoothLeScanner?.stopScan(leScanCallback)
+
+            }
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+
+                bluetoothLeScanner?.stopScan(leScanCallback)
+            }
+        }
+    }
+
 }
