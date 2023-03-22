@@ -1,4 +1,8 @@
 # Composable Android App for EVAL-HCRWATCH4Z
+
+This is an app for testing the [HCRWATCH4Z](https://www.analog.com/en/design-center/evaluation-hardware-and-software/evaluation-boards-kits/eval-hcrwatch4z.html)
+smart watch. It will made fully using jetpack compose.
+
 ### Progress
 The bluetooth low energy scanning part is almost ready, we have used basic composable functions
 like lazy list. The most advanced composable so far is the [PullRefreshIndicator](https://developer.android.com/reference/kotlin/androidx/compose/material/pullrefresh/package-summary
