@@ -6,10 +6,10 @@ like lazy list. The most advanced composable so far is the [PullRefreshIndicator
 commits.
 
 #### Home Screen
-![Home screen](https://drive.google.com/file/d/153usUUFJuNJcybiCrEGz6wh9TSEDZBYr/preview)
+![Home screen](https://raw.githubusercontent.com/juandspcf-bit/Composable_GUI_For_EVAL-HCRWATCH4Z/pull-refresh-feature/GitHubAssets/Screenshot_20230322_212406.png)
 
 ### Scanning
-![Scanning](https://drive.google.com/file/d/103n35t1aSYMCepMUghXfEm6eO9xThAdL/preview)
+![Scanning](https://raw.githubusercontent.com/juandspcf-bit/Composable_GUI_For_EVAL-HCRWATCH4Z/pull-refresh-feature/GitHubAssets/Screenshot_20230322_212533.png)
 
 ### Home Data
-![Home Data](https://drive.google.com/file/d/185dO8c2BA5grcxVAK_yhvgDXxXFxrI-R/preview)
+![Home Data](https://raw.githubusercontent.com/juandspcf-bit/Composable_GUI_For_EVAL-HCRWATCH4Z/pull-refresh-feature/GitHubAssets/Screenshot_20230322_212456.png)
