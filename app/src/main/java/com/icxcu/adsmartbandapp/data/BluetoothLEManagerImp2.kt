@@ -1,4 +1,4 @@
-package com.icxcu.adsmartbandapp.bluetooth
+package com.icxcu.adsmartbandapp.data
 
 import android.Manifest
 import android.app.Activity
@@ -6,30 +6,27 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
-import android.bluetooth.le.ScanResult
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.icxcu.adsmartbandapp.MainActivity
 import com.icxcu.adsmartbandapp.REQUEST_ENABLE_BT
-import com.icxcu.adsmartbandapp.data.BasicBluetoothAdapter
+import com.icxcu.adsmartbandapp.viewModels.AppMainViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import kotlinx.coroutines.*
 
-class BluetoothLEManagerImp(
+class BluetoothLEManagerImp2(
     private var mainActivity: Activity,
-    private var mViewModel: BluetoothScannerViewModel,
-
+    private var mViewModel: AppMainViewModel,
+    private var requestMultiplePermissions: ActivityResultLauncher<Array<String>>
 ):com.icxcu.adsmartbandapp.bluetooth.BluetoothManager {
     private var scanning = false
     private var statusResults = -1
-    private var jobs:Job? = null
+    private var jobs: Job? = null
+
 
     override fun scanLocalBluetooth(): BluetoothLeScanner? {
         val bluetoothManager: BluetoothManager? =
@@ -56,9 +53,11 @@ class BluetoothLEManagerImp(
                         "Asking permission",
                         Toast.LENGTH_LONG
                     ).show()
-                    ActivityCompat.requestPermissions(mainActivity,
-                        arrayOf(Manifest.permission.BLUETOOTH_CONNECT),
-                        500)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        requestMultiplePermissions.launch(arrayOf(
+                            Manifest.permission.BLUETOOTH_SCAN,
+                            Manifest.permission.BLUETOOTH_CONNECT))
+                    }
                 }
 
                 return null
@@ -88,7 +87,10 @@ class BluetoothLEManagerImp(
     private val SCAN_PERIOD: Long = 10000
 
 
-    override fun scanLeDevice(bluetoothLeScanner: BluetoothLeScanner?, leScanCallback: ScanCallback) {
+    override fun scanLeDevice(
+        bluetoothLeScanner: BluetoothLeScanner?,
+        leScanCallback: ScanCallback
+    ) {
         if (!scanning) {
 
             val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -98,74 +100,7 @@ class BluetoothLEManagerImp(
 
             jobs = coroutineScope.launch {
                 delay(SCAN_PERIOD)
-                if(isActive){
-                    scanning = false
-                    statusResults = 1
-                    mViewModel.liveStatusResults.value = statusResults
-
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                        if (ActivityCompat.checkSelfPermission(
-                                mainActivity,
-                                Manifest.permission.BLUETOOTH_SCAN
-                            ) != PackageManager.PERMISSION_GRANTED
-                        ) {
-                            return@launch
-                        }
-                        bluetoothLeScanner?.stopScan(leScanCallback)
-                    }
-                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-                        bluetoothLeScanner?.stopScan(leScanCallback)
-                    }
-
-                }
-
-
-            }
-
-            scanning = true
-            statusResults = 0
-            mViewModel.liveStatusResults.value = statusResults
-            mViewModel.liveBasicBluetoothAdapter.value = mutableListOf()
-            bluetoothLeScanner?.startScan(leScanCallback)
-
-        } else {
-            scanning = false
-            statusResults = -1
-            mViewModel.liveStatusResults.value = statusResults
-            jobs?.cancel()
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                if (ActivityCompat.checkSelfPermission(
-                        mainActivity,
-                        Manifest.permission.BLUETOOTH_SCAN
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    return
-                }
-
-                bluetoothLeScanner?.stopScan(leScanCallback)
-
-            }
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-
-                bluetoothLeScanner?.stopScan(leScanCallback)
-            }
-        }
-    }
-
-
-
-    suspend fun scanLeDevice2(bluetoothLeScanner: BluetoothLeScanner?, leScanCallback: ScanCallback) {
-        if (!scanning) {
-
-            val coroutineScope = CoroutineScope(Dispatchers.Main)
-
-            if (jobs?.isActive == true)
-                return
-
-            jobs = coroutineScope.launch {
-                delay(SCAN_PERIOD)
-                if(isActive){
+                if (isActive) {
                     scanning = false
                     statusResults = 1
                     mViewModel.liveStatusResults.value = statusResults
@@ -220,4 +155,73 @@ class BluetoothLEManagerImp(
         }
     }
 
+
+    suspend fun scanLeDevice2(
+        bluetoothLeScanner: BluetoothLeScanner?,
+        leScanCallback: ScanCallback
+    ) {
+        if (!scanning) {
+
+            val coroutineScope = CoroutineScope(Dispatchers.Main)
+
+            if (jobs?.isActive == true)
+                return
+
+            jobs = coroutineScope.launch {
+                delay(SCAN_PERIOD)
+                if (isActive) {
+                    scanning = false
+                    statusResults = 1
+                    mViewModel.liveStatusResults.value = statusResults
+
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        if (ActivityCompat.checkSelfPermission(
+                                mainActivity,
+                                Manifest.permission.BLUETOOTH_SCAN
+                            ) != PackageManager.PERMISSION_GRANTED
+                        ) {
+                            return@launch
+                        }
+                        bluetoothLeScanner?.stopScan(leScanCallback)
+                    }
+                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                        bluetoothLeScanner?.stopScan(leScanCallback)
+                    }
+
+                }
+
+
+            }
+
+            scanning = true
+            statusResults = 0
+            mViewModel.liveStatusResults.value = statusResults
+            mViewModel.liveBasicBluetoothAdapter.value = mutableListOf()
+            bluetoothLeScanner?.startScan(leScanCallback)
+
+        } else {
+            scanning = false
+            statusResults = -1
+            mViewModel.liveStatusResults.value = statusResults
+            jobs?.cancel()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (ActivityCompat.checkSelfPermission(
+                        mainActivity,
+                        Manifest.permission.BLUETOOTH_SCAN
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    return
+                }
+
+                bluetoothLeScanner?.stopScan(leScanCallback)
+
+            }
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+
+                bluetoothLeScanner?.stopScan(leScanCallback)
+            }
+        }
+    }
 }
+
