@@ -130,8 +130,9 @@ fun GenericCard(
     resource: Int = R.drawable.ic_launcher_foreground,
     iconTint: Color = Color.Green,
     iconPadding: Dp = 0.dp,
-    backgroundCard: Color = Color.DarkGray
-
+    backgroundCard: Color = Color.DarkGray,
+    isWithIconTitle:Boolean=false,
+    resourceIconTitle: Int = R.drawable.ic_launcher_foreground,
 ) {
     Card(
         modifier = modifier,
