@@ -26,7 +26,7 @@ fun DataHome(bluetoothName: String,
              navLambda: () -> Unit) {
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(title = { Text("Bottom Navigation Demo", color = Color.White) },
+            CenterAlignedTopAppBar(title = { Text(text="$bluetoothName, $bluetoothAddress ", color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = {
                         Toast.makeText(mainActivity, "Back Icon Click", Toast.LENGTH_SHORT)

@@ -52,7 +52,7 @@ fun StepsDashBoard() {
             text = "10000",
             fieldPlural = "Steps",
             resource = R.drawable.baseline_directions_walk_24,
-            iconPadding = 0.dp
+            iconPadding = 20.dp
         )
 
         ConstraintLayout(
@@ -129,7 +129,7 @@ fun GenericCard(
     fieldPlural: String = "Field",
     resource: Int = R.drawable.ic_launcher_foreground,
     iconTint: Color = Color.Green,
-    iconPadding: Dp =0.dp,
+    iconPadding: Dp = 0.dp,
     backgroundCard: Color = Color.DarkGray
 
 ) {
@@ -147,25 +147,30 @@ fun GenericCard(
             val (iconValuesSteps, valuesTitle) = createRefs()
             val guideH50 = createGuidelineFromBottom(fraction = 0.5f)
 
-            Text(
-                text = title, modifier = Modifier
-                    .constrainAs(valuesTitle) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(guideH50)
-                        linkTo(
-                            start = parent.start,
-                            end = parent.end,
+            ConstraintLayout(modifier = Modifier
+                .constrainAs(valuesTitle) {
+                    top.linkTo(parent.top)
+                    bottom.linkTo(guideH50)
+                    linkTo(
+                        start = parent.start,
+                        end = parent.end,
 
-                            )
-                        height = Dimension.wrapContent
-                        width = Dimension.matchParent
-                    },
+                        )
+                    height = Dimension.wrapContent
+                    width = Dimension.wrapContent
+                }
+                .padding(10.dp)) {
+                val (titleSub, unit) = createRefs()
+                createVerticalChain(titleSub, unit, chainStyle = ChainStyle.SpreadInside)
+
+/**/            Text(
+                text = title, modifier = Modifier
+                    .constrainAs(titleSub) {centerHorizontallyTo(parent)},
                 color = Color.White,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.h5
             )
-
-
+            }
 
             ConstraintLayout(
                 modifier = Modifier
@@ -196,7 +201,8 @@ fun GenericCard(
                             height = Dimension.fillToConstraints
                             width = Dimension.fillToConstraints
                         }
-                        .fillMaxSize().padding(iconPadding),
+                        .fillMaxSize()
+                        .padding(iconPadding),
                     tint = iconTint
                 )
 
@@ -214,18 +220,20 @@ fun GenericCard(
                     }
                     .padding(10.dp)) {
                     val (value, unit) = createRefs()
-                    createVerticalChain(value, unit,chainStyle = ChainStyle.SpreadInside)
+                    createVerticalChain(value, unit, chainStyle = ChainStyle.SpreadInside)
 
-                    Text(modifier = Modifier
-                        .constrainAs(value){centerHorizontallyTo(parent)},
+                    Text(
+                        modifier = Modifier
+                            .constrainAs(value) { centerHorizontallyTo(parent) },
                         text = text,
                         color = Color.White,
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.h5
                     )
 
-                    Text(modifier = Modifier
-                        .constrainAs(unit){centerHorizontallyTo(parent)},
+                    Text(
+                        modifier = Modifier
+                            .constrainAs(unit) { centerHorizontallyTo(parent) },
                         text = fieldPlural,
                         color = Color.White,
                         textAlign = TextAlign.Center,
@@ -235,39 +243,7 @@ fun GenericCard(
 
                 }
 
-/*                Column(modifier = Modifier
-                    .constrainAs(valuesSteps) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        linkTo(
-                            start = iconValueStepsV50,
-                            end = parent.end,
-
-                            )
-                        height = Dimension.wrapContent
-                        width = Dimension.wrapContent
-                    }
-                    .fillMaxSize().padding(10.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = text,
-                        color = Color.White,
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.h5
-                    )
-
-                    Text(
-                        text = fieldPlural,
-                        color = Color.White,
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.h5
-                    )
-                }*/
-
-
             }
-
 
 
         }
