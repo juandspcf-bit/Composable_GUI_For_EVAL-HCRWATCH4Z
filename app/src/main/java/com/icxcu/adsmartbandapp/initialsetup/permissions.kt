@@ -34,6 +34,7 @@ fun SetPermissions(mainActivity: MainActivity, permissionsRequired: List<String>
 
             // if the map does NOT contain false,
             // all the permissions are granted
+            Log.d("Permissions", "SetPermissions: $permissionsMap")
             allPermissionGranted = !permissionsMap.containsValue(false)
         }
 
