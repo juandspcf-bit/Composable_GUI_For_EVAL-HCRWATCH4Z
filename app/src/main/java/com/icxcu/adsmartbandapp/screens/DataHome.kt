@@ -47,7 +47,8 @@ fun DataHome(bluetoothName: String,
                     .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                StepsDashBoard()
+                ListFields()
+                //StepsDashBoard()
                 //Text(text = "$bluetoothName, $bluetoothAddress ")
             }
 

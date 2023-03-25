@@ -1,8 +1,11 @@
 package com.icxcu.adsmartbandapp.screens
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
@@ -33,7 +36,6 @@ fun StepsDashBoard() {
     ) {
         val (stepsCard, distanceCaloriesValues) = createRefs()
         val guideV5 = createGuidelineFromEnd(fraction = .5f)
-
 
         GenericCard(
             modifier = Modifier
@@ -131,14 +133,16 @@ fun GenericCard(
     iconTint: Color = Color.Green,
     iconPadding: Dp = 0.dp,
     backgroundCard: Color = Color.DarkGray,
-    isWithIconTitle:Boolean=false,
+    isWithIconTitle: Boolean = false,
     resourceIconTitle: Int = R.drawable.ic_launcher_foreground,
+    size: Dp=200.dp
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier.height(size),
         shape = RoundedCornerShape(size = 26.dp),
         border = BorderStroke(width = 1.dp, color = Color.Green),
-        elevation = 4.dp
+        elevation = 4.dp,
+
     ) {
         ConstraintLayout(
             modifier = Modifier
@@ -166,7 +170,7 @@ fun GenericCard(
 
 /**/            Text(
                 text = title, modifier = Modifier
-                    .constrainAs(titleSub) {centerHorizontallyTo(parent)},
+                    .constrainAs(titleSub) { centerHorizontallyTo(parent) },
                 color = Color.White,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.h5
@@ -251,6 +255,21 @@ fun GenericCard(
     }
 
 }
+
+
+data class GenericCardData(
+    var modifier: Modifier = Modifier,
+    var title: String = "Field",
+    var text: String = "value",
+    var fieldPlural: String = "Field",
+    var resource: Int = R.drawable.ic_launcher_foreground,
+    var iconTint: Color = Color.Green,
+    var iconPadding: Dp = 0.dp,
+    var backgroundCard: Color = Color.DarkGray,
+    var isWithIconTitle: Boolean = false,
+    var resourceIconTitle: Int = R.drawable.ic_launcher_foreground,
+    var size: Dp = 256.dp
+)
 
 @Preview(showBackground = true)
 @Composable
