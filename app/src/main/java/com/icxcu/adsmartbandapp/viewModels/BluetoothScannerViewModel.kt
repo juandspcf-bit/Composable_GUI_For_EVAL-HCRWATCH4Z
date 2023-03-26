@@ -8,6 +8,9 @@ import android.bluetooth.le.ScanResult
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,7 +24,7 @@ class BluetoothScannerViewModel(var application: Application) : ViewModel() {
     val liveBasicBluetoothAdapter = MutableLiveData<MutableList<BasicBluetoothAdapter>>(
         mutableListOf()
     )
-    val liveStatusResults = MutableLiveData<Int>(-2)
+    var liveStatusResults by mutableStateOf(-2)
     private var partialList: MutableList<BasicBluetoothAdapter> = mutableListOf()
 
     val leScanCallback: ScanCallback = object : ScanCallback() {

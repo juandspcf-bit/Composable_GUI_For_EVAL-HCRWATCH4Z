@@ -27,7 +27,7 @@ fun ListFields(){
         title = "Steps",
         text = "10000",
         fieldPlural = "Steps",
-        resource = R.drawable.baseline_directions_walk_24,
+        resource = R.drawable.walk,
         iconPadding = 20.dp,
     size = 400.dp))
     listOf.add(GenericCardData(modifier = Modifier
@@ -35,7 +35,7 @@ fun ListFields(){
         title = "Distance",
         text = "10000",
         fieldPlural = "Km",
-        resource = R.drawable.baseline_add_road_24,
+        resource = R.drawable.measure_distance,
         iconPadding = 20.dp,
         size = 200.dp))
 
@@ -45,7 +45,17 @@ fun ListFields(){
         title = "Calories",
         text = "10000",
         fieldPlural = "KCal",
-        resource = R.drawable.baseline_local_fire_department_24,
+        resource = R.drawable.calories,
+        iconPadding = 20.dp,
+        size = 200.dp))
+
+    listOf.add(GenericCardData(
+        modifier = Modifier
+            .padding(5.dp),
+        title = "Blood Pressure",
+        text = "130",
+        fieldPlural = "mmHg",
+        resource = R.drawable.blood_pressure_gauge,
         iconPadding = 20.dp,
         size = 200.dp))
 

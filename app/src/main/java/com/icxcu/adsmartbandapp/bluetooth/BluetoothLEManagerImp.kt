@@ -98,7 +98,7 @@ class BluetoothLEManagerImp(
                 if(isActive){
                     scanning = false
                     statusResults = 1
-                    mViewModel.liveStatusResults.value = statusResults
+                    mViewModel.liveStatusResults = statusResults
 
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -122,14 +122,14 @@ class BluetoothLEManagerImp(
 
             scanning = true
             statusResults = 0
-            mViewModel.liveStatusResults.value = statusResults
+            mViewModel.liveStatusResults = statusResults
             mViewModel.liveBasicBluetoothAdapter.value = mutableListOf()
             bluetoothLeScanner?.startScan(leScanCallback)
 
         } else {
             scanning = false
             statusResults = -1
-            mViewModel.liveStatusResults.value = statusResults
+            mViewModel.liveStatusResults = statusResults
             jobs?.cancel()
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 if (ActivityCompat.checkSelfPermission(
@@ -165,7 +165,7 @@ class BluetoothLEManagerImp(
                 if(isActive){
                     scanning = false
                     statusResults = 1
-                    mViewModel.liveStatusResults.value = statusResults
+                    mViewModel.liveStatusResults = statusResults
 
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -189,14 +189,14 @@ class BluetoothLEManagerImp(
 
             scanning = true
             statusResults = 0
-            mViewModel.liveStatusResults.value = statusResults
+            mViewModel.liveStatusResults = statusResults
             mViewModel.liveBasicBluetoothAdapter.value = mutableListOf()
             bluetoothLeScanner?.startScan(leScanCallback)
 
         } else {
             scanning = false
             statusResults = -1
-            mViewModel.liveStatusResults.value = statusResults
+            mViewModel.liveStatusResults = statusResults
             jobs?.cancel()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 if (ActivityCompat.checkSelfPermission(

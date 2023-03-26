@@ -2,6 +2,7 @@ package com.icxcu.adsmartbandapp.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -193,7 +194,7 @@ fun GenericCard(
             ) {
                 val iconValueStepsV50 = createGuidelineFromEnd(fraction = 0.5f)
                 val (iconSteps, valuesSteps) = createRefs()
-                Icon(
+/*                Icon(
                     painter = painterResource(resource),
                     contentDescription = "frost",
                     modifier = Modifier
@@ -209,7 +210,26 @@ fun GenericCard(
                         .fillMaxSize()
                         .padding(iconPadding),
                     tint = iconTint
+                )*/
+
+                Image(
+                    painter = painterResource(resource),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .constrainAs(iconSteps) {
+                            top.linkTo(parent.top)
+                            bottom.linkTo(parent.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(iconValueStepsV50)
+
+                            height = Dimension.fillToConstraints
+                            width = Dimension.fillToConstraints
+                        }
+                        .fillMaxSize()
+                        .padding(iconPadding),
+
                 )
+
 
                 ConstraintLayout(modifier = Modifier
                     .constrainAs(valuesSteps) {

@@ -92,7 +92,7 @@ class MainActivity : ComponentActivity() {
                     bluetoothLEManager = BluetoothLEManagerImp(this@MainActivity, mViewModel)
                     val navController = rememberNavController()
                     val navLambdaDataScreen = { name:String, address:String ->
-                        if(mViewModel.liveStatusResults.value==1 || mViewModel.liveStatusResults.value==-1){
+                        if(mViewModel.liveStatusResults==1 || mViewModel.liveStatusResults==-1){
                             navController.navigate(Routes.DataHome
                                 .route + "/${name}/${address}")
                         }
@@ -101,16 +101,14 @@ class MainActivity : ComponentActivity() {
                     val navLambdaBackHome = {
                         navController.popBackStack()
                         mViewModel.liveBasicBluetoothAdapter.value = mutableListOf()
-                        mViewModel.liveStatusResults.value = -2
+                        mViewModel.liveStatusResults = -2
                     }
 
                     val basicBluetoothAdapters by mViewModel
                         .liveBasicBluetoothAdapter
                         .observeAsState(listOf())
 
-                    val statusResultState by mViewModel
-                        .liveStatusResults
-                        .observeAsState(-2)
+
                     NavHost(
                         navController = navController,
                         startDestination = Routes.BluetoothScanner.route
@@ -118,7 +116,7 @@ class MainActivity : ComponentActivity() {
                         composable(Routes.BluetoothScanner.route) {
                             BluetoothScanScreen(
                                 basicBluetoothAdapters =basicBluetoothAdapters,
-                                statusResultState = statusResultState,
+                                statusResultState = mViewModel.liveStatusResults,
                                 mViewModel.leScanCallback,
                                 bluetoothLEManager,
                                 navLambdaDataScreen
