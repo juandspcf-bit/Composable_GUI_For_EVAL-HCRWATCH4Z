@@ -140,6 +140,7 @@ class MainActivity : ComponentActivity() {
                                 bluetoothName = bluetoothName?:"no name",
                                 bluetoothAddress = bluetoothAddress?:"no address",
                             this@MainActivity,
+                                null,
                                 navLambda = { navLambdaBackHome() }
                             )
                         }

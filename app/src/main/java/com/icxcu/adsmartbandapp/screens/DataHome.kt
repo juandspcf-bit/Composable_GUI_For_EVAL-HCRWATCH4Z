@@ -17,13 +17,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.icxcu.adsmartbandapp.MainActivity
+import com.icxcu.adsmartbandapp.bluetooth.device.DeviceConnection
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DataHome(bluetoothName: String,
              bluetoothAddress: String,
              mainActivity: MainActivity?,
+            deviceConnection: DeviceConnection?,
              navLambda: () -> Unit) {
+
+
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(title = { Text(text="$bluetoothName, $bluetoothAddress ", color = Color.White) },
@@ -48,8 +53,6 @@ fun DataHome(bluetoothName: String,
                 contentAlignment = Alignment.Center
             ) {
                 ListFields()
-                //StepsDashBoard()
-                //Text(text = "$bluetoothName, $bluetoothAddress ")
             }
 
         },
@@ -64,5 +67,11 @@ fun DataHome(bluetoothName: String,
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    DataHome(bluetoothName = "ddd", bluetoothAddress = "ddddd", mainActivity = null, {})
+    DataHome(
+        bluetoothName = "ddd",
+        bluetoothAddress = "ddddd",
+        mainActivity = null,
+        null,
+        {}
+    )
 }
