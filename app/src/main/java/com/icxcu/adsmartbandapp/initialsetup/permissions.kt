@@ -51,6 +51,7 @@ fun SetPermissions(mainActivity: MainActivity, permissionsRequired: List<String>
 
     // if the list if empty, all permissions are granted
     allPermissionGranted = askPermissions.isEmpty()
+    Log.d("Permissions", "All Permission Granted: $allPermissionGranted")
 
     val scope = CoroutineScope(Dispatchers.Main)
 
@@ -67,3 +68,6 @@ fun SetPermissions(mainActivity: MainActivity, permissionsRequired: List<String>
     }
 
 }
+
+
+
