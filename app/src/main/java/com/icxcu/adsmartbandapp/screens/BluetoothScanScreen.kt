@@ -1,7 +1,11 @@
 package com.icxcu.adsmartbandapp.screens
 
 
+import android.Manifest
+import android.app.Activity
 import android.bluetooth.le.ScanCallback
+import android.content.pm.PackageManager
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
@@ -26,6 +30,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.core.content.ContextCompat
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
 import com.icxcu.adsmartbandapp.data.BasicBluetoothAdapter
@@ -38,8 +43,19 @@ fun BluetoothScanScreen(
     statusResultState: Int,
     leScanCallback: ScanCallback,
     bluetoothLEManager: BluetoothManager,
+    activity: Activity,
     navLambda: (String, String) -> Unit,
 ) {
+
+    if (isPermissionGranted(
+            activity,
+            Manifest.permission.BLUETOOTH_CONNECT
+        )
+    ) {
+        Toast.makeText(activity, "permission granted", Toast.LENGTH_LONG).show()
+    } else {
+        Toast.makeText(activity, "permission not granted", Toast.LENGTH_LONG).show()
+    }
 
     var textState by remember {
         mutableStateOf("Swipe  down to scan devices")
@@ -50,13 +66,14 @@ fun BluetoothScanScreen(
 
     fun refresh2() = refreshScope.launch {
         refreshing = true
-        val scanLocalBluetooth = bluetoothLEManager.scanLocalBluetooth()
+        val scanLocalBluetooth = bluetoothLEManager.scanLocalBluetooth(activity)
         bluetoothLEManager.scanLeDevice(
             scanLocalBluetooth,
             leScanCallback
         )
     }
-    val state = rememberPullRefreshState(refreshing, ::refresh2, refreshingOffset=100.dp)
+
+    val state = rememberPullRefreshState(refreshing, ::refresh2, refreshingOffset = 100.dp)
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
 
         val (rowBar, divider, listData) = createRefs()
@@ -73,8 +90,7 @@ fun BluetoothScanScreen(
             Text(
                 text = textState,
                 style = MaterialTheme.typography.h4,
-                color = Color.White
-                , modifier = Modifier
+                color = Color.White, modifier = Modifier
                     .align(Alignment.Center)
                     .padding(30.dp)
             )
@@ -105,9 +121,9 @@ fun BluetoothScanScreen(
                 .pullRefresh(state)) {
 
 
-            if(statusResultState==-2 || basicBluetoothAdapters.isEmpty()){
+            if (statusResultState == -2 || basicBluetoothAdapters.isEmpty()) {
                 ListAlbumDataEmpty()
-            }else{
+            } else {
                 ListAlbumDataEmpty()
                 ListAlbumData(
                     basicBluetoothAdapter = basicBluetoothAdapters,
@@ -118,32 +134,39 @@ fun BluetoothScanScreen(
 
             }
 
-            PullRefreshIndicator(refreshing, state, Modifier.align(Alignment.TopCenter).size(50.dp), scale = true)
+            PullRefreshIndicator(
+                refreshing,
+                state,
+                Modifier
+                    .align(Alignment.TopCenter)
+                    .size(50.dp),
+                scale = true
+            )
             when (statusResultState) {
                 0 -> {
-                    textState="scanning"
+                    textState = "scanning"
                 }
                 1 -> {
-                    refreshing=false
-                    textState="Swipe  down to scan devices"
+                    refreshing = false
+                    textState = "Swipe  down to scan devices"
                 }
-                -1 ->{
-                    textState="Swipe  down to scan devices"
+                -1 -> {
+                    textState = "Swipe  down to scan devices"
                 }
-                -2 ->{
-                    textState="Swipe  down to scan devices"
+                -2 -> {
+                    textState = "Swipe  down to scan devices"
                     Icon(
                         painter = painterResource(R.drawable.baseline_bluetooth_24),
                         contentDescription = "frost",
                         modifier = Modifier
-                            .align(Alignment.Center).size(80.dp),
+                            .align(Alignment.Center)
+                            .size(80.dp),
                         tint = Color.White
                     )
                 }
 
             }
         }
-
 
 
     }
@@ -157,7 +180,7 @@ fun ListAlbumData(
     navigateRoute: (String, String) -> Unit
 ) {
     LazyColumn(modifier = Modifier) {
-        items(basicBluetoothAdapter) {item->
+        items(basicBluetoothAdapter) { item ->
 
             Card(
                 modifier
@@ -199,14 +222,13 @@ fun ListAlbumData(
 fun ListAlbumDataEmpty(
     modifier: Modifier = Modifier,
 
-) {
+    ) {
     LazyColumn(modifier = Modifier) {
         items(5) {
 
             Card(
                 modifier
-                    .padding(top = 5.dp, bottom = 5.dp)
-                    ,
+                    .padding(top = 5.dp, bottom = 5.dp),
                 backgroundColor = Color.Transparent,
                 shape = RoundedCornerShape(size = 0.dp),
                 border = BorderStroke(width = 1.dp, color = Color.Transparent),

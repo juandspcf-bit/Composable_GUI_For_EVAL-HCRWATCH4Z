@@ -1,10 +1,11 @@
 package com.icxcu.adsmartbandapp.bluetooth
 
+import android.app.Activity
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
 
 interface BluetoothManager {
-    fun scanLocalBluetooth(): BluetoothLeScanner?
+    fun scanLocalBluetooth(activity: Activity): BluetoothLeScanner?
     fun enableBluetooth()
     fun scanLeDevice(bluetoothLeScanner: BluetoothLeScanner?, leScanCallback: ScanCallback)
 }

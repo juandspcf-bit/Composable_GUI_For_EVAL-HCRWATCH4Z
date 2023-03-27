@@ -15,40 +15,94 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModel
 
 
 @Composable
-fun PermissionsScreen(activity: Activity?) {
-    var allPermissionAllowed by remember {mutableStateOf(false)}
+fun PermissionsScreen(
+    activity: Activity?,
+    viewModel: PermissionsViewModel,
+    navLambda: () ->Unit
+) {
 
+    var allPermissionsGranted by remember {
+        mutableStateOf(false)
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 20.dp), verticalArrangement = Arrangement.Top
     ) {
 
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+            viewModel.permissionAccessFineLocationGranted =
+                isPermissionGranted(
+                    activity,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
 
-        var permission1Granted by remember {
-            mutableStateOf(isPermissionGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION))
+            PermissionAccessFineLocationType(
+                message = "Permission to scan Bluetooth devices to know its physical location",
+                permissionType = Manifest.permission.ACCESS_FINE_LOCATION,
+                activity = activity,
+                viewModel
+            )
+
+            allPermissionsGranted=viewModel.permissionAccessFineLocationGranted
+
+
         }
-        PermissionType(
-            message = "Permission to scan Bluetooth devices to know its physical location",
-            permissionType = Manifest.permission.ACCESS_FINE_LOCATION,
-            activity = activity,
-            permission1Granted
-        )
+
+
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            var permission2Granted by remember {
-                mutableStateOf(isPermissionGranted(activity, Manifest.permission.BLUETOOTH_CONNECT))
-            }
-            PermissionType(
+            viewModel.permissionAccessFineLocationGranted =
+                isPermissionGranted(
+                    activity,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            PermissionAccessFineLocationType(
+                message = "Permission to scan Bluetooth devices to know its physical location",
+                permissionType = Manifest.permission.ACCESS_FINE_LOCATION,
+                activity = activity,
+                viewModel
+            )
+            viewModel.permissionBluetoothConnectGranted =
+                isPermissionGranted(
+                    activity,
+                    Manifest.permission.BLUETOOTH_CONNECT
+                )
+            PermissionBluetoothConnectType(
                 message = "Permission to communicate with already-paired Bluetooth devices",
                 permissionType = Manifest.permission.BLUETOOTH_CONNECT,
                 activity = activity,
-                permission2Granted
+                viewModel
             )
+
+            allPermissionsGranted=viewModel.permissionAccessFineLocationGranted
+                    && viewModel.permissionBluetoothConnectGranted
+        }
+
+        ElevatedButton(
+            enabled = allPermissionsGranted,
+            modifier = Modifier
+                .padding(5.dp),
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp),
+            onClick = {
+                if (isPermissionGranted(
+                        activity,
+                        Manifest.permission.BLUETOOTH_CONNECT
+                    )
+                ){
+                    Toast.makeText(activity, "permission granted",Toast.LENGTH_LONG).show()
+                }else{
+                    Toast.makeText(activity, "permission not granted",Toast.LENGTH_LONG).show()
+                }
+                navLambda()
+            }
+        ) {
+            Text(text = "scan devices")
         }
 
 
@@ -58,9 +112,13 @@ fun PermissionsScreen(activity: Activity?) {
 }
 
 
-
 @Composable
-fun PermissionType(message: String = "", permissionType: String, activity: Activity?, permissionGranted:Boolean) {
+fun PermissionAccessFineLocationType(
+    message: String = "",
+    permissionType: String,
+    activity: Activity?,
+    viewModel: PermissionsViewModel
+) {
 
     val permissionLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { permissionGranted_ ->
@@ -70,7 +128,7 @@ fun PermissionType(message: String = "", permissionType: String, activity: Activ
                 "permissionGranted_ $permissionGranted_",
                 Toast.LENGTH_SHORT
             ).show()
-            //permissionGranted = permissionGranted_
+            viewModel.permissionAccessFineLocationGranted = permissionGranted_
         }
 
 
@@ -86,12 +144,13 @@ fun PermissionType(message: String = "", permissionType: String, activity: Activ
         )
 
         ElevatedButton(
+            enabled = !viewModel.permissionAccessFineLocationGranted,
             modifier = Modifier
                 .weight(0.3f)
                 .padding(5.dp),
             elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp),
             onClick = {
-                if (!permissionGranted) {
+                if (!viewModel.permissionAccessFineLocationGranted) {
                     permissionLauncher.launch(permissionType)
                 }
             }
@@ -101,16 +160,66 @@ fun PermissionType(message: String = "", permissionType: String, activity: Activ
     }
 }
 
-private fun isPermissionGranted(activity: Activity?, permissionType: String): Boolean {
+
+@Composable
+fun PermissionBluetoothConnectType(
+    message: String = "",
+    permissionType: String,
+    activity: Activity?,
+    viewModel: PermissionsViewModel
+) {
+
+    val permissionLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { permissionGranted_ ->
+            // this is called when the user selects allow or deny
+            Toast.makeText(
+                activity,
+                "permissionGranted_ $permissionGranted_",
+                Toast.LENGTH_SHORT
+            ).show()
+            viewModel.permissionBluetoothConnectGranted = permissionGranted_
+        }
+
+
+
+    Row() {
+        Text(
+            text = message,
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Justify,
+            modifier = Modifier
+                .weight(0.7f)
+                .padding(7.dp)
+        )
+
+        ElevatedButton(
+            enabled = !viewModel.permissionBluetoothConnectGranted,
+            modifier = Modifier
+                .weight(0.3f)
+                .padding(5.dp),
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp),
+            onClick = {
+                if (!viewModel.permissionBluetoothConnectGranted) {
+                    permissionLauncher.launch(permissionType)
+                }
+            }
+        ) {
+            Text(text = "request")
+        }
+    }
+}
+
+fun isPermissionGranted(activity: Activity?, permissionType: String): Boolean {
     return activity?.let {
         ContextCompat.checkSelfPermission(
             it,
-            permissionType        )
+            permissionType
+        )
     } == PackageManager.PERMISSION_GRANTED
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PermissionsScreenPreview() {
-    PermissionsScreen(null)
+    //PermissionsScreen(null,)
 }
