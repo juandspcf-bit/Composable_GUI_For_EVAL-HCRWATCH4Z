@@ -50,14 +50,17 @@ fun DataHome(bluetoothName: String,
                         Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Go Back", tint = Color.White)
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color(0xff1d2a35),
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color(0xff0d1721),
                 ),
                 modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                 scrollBehavior = scrollBehavior
             )
         },
         content = { padding ->
-            Box(Modifier.padding(padding).fillMaxSize()) {
+            Box(
+                Modifier
+                    .padding(padding)
+                    .fillMaxSize()) {
                 NavigationHost(navController = navController)
             }
 
@@ -93,7 +96,9 @@ fun NavigationHost(navController: NavHostController) {
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
 
-    NavigationBar  {
+    NavigationBar(containerColor = Color(0xff0d1721),
+        contentColor = Color(0xFFCDDC39)
+    )  {
         val backStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = backStackEntry?.destination?.route
 
@@ -113,11 +118,13 @@ fun BottomNavigationBar(navController: NavHostController) {
 
                 icon = {
                     Icon(imageVector = navItem.image,
-                        contentDescription = navItem.title)
+                        contentDescription = navItem.title,
+                    tint = Color.White)
                 },
                 label = {
-                    Text(text = navItem.title)
+                    Text(text = navItem.title, color = Color.White)
                 },
+                colors = NavigationBarItemDefaults.colors(indicatorColor = Color.Blue)
             )
         }
     }

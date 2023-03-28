@@ -59,6 +59,16 @@ fun ListFields(){
         iconPadding = 20.dp,
         size = 200.dp))
 
+    listOf.add(GenericCardData(
+        modifier = Modifier
+            .padding(5.dp),
+        title = "SpO2",
+        text = "95",
+        fieldPlural = "%",
+        resource = R.drawable.oxygen_saturation,
+        iconPadding = 20.dp,
+        size = 200.dp))
+
 
     LazyVerticalStaggeredGrid(columns = StaggeredGridCells.Fixed(2),
         modifier = Modifier.fillMaxSize().background(Color(0xff1d2a35)),
