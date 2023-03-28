@@ -2,8 +2,10 @@ package com.icxcu.adsmartbandapp
 
 import android.Manifest
 import android.app.Application
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -13,6 +15,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
@@ -23,10 +26,7 @@ import androidx.navigation.navArgument
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothLEManagerImp
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
 import com.icxcu.adsmartbandapp.initialsetup.SetPermissions
-import com.icxcu.adsmartbandapp.screens.BluetoothScanScreen
-import com.icxcu.adsmartbandapp.screens.DataHome
-import com.icxcu.adsmartbandapp.screens.PermissionsScreen
-import com.icxcu.adsmartbandapp.screens.Routes
+import com.icxcu.adsmartbandapp.screens.*
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModelFactory
@@ -54,135 +54,196 @@ class MainActivity : ComponentActivity() {
         )
     }
 
+    private var askPermissions = arrayListOf<String>()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
         setContent {
             ADSmartBandAppTheme {
+                val owner = LocalViewModelStoreOwner.current
 
-
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    val owner = LocalViewModelStoreOwner.current
-
-                    owner?.let {
-                        mViewModel = viewModel(
-                            it,
-                            "MainViewModel",
-                            BluetoothScannerViewModelFactory(
-                                LocalContext.current.applicationContext
-                                        as Application
-                            )
+                owner?.let {
+                    mViewModel = viewModel(
+                        it,
+                        "MainViewModel",
+                        BluetoothScannerViewModelFactory(
+                            LocalContext.current.applicationContext
+                                    as Application
                         )
+                    )
 
-                        pViewModel = viewModel(
-                            it,
-                            "PermissionsViewModel",
-                            PermissionsViewModelFactory()
-                        )
+                    pViewModel = viewModel(
+                        it,
+                        "PermissionsViewModel",
+                        PermissionsViewModelFactory()
+                    )
 
-                    }
-
-
-                    //SetPermissions(this@MainActivity, permissionsRequired)
-
-
-                    bluetoothLEManager = BluetoothLEManagerImp(this@MainActivity, mViewModel)
-                    val navController = rememberNavController()
-
-                    val navLambdaDataScreen = { name:String, address:String ->
-                        if(mViewModel.liveStatusResults==1 || mViewModel.liveStatusResults==-1){
-                            navController.navigate(Routes.DataHome
-                                .route + "/${name}/${address}")
-                        }
-                    }
-
-                    val navLambdaToBlueScanScreen = {
-                        navController.navigate(Routes.BluetoothScanner.route)
-                    }
-
-                    val navLambdaBackHome = {
-                        navController.popBackStack()
-                        mViewModel.liveBasicBluetoothAdapter.value = mutableListOf()
-                        mViewModel.liveStatusResults = -2
-                    }
-
-                    val basicBluetoothAdapters by mViewModel
-                        .liveBasicBluetoothAdapter
-                        .observeAsState(listOf())
-
-
-                    NavHost(
-                        navController = navController,
-                        startDestination = Routes.Permissions.route
-                    ) {
-
-                        composable(Routes.Permissions.route) {
-                            PermissionsScreen(activity = this@MainActivity,
-                                viewModel = pViewModel, navLambda = navLambdaToBlueScanScreen)
-
-                        }
-
-                        composable(Routes.BluetoothScanner.route) {
-                            BluetoothScanScreen(
-                                basicBluetoothAdapters =basicBluetoothAdapters,
-                                statusResultState = mViewModel.liveStatusResults,
-                                mViewModel.leScanCallback,
-                                bluetoothLEManager,
-                                this@MainActivity,
-                                navLambdaDataScreen
-                            )
-                        }
-
-                        composable(
-                            Routes.DataHome.route + "/{bluetoothName}/{bluetoothAddress}",                    // declaring placeholder in String route
-                            arguments = listOf(
-                                // declaring argument type
-                                navArgument("bluetoothName") { type = NavType.StringType },
-                                navArgument("bluetoothAddress") { type = NavType.StringType },
-                            )
-                        ) {
-                                backStackEntry ->
-
-                            // Extracting exact values and passing it to Profile() screen
-                            val bluetoothName = backStackEntry.arguments?.getString("bluetoothName")
-                            val bluetoothAddress = backStackEntry.arguments?.getString("bluetoothAddress")
-                            DataHome(
-                                bluetoothName = bluetoothName?:"no name",
-                                bluetoothAddress = bluetoothAddress?:"no address",
-                            this@MainActivity,
-                                null,
-                                navLambda = { navLambdaBackHome() }
-                            )
-                        }
-
-
-
-                        }
-
-
-
-
-
-
-
-
-                    }
                 }
+
+                mainContent()
             }
         }
-
-
     }
 
 
-    @Preview(showBackground = true)
-    @Composable
-    fun DefaultPreview() {
-        ADSmartBandAppTheme {
-
+    override fun onRestart() {
+        super.onRestart()
+        setContent {
+            ADSmartBandAppTheme {
+                mainContent()
+            }
         }
     }
+
+
+    @Composable
+    private fun mainContent(){
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colors.background
+        ) {
+
+            //SetPermissions(this@MainActivity, permissionsRequired)
+            for (permission in permissionsRequired) {
+                if (ContextCompat.checkSelfPermission(
+                        this@MainActivity,
+                        permission
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    askPermissions.add(permission)
+                }
+            }
+            var startDestination = ""
+            // if the list if empty, all permissions are granted
+            startDestination = if (askPermissions.isEmpty()) {
+                Routes.BluetoothScanner.route
+            } else {
+                Routes.Permissions.route
+            }
+
+
+            bluetoothLEManager = BluetoothLEManagerImp(this@MainActivity, mViewModel)
+            val navController = rememberNavController()
+
+            val navLambdaDataScreen = { name: String, address: String ->
+                if (mViewModel.liveStatusResults == 1 || mViewModel.liveStatusResults == -1) {
+                    navController.navigate(
+                        Routes.DataHome
+                            .route + "/${name}/${address}"
+                    )
+                }
+            }
+
+            val navLambdaToBlueScanScreen = {
+                navController.navigate(Routes.BluetoothScanner.route)
+            }
+
+            val navLambdaBackHome = {
+                navController.popBackStack()
+                mViewModel.liveBasicBluetoothAdapter.value = mutableListOf()
+                mViewModel.liveStatusResults = -2
+            }
+
+            val basicBluetoothAdapters by mViewModel
+                .liveBasicBluetoothAdapter
+                .observeAsState(listOf())
+
+
+            NavHost(
+                navController = navController,
+                startDestination = startDestination
+            ) {
+
+                composable(Routes.Permissions.route) {
+                    PermissionsScreen(
+                        activity = this@MainActivity,
+                        viewModel = pViewModel, navLambda = navLambdaToBlueScanScreen
+                    )
+
+                }
+
+                composable(Routes.BluetoothScanner.route) {
+                    BluetoothScanScreen(
+                        basicBluetoothAdapters = basicBluetoothAdapters,
+                        statusResultState = mViewModel.liveStatusResults,
+                        mViewModel.leScanCallback,
+                        bluetoothLEManager,
+                        this@MainActivity,
+                        navLambdaDataScreen
+                    )
+                }
+
+                composable(
+                    Routes.DataHome.route + "/{bluetoothName}/{bluetoothAddress}",                    // declaring placeholder in String route
+                    arguments = listOf(
+                        // declaring argument type
+                        navArgument("bluetoothName") { type = NavType.StringType },
+                        navArgument("bluetoothAddress") { type = NavType.StringType },
+                    )
+                ) { backStackEntry ->
+
+                    // Extracting exact values and passing it to Profile() screen
+                    val bluetoothName = backStackEntry.arguments?.getString("bluetoothName")
+                    val bluetoothAddress =
+                        backStackEntry.arguments?.getString("bluetoothAddress")
+                    DataHome(
+                        bluetoothName = bluetoothName ?: "no name",
+                        bluetoothAddress = bluetoothAddress ?: "no address",
+                        this@MainActivity,
+                        null,
+                        navLambda = { navLambdaBackHome() }
+                    )
+                }
+
+
+            }
+
+
+        }
+
+    }
+
+}
+
+
+
+/*                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+
+                        pViewModel.permissionAccessFineLocationGranted =
+                            isPermissionGranted(
+                                this@MainActivity,
+                                Manifest.permission.ACCESS_FINE_LOCATION
+                            )
+
+                        val mapOf =
+                            mapOf(Manifest.permission.ACCESS_FINE_LOCATION to pViewModel.permissionAccessFineLocationGranted)
+                    }
+
+                    if (Build.VERSION.SDK_INT >=Build.VERSION_CODES.S) {
+
+                        pViewModel.permissionAccessFineLocationGranted =
+                            isPermissionGranted(
+                                this@MainActivity,
+                                Manifest.permission.ACCESS_FINE_LOCATION
+                            )
+
+                        pViewModel.permissionBluetoothConnectGranted =
+                            isPermissionGranted(
+                                this@MainActivity,
+                                Manifest.permission.BLUETOOTH_CONNECT
+                            )
+
+                        val mapOf = mapOf(
+                            Manifest.permission.ACCESS_FINE_LOCATION to pViewModel.permissionAccessFineLocationGranted,
+                            Manifest.permission.BLUETOOTH_CONNECT to pViewModel.permissionBluetoothConnectGranted
+                        )
+                    }*/
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    ADSmartBandAppTheme {
+
+    }
+}
