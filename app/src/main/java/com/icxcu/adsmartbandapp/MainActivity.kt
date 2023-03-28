@@ -39,6 +39,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var bluetoothLEManager: BluetoothManager
     private lateinit var mViewModel: BluetoothScannerViewModel
     private lateinit var pViewModel: PermissionsViewModel
+    private lateinit var startDestination:String
 
     private val permissionsRequired = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         listOf(
@@ -81,6 +82,24 @@ class MainActivity : ComponentActivity() {
 
                 }
 
+                //SetPermissions(this@MainActivity, permissionsRequired)
+                for (permission in permissionsRequired) {
+                    if (ContextCompat.checkSelfPermission(
+                            this@MainActivity,
+                            permission
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        askPermissions.add(permission)
+                    }
+                }
+
+                // if the list if empty, all permissions are granted
+                startDestination = if (askPermissions.isEmpty()) {
+                    Routes.BluetoothScanner.route
+                } else {
+                    Routes.Permissions.route
+                }
+                bluetoothLEManager = BluetoothLEManagerImp(this@MainActivity, mViewModel)
                 mainContent()
             }
         }
@@ -104,26 +123,6 @@ class MainActivity : ComponentActivity() {
             color = MaterialTheme.colors.background
         ) {
 
-            //SetPermissions(this@MainActivity, permissionsRequired)
-            for (permission in permissionsRequired) {
-                if (ContextCompat.checkSelfPermission(
-                        this@MainActivity,
-                        permission
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    askPermissions.add(permission)
-                }
-            }
-            var startDestination = ""
-            // if the list if empty, all permissions are granted
-            startDestination = if (askPermissions.isEmpty()) {
-                Routes.BluetoothScanner.route
-            } else {
-                Routes.Permissions.route
-            }
-
-
-            bluetoothLEManager = BluetoothLEManagerImp(this@MainActivity, mViewModel)
             val navController = rememberNavController()
 
             val navLambdaDataScreen = { name: String, address: String ->

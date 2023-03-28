@@ -109,6 +109,31 @@ fun PermissionsScreen(
             )
 
 
+            viewModel.permissionBluetoothScanGranted =
+                isPermissionGranted(
+                    activity,
+                    Manifest.permission.BLUETOOTH_SCAN
+                )
+            val permissionBluetoothScanLauncher =
+                rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { permissionGranted_ ->
+                    // this is called when the user selects allow or deny
+                    Toast.makeText(
+                        activity,
+                        "Permission Granted $permissionGranted_",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    viewModel.permissionBluetoothScanGranted = permissionGranted_
+                }
+            PermissionType(
+                message = "Permission to scan bluetooth devices",
+                permissionType = Manifest.permission.BLUETOOTH_SCAN,
+                permissionBluetoothScanLauncher,
+                viewModel.permissionBluetoothScanGranted
+            )
+
+
+
+
             viewModel.permissionBluetoothConnectGranted =
                 isPermissionGranted(
                     activity,
@@ -133,6 +158,7 @@ fun PermissionsScreen(
 
             allPermissionsGranted=viewModel.permissionAccessFineLocationGranted
                     && viewModel.permissionBluetoothConnectGranted
+                    && viewModel.permissionBluetoothScanGranted
         }
 
 

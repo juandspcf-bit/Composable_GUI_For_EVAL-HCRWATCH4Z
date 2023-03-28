@@ -8,5 +8,6 @@ import androidx.lifecycle.ViewModel
 
 class PermissionsViewModel: ViewModel() {
     var permissionAccessFineLocationGranted by mutableStateOf(false)
+    var permissionBluetoothScanGranted by mutableStateOf(false)
     var permissionBluetoothConnectGranted by mutableStateOf(false)
     }
