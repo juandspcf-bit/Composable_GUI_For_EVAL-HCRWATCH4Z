@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -18,26 +17,23 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.bottombardemo.screens.Contacts
 import com.example.bottombardemo.screens.Favorites
 import com.icxcu.adsmartbandapp.MainActivity
-import com.icxcu.adsmartbandapp.R
-import com.icxcu.adsmartbandapp.bluetooth.device.DeviceConnection
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DataHome(bluetoothName: String,
-             bluetoothAddress: String,
-             mainActivity: MainActivity?,
-            deviceConnection: DeviceConnection?,
-             navLambda: () -> Unit) {
+fun DataHome(
+    bluetoothName: String,
+    bluetoothAddress: String,
+    mainActivity: MainActivity?,
+    navLambda: () -> Unit
+) {
 
 
     val navController = rememberNavController()
@@ -143,8 +139,6 @@ fun DefaultPreview() {
     DataHome(
         bluetoothName = "ddd",
         bluetoothAddress = "ddddd",
-        mainActivity = null,
-        null,
-        {}
-    )
+        mainActivity = null
+    ) {}
 }

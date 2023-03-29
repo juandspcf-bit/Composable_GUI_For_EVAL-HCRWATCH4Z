@@ -5,7 +5,6 @@ import android.app.Application
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -25,7 +24,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothLEManagerImp
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
-import com.icxcu.adsmartbandapp.initialsetup.SetPermissions
 import com.icxcu.adsmartbandapp.screens.*
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
@@ -193,10 +191,8 @@ class MainActivity : ComponentActivity() {
                     DataHome(
                         bluetoothName = bluetoothName ?: "no name",
                         bluetoothAddress = bluetoothAddress ?: "no address",
-                        this@MainActivity,
-                        null,
-                        navLambda = { navLambdaBackHome() }
-                    )
+                        this@MainActivity
+                    ) { navLambdaBackHome() }
                 }
 
 
