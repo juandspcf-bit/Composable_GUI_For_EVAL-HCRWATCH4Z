@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.R
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -37,7 +36,7 @@ fun ListFields(){
         fieldPlural = "Km",
         resource = R.drawable.measure_distance,
         iconPadding = 20.dp,
-        size = 200.dp))
+        size = 195.dp))
 
     listOf.add(GenericCardData(
         modifier = Modifier
@@ -47,7 +46,7 @@ fun ListFields(){
         fieldPlural = "KCal",
         resource = R.drawable.calories,
         iconPadding = 20.dp,
-        size = 200.dp))
+        size = 195.dp))
 
     listOf.add(GenericCardData(
         modifier = Modifier
@@ -67,7 +66,19 @@ fun ListFields(){
         fieldPlural = "%",
         resource = R.drawable.oxygen_saturation,
         iconPadding = 20.dp,
-        size = 200.dp))
+        size = 200.dp,
+        verticalChainData=false))
+
+    listOf.add(GenericCardData(
+        modifier = Modifier
+            .padding(5.dp),
+        title = "Temperature",
+        text = "30",
+        fieldPlural = "°C",
+        resource = R.drawable.thermometer,
+        iconPadding = 20.dp,
+        size = 200.dp,
+        verticalChainData=false))
 
 
     LazyVerticalStaggeredGrid(columns = StaggeredGridCells.Fixed(2),
@@ -84,7 +95,8 @@ fun ListFields(){
                 fieldPlural = it.fieldPlural,
                 resource = it.resource,
                 iconPadding = it.iconPadding,
-                size = it.size
+                size = it.size,
+                verticalChainData = it.verticalChainData
             )
         }
     }

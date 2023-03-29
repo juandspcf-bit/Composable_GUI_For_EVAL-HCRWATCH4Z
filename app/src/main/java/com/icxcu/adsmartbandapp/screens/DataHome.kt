@@ -5,16 +5,20 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -24,6 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.bottombardemo.screens.Contacts
 import com.example.bottombardemo.screens.Favorites
 import com.icxcu.adsmartbandapp.MainActivity
+import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.bluetooth.device.DeviceConnection
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -105,6 +110,7 @@ fun BottomNavigationBar(navController: NavHostController) {
         NavBarItems.BarItems.forEach { navItem ->
 
             NavigationBarItem(
+
                 selected = currentRoute == navItem.route,
                 onClick = {
                     navController.navigate(navItem.route) {
@@ -117,7 +123,7 @@ fun BottomNavigationBar(navController: NavHostController) {
                 },
 
                 icon = {
-                    Icon(imageVector = navItem.image,
+                    Icon( modifier = Modifier.scale(1.2f), painter = painterResource(navItem.image),
                         contentDescription = navItem.title,
                     tint = Color.White)
                 },
