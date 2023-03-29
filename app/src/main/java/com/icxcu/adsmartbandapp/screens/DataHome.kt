@@ -88,7 +88,7 @@ fun NavigationHost(navController: NavHostController) {
             ListFields()
         }
         composable(NavRoutes.CheckHealth.route) {
-            Contacts()
+            TestingHealthScreen()
         }
 
         composable(NavRoutes.Settings.route) {
