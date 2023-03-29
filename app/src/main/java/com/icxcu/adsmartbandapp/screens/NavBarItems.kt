@@ -4,22 +4,23 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import com.icxcu.adsmartbandapp.R
 
 object NavBarItems {
     val BarItems = listOf(
         BarItem(
             title = "Home",
-            image = Icons.Filled.Home,
+            image = R.drawable.baseline_directions_run_24,
             route = "fields"
         ),
         BarItem(
             title = "Check your Health",
-            image = Icons.Filled.Face,
+            image = R.drawable.baseline_vibration_24,
             route = "CheckHealth"
         ),
         BarItem(
             title = "Settings",
-            image = Icons.Filled.Favorite,
+            image = R.drawable.baseline_settings_24,
             route = "settings"
         )
     )

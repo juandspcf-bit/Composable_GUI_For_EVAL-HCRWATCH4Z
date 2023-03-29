@@ -217,15 +217,6 @@ fun PermissionsScreen(
                 disabledContainerColor = Color(0xff027146)
             ),
             onClick = {
-                if (isPermissionGranted(
-                        activity,
-                        Manifest.permission.BLUETOOTH_CONNECT
-                    )
-                ){
-                    Toast.makeText(activity, "permission granted",Toast.LENGTH_LONG).show()
-                }else{
-                    Toast.makeText(activity, "permission not granted",Toast.LENGTH_LONG).show()
-                }
                 navLambda()
             }
         ) {

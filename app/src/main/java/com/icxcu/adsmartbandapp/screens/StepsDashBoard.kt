@@ -1,24 +1,18 @@
 package com.icxcu.adsmartbandapp.screens
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -131,12 +125,12 @@ fun GenericCard(
     text: String = "value",
     fieldPlural: String = "Field",
     resource: Int = R.drawable.ic_launcher_foreground,
-    iconTint: Color = Color.Green,
     iconPadding: Dp = 0.dp,
     backgroundCard: Color = Color.DarkGray,
+    verticalChainData: Boolean = true,
     isWithIconTitle: Boolean = false,
     resourceIconTitle: Int = R.drawable.ic_launcher_foreground,
-    size: Dp=200.dp
+    size: Dp = 200.dp
 ) {
     Card(
         modifier = modifier.height(size),
@@ -144,7 +138,7 @@ fun GenericCard(
         border = BorderStroke(width = 1.dp, color = Color.Green),
         elevation = 4.dp,
 
-    ) {
+        ) {
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxWidth()
@@ -194,23 +188,7 @@ fun GenericCard(
             ) {
                 val iconValueStepsV50 = createGuidelineFromEnd(fraction = 0.5f)
                 val (iconSteps, valuesSteps) = createRefs()
-/*                Icon(
-                    painter = painterResource(resource),
-                    contentDescription = "frost",
-                    modifier = Modifier
-                        .constrainAs(iconSteps) {
-                            top.linkTo(parent.top)
-                            bottom.linkTo(parent.bottom)
-                            start.linkTo(parent.start)
-                            end.linkTo(iconValueStepsV50)
 
-                            height = Dimension.fillToConstraints
-                            width = Dimension.fillToConstraints
-                        }
-                        .fillMaxSize()
-                        .padding(iconPadding),
-                    tint = iconTint
-                )*/
 
                 Image(
                     painter = painterResource(resource),
@@ -228,7 +206,7 @@ fun GenericCard(
                         .fillMaxSize()
                         .padding(iconPadding),
 
-                )
+                    )
 
 
                 ConstraintLayout(modifier = Modifier
@@ -245,11 +223,27 @@ fun GenericCard(
                     }
                     .padding(10.dp)) {
                     val (value, unit) = createRefs()
-                    createVerticalChain(value, unit, chainStyle = ChainStyle.SpreadInside)
+                    if (verticalChainData) {
+                        createVerticalChain(value, unit, chainStyle = ChainStyle.SpreadInside)
+                    } else {
+                        createHorizontalChain(value, unit, chainStyle = ChainStyle.SpreadInside)
+                    }
+
+
 
                     Text(
                         modifier = Modifier
-                            .constrainAs(value) { centerHorizontallyTo(parent) },
+                            .constrainAs(value) {
+                                if (verticalChainData) {
+                                    centerHorizontallyTo(parent)
+                                } else {
+                                    centerVerticallyTo(parent)
+                                }
+                            }.padding(if (verticalChainData) {
+                                0.dp
+                            } else {
+                                2.dp
+                            }),
                         text = text,
                         color = Color.White,
                         textAlign = TextAlign.Center,
@@ -258,7 +252,17 @@ fun GenericCard(
 
                     Text(
                         modifier = Modifier
-                            .constrainAs(unit) { centerHorizontallyTo(parent) },
+                            .constrainAs(unit) {
+                                if (verticalChainData) {
+                                    centerHorizontallyTo(parent)
+                                } else {
+                                    centerVerticallyTo(parent)
+                                }
+                            }.padding(if (verticalChainData) {
+                                0.dp
+                            } else {
+                                2.dp
+                            }),
                         text = fieldPlural,
                         color = Color.White,
                         textAlign = TextAlign.Center,
@@ -288,7 +292,8 @@ data class GenericCardData(
     var backgroundCard: Color = Color.DarkGray,
     var isWithIconTitle: Boolean = false,
     var resourceIconTitle: Int = R.drawable.ic_launcher_foreground,
-    var size: Dp = 256.dp
+    var size: Dp = 256.dp,
+    var verticalChainData: Boolean = true,
 )
 
 @Preview(showBackground = true)

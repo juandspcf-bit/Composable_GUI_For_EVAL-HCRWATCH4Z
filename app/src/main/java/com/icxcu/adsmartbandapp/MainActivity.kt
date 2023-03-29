@@ -100,7 +100,7 @@ class MainActivity : ComponentActivity() {
                     Routes.Permissions.route
                 }
                 bluetoothLEManager = BluetoothLEManagerImp(this@MainActivity, mViewModel)
-                mainContent()
+                MainContent()
             }
         }
     }
@@ -110,14 +110,14 @@ class MainActivity : ComponentActivity() {
         super.onRestart()
         setContent {
             ADSmartBandAppTheme {
-                mainContent()
+                MainContent()
             }
         }
     }
 
 
     @Composable
-    private fun mainContent(){
+    private fun MainContent(){
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colors.background
@@ -135,7 +135,11 @@ class MainActivity : ComponentActivity() {
             }
 
             val navLambdaToBlueScanScreen = {
-                navController.navigate(Routes.BluetoothScanner.route)
+                navController.navigate(Routes.BluetoothScanner.route){
+                    popUpTo(navController.graph.id){
+                        inclusive=true
+                    }
+                }
             }
 
             val navLambdaBackHome = {
