@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.icxcu.adsmartbandapp.REQUEST_ENABLE_BT
+import com.icxcu.adsmartbandapp.screens.isPermissionGranted
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import kotlinx.coroutines.*
 
@@ -26,35 +27,56 @@ class BluetoothLEManagerImp(
 
 
     override fun scanLocalBluetooth(activity: Activity): BluetoothLeScanner? {
+
+
+
         val bluetoothManager: BluetoothManager? =
             ContextCompat.getSystemService(activity, BluetoothManager::class.java)
         val bluetoothAdapter: BluetoothAdapter? = bluetoothManager?.adapter
-        bluetoothAdapter.let {
-            if (ContextCompat.checkSelfPermission(
-                    activity,
-                    Manifest.permission.BLUETOOTH_CONNECT
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                val bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
-                Toast.makeText(
-                    activity,
-                    "${bluetoothAdapter?.name},  ${bluetoothAdapter?.address}" ?: "No adapter",
-                    Toast.LENGTH_LONG
-                ).show()
-                return bluetoothLeScanner
-            } else {
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (isPermissionGranted(
+                activity,
+                Manifest.permission.BLUETOOTH_CONNECT
+            )
+        ) {
+            Toast.makeText(activity, "BluetoothScanScreen permission granted", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(activity, "BluetoothScanScreen permission not granted", Toast.LENGTH_LONG).show()
+        }
+
+
+        bluetoothAdapter.let {
+
+            activity.let {
+
+                if (ContextCompat.checkSelfPermission(
+                        activity,
+                        Manifest.permission.BLUETOOTH_CONNECT
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
+                    val bluetoothLeScanner = bluetoothAdapter?.bluetoothLeScanner
                     Toast.makeText(
                         activity,
-                        "Asking permission",
+                        "${bluetoothAdapter?.name},  ${bluetoothAdapter?.address}" ?: "No adapter",
                         Toast.LENGTH_LONG
                     ).show()
+                    return bluetoothLeScanner
+                } else {
 
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        Toast.makeText(
+                            activity,
+                            "Asking permission",
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                    }
+
+                    return null
                 }
-
-                return null
             }
+
+
 
         }
 

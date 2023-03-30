@@ -47,16 +47,6 @@ fun BluetoothScanScreen(
     navLambda: (String, String) -> Unit,
 ) {
 
-    if (isPermissionGranted(
-            activity,
-            Manifest.permission.BLUETOOTH_CONNECT
-        )
-    ) {
-        Toast.makeText(activity, "BluetoothScanScreen permission granted", Toast.LENGTH_LONG).show()
-    } else {
-        Toast.makeText(activity, "BluetoothScanScreen permission not granted", Toast.LENGTH_LONG).show()
-    }
-
     var textState by remember {
         mutableStateOf("Swipe  down to scan devices")
     }
