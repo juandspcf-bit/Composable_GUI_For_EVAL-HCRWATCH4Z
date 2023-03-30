@@ -14,3 +14,7 @@
 .cxx
 local.properties
 /.idea/deploymentTargetDropDown.xml
+/hs_err_pid417.log
+/hs_err_pid20536.log
+/replay_pid417.log
+/replay_pid20536.log
