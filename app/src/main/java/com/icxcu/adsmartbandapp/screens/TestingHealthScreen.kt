@@ -30,7 +30,7 @@ fun TestingHealthScreen() {
 
 
     Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Top) {
-        LazyVerticalGrid(modifier = Modifier.background(Color(0xff0d1721)).fillMaxWidth(),horizontalArrangement = Arrangement.SpaceEvenly,
+        LazyVerticalGrid(modifier = Modifier.background(Color(0xFF03A9F4)).fillMaxWidth(),horizontalArrangement = Arrangement.SpaceEvenly,
             columns = GridCells.Fixed(3),
             state = rememberLazyGridState(),
             contentPadding = PaddingValues(30.dp)
@@ -57,7 +57,10 @@ fun TestingHealthScreen() {
 
 @Composable
 fun ButtonCircle(resource:Int=R.drawable.blood_pressure_gauge){
-    Image(modifier = Modifier.padding(10.dp).clip(CircleShape).border(BorderStroke(2.dp, Color.DarkGray), CircleShape).background(Color(0xff1d2a35)),
+    Image(modifier = Modifier.padding(10.dp).clip(CircleShape).border(BorderStroke(2.dp, Color.DarkGray), CircleShape).background(Color(
+        0xFFE7EDF1
+    )
+    ),
         painter = painterResource(resource),
         contentDescription = null,
         contentScale = ContentScale.FillWidth)
