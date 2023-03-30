@@ -52,9 +52,9 @@ fun BluetoothScanScreen(
             Manifest.permission.BLUETOOTH_CONNECT
         )
     ) {
-        Toast.makeText(activity, "permission granted", Toast.LENGTH_LONG).show()
+        Toast.makeText(activity, "BluetoothScanScreen permission granted", Toast.LENGTH_LONG).show()
     } else {
-        Toast.makeText(activity, "permission not granted", Toast.LENGTH_LONG).show()
+        Toast.makeText(activity, "BluetoothScanScreen permission not granted", Toast.LENGTH_LONG).show()
     }
 
     var textState by remember {
