@@ -1,41 +1,69 @@
 package com.icxcu.adsmartbandapp.screens
 
+
+import android.Manifest
+import android.app.Activity
 import android.bluetooth.le.ScanCallback
+import android.content.pm.PackageManager
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.core.content.ContextCompat
+import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
 import com.icxcu.adsmartbandapp.data.BasicBluetoothAdapter
-import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BluetoothScanScreen(
     basicBluetoothAdapters: List<BasicBluetoothAdapter>,
     statusResultState: Int,
     leScanCallback: ScanCallback,
     bluetoothLEManager: BluetoothManager,
+    activity: Activity,
     navLambda: (String, String) -> Unit,
 ) {
 
     var textState by remember {
-        mutableStateOf("start scanning")
+        mutableStateOf("Swipe  down to scan devices")
+    }
+    val refreshScope = rememberCoroutineScope()
+    var refreshing by remember { mutableStateOf(false) }
+
+
+    fun refresh2() = refreshScope.launch {
+        refreshing = true
+        val scanLocalBluetooth = bluetoothLEManager.scanLocalBluetooth(activity)
+        bluetoothLEManager.scanLeDevice(
+            scanLocalBluetooth,
+            leScanCallback
+        )
     }
 
-
+    val state = rememberPullRefreshState(refreshing, ::refresh2, refreshingOffset = 100.dp)
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
 
         val (rowBar, divider, listData) = createRefs()
@@ -47,43 +75,16 @@ fun BluetoothScanScreen(
                     linkTo(parent.start, parent.end)
                     height = Dimension.fillToConstraints
                 }
+                .fillMaxWidth()
                 .background(Color(0xff0d1721))) {
-            Row(
-                modifier = Modifier
-                    .padding(bottom = 10.dp, top = 10.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Button(
-                    onClick = {
-                        val scanLocalBluetooth = bluetoothLEManager.scanLocalBluetooth()
-                        bluetoothLEManager.scanLeDevice(
-                            scanLocalBluetooth,
-                            leScanCallback
-                        )
+            Text(
+                text = textState,
+                style = MaterialTheme.typography.h4,
+                color = Color.White, modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(30.dp)
+            )
 
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color(163, 163, 117, 255),
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text(text = textState)
-                }
-
-
-                Button(
-                    onClick = { bluetoothLEManager.enableBluetooth() },
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color(163, 163, 117, 255),
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text(text = "Enable Bluetooth")
-                }
-
-            }
         }
 
         Divider(modifier = Modifier
@@ -97,7 +98,7 @@ fun BluetoothScanScreen(
             .background(Color.Black))
 
 
-        Box(contentAlignment = Alignment.Center,
+        Box(contentAlignment = Alignment.TopCenter,
             modifier = Modifier
                 .constrainAs(listData) {
                     linkTo(parent.start, parent.end)
@@ -106,55 +107,57 @@ fun BluetoothScanScreen(
                     height = Dimension.fillToConstraints
                     width = Dimension.fillToConstraints
                 }
-                .background(Color(0xff1d2a35))) {
+                .background(Color(0xff1d2a35))
+                .pullRefresh(state)) {
 
 
+            if (statusResultState == -2 || basicBluetoothAdapters.isEmpty()) {
+                ListAlbumDataEmpty()
+            } else {
+                ListAlbumDataEmpty()
+                ListAlbumData(
+                    basicBluetoothAdapter = basicBluetoothAdapters,
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    navLambda
+                )
 
+            }
+
+            PullRefreshIndicator(
+                refreshing,
+                state,
+                Modifier
+                    .align(Alignment.TopCenter)
+                    .size(50.dp),
+                scale = true
+            )
             when (statusResultState) {
-                0 -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    textState="stop scanning"
-
-                    ListAlbumData(
-                        basicBluetoothAdapter = basicBluetoothAdapters,
-                        modifier = Modifier.align(
-                            Alignment.TopCenter
-                        ),
-                        navLambda
-                    )
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(200.dp)
-                            .background(Color.Transparent),
-                        color = Color.White,
-                        strokeWidth = 18.dp
-                    )
+                0 -> {
+                    textState = "scanning"
                 }
                 1 -> {
-                    textState="start scanning"
-                    ListAlbumData(
-                    basicBluetoothAdapter = basicBluetoothAdapters,
-                    modifier = Modifier.fillMaxSize(),
-                    navLambda
-                )}
-                -1 ->{
-                    textState="start scanning"
-                    ListAlbumData(
-                        basicBluetoothAdapter = basicBluetoothAdapters,
-                        modifier = Modifier.fillMaxSize(),
-                        navLambda)
+                    refreshing = false
+                    textState = "Swipe  down to scan devices"
                 }
-                -2 ->{
-                    textState="start scanning"
-                    Text(
-                        text = "click find bluetooth",
-                        style = MaterialTheme.typography.h3,
-                        color = Color.White
+                -1 -> {
+                    textState = "Swipe  down to scan devices"
+                }
+                -2 -> {
+                    textState = "Swipe  down to scan devices"
+                    Icon(
+                        painter = painterResource(R.drawable.baseline_bluetooth_24),
+                        contentDescription = "frost",
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .size(80.dp),
+                        tint = Color.White
                     )
                 }
 
             }
-
         }
+
 
     }
 
@@ -166,41 +169,71 @@ fun ListAlbumData(
     modifier: Modifier = Modifier,
     navigateRoute: (String, String) -> Unit
 ) {
-    Box(modifier = modifier, contentAlignment = Alignment.TopCenter) {
-        LazyColumn() {
-            items(basicBluetoothAdapter) {item->
+    LazyColumn(modifier = Modifier) {
+        items(basicBluetoothAdapter) { item ->
 
-                Card(
-                    modifier
-                        .padding(top = 5.dp, bottom = 5.dp)
-                        .pointerInput(Unit) {
-                            detectTapGestures(
-                                onPress = { /* Press Detected */ },
-                                onDoubleTap = { /* Double Tap Detected */ },
-                                onLongPress = { /* Long Press Detected */ },
-                                onTap = {
+            Card(
+                modifier
+                    .padding(top = 5.dp, bottom = 5.dp)
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onPress = { /* Press Detected */ },
+                            onDoubleTap = { /* Double Tap Detected */ },
+                            onLongPress = { /* Long Press Detected */ },
+                            onTap = {
 
-                                    navigateRoute(item.name, item.address)
+                                navigateRoute(item.name, item.address)
 
-                                }
-                            )
-                        },
-                    backgroundColor = Color(60, 63, 65, 255),
-                    shape = RoundedCornerShape(size = 26.dp),
-                    border = BorderStroke(width = 1.dp, color = Color.Green),
-                    elevation = 4.dp
-                ) {
-                    Text(
-                        text = "${item.name}: ${item.address} ",
-                        modifier = Modifier
-                            .padding(20.dp)
-                            .fillMaxWidth(),
-                        style = MaterialTheme.typography.h3, color = Color.White
-                    )
-
-                }
+                            }
+                        )
+                    },
+                backgroundColor = Color(60, 63, 65, 255),
+                shape = RoundedCornerShape(size = 26.dp),
+                border = BorderStroke(width = 1.dp, color = Color.Green),
+                elevation = 4.dp
+            ) {
+                Text(
+                    text = "${item.name}: ${item.address} ",
+                    modifier = Modifier
+                        .padding(20.dp)
+                        .fillMaxWidth(),
+                    style = MaterialTheme.typography.h3, color = Color.White
+                )
 
             }
+
+        }
+    }
+
+}
+
+
+@Composable
+fun ListAlbumDataEmpty(
+    modifier: Modifier = Modifier,
+
+    ) {
+    LazyColumn(modifier = Modifier) {
+        items(5) {
+
+            Card(
+                modifier
+                    .padding(top = 5.dp, bottom = 5.dp),
+                backgroundColor = Color.Transparent,
+                shape = RoundedCornerShape(size = 0.dp),
+                border = BorderStroke(width = 1.dp, color = Color.Transparent),
+                elevation = 0.dp
+            ) {
+                Text(
+                    text = "",
+                    modifier = Modifier
+                        .padding(100.dp)
+                        .fillMaxWidth(),
+                    style = MaterialTheme.typography.h3, color = Color.White
+                )
+
+            }
+
         }
     }
 
