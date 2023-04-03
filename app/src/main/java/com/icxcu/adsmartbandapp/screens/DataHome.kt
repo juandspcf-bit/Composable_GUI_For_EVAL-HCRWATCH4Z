@@ -25,6 +25,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.bottombardemo.screens.Favorites
 import com.icxcu.adsmartbandapp.MainActivity
+import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,26 +33,38 @@ fun DataHome(
     bluetoothName: String,
     bluetoothAddress: String,
     mainActivity: MainActivity?,
+    dataSteps: List<Int>,
+    navMainController: NavHostController,
     navLambda: () -> Unit
 ) {
 
 
     val navController = rememberNavController()
-    val scrollBehavior =TopAppBarDefaults.pinnedScrollBehavior()
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(title = { Text(text="$bluetoothName, $bluetoothAddress ", maxLines = 1,
-                overflow = TextOverflow.Ellipsis,color = Color.White) },
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "$bluetoothName, $bluetoothAddress ", maxLines = 1,
+                        overflow = TextOverflow.Ellipsis, color = Color.White
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = {
                         Toast.makeText(mainActivity, "Back Icon Click", Toast.LENGTH_SHORT)
                             .show()
                         navLambda()
                     }) {
-                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Go Back", tint = Color.White)
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Go Back",
+                            tint = Color.White
+                        )
                     }
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color(0xff0d1721),
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color(0xff0d1721),
                 ),
                 modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                 scrollBehavior = scrollBehavior
@@ -61,27 +74,32 @@ fun DataHome(
             Box(
                 Modifier
                     .padding(padding)
-                    .fillMaxSize()) {
-                NavigationHost(navController = navController)
+                    .fillMaxSize()
+            ) {
+                NavigationHost(navController = navController, dataSteps = dataSteps, navMainController)
             }
 
         },
-        bottomBar = { BottomNavigationBar(navController = navController)}
+        bottomBar = { BottomNavigationBar(navController = navController) }
 
-        )
+    )
 
 
 }
 
 
 @Composable
-fun NavigationHost(navController: NavHostController) {
+fun NavigationHost(
+    navController: NavHostController,
+    dataSteps: List<Int>,
+    navMainController: NavHostController
+) {
     NavHost(
         navController = navController,
         startDestination = NavRoutes.Fields.route,
     ) {
         composable(NavRoutes.Fields.route) {
-            ListFields()
+            ListFields(dataSteps, navMainController)
         }
         composable(NavRoutes.CheckHealth.route) {
             TestingHealthScreen()
@@ -97,9 +115,10 @@ fun NavigationHost(navController: NavHostController) {
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
 
-    NavigationBar(containerColor = Color(0xff0d1721),
+    NavigationBar(
+        containerColor = Color(0xff0d1721),
         contentColor = Color(0xFFCDDC39)
-    )  {
+    ) {
         val backStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = backStackEntry?.destination?.route
 
@@ -119,9 +138,11 @@ fun BottomNavigationBar(navController: NavHostController) {
                 },
 
                 icon = {
-                    Icon( modifier = Modifier.scale(1.2f), painter = painterResource(navItem.image),
+                    Icon(
+                        modifier = Modifier.scale(1.2f), painter = painterResource(navItem.image),
                         contentDescription = navItem.title,
-                    tint = Color.White)
+                        tint = Color.White
+                    )
                 },
                 label = {
                     Text(text = navItem.title, color = Color.White)
@@ -136,9 +157,5 @@ fun BottomNavigationBar(navController: NavHostController) {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    DataHome(
-        bluetoothName = "ddd",
-        bluetoothAddress = "ddddd",
-        mainActivity = null
-    ) {}
+
 }

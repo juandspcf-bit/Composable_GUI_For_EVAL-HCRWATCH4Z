@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,14 +27,12 @@ import com.icxcu.adsmartbandapp.bluetooth.BluetoothLEManagerImp
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
 import com.icxcu.adsmartbandapp.screens.*
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
-import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
-import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModelFactory
-import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModel
-import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModelFactory
+import com.icxcu.adsmartbandapp.viewModels.*
 
 const val REQUEST_ENABLE_BT: Int = 500
 
 class MainActivity : ComponentActivity() {
+    private lateinit var dViewModel: DataViewModel
     private lateinit var bluetoothLEManager: BluetoothManager
     private lateinit var mViewModel: BluetoothScannerViewModel
     private lateinit var pViewModel: PermissionsViewModel
@@ -78,6 +77,11 @@ class MainActivity : ComponentActivity() {
                         PermissionsViewModelFactory()
                     )
 
+                    dViewModel = viewModel(it,
+                        "DataViewModel",
+                        DataViewModelFactory(LocalContext.current.applicationContext
+                                as Application))
+
                 }
 
                 //SetPermissions(this@MainActivity, permissionsRequired)
@@ -121,11 +125,11 @@ class MainActivity : ComponentActivity() {
             color = MaterialTheme.colors.background
         ) {
 
-            val navController = rememberNavController()
+            val navMainController = rememberNavController()
 
             val navLambdaDataScreen = { name: String, address: String ->
                 if (mViewModel.liveStatusResults == 1 || mViewModel.liveStatusResults == -1) {
-                    navController.navigate(
+                    navMainController.navigate(
                         Routes.DataHome
                             .route + "/${name}/${address}"
                     )
@@ -133,15 +137,15 @@ class MainActivity : ComponentActivity() {
             }
 
             val navLambdaToBlueScanScreen = {
-                navController.navigate(Routes.BluetoothScanner.route){
-                    popUpTo(navController.graph.id){
+                navMainController.navigate(Routes.BluetoothScanner.route){
+                    popUpTo(navMainController.graph.id){
                         inclusive=true
                     }
                 }
             }
 
             val navLambdaBackHome = {
-                navController.popBackStack()
+                navMainController.popBackStack()
                 mViewModel.liveBasicBluetoothAdapter.value = mutableListOf()
                 mViewModel.liveStatusResults = -2
             }
@@ -152,7 +156,7 @@ class MainActivity : ComponentActivity() {
 
 
             NavHost(
-                navController = navController,
+                navController = navMainController,
                 startDestination = startDestination
             ) {
 
@@ -191,8 +195,16 @@ class MainActivity : ComponentActivity() {
                     DataHome(
                         bluetoothName = bluetoothName ?: "no name",
                         bluetoothAddress = bluetoothAddress ?: "no address",
-                        this@MainActivity
+                        this@MainActivity,
+                        dataSteps = dViewModel.dataSteps,
+                        navMainController = navMainController
                     ) { navLambdaBackHome() }
+                }
+
+                composable(Routes.StepsPlots.route){
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(text = "Data Plot")
+                    }
                 }
 
 

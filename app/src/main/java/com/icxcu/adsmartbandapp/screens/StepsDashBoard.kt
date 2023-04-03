@@ -294,6 +294,7 @@ data class GenericCardData(
     var resourceIconTitle: Int = R.drawable.ic_launcher_foreground,
     var size: Dp = 256.dp,
     var verticalChainData: Boolean = true,
+    var callBack:()->Unit={}
 )
 
 @Preview(showBackground = true)
