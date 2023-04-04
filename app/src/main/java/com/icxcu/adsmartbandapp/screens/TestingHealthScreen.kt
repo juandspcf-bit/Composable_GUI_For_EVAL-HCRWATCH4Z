@@ -5,11 +5,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.*
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.movableContentOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,7 +19,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.R
@@ -65,7 +65,7 @@ fun TestingHealthScreen() {
             ) {
 
                 items(fields) {
-                    BoxImageCircle2(
+                    BoxImageCircle(
                         withImage = true,
                         imageResource = it
                     )
@@ -88,127 +88,10 @@ fun TestingHealthScreen() {
 }
 
 
-@Composable()
-fun BarIconsWithConstrainLayout() {
-    ConstraintLayout(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xFF0580B8))
-            .padding(10.dp)
-    ) {
-        val (bloodP, S2op, heartRate) = createRefs()
 
-        createHorizontalChain(bloodP, S2op, heartRate, chainStyle = ChainStyle.Spread)
-        BoxImageCircle(
-            modifier = Modifier.constrainAs(bloodP) {
-                centerVerticallyTo(parent)
-            },
-            withImage = true,
-            imageResource = R.drawable.blood_pressure_gauge
-        )
-
-        BoxImageCircle(
-            modifier = Modifier.constrainAs(S2op) {
-                centerVerticallyTo(parent)
-            },
-            withImage = true,
-            imageResource = R.drawable.oxygen_saturation
-        )
-
-        BoxImageCircle(
-            modifier = Modifier.constrainAs(heartRate) {
-                centerVerticallyTo(parent)
-            },
-            withImage = true,
-            imageResource = R.drawable.heart_rate
-        )
-
-
-    }
-
-    ConstraintLayout(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xFF0580B8))
-            .padding(10.dp)
-    ) {
-        val (temp, dummy1, dummy2) = createRefs()
-
-        createHorizontalChain(temp, dummy1, dummy2, chainStyle = ChainStyle.Spread)
-        BoxImageCircle(
-            modifier = Modifier.constrainAs(temp) {
-                centerVerticallyTo(parent)
-            },
-            withImage = true,
-            imageResource = R.drawable.thermometer
-        )
-
-        BoxImageCircle(
-            modifier = Modifier.constrainAs(dummy1) {
-                centerVerticallyTo(parent)
-            },
-            colorBacKGround = Color(0xFF0580B8),
-            withImage = false,
-        )
-
-        BoxImageCircle(
-            modifier = Modifier.constrainAs(dummy2) {
-                centerVerticallyTo(parent)
-            },
-            colorBacKGround = Color(0xFF0580B8),
-            withImage = false,
-        )
-
-    }
-}
 
 @Composable
 fun BoxImageCircle(
-    modifier: Modifier = Modifier,
-    colorBacKGround: Color = Color(
-        0xFFE7EDF1
-    ),
-    withImage: Boolean = false,
-    imageResource: Int = R.drawable.ic_launcher_foreground
-) {
-
-
-    Box(
-        modifier = modifier
-            .size(100.dp)
-            .clip(CircleShape)
-            .background(
-                colorBacKGround
-            )
-            .border(
-                BorderStroke(
-                    2.dp,
-                    color = if (withImage) {
-                        Color.DarkGray
-                    } else {
-                        Color.Transparent
-                    }
-                ), CircleShape
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        if (withImage) {
-            Image(
-                modifier = modifier
-                    .size(75.dp),
-
-                painter = painterResource(imageResource),
-                contentDescription = null,
-                contentScale = ContentScale.Inside
-            )
-        }
-
-
-    }
-}
-
-@Composable
-fun BoxImageCircle2(
     modifier: Modifier = Modifier,
     colorBacKGround: Color = Color(
         0xFFE7EDF1
