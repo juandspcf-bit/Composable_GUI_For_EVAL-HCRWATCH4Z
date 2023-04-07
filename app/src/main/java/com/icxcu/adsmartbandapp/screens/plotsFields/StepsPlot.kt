@@ -8,8 +8,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.room.util.getColumnIndex
 import com.icxcu.adsmartbandapp.ui.theme.rememberChartStyle
 import com.icxcu.adsmartbandapp.ui.theme.rememberMarker
 import com.patrykandpatrick.vico.compose.axis.axisLabelComponent
@@ -51,7 +53,6 @@ import com.patrykandpatrick.vico.core.entry.ChartEntry
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import java.math.RoundingMode
 import java.time.Duration
-import java.time.LocalDate
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -110,11 +111,11 @@ fun ContentPlots(dataSteps: List<Int>) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        val (plot, divider,tabRow,list) = createRefs()
+        val (plot, divider, tabRow, list) = createRefs()
         val guideH3 = createGuidelineFromTop(fraction = 0.4f)
+        var state by remember { mutableStateOf(0) }
 
-
-        val mapIndexed2 = dataSteps.mapIndexed { index, y ->
+        val stepsEntries = dataSteps.mapIndexed { index, y ->
             var entry = EntryHour(
                 Duration.ofHours(24).minusMinutes(30L * index.toLong()),
                 index.toFloat(), y.toFloat()
@@ -122,20 +123,26 @@ fun ContentPlots(dataSteps: List<Int>) {
             Log.d("Go", "MainScreen: ${entry.duration.toHours()}")
             entry
         }
-        ComposeChart2(
-            modifier = Modifier
-                .padding(start = 10.dp, end = 10.dp)
-                .clip(shape = RoundedCornerShape(size = 25.dp))
-                .background(
-                    Color(0xFFF6F4F8)
-                )
-                .constrainAs(plot) {
-                    top.linkTo(parent.top)
-                    bottom.linkTo(guideH3)
-                    linkTo(start = parent.start, end = parent.end)
-                    height = Dimension.fillToConstraints
-                }, chartEntryModelProducer = ChartEntryModelProducer(mapIndexed2)
-        )
+
+        Box(modifier = Modifier
+            .padding(start = 10.dp, end = 10.dp)
+            .clip(shape = RoundedCornerShape(size = 25.dp))
+            .background(
+                Color(0xFFF6F4F8)
+            )
+            .constrainAs(plot) {
+                top.linkTo(parent.top)
+                bottom.linkTo(guideH3)
+                linkTo(start = parent.start, end = parent.end)
+                height = Dimension.fillToConstraints
+            }
+        ) {
+            if (state == 0) {
+                ComposeChart2(chartEntryModelProducer = ChartEntryModelProducer(stepsEntries))
+            }
+        }
+
+
 
         Divider(modifier = Modifier
             .constrainAs(divider) {
@@ -146,11 +153,10 @@ fun ContentPlots(dataSteps: List<Int>) {
             .height(2.dp))
 
 
-        var state by remember { mutableStateOf(0) }
         val titles = listOf("Steps", "Distance", "Calories")
 
         TabRow(selectedTabIndex = state, modifier = Modifier
-            .padding(top = 5.dp, bottom = 5.dp, start = 50.dp, end = 50.dp)
+            .padding(top = 10.dp, bottom = 10.dp, start = 50.dp, end = 50.dp)
             .constrainAs(tabRow) {
                 top.linkTo(divider.bottom)
                 linkTo(start = parent.start, end = parent.end)
@@ -164,16 +170,24 @@ fun ContentPlots(dataSteps: List<Int>) {
             }
         }
 
-        if(state==0){
-            StepsList(dataSteps = dataSteps, modifier = Modifier.constrainAs(list) {
+        Box(modifier = Modifier
+            .constrainAs(list) {
                 top.linkTo(tabRow.bottom)
                 bottom.linkTo(parent.bottom)
                 linkTo(start = parent.start, end = parent.end)
                 height = Dimension.fillToConstraints
+            }
+            .fillMaxSize()
+        ) {
 
-            }.fillMaxSize())
+            if (state == 0) {
+                StepsList(
+                    dataSteps = dataSteps, modifier = Modifier
+                        .fillMaxSize()
+                )
+            }
+
         }
-
 
 
     }
@@ -191,6 +205,21 @@ fun MyTab(title: String, onClick: () -> Unit, selected: Boolean) {
     }
 }
 
+
+@Composable
+fun ListSelector(dataSteps: List<Int>, modifier: Modifier) {
+    var state by remember { mutableStateOf(0) }
+    val titles = listOf("Steps", "Distance", "Calories")
+
+    TabRow(selectedTabIndex = state, modifier = modifier) {
+
+        titles.forEachIndexed { index, title ->
+            MyTab(title = title, onClick = { state = index }, selected = (index == state))
+        }
+    }
+
+
+}
 
 @Composable
 internal fun ComposeChart2(
@@ -211,9 +240,8 @@ internal fun ComposeChart2(
                 decorations = remember(thresholdLine) { listOf(thresholdLine) },
             ),
             chartModelProducer = chartEntryModelProducer,
-            modifier = modifier,
-            //.height(512.dp)
-            //.padding(start = 10.dp, end = 10.dp),
+            modifier = modifier.fillMaxSize(),
+
             startAxis = startAxis(
                 maxLabelCount = 5,
                 //axis = LineComponent(thicknessDp = 90f, color = 0x0000ff),
@@ -321,34 +349,36 @@ private val bottomAxisTickPosition =
 fun StepsList(dataSteps: List<Int>, modifier: Modifier = Modifier) {
 
     LazyColumn(modifier = modifier) {
-        items(dataSteps) {
-            RowSteps(valueSteps = it.toString())
+        itemsIndexed(dataSteps) { index, item->
+
+            RowSteps(valueSteps = item.toString())
         }
     }
 
 }
 
 @Composable
-fun RowSteps(valueSteps:String){
-    ConstraintLayout(modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = 2.dp, bottom = 2.dp)) {
+fun RowSteps(valueSteps: String) {
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 2.dp, bottom = 2.dp)
+    ) {
         val (hour, icon, value) = createRefs()
         val guideHourIcon = createGuidelineFromStart(fraction = 0.25f)
         val gideIconValue = createGuidelineFromStart(fraction = 0.75f)
 
-        Text(text = "Hour", modifier = Modifier.constrainAs(hour){
-            linkTo(start=parent.start, end=guideHourIcon)
+        Text(text = "Hour", modifier = Modifier.constrainAs(hour) {
+            linkTo(start = parent.start, end = guideHourIcon)
             top.linkTo(parent.top)
             bottom.linkTo(parent.bottom)
         })
 
-        Text(text = valueSteps, modifier = Modifier.constrainAs(value){
-            linkTo(start=gideIconValue, end=parent.end)
+        Text(text = valueSteps, modifier = Modifier.constrainAs(value) {
+            linkTo(start = gideIconValue, end = parent.end)
             top.linkTo(parent.top)
             bottom.linkTo(parent.bottom)
         })
-
 
 
     }
