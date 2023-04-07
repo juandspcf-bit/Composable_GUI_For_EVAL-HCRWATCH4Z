@@ -40,7 +40,8 @@ fun DataHome(
 
 
     val navController = rememberNavController()
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(

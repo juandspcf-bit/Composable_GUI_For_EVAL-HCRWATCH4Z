@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,6 +25,7 @@ import androidx.navigation.navArgument
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothLEManagerImp
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
 import com.icxcu.adsmartbandapp.screens.*
+import com.icxcu.adsmartbandapp.screens.plotsFields.StepsPlots
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
 import com.icxcu.adsmartbandapp.viewModels.*
 
@@ -144,10 +144,14 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            val navLambdaBackHome = {
+            val navLambdaBackBluetoothScanner = {
                 navMainController.popBackStack()
                 mViewModel.liveBasicBluetoothAdapter.value = mutableListOf()
                 mViewModel.liveStatusResults = -2
+            }
+
+            val navLambdaBackDataHome = {
+                navMainController.popBackStack()
             }
 
             val basicBluetoothAdapters by mViewModel
@@ -198,13 +202,11 @@ class MainActivity : ComponentActivity() {
                         this@MainActivity,
                         dataSteps = dViewModel.dataSteps,
                         navMainController = navMainController
-                    ) { navLambdaBackHome() }
+                    ) { navLambdaBackBluetoothScanner() }
                 }
 
                 composable(Routes.StepsPlots.route){
-                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(text = "Data Plot")
-                    }
+                    StepsPlots(dataSteps = dViewModel.dataSteps,){ navLambdaBackDataHome() }
                 }
 
 
@@ -216,40 +218,6 @@ class MainActivity : ComponentActivity() {
     }
 
 }
-
-
-
-/*                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-
-                        pViewModel.permissionAccessFineLocationGranted =
-                            isPermissionGranted(
-                                this@MainActivity,
-                                Manifest.permission.ACCESS_FINE_LOCATION
-                            )
-
-                        val mapOf =
-                            mapOf(Manifest.permission.ACCESS_FINE_LOCATION to pViewModel.permissionAccessFineLocationGranted)
-                    }
-
-                    if (Build.VERSION.SDK_INT >=Build.VERSION_CODES.S) {
-
-                        pViewModel.permissionAccessFineLocationGranted =
-                            isPermissionGranted(
-                                this@MainActivity,
-                                Manifest.permission.ACCESS_FINE_LOCATION
-                            )
-
-                        pViewModel.permissionBluetoothConnectGranted =
-                            isPermissionGranted(
-                                this@MainActivity,
-                                Manifest.permission.BLUETOOTH_CONNECT
-                            )
-
-                        val mapOf = mapOf(
-                            Manifest.permission.ACCESS_FINE_LOCATION to pViewModel.permissionAccessFineLocationGranted,
-                            Manifest.permission.BLUETOOTH_CONNECT to pViewModel.permissionBluetoothConnectGranted
-                        )
-                    }*/
 
 @Preview(showBackground = true)
 @Composable
