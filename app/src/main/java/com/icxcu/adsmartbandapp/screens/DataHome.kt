@@ -1,7 +1,6 @@
 package com.icxcu.adsmartbandapp.screens
 
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -24,17 +23,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.bottombardemo.screens.Favorites
-import com.icxcu.adsmartbandapp.MainActivity
 import com.icxcu.adsmartbandapp.repositories.Values
-import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DataHome(
     bluetoothName: String,
     bluetoothAddress: String,
-    mainActivity: MainActivity?,
-    dataSteps: Values,
+    values: Values,
     navMainController: NavHostController,
     navLambda: () -> Unit
 ) {
@@ -54,8 +50,6 @@ fun DataHome(
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        Toast.makeText(mainActivity, "Back Icon Click", Toast.LENGTH_SHORT)
-                            .show()
                         navLambda()
                     }) {
                         Icon(
@@ -78,7 +72,7 @@ fun DataHome(
                     .padding(padding)
                     .fillMaxSize()
             ) {
-                NavigationHost(navController = navController, dataSteps = dataSteps, navMainController)
+                NavigationHost(navController = navController, dataSteps = values, navMainController)
             }
 
         },
@@ -159,5 +153,165 @@ fun BottomNavigationBar(navController: NavHostController) {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
+    val stepValue = listOf(
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        141,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        239,
+        110,
+        1455,
+        3177,
+        2404,
+        246,
+        315,
+        65,
+        25,
+        74,
+        0,
+        0,
+        0,
+        47,
+        77,
+        1025,
+        1600,
+        164,
+        252,
+        37,
+        51,
+        79,
+        0,
+        11,
+        0,
+        17,
+        43,
+        311,
+        0
+    )
+
+    var disValue = listOf(
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.109,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.185,
+        0.077,
+        1.127,
+        2.512,
+        1.849,
+        0.185,
+        0.249,
+        0.053,
+        0.02,
+        0.058,
+        0.0,
+        0.0,
+        0.0,
+        0.039,
+        0.061,
+        0.788,
+        1.201,
+        0.131,
+        0.193,
+        0.03,
+        0.04,
+        0.062,
+        0.0,
+        0.009,
+        0.0,
+        0.014,
+        0.034,
+        0.204,
+        0.0
+    )
+
+    var caloriesValues = listOf(
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        7.1,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        12.1,
+        5.1,
+        73.7,
+        164.2,
+        121.0,
+        12.0,
+        16.4,
+        3.4,
+        1.3,
+        3.8,
+        0.0,
+        0.0,
+        0.0,
+        2.6,
+        3.9,
+        51.6,
+        78.6,
+        8.5,
+        12.7,
+        1.9,
+        2.6,
+        4.1,
+        0.0,
+        0.6,
+        0.0,
+        0.8,
+        2.3,
+        13.3,
+        0.0
+    )
+
+    val values = Values(stepValue, disValue, caloriesValues)
+    DataHome(
+        bluetoothName = "Device Fake",
+        bluetoothAddress="000000",
+        values = values,
+        navMainController= rememberNavController(),
+        navLambda={}
+    )
 
 }

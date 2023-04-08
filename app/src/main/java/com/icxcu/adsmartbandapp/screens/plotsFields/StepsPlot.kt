@@ -125,8 +125,8 @@ fun StepsPlots(
 @Composable
 fun ContentPlots(values: Values) {
     ConstraintLayout(
-        modifier = Modifier.
-            background(Color(0xff1d2a35))
+        modifier = Modifier
+            .background(Color(0xff1d2a35))
             .fillMaxSize()
     ) {
         val (plot, divider, tabRow, list) = createRefs()
@@ -191,8 +191,8 @@ fun ContentPlots(values: Values) {
                 top.linkTo(divider.bottom)
                 linkTo(start = parent.start, end = parent.end)
                 height = Dimension.fillToConstraints
-            }.padding(top = 20.dp, bottom = 20.dp, start = 50.dp, end = 50.dp),
-            modifierList = Modifier
+            }//.padding(top = 20.dp, bottom = 20.dp, start = 50.dp, end = 50.dp),
+            ,modifierList = Modifier
                 .constrainAs(list) {
                     top.linkTo(tabRow.bottom)
                     bottom.linkTo(parent.bottom)
@@ -205,12 +205,19 @@ fun ContentPlots(values: Values) {
 
 @Composable
 fun MyTab(title: String, onClick: () -> Unit, selected: Boolean) {
-    Tab(selected,  onClick, selectedContentColor = Color.Red, modifier = Modifier.fillMaxHeight()) {
+    Tab(
+        selected,
+        onClick,
+        selectedContentColor = Color.Red,
+        unselectedContentColor = Color.Green,
+        modifier = Modifier.fillMaxHeight()
+    ) {
         Text(
             text = title,
             color= Color.White,
             style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+
         )
     }
 }
@@ -221,7 +228,14 @@ fun ListSelector(values: Values, modifierTabs: Modifier, modifierList: Modifier)
     var state by remember { mutableStateOf(0) }
     val titles = listOf("Steps", "Distance", "Calories")
 
-    TabRow(selectedTabIndex = state, modifier = modifierTabs, containerColor = Color.DarkGray, contentColor = Color.Green) {
+    TabRow(
+        selectedTabIndex = state,
+        modifier = modifierTabs.height(52.dp),
+        containerColor = Color.DarkGray,
+        divider = {
+            Divider(modifier = Modifier.fillMaxWidth(), color = Color(0xFF855454))
+        },
+    ) {
 
         titles.forEachIndexed { index, title ->
             MyTab(title = title, onClick = { state = index }, selected = (index == state))
@@ -506,7 +520,7 @@ fun RowSteps(
 @Composable
 fun StepsPlotsPreview() {
 
-    var stepValue = listOf(
+    val stepValue = listOf(
         0,
         0,
         0,
@@ -557,10 +571,108 @@ fun StepsPlotsPreview() {
         0
     )
 
-    val values = Values(stepValue,
-        MutableList(48) { 0.0 }.toList(),
-        MutableList(48) { 0.0 }.toList()
+    var disValue = listOf(
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.109,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.185,
+        0.077,
+        1.127,
+        2.512,
+        1.849,
+        0.185,
+        0.249,
+        0.053,
+        0.02,
+        0.058,
+        0.0,
+        0.0,
+        0.0,
+        0.039,
+        0.061,
+        0.788,
+        1.201,
+        0.131,
+        0.193,
+        0.03,
+        0.04,
+        0.062,
+        0.0,
+        0.009,
+        0.0,
+        0.014,
+        0.034,
+        0.204,
+        0.0
     )
+
+    var caloriesValues = listOf(
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        7.1,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        12.1,
+        5.1,
+        73.7,
+        164.2,
+        121.0,
+        12.0,
+        16.4,
+        3.4,
+        1.3,
+        3.8,
+        0.0,
+        0.0,
+        0.0,
+        2.6,
+        3.9,
+        51.6,
+        78.6,
+        8.5,
+        12.7,
+        1.9,
+        2.6,
+        4.1,
+        0.0,
+        0.6,
+        0.0,
+        0.8,
+        2.3,
+        13.3,
+        0.0
+    )
+
+    val values = Values(stepValue, disValue, caloriesValues)
 
     StepsPlots(values = values) {}
 }

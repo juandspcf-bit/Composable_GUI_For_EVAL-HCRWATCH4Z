@@ -199,14 +199,13 @@ class MainActivity : ComponentActivity() {
                     DataHome(
                         bluetoothName = bluetoothName ?: "no name",
                         bluetoothAddress = bluetoothAddress ?: "no address",
-                        this@MainActivity,
-                        dataSteps = dViewModel.dataSteps,
+                        values = dViewModel.values,
                         navMainController = navMainController
                     ) { navLambdaBackBluetoothScanner() }
                 }
 
                 composable(Routes.StepsPlots.route){
-                    StepsPlots(values = dViewModel.dataSteps,){ navLambdaBackDataHome() }
+                    StepsPlots(values = dViewModel.values,){ navLambdaBackDataHome() }
                 }
 
 

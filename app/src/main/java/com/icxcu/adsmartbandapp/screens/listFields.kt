@@ -29,7 +29,7 @@ fun ListFields(
             modifier = Modifier
                 .padding(5.dp),
             title = "Steps",
-            text = values.distanceList.sum().toString(),
+            text = values.stepList.sum().toString(),
             fieldPlural = "Steps",
             resource = R.drawable.walk,
             iconPadding = 20.dp,
