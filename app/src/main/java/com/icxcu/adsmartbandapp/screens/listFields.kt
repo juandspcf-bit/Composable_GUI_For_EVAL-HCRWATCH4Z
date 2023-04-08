@@ -14,11 +14,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.icxcu.adsmartbandapp.R
+import com.icxcu.adsmartbandapp.repositories.Values
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListFields(
-    dataSteps: List<Int>,
+    values: Values,
     navMainController: NavHostController
 ) {
 
@@ -28,7 +29,7 @@ fun ListFields(
             modifier = Modifier
                 .padding(5.dp),
             title = "Steps",
-            text = dataSteps.sum().toString(),
+            text = values.distanceList.sum().toString(),
             fieldPlural = "Steps",
             resource = R.drawable.walk,
             iconPadding = 20.dp,

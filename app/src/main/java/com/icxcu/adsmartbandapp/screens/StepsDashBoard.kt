@@ -205,8 +205,7 @@ fun GenericCard(
                         }
                         .fillMaxSize()
                         .padding(iconPadding),
-
-                    )
+                )
 
 
                 ConstraintLayout(modifier = Modifier

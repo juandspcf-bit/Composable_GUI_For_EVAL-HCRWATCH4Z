@@ -206,7 +206,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 composable(Routes.StepsPlots.route){
-                    StepsPlots(dataSteps = dViewModel.dataSteps,){ navLambdaBackDataHome() }
+                    StepsPlots(values = dViewModel.dataSteps,){ navLambdaBackDataHome() }
                 }
 
 

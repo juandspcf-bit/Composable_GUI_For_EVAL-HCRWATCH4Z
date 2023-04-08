@@ -25,6 +25,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.bottombardemo.screens.Favorites
 import com.icxcu.adsmartbandapp.MainActivity
+import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,7 +34,7 @@ fun DataHome(
     bluetoothName: String,
     bluetoothAddress: String,
     mainActivity: MainActivity?,
-    dataSteps: List<Int>,
+    dataSteps: Values,
     navMainController: NavHostController,
     navLambda: () -> Unit
 ) {
@@ -92,7 +93,7 @@ fun DataHome(
 @Composable
 fun NavigationHost(
     navController: NavHostController,
-    dataSteps: List<Int>,
+    dataSteps: Values,
     navMainController: NavHostController
 ) {
     NavHost(
