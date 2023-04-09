@@ -1,15 +1,10 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields
 
-import android.graphics.Paint
-import android.graphics.Typeface
-import android.graphics.drawable.Icon
-import android.text.TextUtils
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
@@ -17,53 +12,24 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.repositories.Values
-import com.icxcu.adsmartbandapp.ui.theme.rememberChartStyle
-import com.icxcu.adsmartbandapp.ui.theme.rememberMarker
-import com.patrykandpatrick.vico.compose.axis.axisLabelComponent
-import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
-import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
-import com.patrykandpatrick.vico.compose.chart.Chart
-import com.patrykandpatrick.vico.compose.chart.column.columnChart
-import com.patrykandpatrick.vico.compose.component.shapeComponent
-import com.patrykandpatrick.vico.compose.component.textComponent
-import com.patrykandpatrick.vico.compose.dimensions.dimensionsOf
-import com.patrykandpatrick.vico.compose.legend.verticalLegend
-import com.patrykandpatrick.vico.compose.legend.verticalLegendItem
-import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
-import com.patrykandpatrick.vico.compose.style.currentChartStyle
-import com.patrykandpatrick.vico.core.axis.Axis
-import com.patrykandpatrick.vico.core.axis.AxisPosition
-import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
-import com.patrykandpatrick.vico.core.axis.formatter.DecimalFormatAxisValueFormatter
-import com.patrykandpatrick.vico.core.axis.formatter.PercentageFormatAxisValueFormatter
-import com.patrykandpatrick.vico.core.axis.horizontal.HorizontalAxis
-import com.patrykandpatrick.vico.core.chart.decoration.ThresholdLine
-import com.patrykandpatrick.vico.core.component.shape.LineComponent
-import com.patrykandpatrick.vico.core.component.shape.Shapes
-import com.patrykandpatrick.vico.core.entry.ChartEntry
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
-import com.patrykandpatrick.vico.core.legend.Legend
-import java.math.RoundingMode
 import java.time.Duration
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StepsPlots(
+fun PhysicalActivityInfo(
     values: Values,
     navLambda: () -> Unit
 ) {
@@ -112,7 +78,7 @@ fun StepsPlots(
                     .padding(padding)
                     .fillMaxSize(), contentAlignment = Alignment.TopCenter
             ) {
-                ContentPlots(values)
+                PhysicalActivityInfoContent(values)
             }
 
         },
@@ -123,7 +89,7 @@ fun StepsPlots(
 
 
 @Composable
-fun ContentPlots(values: Values) {
+fun PhysicalActivityInfoContent(values: Values) {
     ConstraintLayout(
         modifier = Modifier
             .background(Color(0xff1d2a35))
@@ -158,8 +124,8 @@ fun ContentPlots(values: Values) {
         }
 
         Box(modifier = Modifier
-            .padding(start = 10.dp, end = 10.dp)
-            .clip(shape = RoundedCornerShape(size = 25.dp))
+/*            .padding(start = 10.dp, end = 10.dp)
+            .clip(shape = RoundedCornerShape(size = 25.dp))*/
             .background(
                 Color(0xfff5f5f7)
             )
@@ -175,7 +141,7 @@ fun ContentPlots(values: Values) {
                 1->ComposeChart2(chartEntryModelProducer = ChartEntryModelProducer(distanceEntries))
                 2->ComposeChart2(chartEntryModelProducer = ChartEntryModelProducer(caloriesEntries))
             }*/
-            ComposeChart2(chartEntryModelProducer = ChartEntryModelProducer(stepsEntries))
+            ComposeBartCharts(chartEntryModelProducer = ChartEntryModelProducer(stepsEntries))
         }
 
         Divider(modifier = Modifier
@@ -275,155 +241,6 @@ fun ListSelector(values: Values, modifierTabs: Modifier, modifierList: Modifier)
 
     }
 }
-
-@Composable
-internal fun ComposeChart2(
-    chartEntryModelProducer: ChartEntryModelProducer,
-    modifier: Modifier = Modifier
-) {
-    val thresholdLine = rememberThresholdLine()
-    ProvideChartStyle(rememberChartStyle(chartColors)) {
-        val defaultColumns = currentChartStyle.columnChart.columns
-        Chart(
-            chart = columnChart(
-                spacing = 1.dp,
-                columns = remember(defaultColumns) {
-                    defaultColumns.map { defaultColumn ->
-                        LineComponent(defaultColumn.color, COLUMN_WIDTH_DP, defaultColumn.shape)
-                    }
-                },
-                decorations = remember(thresholdLine) { listOf(thresholdLine) },
-            ),
-            chartModelProducer = chartEntryModelProducer,
-            modifier = modifier.fillMaxSize(),
-
-            startAxis = startAxis(
-                maxLabelCount = 5,
-                //axis = LineComponent(thicknessDp = 90f, color = 0x0000ff),
-                valueFormatter = DecimalFormatAxisValueFormatter("#0", RoundingMode.FLOOR),
-                tickLength = 2.dp
-            ),
-
-            bottomAxis = bottomAxis(
-                sizeConstraint = Axis.SizeConstraint.TextWidth("sssss"),
-                valueFormatter = axisValueFormatter,
-                label = axisLabelComponent(
-                    ellipsize = TextUtils.TruncateAt.START,
-                    textSize = 15.sp,
-                    lineCount = 3,
-                    typeface = Typeface.SERIF,
-                    textAlign = Paint.Align.CENTER
-                ),
-                labelRotationDegrees = -10f
-            ),
-
-            marker = rememberMarker(),
-            legend = rememberLegend(),
-
-
-
-            )
-    }
-}
-
-private val legendItemLabelTextSize = 12.sp
-private val legendItemIconSize = 8.dp
-private val legendItemIconPaddingValue = 10.dp
-private val legendItemSpacing = 4.dp
-private val legendTopPaddingValue = 8.dp
-private val legendPadding = dimensionsOf(top = legendTopPaddingValue)
-@Composable
-private fun rememberLegend() = verticalLegend(
-    items = chartColors.mapIndexed { index, chartColor ->
-        verticalLegendItem(
-            icon = shapeComponent(Shapes.pillShape, chartColor),
-            label = textComponent(
-                color = currentChartStyle.axis.axisLabelColor,
-                textSize = legendItemLabelTextSize,
-                typeface = Typeface.MONOSPACE,
-            ),
-            labelText = "Steps",
-        )
-    },
-    iconSize = legendItemIconSize,
-    iconPadding = legendItemIconPaddingValue,
-    spacing = legendItemSpacing,
-    padding = legendPadding,
-)
-
-@Composable
-private fun rememberThresholdLine(): ThresholdLine {
-    val line = shapeComponent(strokeWidth = thresholdLineThickness, strokeColor = color2)
-    val label = textComponent(
-        color = Color.Black,
-        background = shapeComponent(Shapes.pillShape, color2),
-        padding = thresholdLineLabelPadding,
-        margins = thresholdLineLabelMargins,
-        typeface = Typeface.MONOSPACE,
-    )
-    return remember(line, label) {
-        ThresholdLine(
-            thresholdValue = THRESHOLD_LINE_VALUE,
-            lineComponent = line,
-            labelComponent = label
-        )
-    }
-}
-
-
-class EntryHour(
-    val duration: Duration,
-    override val x: Float,
-    override val y: Float,
-) : ChartEntry {
-    override fun withY(y: Float) = EntryHour(duration, x, y)
-}
-
-
-val axisValueFormatter = AxisValueFormatter<AxisPosition.Horizontal.Bottom> { value, chartValues ->
-    (chartValues.chartEntryModel.entries.first().getOrNull(value.toInt()) as? EntryHour)
-        ?.x
-        ?.run {
-            if (toInt() % 6L == 0L) {
-                val hour = "${Duration.ofHours(0).plusMinutes(30L * toLong()).toHours()}"
-                val time = hour + if ((toInt() + 1) % 2 == 0) {
-                    ":30"
-                } else {
-                    ":00"
-                }
-                time
-            } else {
-                " "
-            }
-        }
-        .orEmpty()
-}
-
-
-private const val COLOR_1_CODE = 0xffff5500
-private const val COLOR_2_CODE = 0xffd3d826
-private const val PERSISTENT_MARKER_X = 1000f
-
-private const val COLUMN_WIDTH_DP = 5f
-private const val THRESHOLD_LINE_VALUE = 13f
-private const val START_AXIS_LABEL_COUNT = 5
-private const val BOTTOM_AXIS_TICK_OFFSET = 0
-private const val BOTTOM_AXIS_TICK_SPACING = 1
-
-private val color1 = Color(COLOR_1_CODE)
-private val color2 = Color(COLOR_2_CODE)
-private val chartColors = listOf(color1)
-private val thresholdLineLabelMarginValue = 4.dp
-private val thresholdLineLabelHorizontalPaddingValue = 8.dp
-private val thresholdLineLabelVerticalPaddingValue = 2.dp
-private val thresholdLineThickness = 2.dp
-private val thresholdLineLabelPadding =
-    dimensionsOf(thresholdLineLabelHorizontalPaddingValue, thresholdLineLabelVerticalPaddingValue)
-private val thresholdLineLabelMargins = dimensionsOf(thresholdLineLabelMarginValue)
-private val startAxisValueFormatter =
-    PercentageFormatAxisValueFormatter<AxisPosition.Vertical.Start>()
-private val bottomAxisTickPosition =
-    HorizontalAxis.TickPosition.Center(BOTTOM_AXIS_TICK_OFFSET, BOTTOM_AXIS_TICK_SPACING)
 
 
 @Composable
@@ -674,7 +491,7 @@ fun StepsPlotsPreview() {
 
     val values = Values(stepValue, disValue, caloriesValues)
 
-    StepsPlots(values = values) {}
+    PhysicalActivityInfo(values = values) {}
 }
 
 

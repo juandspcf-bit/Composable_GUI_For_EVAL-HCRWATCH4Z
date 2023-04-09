@@ -25,7 +25,7 @@ import androidx.navigation.navArgument
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothLEManagerImp
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
 import com.icxcu.adsmartbandapp.screens.*
-import com.icxcu.adsmartbandapp.screens.plotsFields.StepsPlots
+import com.icxcu.adsmartbandapp.screens.plotsFields.PhysicalActivityInfo
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
 import com.icxcu.adsmartbandapp.viewModels.*
 
@@ -205,7 +205,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 composable(Routes.StepsPlots.route){
-                    StepsPlots(values = dViewModel.values,){ navLambdaBackDataHome() }
+                    PhysicalActivityInfo(values = dViewModel.values,){ navLambdaBackDataHome() }
                 }
 
 
