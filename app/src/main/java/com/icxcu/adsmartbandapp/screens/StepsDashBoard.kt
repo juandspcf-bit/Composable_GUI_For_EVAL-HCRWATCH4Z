@@ -3,12 +3,14 @@ package com.icxcu.adsmartbandapp.screens
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -19,104 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.navigation.compose.rememberNavController
 import com.icxcu.adsmartbandapp.R
-
-@Composable
-fun StepsDashBoard() {
-    ConstraintLayout(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.DarkGray)
-            .height(400.dp)
-    ) {
-        val (stepsCard, distanceCaloriesValues) = createRefs()
-        val guideV5 = createGuidelineFromEnd(fraction = .5f)
-
-        GenericCard(
-            modifier = Modifier
-                .constrainAs(stepsCard) {
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                    linkTo(
-                        start = parent.start,
-                        end = guideV5,
-                    )
-                    height = Dimension.fillToConstraints
-                    width = Dimension.fillToConstraints
-                }
-                .padding(5.dp),
-            title = "Steps",
-            text = "10000",
-            fieldPlural = "Steps",
-            resource = R.drawable.baseline_directions_walk_24,
-            iconPadding = 20.dp
-        )
-
-        ConstraintLayout(
-            modifier = Modifier
-                .constrainAs(distanceCaloriesValues) {
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                    linkTo(
-                        start = guideV5,
-                        end = parent.end,
-                    )
-                    height = Dimension.fillToConstraints
-                    width = Dimension.fillToConstraints
-                }
-                .fillMaxWidth()
-                .background(Color.DarkGray)
-        ) {
-            val (distanceCard, caloriesCard) = createRefs()
-            val guideDistanceCaloriesH50 = createGuidelineFromBottom(fraction = 0.5f)
-
-            GenericCard(
-                modifier = Modifier
-                    .constrainAs(distanceCard) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(guideDistanceCaloriesH50)
-                        linkTo(
-                            start = parent.start,
-                            end = parent.end,
-                        )
-                        height = Dimension.fillToConstraints
-                        width = Dimension.fillToConstraints
-                    }
-                    .padding(5.dp),
-                title = "Distance",
-                text = "10000",
-                fieldPlural = "Km",
-                resource = R.drawable.baseline_add_road_24,
-                iconPadding = 20.dp
-            )
-
-
-            GenericCard(
-                modifier = Modifier
-                    .constrainAs(caloriesCard) {
-                        top.linkTo(guideDistanceCaloriesH50)
-                        bottom.linkTo(parent.bottom)
-                        linkTo(
-                            start = parent.start,
-                            end = parent.end,
-                        )
-                        height = Dimension.fillToConstraints
-                        width = Dimension.fillToConstraints
-                    }
-                    .padding(5.dp),
-                title = "Calories",
-                text = "10000",
-                fieldPlural = "KCal",
-                resource = R.drawable.baseline_local_fire_department_24,
-                iconPadding = 20.dp
-            )
-
-
-        }
-
-
-    }
-}
+import com.icxcu.adsmartbandapp.screens.additionalWidgets.ArcCompose
 
 @Composable
 fun GenericCard(
@@ -129,7 +36,7 @@ fun GenericCard(
     backgroundCard: Color = Color.DarkGray,
     verticalChainData: Boolean = true,
     isWithIconTitle: Boolean = false,
-    resourceIconTitle: Int = R.drawable.ic_launcher_foreground,
+    resourceIconTitle: @Composable () -> Unit ={Spacer(modifier = Modifier.size(0.dp))},
     size: Dp = 200.dp
 ) {
     Card(
@@ -147,7 +54,7 @@ fun GenericCard(
             val (iconValuesSteps, valuesTitle) = createRefs()
             val guideH50 = createGuidelineFromBottom(fraction = 0.5f)
 
-            ConstraintLayout(modifier = Modifier
+            /*ConstraintLayout(modifier = Modifier
                 .constrainAs(valuesTitle) {
                     top.linkTo(parent.top)
                     bottom.linkTo(guideH50)
@@ -156,22 +63,69 @@ fun GenericCard(
                         end = parent.end,
 
                         )
-                    height = Dimension.wrapContent
-                    width = Dimension.wrapContent
+                    height = Dimension.matchParent
+                    width = Dimension.matchParent
                 }
-                .padding(10.dp)) {
-                val (titleSub, unit) = createRefs()
-                createVerticalChain(titleSub, unit, chainStyle = ChainStyle.SpreadInside)
+                .fillMaxSize().padding(10.dp)) {
 
-/**/            Text(
-                text = title, modifier = Modifier
-                    .constrainAs(titleSub) { centerHorizontallyTo(parent) },
+                val (titleSub, pointer) = createRefs()
+                createVerticalChain(titleSub, pointer, chainStyle = ChainStyle.Spread)
+
+
+
+
+
+
+            }*/
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                .constrainAs(valuesTitle) {
+                    top.linkTo(parent.top)
+                    bottom.linkTo(guideH50)
+                    linkTo(
+                        start = parent.start,
+                        end = parent.end,
+
+                        )
+                    height = Dimension.fillToConstraints
+                    width = Dimension.fillToConstraints
+                }) {
+
+                Text(
+                    modifier=Modifier.padding(top =0.dp, bottom = 0.dp),
+                text = title,
+                   // modifier = Modifier
+                    //.constrainAs(titleSub) { centerHorizontallyTo(parent) }
+                    //.padding(bottom = 0.dp),
                 color = Color.White,
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.h5
-            )
-            }
+                style = MaterialTheme.typography.h5)
 
+
+
+                if (isWithIconTitle){
+                    Text(
+                        modifier=Modifier.padding(top =0.dp, bottom = 0.dp),
+                        text = title,
+                        // modifier = Modifier
+                        //.constrainAs(titleSub) { centerHorizontallyTo(parent) }
+                        //.padding(bottom = 0.dp),
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.h5)
+
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                        //.constrainAs(pointer) { centerHorizontallyTo(parent) },
+                    ){
+                        resourceIconTitle()
+                    }
+                }
+
+            }
             ConstraintLayout(
                 modifier = Modifier
                     .constrainAs(iconValuesSteps) {
@@ -238,11 +192,14 @@ fun GenericCard(
                                 } else {
                                     centerVerticallyTo(parent)
                                 }
-                            }.padding(if (verticalChainData) {
-                                0.dp
-                            } else {
-                                2.dp
-                            }),
+                            }
+                            .padding(
+                                if (verticalChainData) {
+                                    0.dp
+                                } else {
+                                    2.dp
+                                }
+                            ),
                         text = text,
                         color = Color.White,
                         textAlign = TextAlign.Center,
@@ -257,11 +214,14 @@ fun GenericCard(
                                 } else {
                                     centerVerticallyTo(parent)
                                 }
-                            }.padding(if (verticalChainData) {
-                                0.dp
-                            } else {
-                                2.dp
-                            }),
+                            }
+                            .padding(
+                                if (verticalChainData) {
+                                    0.dp
+                                } else {
+                                    2.dp
+                                }
+                            ),
                         text = fieldPlural,
                         color = Color.White,
                         textAlign = TextAlign.Center,
@@ -275,9 +235,12 @@ fun GenericCard(
 
 
         }
+
+
     }
 
 }
+
 
 
 data class GenericCardData(
@@ -290,14 +253,49 @@ data class GenericCardData(
     var iconPadding: Dp = 0.dp,
     var backgroundCard: Color = Color.DarkGray,
     var isWithIconTitle: Boolean = false,
-    var resourceIconTitle: Int = R.drawable.ic_launcher_foreground,
+    var resourceIconTitle:  @Composable () -> Unit ={Spacer(modifier = Modifier.size(0.dp))},
     var size: Dp = 256.dp,
     var verticalChainData: Boolean = true,
-    var callBack:()->Unit={}
+    var callBack: () -> Unit = {}
 )
 
 @Preview(showBackground = true)
 @Composable
 fun StepsDashBoardPreview() {
-    StepsDashBoard()
+    var navController=rememberNavController()
+    var it = GenericCardData(
+        modifier = Modifier
+            .padding(5.dp),
+        title = "Steps",
+        text = "20000",
+        fieldPlural = "Steps",
+        resource = R.drawable.walk,
+        iconPadding = 20.dp,
+        size = 400.dp,
+        isWithIconTitle = true,
+        resourceIconTitle = { ArcCompose(
+            modifier = Modifier.fillMaxWidth(),
+            stepsMade = 7000,
+            stepsGoal = 10000,
+            radius = 70.dp
+        ) },
+        callBack = { navController.popBackStack() }
+    )
+
+    GenericCard(
+        modifier = it.modifier.clickable {
+            it.callBack()
+        },
+        title = it.title,
+        text = it.text,
+        fieldPlural = it.fieldPlural,
+        resource = it.resource,
+        iconPadding = it.iconPadding,
+        size = it.size,
+        verticalChainData = it.verticalChainData,
+        isWithIconTitle = it.isWithIconTitle,
+        resourceIconTitle = it.resourceIconTitle
+
+        )
+
 }

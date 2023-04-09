@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.repositories.Values
+import com.icxcu.adsmartbandapp.screens.additionalWidgets.ArcCompose
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -33,7 +34,12 @@ fun ListFields(
             fieldPlural = "Steps",
             resource = R.drawable.walk,
             iconPadding = 20.dp,
-            size = 400.dp,
+            size = 360.dp,
+            isWithIconTitle = true,
+            resourceIconTitle = { ArcCompose(stepsMade =9000,
+                stepsGoal = 10000,
+                sizeContainer = 110.dp,
+                radius = 60.dp)},
             callBack = { navMainController.navigate(Routes.StepsPlots.route) }
         )
     )
@@ -46,7 +52,7 @@ fun ListFields(
             fieldPlural = "Km",
             resource = R.drawable.measure_distance,
             iconPadding = 20.dp,
-            size = 195.dp
+            size = 180.dp
         )
     )
 
@@ -59,7 +65,7 @@ fun ListFields(
             fieldPlural = "KCal",
             resource = R.drawable.calories,
             iconPadding = 20.dp,
-            size = 195.dp
+            size = 180.dp
         )
     )
 
@@ -125,6 +131,8 @@ fun ListFields(
                 iconPadding = it.iconPadding,
                 size = it.size,
                 verticalChainData = it.verticalChainData,
+                isWithIconTitle = it.isWithIconTitle,
+                resourceIconTitle = it.resourceIconTitle
 
                 )
         }
