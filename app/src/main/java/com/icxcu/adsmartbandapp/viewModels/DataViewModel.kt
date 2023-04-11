@@ -13,7 +13,8 @@ import kotlinx.coroutines.launch
 class DataViewModel(var application: Application) : ViewModel() {
     var values by mutableStateOf(Values(MutableList(48){0}.toList(),
         MutableList(48){0.0}.toList(),
-        MutableList(48){0.0}.toList()))
+        MutableList(48){0.0}.toList(),
+        MutableList(48){ listOf(0.0, 0.0) }.toList()))
     private var mockRepository: MockRepository = MockRepository()
 
 

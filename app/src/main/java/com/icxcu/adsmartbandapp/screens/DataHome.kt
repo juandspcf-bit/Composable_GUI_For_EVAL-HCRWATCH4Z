@@ -27,7 +27,7 @@ import com.icxcu.adsmartbandapp.repositories.Values
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DataHome(
+fun DashBoard(
     bluetoothName: String,
     bluetoothAddress: String,
     values: Values,
@@ -72,7 +72,7 @@ fun DataHome(
                     .padding(padding)
                     .fillMaxSize()
             ) {
-                NavigationHost(navController = navController, dataSteps = values, navMainController)
+                NavigationHost(navController = navController, values = values, navMainController)
             }
 
         },
@@ -87,7 +87,7 @@ fun DataHome(
 @Composable
 fun NavigationHost(
     navController: NavHostController,
-    dataSteps: Values,
+    values: Values,
     navMainController: NavHostController
 ) {
     NavHost(
@@ -95,7 +95,7 @@ fun NavigationHost(
         startDestination = NavRoutes.Fields.route,
     ) {
         composable(NavRoutes.Fields.route) {
-            ListFields(dataSteps, navMainController)
+            ListFields(values, navMainController)
         }
         composable(NavRoutes.CheckHealth.route) {
             TestingHealthScreen()
@@ -152,7 +152,7 @@ fun BottomNavigationBar(navController: NavHostController) {
 
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
+fun DashBoardPreview() {
     val stepValue = listOf(
         0,
         0,
@@ -305,8 +305,8 @@ fun DefaultPreview() {
         0.0
     )
 
-    val values = Values(stepValue, disValue, caloriesValues)
-    DataHome(
+    val values = Values(stepValue, disValue, caloriesValues, listOf())
+    DashBoard(
         bluetoothName = "Device Fake",
         bluetoothAddress="000000",
         values = values,

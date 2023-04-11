@@ -3,7 +3,6 @@ package com.icxcu.adsmartbandapp.repositories
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -18,7 +17,7 @@ class MockRepository {
     fun requestStepsData() {
         CoroutineScope(Dispatchers.Default).launch {
 
-            val stepValue = listOf(
+            val stepValues = listOf(
                 0,
                 0,
                 0,
@@ -69,7 +68,7 @@ class MockRepository {
                 0
             )
 
-            var disValue = listOf(
+            var distanceValues = listOf(
                 0.0,
                 0.0,
                 0.0,
@@ -170,7 +169,110 @@ class MockRepository {
                 0.0
             )
 
-            val values = Values(stepValue, disValue, caloriesValues)
+            val bloodPressureHighValues = listOf(116.6666667,
+            120.3333333,
+            120.1666667,
+            121.6666667,
+            121.1666667,
+            120.0,
+            119.0,
+            120.6666667,
+            122.5,
+            120.3333333,
+            118.0,
+            119.8333333,
+            120.3333333,
+            116.8333333,
+            119.1666667,
+            121.5,
+            120.8333333,
+            122.0,
+            120.6666667,
+            121.8333333,
+            119.1666667,
+            120.5,
+            119.6666667,
+            122.3333333,
+            120.3333333,
+            119.1666667,
+            123.8333333,
+            121.5,
+            121.8333333,
+            121.6666667,
+            118.8333333,
+            120.3333333,
+            122.8333333,
+            123.0,
+            120.0,
+            119.0,
+            120.0,
+            123.0,
+            124.3333333,
+            120.0,
+            117.8333333,
+            122.3333333,
+            121.0,
+            123.0,
+            118.8333333,
+            125.0,
+            119.4,
+            0.0)
+
+            val bloodPressureLowValues = listOf(81.0,
+            84.0,
+            82.33333333,
+            78.0,
+            81.66666667,
+            81.33333333,
+            79.33333333,
+            80.5,
+            82.66666667,
+            79.33333333,
+            80.66666667,
+            78.16666667,
+            82.83333333,
+            78.83333333,
+            83.16666667,
+            78.83333333,
+            80.16666667,
+            80.0,
+            80.16666667,
+            79.0,
+            79.5,
+            79.66666667,
+            78.83333333,
+            82.16666667,
+            82.0,
+            82.0,
+            81.83333333,
+            80.83333333,
+            75.66666667,
+            82.33333333,
+            80.33333333,
+            78.5,
+            78.66666667,
+            79.66666667,
+            80.5,
+            82.33333333,
+            79.83333333,
+            78.16666667,
+            79.33333333,
+            84.66666667,
+            81.0,
+            81.16666667,
+            80.83333333,
+            80.0,
+            84.0,
+            84.66666667,
+            81.8,
+            0.0)
+
+            val bloodPressureValues = bloodPressureHighValues.zip(bloodPressureLowValues) { high, low ->
+                listOf(high, low)
+            }.toList()
+
+
+            val values = Values(stepValues, distanceValues, caloriesValues, bloodPressureValues)
             _sharedStepsFlow.emit(values)
         }
     }
@@ -180,5 +282,6 @@ class MockRepository {
 data class Values(
     var stepList: List<Int>,
     var distanceList: List<Double>,
-    var caloriesList: List<Double>
+    var caloriesList: List<Double>,
+    var bloodPressureValuesList: List<List<Double>>
 )

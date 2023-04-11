@@ -26,7 +26,7 @@ import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.screens.additionalWidgets.ArcCompose
 
 @Composable
-fun GenericCard(
+fun DashBoardCard(
     modifier: Modifier = Modifier,
     title: String = "Field",
     text: String = "value",
@@ -36,8 +36,9 @@ fun GenericCard(
     backgroundCard: Color = Color.DarkGray,
     verticalChainData: Boolean = true,
     isWithIconTitle: Boolean = false,
-    resourceIconTitle: @Composable () -> Unit ={Spacer(modifier = Modifier.size(0.dp))},
-    size: Dp = 200.dp
+    resourceIconTitle: @Composable () -> Unit = { Spacer(modifier = Modifier.size(0.dp)) },
+    size: Dp = 200.dp,
+    guidelineFromBottomFraction:Float =0.5f
 ) {
     Card(
         modifier = modifier.height(size),
@@ -46,86 +47,68 @@ fun GenericCard(
         elevation = 4.dp,
 
         ) {
+
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(backgroundCard)
         ) {
             val (iconValuesSteps, valuesTitle) = createRefs()
-            val guideH50 = createGuidelineFromBottom(fraction = 0.5f)
+            val guideH50 = createGuidelineFromBottom(fraction =guidelineFromBottomFraction)
 
-            /*ConstraintLayout(modifier = Modifier
-                .constrainAs(valuesTitle) {
-                    top.linkTo(parent.top)
-                    bottom.linkTo(guideH50)
-                    linkTo(
-                        start = parent.start,
-                        end = parent.end,
-
-                        )
-                    height = Dimension.matchParent
-                    width = Dimension.matchParent
-                }
-                .fillMaxSize().padding(10.dp)) {
-
-                val (titleSub, pointer) = createRefs()
-                createVerticalChain(titleSub, pointer, chainStyle = ChainStyle.Spread)
-
-
-
-
-
-
-            }*/
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier
-                .constrainAs(valuesTitle) {
-                    top.linkTo(parent.top)
-                    bottom.linkTo(guideH50)
-                    linkTo(
-                        start = parent.start,
-                        end = parent.end,
+                    .constrainAs(valuesTitle) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(guideH50)
+                        linkTo(
+                            start = parent.start,
+                            end = parent.end,
 
-                        )
-                    height = Dimension.fillToConstraints
-                    width = Dimension.fillToConstraints
-                }) {
+                            )
+                        height = Dimension.fillToConstraints
+                        width = Dimension.fillToConstraints
+                    }) {
 
                 Text(
-                    modifier=Modifier.padding(top =0.dp, bottom = 0.dp),
-                text = title,
-                   // modifier = Modifier
+                    modifier = Modifier.padding(top = 0.dp, bottom = 0.dp),
+                    text = title,
+                    // modifier = Modifier
                     //.constrainAs(titleSub) { centerHorizontallyTo(parent) }
                     //.padding(bottom = 0.dp),
-                color = Color.White,
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.h5)
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.h5
+                )
 
 
 
-                if (isWithIconTitle){
+                if (isWithIconTitle) {
                     Text(
-                        modifier=Modifier.padding(top =0.dp, bottom = 0.dp),
+                        modifier = Modifier.padding(top = 0.dp, bottom = 0.dp),
                         text = title,
                         // modifier = Modifier
                         //.constrainAs(titleSub) { centerHorizontallyTo(parent) }
                         //.padding(bottom = 0.dp),
                         color = Color.White,
                         textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.h5)
+                        style = MaterialTheme.typography.h5
+                    )
 
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
                         //.constrainAs(pointer) { centerHorizontallyTo(parent) },
-                    ){
+                    ) {
                         resourceIconTitle()
                     }
                 }
 
             }
+
+
             ConstraintLayout(
                 modifier = Modifier
                     .constrainAs(iconValuesSteps) {
@@ -243,7 +226,7 @@ fun GenericCard(
 
 
 
-data class GenericCardData(
+data class DashBoardCardData(
     var modifier: Modifier = Modifier,
     var title: String = "Field",
     var text: String = "value",
@@ -253,17 +236,18 @@ data class GenericCardData(
     var iconPadding: Dp = 0.dp,
     var backgroundCard: Color = Color.DarkGray,
     var isWithIconTitle: Boolean = false,
-    var resourceIconTitle:  @Composable () -> Unit ={Spacer(modifier = Modifier.size(0.dp))},
+    var resourceIconTitle: @Composable () -> Unit = { Spacer(modifier = Modifier.size(0.dp)) },
     var size: Dp = 256.dp,
     var verticalChainData: Boolean = true,
-    var callBack: () -> Unit = {}
+    var callBack: () -> Unit = {},
+    var guidelineFromBottomFraction:Float =0.5f
 )
 
 @Preview(showBackground = true)
 @Composable
-fun StepsDashBoardPreview() {
-    var navController=rememberNavController()
-    var it = GenericCardData(
+fun DashBoardCardPreview() {
+    var navController = rememberNavController()
+    var it = DashBoardCardData(
         modifier = Modifier
             .padding(5.dp),
         title = "Steps",
@@ -273,16 +257,18 @@ fun StepsDashBoardPreview() {
         iconPadding = 20.dp,
         size = 400.dp,
         isWithIconTitle = true,
-        resourceIconTitle = { ArcCompose(
-            modifier = Modifier.fillMaxWidth(),
-            stepsMade = 7000,
-            stepsGoal = 10000,
-            radius = 70.dp
-        ) },
+        resourceIconTitle = {
+            ArcCompose(
+                modifier = Modifier.fillMaxWidth(),
+                stepsMade = 7000,
+                stepsGoal = 10000,
+                radius = 70.dp
+            )
+        },
         callBack = { navController.popBackStack() }
     )
 
-    GenericCard(
+    DashBoardCard(
         modifier = it.modifier.clickable {
             it.callBack()
         },
@@ -296,6 +282,6 @@ fun StepsDashBoardPreview() {
         isWithIconTitle = it.isWithIconTitle,
         resourceIconTitle = it.resourceIconTitle
 
-        )
+    )
 
 }

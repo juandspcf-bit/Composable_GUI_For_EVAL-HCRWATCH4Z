@@ -489,7 +489,7 @@ fun StepsPlotsPreview() {
         0.0
     )
 
-    val values = Values(stepValue, disValue, caloriesValues)
+    val values = Values(stepValue, disValue, caloriesValues, listOf())
 
     PhysicalActivityInfo(values = values) {}
 }

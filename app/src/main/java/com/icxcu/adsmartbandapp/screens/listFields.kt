@@ -24,88 +24,92 @@ fun ListFields(
     navMainController: NavHostController
 ) {
 
-    val listOf = mutableListOf<GenericCardData>()
+    val listOf = mutableListOf<DashBoardCardData>()
     listOf.add(
-        GenericCardData(
+        DashBoardCardData(
             modifier = Modifier
                 .padding(5.dp),
             title = "Steps",
             text = values.stepList.sum().toString(),
             fieldPlural = "Steps",
             resource = R.drawable.walk,
-            iconPadding = 20.dp,
-            size = 360.dp,
+            iconPadding = 5.dp,
+            size = 280.dp,
             isWithIconTitle = true,
             resourceIconTitle = { ArcCompose(stepsMade =9000,
                 stepsGoal = 10000,
                 sizeContainer = 110.dp,
                 radius = 60.dp)},
-            callBack = { navMainController.navigate(Routes.StepsPlots.route) }
+            callBack = { navMainController.navigate(Routes.StepsPlots.route) },
+            guidelineFromBottomFraction =0.35f
         )
     )
     listOf.add(
-        GenericCardData(
+        DashBoardCardData(
             modifier = Modifier
                 .padding(5.dp),
             title = "Distance",
             text = "10000",
             fieldPlural = "Km",
             resource = R.drawable.measure_distance,
-            iconPadding = 20.dp,
-            size = 180.dp
+            iconPadding = 5.dp,
+            size = 140.dp
         )
     )
 
     listOf.add(
-        GenericCardData(
+        DashBoardCardData(
             modifier = Modifier
                 .padding(5.dp),
             title = "Calories",
             text = "10000",
             fieldPlural = "KCal",
             resource = R.drawable.calories,
-            iconPadding = 20.dp,
-            size = 180.dp
+            iconPadding = 5.dp,
+            size = 140.dp
         )
     )
+    val bPHighMaxValue = values.bloodPressureValuesList.maxOfOrNull { it[0] }
+    val stringValueBP= String.format("%.1f", bPHighMaxValue)
 
     listOf.add(
-        GenericCardData(
+        DashBoardCardData(
             modifier = Modifier
                 .padding(5.dp),
             title = "Blood Pressure",
-            text = "130",
+            text = stringValueBP,
             fieldPlural = "mmHg",
             resource = R.drawable.blood_pressure_gauge,
-            iconPadding = 20.dp,
-            size = 200.dp
+            iconPadding = 5.dp,
+            size = 140.dp,
+            callBack = { navMainController.navigate(Routes.BloodPressurePlots.route) },
         )
     )
 
     listOf.add(
-        GenericCardData(
+        DashBoardCardData(
             modifier = Modifier
                 .padding(5.dp),
             title = "SpO2",
             text = "95",
             fieldPlural = "%",
             resource = R.drawable.oxygen_saturation,
-            iconPadding = 20.dp,
-            size = 200.dp,
+            iconPadding = 5.dp,
+            size = 140.dp,
             verticalChainData = false
         )
     )
 
     listOf.add(
-        GenericCardData(
+        DashBoardCardData(
             modifier = Modifier
                 .padding(5.dp),
             title = "Temperature",
             text = "30",
             fieldPlural = "°C",
             resource = R.drawable.thermometer,
-            iconPadding = 20.dp,
-            size = 200.dp,
+            iconPadding = 5.dp,
+            size =140.dp,
             verticalChainData = false
         )
     )
@@ -120,7 +124,7 @@ fun ListFields(
         verticalItemSpacing = 0.dp
     ) {
         items(listOf) {
-            GenericCard(
+            DashBoardCard(
                 modifier = it.modifier.clickable {
                     it.callBack()
                 },
@@ -132,8 +136,8 @@ fun ListFields(
                 size = it.size,
                 verticalChainData = it.verticalChainData,
                 isWithIconTitle = it.isWithIconTitle,
-                resourceIconTitle = it.resourceIconTitle
-
+                resourceIconTitle = it.resourceIconTitle,
+                guidelineFromBottomFraction = it.guidelineFromBottomFraction
                 )
         }
     }

@@ -25,6 +25,7 @@ import androidx.navigation.navArgument
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothLEManagerImp
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
 import com.icxcu.adsmartbandapp.screens.*
+import com.icxcu.adsmartbandapp.screens.plotsFields.BloodPressureInfo
 import com.icxcu.adsmartbandapp.screens.plotsFields.PhysicalActivityInfo
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
 import com.icxcu.adsmartbandapp.viewModels.*
@@ -196,7 +197,7 @@ class MainActivity : ComponentActivity() {
                     val bluetoothName = backStackEntry.arguments?.getString("bluetoothName")
                     val bluetoothAddress =
                         backStackEntry.arguments?.getString("bluetoothAddress")
-                    DataHome(
+                    DashBoard(
                         bluetoothName = bluetoothName ?: "no name",
                         bluetoothAddress = bluetoothAddress ?: "no address",
                         values = dViewModel.values,
@@ -206,6 +207,10 @@ class MainActivity : ComponentActivity() {
 
                 composable(Routes.StepsPlots.route){
                     PhysicalActivityInfo(values = dViewModel.values,){ navLambdaBackDataHome() }
+                }
+
+                composable(Routes.BloodPressurePlots.route){
+                    BloodPressureInfo(values = dViewModel.values,){ navLambdaBackDataHome() }
                 }
 
 
