@@ -1,5 +1,6 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -25,6 +26,7 @@ import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
+import kotlinx.coroutines.launch
 import java.time.Duration
 
 
@@ -34,6 +36,13 @@ fun PhysicalActivityInfo(
     values: Values,
     navLambda: () -> Unit
 ) {
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+
+    var  modifyShowDialog:(Boolean)->Unit = { value->
+        showDialog=value
+    }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
         topBar = {
@@ -62,7 +71,7 @@ fun PhysicalActivityInfo(
                 scrollBehavior = scrollBehavior,
                 actions = {
                     IconButton(onClick = {
-
+                        showDialog=!showDialog
                     }) {
                         Icon(
                             imageVector = Icons.Filled.DateRange,
@@ -74,12 +83,18 @@ fun PhysicalActivityInfo(
             )
         },
         content = { padding ->
+
+
             Box(
                 Modifier
                     .padding(padding)
                     .fillMaxSize(), contentAlignment = Alignment.TopCenter
             ) {
                 PhysicalActivityInfoContent(values)
+            }
+
+            if(showDialog){
+                DatePickerDialogSample(modifyShowDialog)
             }
 
         },
@@ -332,6 +347,56 @@ fun RowSteps(
     }
 
 }
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DatePickerDialogSample(modifyShowDialog:(Boolean)->Unit) {
+    // Decoupled snackbar host state from scaffold state for demo purposes.
+    val snackState = remember { SnackbarHostState() }
+    val snackScope = rememberCoroutineScope()
+    SnackbarHost(hostState = snackState, Modifier)
+    val openDialog = remember { mutableStateOf(true) }
+// TODO demo how to read the selected date from the state.
+    if (openDialog.value) {
+        val datePickerState = rememberDatePickerState()
+        val confirmEnabled = remember {derivedStateOf { datePickerState.selectedDateMillis != null }}
+        DatePickerDialog(
+            onDismissRequest = {
+                openDialog.value = false
+                modifyShowDialog(false)
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        openDialog.value = false
+                        Log.d("Dialog", "DatePickerDialogSample: ${datePickerState.selectedDateMillis}")
+
+                        modifyShowDialog(false)
+                    },
+                    enabled = confirmEnabled.value
+                ) {
+                    Text("OK")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        openDialog.value = false
+                        modifyShowDialog(false)
+                    }
+                ) {
+                    Text("Cancel")
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
+}
+
+
+
 
 
 @Preview(showBackground = true, showSystemUi = true)
