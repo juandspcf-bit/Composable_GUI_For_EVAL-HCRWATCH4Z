@@ -140,8 +140,6 @@ fun PhysicalActivityInfoContent(values: Values) {
         }
 
         Box(modifier = Modifier
-/*            .padding(start = 10.dp, end = 10.dp)
-            .clip(shape = RoundedCornerShape(size = 25.dp))*/
             .background(
                 Color(0xfff5f5f7)
             )

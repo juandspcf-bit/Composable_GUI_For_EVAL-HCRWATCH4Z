@@ -3,6 +3,8 @@ package com.icxcu.adsmartbandapp.screens.plotsFields
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.text.TextUtils
+import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -25,6 +27,7 @@ import com.patrykandpatrick.vico.compose.legend.verticalLegend
 import com.patrykandpatrick.vico.compose.legend.verticalLegendItem
 import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
 import com.patrykandpatrick.vico.compose.style.currentChartStyle
+import com.patrykandpatrick.vico.core.Animation
 import com.patrykandpatrick.vico.core.axis.Axis
 import com.patrykandpatrick.vico.core.axis.AxisPosition
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
@@ -87,7 +90,9 @@ internal fun ComposeBartCharts(
 
             marker = rememberMarker(),
             legend = rememberLegend(),
-
+            diffAnimationSpec = tween(
+                durationMillis = 0,
+            )
 
 
             )
