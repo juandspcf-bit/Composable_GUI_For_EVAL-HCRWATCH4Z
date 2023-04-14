@@ -1,6 +1,7 @@
 package com.icxcu.adsmartbandapp.screens
 
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -24,6 +25,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.bottombardemo.screens.Favorites
 import com.icxcu.adsmartbandapp.data.MockData
+import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.repositories.Values
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,9 +35,9 @@ fun DashBoard(
     bluetoothAddress: String,
     values: Values,
     navMainController: NavHostController,
+
     navLambda: () -> Unit
 ) {
-
 
     val navController = rememberNavController()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()

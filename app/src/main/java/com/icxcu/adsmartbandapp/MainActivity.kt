@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -24,11 +25,14 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothLEManagerImp
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
+import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.screens.*
 import com.icxcu.adsmartbandapp.screens.plotsFields.BloodPressureInfo
 import com.icxcu.adsmartbandapp.screens.plotsFields.PhysicalActivityInfo
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
 import com.icxcu.adsmartbandapp.viewModels.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 const val REQUEST_ENABLE_BT: Int = 500
 
@@ -38,6 +42,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var mViewModel: BluetoothScannerViewModel
     private lateinit var pViewModel: PermissionsViewModel
     private lateinit var startDestination:String
+
 
     private val permissionsRequired = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         listOf(
@@ -83,6 +88,7 @@ class MainActivity : ComponentActivity() {
                         DataViewModelFactory(LocalContext.current.applicationContext
                                 as Application))
 
+
                 }
 
                 //SetPermissions(this@MainActivity, permissionsRequired)
@@ -120,7 +126,10 @@ class MainActivity : ComponentActivity() {
 
 
     @Composable
-    private fun MainContent(){
+    private fun MainContent( ){
+
+        Log.d("TAG", "MainContent: ")
+
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colors.background
@@ -197,6 +206,21 @@ class MainActivity : ComponentActivity() {
                     val bluetoothName = backStackEntry.arguments?.getString("bluetoothName")
                     val bluetoothAddress =
                         backStackEntry.arguments?.getString("bluetoothAddress")
+                    dViewModel.macAddress=bluetoothAddress ?: "no address"
+                    dViewModel.name=bluetoothName ?: "no name"
+
+                    LaunchedEffect(key1 = true){
+                        val physicalActivity = PhysicalActivity().apply {
+                            macAddress=dViewModel.macAddress
+                            val date = Date()
+                            val formattedDate =  SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                            dateData= formattedDate.format(date)
+                            data= randomData()
+                        }
+                        dViewModel.insertPhysicalActivityData(physicalActivity)
+                    }
+
+
                     DashBoard(
                         bluetoothName = bluetoothName ?: "no name",
                         bluetoothAddress = bluetoothAddress ?: "no address",
@@ -206,7 +230,13 @@ class MainActivity : ComponentActivity() {
                 }
 
                 composable(Routes.StepsPlots.route){
-                    PhysicalActivityInfo(values = dViewModel.values,){ navLambdaBackDataHome() }
+                    val todayDate = Date()
+                    val formattedDate =  SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    val todayDateData= formattedDate.format(todayDate)
+                    dViewModel.getDayPhysicalActivityData(todayDateData, dViewModel.macAddress, )
+                    PhysicalActivityInfo(values = dViewModel.values,
+                        dataViewModel = dViewModel
+                    ){ navLambdaBackDataHome() }
                 }
 
                 composable(Routes.BloodPressurePlots.route){
@@ -222,6 +252,9 @@ class MainActivity : ComponentActivity() {
     }
 
 }
+
+
+
 
 @Preview(showBackground = true)
 @Composable

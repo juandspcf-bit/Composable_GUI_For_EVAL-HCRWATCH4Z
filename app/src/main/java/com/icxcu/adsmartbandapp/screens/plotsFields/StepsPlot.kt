@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,7 +25,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.data.MockData
+import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.repositories.Values
+import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import kotlinx.coroutines.launch
 import java.time.Duration
@@ -34,11 +37,23 @@ import java.time.Duration
 @Composable
 fun PhysicalActivityInfo(
     values: Values,
+    dataViewModel: DataViewModel,
     navLambda: () -> Unit
 ) {
+    val physicalActivityData by dataViewModel.dayPhysicalActivityData.observeAsState(listOf())
+    var stepsList by remember {
+        mutableStateOf(listOf<Int>())
+    }
+
+
     var showDialog by remember {
         mutableStateOf(false)
     }
+
+    if(physicalActivityData.isEmpty().not()){
+        stepsList = getDataFromStringMap(physicalActivityData[0].data)
+    }
+
 
     var  modifyShowDialog:(Boolean)->Unit = { value->
         showDialog=value
@@ -90,7 +105,7 @@ fun PhysicalActivityInfo(
                     .padding(padding)
                     .fillMaxSize(), contentAlignment = Alignment.TopCenter
             ) {
-                PhysicalActivityInfoContent(values)
+                PhysicalActivityInfoContent(values, stepsList)
             }
 
             if(showDialog){
@@ -105,7 +120,7 @@ fun PhysicalActivityInfo(
 
 
 @Composable
-fun PhysicalActivityInfoContent(values: Values) {
+fun PhysicalActivityInfoContent(values: Values, listSteps:List<Int> ) {
     ConstraintLayout(
         modifier = Modifier
             .background(Color(0xff1d2a35))
@@ -115,7 +130,7 @@ fun PhysicalActivityInfoContent(values: Values) {
         val guideH3 = createGuidelineFromTop(fraction = 0.4f)
 
 
-        val stepsEntries = values.stepList.mapIndexed { index, y ->
+        val stepsEntries = listSteps.mapIndexed { index, y ->
             val entry = EntryHour(
                 Duration.ofHours(24).minusMinutes(30L * index.toLong()),
                 index.toFloat(), y.toFloat()
@@ -166,7 +181,9 @@ fun PhysicalActivityInfoContent(values: Values) {
             }
             .height(2.dp))
 
-        ListSelector(values, modifierTabs = Modifier
+        ListSelector(values=values,
+            listSteps=listSteps,
+            modifierTabs = Modifier
             .constrainAs(tabRow) {
                 top.linkTo(divider.bottom)
                 linkTo(start = parent.start, end = parent.end)
@@ -204,7 +221,7 @@ fun MyTab(title: String, onClick: () -> Unit, selected: Boolean) {
 
 
 @Composable
-fun ListSelector(values: Values, modifierTabs: Modifier, modifierList: Modifier) {
+fun ListSelector(values: Values, listSteps: List<Int>, modifierTabs: Modifier, modifierList: Modifier) {
     var state by remember { mutableStateOf(0) }
     val titles = listOf("Steps", "Distance", "Calories")
 
@@ -229,7 +246,7 @@ fun ListSelector(values: Values, modifierTabs: Modifier, modifierList: Modifier)
         when (state) {
             0 -> {
                 StepsList(
-                    dataList = values.stepList,
+                    dataList = listSteps,
                     hoursList,
                     modifier = Modifier
                         .fillMaxSize()
@@ -400,7 +417,7 @@ fun DatePickerDialogSample(modifyShowDialog:(Boolean)->Unit) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun StepsPlotsPreview() {
-    PhysicalActivityInfo(values = MockData.values) {}
+
 }
 
 
@@ -419,4 +436,18 @@ fun getIntervals(index:Int=0, hoursList:List<String>) = when(index){
     else -> "${hoursList[index]} - ${hoursList[index+1]}"
 }
 
+
+fun getDataFromStringMap(map:String):List<Int>{
+    val newMap = map.subSequence(1, map.length-1)
+    val newMapD = newMap.split(", ")
+    val stepsLists=MutableList(48){0}
+    newMapD.forEachIndexed { indexO, s ->
+        val split = s.split("=")
+        val index = split[0].toInt()
+        val value = split[1].toInt()
+        stepsLists[index]=value
+    }
+    Log.d("DIV", "getDataFromStringMap: $stepsLists")
+    return stepsLists.toList()
+}
 
