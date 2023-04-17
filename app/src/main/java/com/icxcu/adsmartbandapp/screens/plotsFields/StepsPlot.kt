@@ -1,38 +1,15 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields
 
-import android.util.Log
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
-import com.icxcu.adsmartbandapp.R
-import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
-import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import java.text.SimpleDateFormat
-import java.time.Duration
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 
 @Composable
@@ -46,9 +23,6 @@ fun PhysicalActivityInfo(
     val todayPhysicalActivityData by dataViewModel.todayPhysicalActivityResults.observeAsState(
         MutableList(0) { PhysicalActivity() }.toList()
     )
-
-    Log.d("DataFRomDB", "PhysicalActivityInfo: $todayPhysicalActivityData")
-
     val updateStepList:(List<Int>)->Unit={
         dataViewModel.stepList = it
     }
@@ -255,14 +229,11 @@ fun distanceUpdateOrInsert(
                 true
             } else false
         }
-        Log.d("DDDDDD", "distanceUpdateOrInsert: $todayPhysicalActivityData")
-        //if(listIndex.isEmpty())return
+
+
         todayPhysicalActivityData[listIndex[0]].data = newValuesList.toString()
-        //stepsList = values.stepList
         updateDistanceList(values.distanceList)
         dataViewModel.updatePhysicalActivityData(todayPhysicalActivityData[0])
-
-        //stepsAlreadyUpdated = true
         updateDistanceAlreadyUpdated(true)
 
     } else if (values.distanceList.isEmpty().not() &&
@@ -282,7 +253,6 @@ fun distanceUpdateOrInsert(
             data = newValuesList.toString()
         }
         dataViewModel.insertPhysicalActivityData(physicalActivity)
-        //stepsAlreadyInserted = true
         updateDistanceAlreadyInserted(true)
     }
 
@@ -319,14 +289,10 @@ fun caloriesUpdateOrInsert(
                 true
             } else false
         }
-        Log.d("DDDDDD", "distanceUpdateOrInsert: $todayPhysicalActivityData")
-        //if(listIndex.isEmpty())return
+
         todayPhysicalActivityData[listIndex[0]].data = newValuesList.toString()
-        //stepsList = values.stepList
         updateCaloriesList(values.caloriesList)
         dataViewModel.updatePhysicalActivityData(todayPhysicalActivityData[0])
-
-        //stepsAlreadyUpdated = true
         updateCaloriesAlreadyUpdated(true)
 
     } else if (values.caloriesList.isEmpty().not() &&
@@ -352,34 +318,66 @@ fun caloriesUpdateOrInsert(
 
 }
 
+fun doubleFieldUpdateOrInsert(
+    fromRepoListDouble: List<Double>,
+    dataViewModel: DataViewModel,
+    fieldDoubleList: List<Double>,
+    updateFieldDoubleList:(List<Double>)->Unit,
+    todayPhysicalActivityData: List<PhysicalActivity>,
+    doubleFieldAlreadyInserted: Boolean,
+    doubleFieldAlreadyUpdated: Boolean,
+    updateDoubleFieldAlreadyInserted:(Boolean)->Unit,
+    updateDoubleFieldAlreadyUpdated:(Boolean)->Unit,
+    typesTableToModify: TypesTable
+) {
 
+    if (fromRepoListDouble.isEmpty().not() &&
+        todayPhysicalActivityData.isEmpty().not() &&
+        todayPhysicalActivityData[0].physicalActivityId != -1 &&
+        fromRepoListDouble.toList() != fieldDoubleList.toList() &&
+        doubleFieldAlreadyUpdated.not()
+    ) {
 
+        val newValuesList = mutableMapOf<String, String>()
+        fromRepoListDouble.forEachIndexed { index, i ->
+            newValuesList[index.toString()] = i.toString()
+        }
 
-fun getIntegerListFromStringMap(map: String): List<Int> {
-    val newMap = map.subSequence(1, map.length - 1)
-    val newMapD = newMap.split(", ")
-    val stepsLists = MutableList(48) { 0 }
-    newMapD.forEachIndexed { indexO, s ->
-        val split = s.split("=")
-        val index = split[0].toInt()
-        val value = split[1].toInt()
-        stepsLists[index] = value
+        val listIndex = mutableListOf<Int>()
+        todayPhysicalActivityData.filterIndexed { index, physicalActivity ->
+            if (physicalActivity.typesTable == typesTableToModify) {
+                listIndex.add(index)
+                true
+            } else false
+        }
+
+        todayPhysicalActivityData[listIndex[0]].data = newValuesList.toString()
+        updateFieldDoubleList(fromRepoListDouble)
+        dataViewModel.updatePhysicalActivityData(todayPhysicalActivityData[0])
+        updateDoubleFieldAlreadyUpdated(true)
+
+    } else if (fromRepoListDouble.isEmpty().not() &&
+        todayPhysicalActivityData.isEmpty().not() &&
+        todayPhysicalActivityData[0].physicalActivityId == -1 && doubleFieldAlreadyInserted.not()
+    ) {
+        val physicalActivity = PhysicalActivity().apply {
+            macAddress = dataViewModel.macAddress
+            val date = Date()
+            val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            dateData = formattedDate.format(date)
+            typesTable = typesTableToModify
+            val newValuesList = mutableMapOf<String, String>()
+            fromRepoListDouble.forEachIndexed { index, i ->
+                newValuesList[index.toString()] = i.toString()
+            }
+            data = newValuesList.toString()
+        }
+        dataViewModel.insertPhysicalActivityData(physicalActivity)
+        //stepsAlreadyInserted = true
+        updateDoubleFieldAlreadyInserted(true)
     }
-    Log.d("DIV", "getDataFromStringMap: $stepsLists")
-    return stepsLists.toList()
+
 }
 
-fun getDoubleListFromStringMap(map: String): List<Double> {
-    val newMap = map.subSequence(1, map.length - 1)
-    val newMapD = newMap.split(", ")
-    val stepsLists = MutableList(48) { 0.0 }
-    newMapD.forEachIndexed { indexO, s ->
-        val split = s.split("=")
-        val index = split[0].toInt()
-        val value = split[1].toDouble()
-        stepsLists[index] = value
-    }
-    Log.d("DIV", "getDataFromStringMap: $stepsLists")
-    return stepsLists.toList()
-}
+
 

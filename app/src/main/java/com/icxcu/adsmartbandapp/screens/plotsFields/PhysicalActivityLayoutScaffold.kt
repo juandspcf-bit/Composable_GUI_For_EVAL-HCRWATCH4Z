@@ -456,18 +456,3 @@ fun StepsPlotsPreview() {
     ) {}
 }
 
-
-fun getHours() = MutableList(48) { 0 }.mapIndexed { index, value ->
-    val hour = "${Duration.ofHours(0).plusMinutes(30L * index).toHours()}"
-    val time = hour + if ((index + 1) % 2 == 0) {
-        ":30"
-    } else {
-        ":00"
-    }
-    time
-}
-
-fun getIntervals(index: Int = 0, hoursList: List<String>) = when (index) {
-    47 -> "${hoursList[46]} - 00:00"
-    else -> "${hoursList[index]} - ${hoursList[index + 1]}"
-}
