@@ -113,7 +113,7 @@ fun PhysicalActivityInfo(
         MutableList(48) { 0.0 }.toList()
     }
 
-    caloriesUpdateOrInsert(
+/*    caloriesUpdateOrInsert(
         values = values,
         dataViewModel = dataViewModel,
         caloriesList = dataViewModel.caloriesList,
@@ -123,7 +123,21 @@ fun PhysicalActivityInfo(
         caloriesAlreadyUpdated = dataViewModel.caloriesAlreadyUpdated,
         updateCaloriesAlreadyInserted = updateCaloriesAlreadyInserted,
         updateCaloriesAlreadyUpdated = updateCaloriesAlreadyUpdated,
+    )*/
+
+    doubleFieldUpdateOrInsert(
+        fromRepoListDouble = values.caloriesList,
+    dataViewModel = dataViewModel,
+    fieldDoubleList = dataViewModel.caloriesList,
+    updateFieldDoubleList= updateCaloriesList,
+    todayPhysicalActivityData= todayPhysicalActivityData,
+    doubleFieldAlreadyInserted = dataViewModel.caloriesAlreadyInserted,
+    doubleFieldAlreadyUpdated = dataViewModel.caloriesAlreadyUpdated,
+    updateDoubleFieldAlreadyInserted = updateCaloriesAlreadyInserted,
+    updateDoubleFieldAlreadyUpdated = updateCaloriesAlreadyUpdated,
+    typesTableToModify = TypesTable.CALORIES
     )
+
 
     PhysicalActivityLayoutScaffold(
         dataViewModel.stepList,
