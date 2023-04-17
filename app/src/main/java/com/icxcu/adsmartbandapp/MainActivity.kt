@@ -209,7 +209,7 @@ class MainActivity : ComponentActivity() {
                     dViewModel.macAddress=bluetoothAddress ?: "no address"
                     dViewModel.name=bluetoothName ?: "no name"
 
-                    LaunchedEffect(key1 = true){
+/*                    LaunchedEffect(key1 = true){
                         val physicalActivity = PhysicalActivity().apply {
                             macAddress=dViewModel.macAddress
                             val date = Date()
@@ -218,8 +218,7 @@ class MainActivity : ComponentActivity() {
                             data= randomData()
                         }
                         dViewModel.insertPhysicalActivityData(physicalActivity)
-                    }
-
+                    }*/
 
                     DashBoard(
                         bluetoothName = bluetoothName ?: "no name",
@@ -230,10 +229,8 @@ class MainActivity : ComponentActivity() {
                 }
 
                 composable(Routes.StepsPlots.route){
-                    val todayDate = Date()
-                    val formattedDate =  SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                    val todayDateData= formattedDate.format(todayDate)
-                    dViewModel.getDayPhysicalActivityData(todayDateData, dViewModel.macAddress, )
+                    dViewModel.getToDayPhysicalActivityData(dViewModel.macAddress,)
+
                     PhysicalActivityInfo(values = dViewModel.values,
                         dataViewModel = dViewModel
                     ){ navLambdaBackDataHome() }

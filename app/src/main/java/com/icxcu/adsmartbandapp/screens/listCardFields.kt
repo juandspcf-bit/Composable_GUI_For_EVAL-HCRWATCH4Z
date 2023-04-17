@@ -19,7 +19,7 @@ import com.icxcu.adsmartbandapp.screens.additionalWidgets.ArcCompose
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ListFields(
+fun ListCardFields(
     values: Values,
     navMainController: NavHostController
 ) {

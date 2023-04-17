@@ -4,6 +4,7 @@ import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.icxcu.adsmartbandapp.data.TypesTable
 
 @Entity(tableName = "PhysicalActivity")
 class PhysicalActivity {
@@ -14,6 +15,10 @@ class PhysicalActivity {
     @ColumnInfo(name = "mac_address")
     @NonNull
     var macAddress: String = ""
+
+    @ColumnInfo(name = "types_table")
+    @NonNull
+    var typesTable: TypesTable = TypesTable.STEPS
 
     @ColumnInfo(name = "date_data")
     @NonNull
@@ -30,5 +35,10 @@ class PhysicalActivity {
         this.dateData = dateData
         this.data = data
     }
+
+    override fun toString(): String {
+        return "PhysicalActivity(physicalActivityId=$physicalActivityId, macAddress='$macAddress', typesTable=$typesTable, dateData='$dateData', data='$data')"
+    }
+
 
 }

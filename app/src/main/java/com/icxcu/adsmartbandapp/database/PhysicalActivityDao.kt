@@ -13,7 +13,7 @@ interface PhysicalActivityDao {
     @Query("SELECT * FROM PhysicalActivity WHERE date_data = :date AND mac_address=:macAddress LIMIT 3")
     fun getThreeLatestDaysPhysicalActivityData(date: String, macAddress: String): List<PhysicalActivity>
 
-    @Query("SELECT * FROM PhysicalActivity WHERE date_data = :date AND mac_address=:macAddress LIMIT 1")
+    @Query("SELECT * FROM PhysicalActivity WHERE date_data = :date AND mac_address=:macAddress LIMIT 3")
     fun getDayPhysicalActivityData(date: String, macAddress: String): List<PhysicalActivity>
 
     @Query("SELECT * FROM PhysicalActivity")
