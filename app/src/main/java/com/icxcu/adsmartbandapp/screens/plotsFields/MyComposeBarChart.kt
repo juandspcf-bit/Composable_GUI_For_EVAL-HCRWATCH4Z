@@ -1,6 +1,8 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
+import com.icxcu.adsmartbandapp.data.MockData
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import java.time.Duration
 
@@ -15,4 +17,14 @@ fun MyComposeBarChart(stepsList:()-> List<Int>){
     }
     ComposeBartCharts(chartEntryModelProducer = ChartEntryModelProducer(stepsEntries))
 
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun MyComposeBarChartPreview() {
+    val stepsList = {
+        MockData.values.stepList
+    }
+
+    MyComposeBarChart(stepsList)
 }

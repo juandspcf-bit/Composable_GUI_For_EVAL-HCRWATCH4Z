@@ -79,13 +79,14 @@ internal fun ComposeBartCharts(
                 valueFormatter = axisValueFormatter,
                 label = axisLabelComponent(
                     color= Color.White,
-                    ellipsize = TextUtils.TruncateAt.START,
+                    ellipsize = TextUtils.TruncateAt.MIDDLE,
                     textSize = 15.sp,
                     lineCount = 3,
                     typeface = Typeface.SERIF,
-                    textAlign = Paint.Align.CENTER
+                    textAlign = Paint.Align.CENTER,
+                    verticalMargin = 5.dp,
                 ),
-                labelRotationDegrees = -10f
+                labelRotationDegrees = 90f
             ),
 
             marker = rememberMarker(),
@@ -178,7 +179,7 @@ private const val COLOR_2_CODE = 0xffd3d826
 private const val PERSISTENT_MARKER_X = 1000f
 
 private const val COLUMN_WIDTH_DP = 5f
-private const val THRESHOLD_LINE_VALUE = 13f
+private const val THRESHOLD_LINE_VALUE = 500f
 private const val START_AXIS_LABEL_COUNT = 5
 private const val BOTTOM_AXIS_TICK_OFFSET = 0
 private const val BOTTOM_AXIS_TICK_SPACING = 1
