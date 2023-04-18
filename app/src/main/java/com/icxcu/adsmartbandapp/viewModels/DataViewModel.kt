@@ -4,7 +4,6 @@ import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,7 +12,6 @@ import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.database.SWRoomDatabase
 import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.repositories.Values
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -42,7 +40,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     var name:String=""
 
     //Tabs Selector for physical activity plots
-    var stateSelectionTab by mutableStateOf(mutableStateOf(0))
+    var stateShowDialogDatePicker by mutableStateOf(false)
 
     init {
         val swDb = SWRoomDatabase.getInstance(application)

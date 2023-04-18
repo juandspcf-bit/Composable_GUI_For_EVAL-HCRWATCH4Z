@@ -22,11 +22,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,15 +39,11 @@ fun PhysicalActivityLayoutScaffold(
     stepsList: () -> List<Int>,
     distanceList: () -> List<Double>,
     caloriesList: () -> List<Double>,
+    stateShowDialogDatePickerSetter:(Boolean) -> Unit,
+    stateShowDialogDatePickerValue: () -> Boolean,
     navLambda: () -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    var showDialog by remember {
-        mutableStateOf(false)
-    }
-    val modifyShowDialog: (Boolean) -> Unit = { value ->
-        showDialog = value
-    }
 
     Scaffold(
         topBar = {
@@ -78,7 +72,7 @@ fun PhysicalActivityLayoutScaffold(
                 scrollBehavior = scrollBehavior,
                 actions = {
                     IconButton(onClick = {
-                        showDialog = !showDialog
+                        stateShowDialogDatePickerSetter(!stateShowDialogDatePickerValue())
                     }) {
                         Icon(
                             imageVector = Icons.Filled.DateRange,
@@ -112,8 +106,8 @@ fun PhysicalActivityLayoutScaffold(
                 )
             }
 
-            if (showDialog) {
-                DatePickerDialogSample(modifyShowDialog)
+            if (stateShowDialogDatePickerValue()) {
+                DatePickerDialogSample(stateShowDialogDatePickerSetter)
             }
 
         },
@@ -187,10 +181,16 @@ fun StepsPlotsPreview() {
         MockData.values.caloriesList
     }
 
+    var stateShowDialogDatePicker = {
+        false
+    }
+
     PhysicalActivityLayoutScaffold(
         stepsList,
         distanceList,
-        caloriesList
+        caloriesList,
+        {},
+        stateShowDialogDatePicker
     ) {}
 }
 
