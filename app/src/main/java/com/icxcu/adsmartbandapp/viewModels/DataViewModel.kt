@@ -41,6 +41,9 @@ class DataViewModel(var application: Application) : ViewModel() {
     var macAddress:String=""
     var name:String=""
 
+    //Tabs Selector for physical activity plots
+    var stateSelectionTab by mutableStateOf(mutableStateOf(0))
+
     init {
         val swDb = SWRoomDatabase.getInstance(application)
         val physicalActivityDao = swDb.physicalActivityDao()
