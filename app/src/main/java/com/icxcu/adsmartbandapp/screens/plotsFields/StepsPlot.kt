@@ -1,5 +1,6 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -146,12 +147,25 @@ fun PhysicalActivityInfo(
         dataViewModel.stateShowDialogDatePicker = value
     }
 
+    val stateMiliSecondsDateDialogDatePicker = {
+        dataViewModel.stateMiliSecondsDateDialogDatePicker
+    }
+    val stateMiliSecondsDateDialogDatePickerSetter:(Long) -> Unit = { value ->
+        dataViewModel.stateMiliSecondsDateDialogDatePicker = value
+        Log.d(
+            "Dialog",
+            "DatePickerDialogSample: $value"
+        )
+    }
+
     PhysicalActivityLayoutScaffold(
         stepsList,
         distanceList,
         caloriesList,
         stateShowDialogDatePickerSetter,
         stateShowDialogDatePickerValue,
+        stateMiliSecondsDateDialogDatePicker,
+        stateMiliSecondsDateDialogDatePickerSetter,
         navLambda
     )
 

@@ -39,11 +39,19 @@ fun PhysicalActivityLayoutScaffold(
     stepsList: () -> List<Int>,
     distanceList: () -> List<Double>,
     caloriesList: () -> List<Double>,
-    stateShowDialogDatePickerSetter:(Boolean) -> Unit,
+    stateShowDialogDatePickerSetter: (Boolean) -> Unit,
     stateShowDialogDatePickerValue: () -> Boolean,
+    stateMiliSecondsDateDialogDatePickerS: () -> Long,
+    stateMiliSecondsDateDialogDatePickerSetterS: (Long) -> Unit,
     navLambda: () -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val stateMiliSecondsDateDialogDatePicker = {
+        stateMiliSecondsDateDialogDatePickerS()
+    }
+    val stateMiliSecondsDateDialogDatePickerSetter:(Long) -> Unit = { value ->
+        stateMiliSecondsDateDialogDatePickerSetterS(value)
+    }
 
     Scaffold(
         topBar = {
@@ -107,7 +115,10 @@ fun PhysicalActivityLayoutScaffold(
             }
 
             if (stateShowDialogDatePickerValue()) {
-                DatePickerDialogSample(stateShowDialogDatePickerSetter)
+                DatePickerDialogSample(stateShowDialogDatePickerSetter,
+                    stateMiliSecondsDateDialogDatePicker,
+                    stateMiliSecondsDateDialogDatePickerSetter
+                )
             }
 
         },
@@ -116,10 +127,13 @@ fun PhysicalActivityLayoutScaffold(
 }
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DatePickerDialogSample(modifyShowDialog: (Boolean) -> Unit) {
+fun DatePickerDialogSample(
+    modifyShowDialog: (Boolean) -> Unit,
+    stateMiliSecondsDateDialogDatePicker: () -> Long,
+    stateMiliSecondsDateDialogDatePickerSetter: (Long) -> Unit,
+) {
     // Decoupled snackbar host state from scaffold state for demo purposes.
     val snackState = remember { SnackbarHostState() }
     val snackScope = rememberCoroutineScope()
@@ -139,11 +153,12 @@ fun DatePickerDialogSample(modifyShowDialog: (Boolean) -> Unit) {
                 TextButton(
                     onClick = {
                         openDialog.value = false
-                        Log.d(
-                            "Dialog",
-                            "DatePickerDialogSample: ${datePickerState.selectedDateMillis}"
-                        )
 
+                        datePickerState.selectedDateMillis?.let {
+                            stateMiliSecondsDateDialogDatePickerSetter(
+                                it
+                            )
+                        }
                         modifyShowDialog(false)
                     },
                     enabled = confirmEnabled.value
@@ -185,12 +200,12 @@ fun StepsPlotsPreview() {
         false
     }
 
-    PhysicalActivityLayoutScaffold(
-        stepsList,
-        distanceList,
-        caloriesList,
-        {},
-        stateShowDialogDatePicker
-    ) {}
+    /*    PhysicalActivityLayoutScaffold(
+            stepsList,
+            distanceList,
+            caloriesList,
+            {},
+            stateShowDialogDatePicker
+        ) {}*/
 }
 

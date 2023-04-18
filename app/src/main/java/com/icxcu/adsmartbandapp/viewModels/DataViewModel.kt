@@ -39,8 +39,9 @@ class DataViewModel(var application: Application) : ViewModel() {
     var macAddress:String=""
     var name:String=""
 
-    //Tabs Selector for physical activity plots
+    //DatePicker for physical activity plots
     var stateShowDialogDatePicker by mutableStateOf(false)
+    var stateMiliSecondsDateDialogDatePicker by mutableStateOf(0L)
 
     init {
         val swDb = SWRoomDatabase.getInstance(application)
