@@ -13,8 +13,8 @@ import kotlinx.coroutines.flow.asSharedFlow
 
 class SWRepository(private val physicalActivityDao: PhysicalActivityDao) {
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
-    var todayPhysicalActivityResults = MutableLiveData<List<PhysicalActivity>>()
-    var dayPhysicalActivityData = MutableLiveData<List<PhysicalActivity>>()
+    var dayPhysicalActivityResults = MutableLiveData<List<PhysicalActivity>>()
+
     private val _sharedStepsFlow = MutableSharedFlow<Values>(
         replay = 30,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
@@ -34,37 +34,14 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao) {
         }
     }
 
-    fun getThreeLatestDaysPhysicalActivityData(date: String, macAddress:String) {
-        coroutineScope.launch(Dispatchers.Main) {
-            val results = asyncGetDaysPhysicalActivityData(date, macAddress)
-            results?.let{
-                todayPhysicalActivityResults.value = results
-            }
-        }
-    }
-    private suspend fun asyncGetDaysPhysicalActivityData(date: String, macAddress:String): List<PhysicalActivity>? =
-        coroutineScope.async(Dispatchers.IO) {
-            return@async physicalActivityDao.getThreeLatestDaysPhysicalActivityData(date, macAddress)
-        }.await()
 
 
-
-
-    fun getDayPhysicalActivityData(date: String, macAddress:String) {
-        coroutineScope.launch(Dispatchers.Main) {
-            val results = asyncGetSingleDayPhysicalActivityData(date, macAddress)
-            results?.let{
-                dayPhysicalActivityData.value = results
-            }
-        }
-    }
-
-    fun getToDayPhysicalActivityData(queryDate: String, queryMacAddress:String) {
+    fun getDayPhysicalActivityData(queryDate: String, queryMacAddress:String) {
         coroutineScope.launch(Dispatchers.Main) {
             val results = asyncTodayPhysicalActivityData(queryDate, queryMacAddress)
 
             if(results!=null && results.isEmpty().not()){
-                todayPhysicalActivityResults.value = results
+                dayPhysicalActivityResults.value = results
             }else{
 
                 val stepsActivity = PhysicalActivity().apply {
@@ -105,8 +82,8 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao) {
                     data= newValuesList.toString()
                     typesTable = TypesTable.CALORIES
                 }
-                todayPhysicalActivityResults.value =  listOf(stepsActivity, distanceActivity, caloriesListActivity)
-                Log.d("Data From database", "getToDayPhysicalActivityData: ${todayPhysicalActivityResults.value}")
+                dayPhysicalActivityResults.value =  listOf(stepsActivity, distanceActivity, caloriesListActivity)
+                Log.d("Data From database", "getToDayPhysicalActivityData: ${dayPhysicalActivityResults.value}")
             }
 
 

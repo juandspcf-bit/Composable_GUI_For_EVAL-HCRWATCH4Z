@@ -1,7 +1,6 @@
 package com.icxcu.adsmartbandapp.viewModels
 
 import android.app.Application
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -34,8 +33,8 @@ class DataViewModel(var application: Application) : ViewModel() {
     var caloriesAlreadyUpdated by mutableStateOf(false)
 
     private var swRepository: SWRepository
-    var todayPhysicalActivityResults = MutableLiveData<List<PhysicalActivity>>()
-    var dayPhysicalActivityData = MutableLiveData<List<PhysicalActivity>>()
+    var dayPhysicalActivityResults = MutableLiveData<List<PhysicalActivity>>()
+
     var macAddress:String=""
     var name:String=""
 
@@ -47,8 +46,8 @@ class DataViewModel(var application: Application) : ViewModel() {
         val swDb = SWRoomDatabase.getInstance(application)
         val physicalActivityDao = swDb.physicalActivityDao()
         swRepository = SWRepository(physicalActivityDao)
-        todayPhysicalActivityResults = swRepository.todayPhysicalActivityResults
-        dayPhysicalActivityData= swRepository.dayPhysicalActivityData
+        dayPhysicalActivityResults = swRepository.dayPhysicalActivityResults
+
 
         viewModelScope.launch{
             swRepository.sharedStepsFlow.collect{
@@ -64,21 +63,9 @@ class DataViewModel(var application: Application) : ViewModel() {
         swRepository.insertPhysicalActivityData(physicalActivity)
     }
 
-    private fun getThreeLatestDaysPhysicalActivityData(date: String,
-                                                       macAddress:String) {
-        swRepository.getThreeLatestDaysPhysicalActivityData(date, macAddress)
-    }
 
-    fun getDayPhysicalActivityData(date: String, macAddress:String) {
-        swRepository.getDayPhysicalActivityData(date, macAddress)
-    }
-
-    fun getToDayPhysicalActivityData( macAddress:String) {
-        val date = Date()
-        val formattedDate =  SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        val dateData= formattedDate.format(date)
-        Log.d("Date", "getToDayPhysicalActivityData: $dateData")
-        swRepository.getToDayPhysicalActivityData(dateData, macAddress)
+    fun getDayPhysicalActivityData(dateData:String, macAddress:String) {
+        swRepository.getDayPhysicalActivityData(dateData, macAddress)
     }
 
     fun updatePhysicalActivityData(physicalActivity: PhysicalActivity){

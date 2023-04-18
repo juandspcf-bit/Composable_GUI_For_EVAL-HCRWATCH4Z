@@ -25,14 +25,14 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothLEManagerImp
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
-import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.screens.*
 import com.icxcu.adsmartbandapp.screens.plotsFields.BloodPressureInfo
 import com.icxcu.adsmartbandapp.screens.plotsFields.PhysicalActivityInfo
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
 import com.icxcu.adsmartbandapp.viewModels.*
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 const val REQUEST_ENABLE_BT: Int = 500
 
@@ -229,7 +229,11 @@ class MainActivity : ComponentActivity() {
                 }
 
                 composable(Routes.StepsPlots.route){
-                    dViewModel.getToDayPhysicalActivityData(dViewModel.macAddress,)
+                    val date = Date()
+                    val formattedDate =  SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    val dateData= formattedDate.format(date)
+                    dViewModel.getDayPhysicalActivityData(dateData,
+                        dViewModel.macAddress)
 
                     PhysicalActivityInfo(values = dViewModel.values,
                         dataViewModel = dViewModel

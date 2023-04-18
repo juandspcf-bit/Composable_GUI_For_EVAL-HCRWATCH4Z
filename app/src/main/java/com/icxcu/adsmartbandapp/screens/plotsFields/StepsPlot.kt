@@ -21,7 +21,7 @@ fun PhysicalActivityInfo(
 ) {
 
     //Data state
-    val todayPhysicalActivityData by dataViewModel.todayPhysicalActivityResults.observeAsState(
+    val dayPhysicalActivityData by dataViewModel.dayPhysicalActivityResults.observeAsState(
         MutableList(0) { PhysicalActivity() }.toList()
     )
     val updateStepList: (List<Int>) -> Unit = {
@@ -36,8 +36,8 @@ fun PhysicalActivityInfo(
         dataViewModel.stepsAlreadyUpdated = it
     }
 
-    dataViewModel.stepList = if (todayPhysicalActivityData.isEmpty().not()) {
-        val filter = todayPhysicalActivityData.filter { it.typesTable == TypesTable.STEPS }
+    dataViewModel.stepList = if (dayPhysicalActivityData.isEmpty().not()) {
+        val filter = dayPhysicalActivityData.filter { it.typesTable == TypesTable.STEPS }
         getIntegerListFromStringMap(filter[0].data)
     } else {
         MutableList(48) { 0 }.toList()
@@ -49,7 +49,7 @@ fun PhysicalActivityInfo(
         dataViewModel = dataViewModel,
         stepsList = dataViewModel.stepList,
         updateStepList = updateStepList,
-        todayPhysicalActivityData = todayPhysicalActivityData,
+        todayPhysicalActivityData = dayPhysicalActivityData,
         stepsAlreadyInserted = dataViewModel.stepsAlreadyInserted,
         stepsAlreadyUpdated = dataViewModel.stepsAlreadyUpdated,
         updateStepsAlreadyInserted = updateStepsAlreadyInserted,
@@ -68,8 +68,8 @@ fun PhysicalActivityInfo(
         dataViewModel.distanceAlreadyUpdated = it
     }
 
-    dataViewModel.distanceList = if (todayPhysicalActivityData.isEmpty().not()) {
-        val filter = todayPhysicalActivityData.filter { it.typesTable == TypesTable.DISTANCE }
+    dataViewModel.distanceList = if (dayPhysicalActivityData.isEmpty().not()) {
+        val filter = dayPhysicalActivityData.filter { it.typesTable == TypesTable.DISTANCE }
         if (filter.isEmpty()) {
             MutableList(48) { 0.0 }.toList()
         } else {
@@ -84,7 +84,7 @@ fun PhysicalActivityInfo(
         dataViewModel = dataViewModel,
         fieldDoubleList = dataViewModel.distanceList,
         updateFieldDoubleList = updateDistanceList,
-        todayPhysicalActivityData = todayPhysicalActivityData,
+        todayPhysicalActivityData = dayPhysicalActivityData,
         doubleFieldAlreadyInserted = dataViewModel.distanceAlreadyInserted,
         doubleFieldAlreadyUpdated = dataViewModel.distanceAlreadyUpdated,
         updateDoubleFieldAlreadyInserted = updateDistanceAlreadyInserted,
@@ -104,8 +104,8 @@ fun PhysicalActivityInfo(
         dataViewModel.caloriesAlreadyUpdated = it
     }
 
-    dataViewModel.caloriesList = if (todayPhysicalActivityData.isEmpty().not()) {
-        val filter = todayPhysicalActivityData.filter { it.typesTable == TypesTable.CALORIES }
+    dataViewModel.caloriesList = if (dayPhysicalActivityData.isEmpty().not()) {
+        val filter = dayPhysicalActivityData.filter { it.typesTable == TypesTable.CALORIES }
         if (filter.isEmpty()) {
             MutableList(48) { 0.0 }.toList()
         } else {
@@ -120,7 +120,7 @@ fun PhysicalActivityInfo(
         dataViewModel = dataViewModel,
         fieldDoubleList = dataViewModel.caloriesList,
         updateFieldDoubleList = updateCaloriesList,
-        todayPhysicalActivityData = todayPhysicalActivityData,
+        todayPhysicalActivityData = dayPhysicalActivityData,
         doubleFieldAlreadyInserted = dataViewModel.caloriesAlreadyInserted,
         doubleFieldAlreadyUpdated = dataViewModel.caloriesAlreadyUpdated,
         updateDoubleFieldAlreadyInserted = updateCaloriesAlreadyInserted,
@@ -156,6 +156,15 @@ fun PhysicalActivityInfo(
             "Dialog",
             "DatePickerDialogSample: $value"
         )
+
+        val date = Date(value)
+        val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val dateData = formattedDate.format(date)
+        Log.d(
+            "Dialog",
+            "DatePickerDialogSample: $dateData"
+        )
+
     }
 
     PhysicalActivityLayoutScaffold(
