@@ -12,28 +12,42 @@ import com.icxcu.adsmartbandapp.database.SWRoomDatabase
 import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.repositories.Values
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class DataViewModel(var application: Application) : ViewModel() {
-    var values by mutableStateOf(Values(MutableList(48){0}.toList(),
+    var myDateObj = LocalDateTime.now()
+    var myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    var formattedDate = myDateObj.format(myFormatObj)
+    var todayDateValues by mutableStateOf(Values(MutableList(48){0}.toList(),
         MutableList(48){0.0}.toList(),
         MutableList(48){0.0}.toList(),
-        MutableList(48){ listOf(0.0, 0.0) }.toList()))
-    var stepList by mutableStateOf(listOf<Int>())
-    var stepsAlreadyInserted by mutableStateOf(false)
-    var stepsAlreadyUpdated by mutableStateOf(false)
+        MutableList(48){ listOf(0.0, 0.0) }.toList(), formattedDate) )
 
-    var distanceList by mutableStateOf(listOf<Double>())
-    var distanceAlreadyInserted by mutableStateOf(false)
-    var distanceAlreadyUpdated by mutableStateOf(false)
+    var todayPhysicalActivityResults = MutableLiveData<List<PhysicalActivity>>()
+    var todayStepList by mutableStateOf(listOf<Int>())
+    var todayStepsAlreadyInserted by mutableStateOf(false)
+    var todayStepsAlreadyUpdated by mutableStateOf(false)
 
-    var caloriesList by mutableStateOf(listOf<Double>())
-    var caloriesAlreadyInserted by mutableStateOf(false)
-    var caloriesAlreadyUpdated by mutableStateOf(false)
+    var todayDistanceList by mutableStateOf(listOf<Double>())
+    var todayDistanceAlreadyInserted by mutableStateOf(false)
+    var todayDistanceAlreadyUpdated by mutableStateOf(false)
+
+    var todayCaloriesList by mutableStateOf(listOf<Double>())
+    var todayCaloriesAlreadyInserted by mutableStateOf(false)
+    var todayCaloriesAlreadyUpdated by mutableStateOf(false)
+
+    var yesterdayDate = LocalDateTime.now().minusDays(1)
+    var yesterdayFormattedDate = yesterdayDate.format(myFormatObj)
+    var yesterdayDateValues by mutableStateOf(Values(MutableList(48){0}.toList(),
+        MutableList(48){0.0}.toList(),
+        MutableList(48){0.0}.toList(),
+        MutableList(48){ listOf(0.0, 0.0) }.toList(), yesterdayFormattedDate) )
+
+
 
     private var swRepository: SWRepository
-    var dayPhysicalActivityResults = MutableLiveData<List<PhysicalActivity>>()
+
 
     var macAddress:String=""
     var name:String=""
@@ -46,12 +60,18 @@ class DataViewModel(var application: Application) : ViewModel() {
         val swDb = SWRoomDatabase.getInstance(application)
         val physicalActivityDao = swDb.physicalActivityDao()
         swRepository = SWRepository(physicalActivityDao)
-        dayPhysicalActivityResults = swRepository.dayPhysicalActivityResults
+        todayPhysicalActivityResults = swRepository.todayPhysicalActivityResults
 
 
         viewModelScope.launch{
             swRepository.sharedStepsFlow.collect{
-                values = it
+                val myDateObj = LocalDateTime.now()
+                val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                val formattedDate = myDateObj.format(myFormatObj)
+                if(formattedDate==it.date){
+                    todayDateValues = it
+                }
+
             }
         }
 
@@ -64,8 +84,8 @@ class DataViewModel(var application: Application) : ViewModel() {
     }
 
 
-    fun getDayPhysicalActivityData(dateData:String, macAddress:String) {
-        swRepository.getDayPhysicalActivityData(dateData, macAddress)
+    fun getTodayPhysicalActivityData(dateData:String, macAddress:String) {
+        swRepository.getTodayPhysicalActivityData(dateData, macAddress)
     }
 
     fun updatePhysicalActivityData(physicalActivity: PhysicalActivity){

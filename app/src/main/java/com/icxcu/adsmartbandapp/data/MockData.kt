@@ -1,6 +1,12 @@
 package com.icxcu.adsmartbandapp.data
 
 import com.icxcu.adsmartbandapp.repositories.Values
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.Locale
+
 
 class MockData {
 
@@ -259,7 +265,13 @@ class MockData {
             listOf(high, low)
         }.toList()
 
+  /*      val date = Date()
+        val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val dateData = formattedDate.format(date)*/
 
-        val values = Values(stepValues, distanceValues, caloriesValues, bloodPressureValues)
+        var myDateObj = LocalDateTime.now()
+        var myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+        var formattedDate = myDateObj.format(myFormatObj)
+        val values = Values(stepValues, distanceValues, caloriesValues, bloodPressureValues, formattedDate)
     }
 }

@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 
 class SWRepository(private val physicalActivityDao: PhysicalActivityDao) {
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
-    var dayPhysicalActivityResults = MutableLiveData<List<PhysicalActivity>>()
+    var todayPhysicalActivityResults = MutableLiveData<List<PhysicalActivity>>()
 
     private val _sharedStepsFlow = MutableSharedFlow<Values>(
         replay = 30,
@@ -36,12 +36,12 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao) {
 
 
 
-    fun getDayPhysicalActivityData(queryDate: String, queryMacAddress:String) {
+    fun getTodayPhysicalActivityData(queryDate: String, queryMacAddress:String) {
         coroutineScope.launch(Dispatchers.Main) {
             val results = asyncTodayPhysicalActivityData(queryDate, queryMacAddress)
 
             if(results!=null && results.isEmpty().not()){
-                dayPhysicalActivityResults.value = results
+                todayPhysicalActivityResults.value = results
             }else{
 
                 val stepsActivity = PhysicalActivity().apply {
@@ -82,8 +82,8 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao) {
                     data= newValuesList.toString()
                     typesTable = TypesTable.CALORIES
                 }
-                dayPhysicalActivityResults.value =  listOf(stepsActivity, distanceActivity, caloriesListActivity)
-                Log.d("Data From database", "getToDayPhysicalActivityData: ${dayPhysicalActivityResults.value}")
+                todayPhysicalActivityResults.value =  listOf(stepsActivity, distanceActivity, caloriesListActivity)
+                Log.d("Data From database", "getToDayPhysicalActivityData: ${todayPhysicalActivityResults.value}")
             }
 
 
@@ -113,5 +113,6 @@ data class Values(
     var stepList: List<Int>,
     var distanceList: List<Double>,
     var caloriesList: List<Double>,
-    var bloodPressureValuesList: List<List<Double>>
+    var bloodPressureValuesList: List<List<Double>>,
+    var date: String
 )

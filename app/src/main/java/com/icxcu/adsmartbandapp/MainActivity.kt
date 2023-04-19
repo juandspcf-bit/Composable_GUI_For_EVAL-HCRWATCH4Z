@@ -31,6 +31,8 @@ import com.icxcu.adsmartbandapp.screens.plotsFields.PhysicalActivityInfo
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
 import com.icxcu.adsmartbandapp.viewModels.*
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -223,25 +225,25 @@ class MainActivity : ComponentActivity() {
                     DashBoard(
                         bluetoothName = bluetoothName ?: "no name",
                         bluetoothAddress = bluetoothAddress ?: "no address",
-                        values = dViewModel.values,
+                        values = dViewModel.todayDateValues,
                         navMainController = navMainController
                     ) { navLambdaBackBluetoothScanner() }
                 }
 
                 composable(Routes.StepsPlots.route){
-                    val date = Date()
-                    val formattedDate =  SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                    val dateData= formattedDate.format(date)
-                    dViewModel.getDayPhysicalActivityData(dateData,
+                    val myDateObj = LocalDateTime.now()
+                    val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                    val formattedDate = myDateObj.format(myFormatObj)
+                    dViewModel.getTodayPhysicalActivityData(formattedDate,
                         dViewModel.macAddress)
 
-                    PhysicalActivityInfo(values = dViewModel.values,
+                    PhysicalActivityInfo(
                         dataViewModel = dViewModel
                     ){ navLambdaBackDataHome() }
                 }
 
                 composable(Routes.BloodPressurePlots.route){
-                    BloodPressureInfo(values = dViewModel.values,){ navLambdaBackDataHome() }
+                    BloodPressureInfo(values = dViewModel.todayDateValues,){ navLambdaBackDataHome() }
                 }
 
 

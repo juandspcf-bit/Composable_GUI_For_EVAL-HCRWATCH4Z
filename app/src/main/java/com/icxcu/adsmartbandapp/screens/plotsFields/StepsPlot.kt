@@ -15,29 +15,33 @@ import java.util.Locale
 
 @Composable
 fun PhysicalActivityInfo(
-    values: Values,
+
     dataViewModel: DataViewModel,
     navLambda: () -> Unit
 ) {
 
+    val todayValues = {
+        dataViewModel.todayDateValues
+    }
+
     //Data state
-    val dayPhysicalActivityData by dataViewModel.dayPhysicalActivityResults.observeAsState(
+    val todayPhysicalActivityData by dataViewModel.todayPhysicalActivityResults.observeAsState(
         MutableList(0) { PhysicalActivity() }.toList()
     )
-    val updateStepList: (List<Int>) -> Unit = {
-        dataViewModel.stepList = it
+    val todayUpdateStepList: (List<Int>) -> Unit = {
+        dataViewModel.todayStepList = it
     }
 
-    val updateStepsAlreadyInserted: (Boolean) -> Unit = {
-        dataViewModel.stepsAlreadyInserted = it
+    val todayUpdateStepsAlreadyInserted: (Boolean) -> Unit = {
+        dataViewModel.todayStepsAlreadyInserted = it
     }
 
-    val updateStepsAlreadyUpdated: (Boolean) -> Unit = {
-        dataViewModel.stepsAlreadyUpdated = it
+    val todayUpdateStepsAlreadyUpdated: (Boolean) -> Unit = {
+        dataViewModel.todayStepsAlreadyUpdated = it
     }
 
-    dataViewModel.stepList = if (dayPhysicalActivityData.isEmpty().not()) {
-        val filter = dayPhysicalActivityData.filter { it.typesTable == TypesTable.STEPS }
+    dataViewModel.todayStepList = if (todayPhysicalActivityData.isEmpty().not()) {
+        val filter = todayPhysicalActivityData.filter { it.typesTable == TypesTable.STEPS }
         getIntegerListFromStringMap(filter[0].data)
     } else {
         MutableList(48) { 0 }.toList()
@@ -45,31 +49,31 @@ fun PhysicalActivityInfo(
 
 
     stepsUpdateOrInsert(
-        values = values,
+        values = todayValues(),
         dataViewModel = dataViewModel,
-        stepsList = dataViewModel.stepList,
-        updateStepList = updateStepList,
-        todayPhysicalActivityData = dayPhysicalActivityData,
-        stepsAlreadyInserted = dataViewModel.stepsAlreadyInserted,
-        stepsAlreadyUpdated = dataViewModel.stepsAlreadyUpdated,
-        updateStepsAlreadyInserted = updateStepsAlreadyInserted,
-        updateStepsAlreadyUpdated = updateStepsAlreadyUpdated,
+        stepsList = dataViewModel.todayStepList,
+        updateStepList = todayUpdateStepList,
+        todayPhysicalActivityData = todayPhysicalActivityData,
+        stepsAlreadyInserted = dataViewModel.todayStepsAlreadyInserted,
+        stepsAlreadyUpdated = dataViewModel.todayStepsAlreadyUpdated,
+        updateStepsAlreadyInserted = todayUpdateStepsAlreadyInserted,
+        updateStepsAlreadyUpdated = todayUpdateStepsAlreadyUpdated,
     )
 
     val updateDistanceList: (List<Double>) -> Unit = {
-        dataViewModel.distanceList = it
+        dataViewModel.todayDistanceList = it
     }
 
     val updateDistanceAlreadyInserted: (Boolean) -> Unit = {
-        dataViewModel.distanceAlreadyInserted = it
+        dataViewModel.todayDistanceAlreadyInserted = it
     }
 
     val updateDistanceAlreadyUpdated: (Boolean) -> Unit = {
-        dataViewModel.distanceAlreadyUpdated = it
+        dataViewModel.todayDistanceAlreadyUpdated = it
     }
 
-    dataViewModel.distanceList = if (dayPhysicalActivityData.isEmpty().not()) {
-        val filter = dayPhysicalActivityData.filter { it.typesTable == TypesTable.DISTANCE }
+    dataViewModel.todayDistanceList = if (todayPhysicalActivityData.isEmpty().not()) {
+        val filter = todayPhysicalActivityData.filter { it.typesTable == TypesTable.DISTANCE }
         if (filter.isEmpty()) {
             MutableList(48) { 0.0 }.toList()
         } else {
@@ -80,32 +84,32 @@ fun PhysicalActivityInfo(
     }
 
     doubleFieldUpdateOrInsert(
-        fromRepoListDouble = values.distanceList,
+        fromRepoListDouble = todayValues().distanceList,
         dataViewModel = dataViewModel,
-        fieldDoubleList = dataViewModel.distanceList,
+        fieldDoubleList = dataViewModel.todayDistanceList,
         updateFieldDoubleList = updateDistanceList,
-        todayPhysicalActivityData = dayPhysicalActivityData,
-        doubleFieldAlreadyInserted = dataViewModel.distanceAlreadyInserted,
-        doubleFieldAlreadyUpdated = dataViewModel.distanceAlreadyUpdated,
+        todayPhysicalActivityData = todayPhysicalActivityData,
+        doubleFieldAlreadyInserted = dataViewModel.todayDistanceAlreadyInserted,
+        doubleFieldAlreadyUpdated = dataViewModel.todayDistanceAlreadyUpdated,
         updateDoubleFieldAlreadyInserted = updateDistanceAlreadyInserted,
         updateDoubleFieldAlreadyUpdated = updateDistanceAlreadyUpdated,
         typesTableToModify = TypesTable.DISTANCE
     )
 
     val updateCaloriesList: (List<Double>) -> Unit = {
-        dataViewModel.caloriesList = it
+        dataViewModel.todayCaloriesList = it
     }
 
     val updateCaloriesAlreadyInserted: (Boolean) -> Unit = {
-        dataViewModel.caloriesAlreadyInserted = it
+        dataViewModel.todayCaloriesAlreadyInserted = it
     }
 
     val updateCaloriesAlreadyUpdated: (Boolean) -> Unit = {
-        dataViewModel.caloriesAlreadyUpdated = it
+        dataViewModel.todayCaloriesAlreadyUpdated = it
     }
 
-    dataViewModel.caloriesList = if (dayPhysicalActivityData.isEmpty().not()) {
-        val filter = dayPhysicalActivityData.filter { it.typesTable == TypesTable.CALORIES }
+    dataViewModel.todayCaloriesList = if (todayPhysicalActivityData.isEmpty().not()) {
+        val filter = todayPhysicalActivityData.filter { it.typesTable == TypesTable.CALORIES }
         if (filter.isEmpty()) {
             MutableList(48) { 0.0 }.toList()
         } else {
@@ -116,13 +120,13 @@ fun PhysicalActivityInfo(
     }
 
     doubleFieldUpdateOrInsert(
-        fromRepoListDouble = values.caloriesList,
+        fromRepoListDouble = todayValues().caloriesList,
         dataViewModel = dataViewModel,
-        fieldDoubleList = dataViewModel.caloriesList,
+        fieldDoubleList = dataViewModel.todayCaloriesList,
         updateFieldDoubleList = updateCaloriesList,
-        todayPhysicalActivityData = dayPhysicalActivityData,
-        doubleFieldAlreadyInserted = dataViewModel.caloriesAlreadyInserted,
-        doubleFieldAlreadyUpdated = dataViewModel.caloriesAlreadyUpdated,
+        todayPhysicalActivityData = todayPhysicalActivityData,
+        doubleFieldAlreadyInserted = dataViewModel.todayCaloriesAlreadyInserted,
+        doubleFieldAlreadyUpdated = dataViewModel.todayCaloriesAlreadyUpdated,
         updateDoubleFieldAlreadyInserted = updateCaloriesAlreadyInserted,
         updateDoubleFieldAlreadyUpdated = updateCaloriesAlreadyUpdated,
         typesTableToModify = TypesTable.CALORIES
@@ -130,13 +134,13 @@ fun PhysicalActivityInfo(
 
 
     val stepsList = {
-        dataViewModel.stepList
+        dataViewModel.todayStepList
     }
     val distanceList = {
-        dataViewModel.distanceList
+        dataViewModel.todayDistanceList
     }
     val caloriesList = {
-        dataViewModel.caloriesList
+        dataViewModel.todayCaloriesList
     }
 
     //DialogDatePicker State
