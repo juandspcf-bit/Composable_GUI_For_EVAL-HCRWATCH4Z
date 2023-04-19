@@ -1,12 +1,20 @@
-package com.icxcu.adsmartbandapp.screens
-
+package com.icxcu.adsmartbandapp.screens.dashBoard
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -23,19 +31,22 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.bottombardemo.screens.Favorites
-import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.repositories.Values
+import com.icxcu.adsmartbandapp.screens.ListCardFields
+import com.icxcu.adsmartbandapp.screens.NavBarItems
+import com.icxcu.adsmartbandapp.screens.NavRoutes
+import com.icxcu.adsmartbandapp.screens.TestingHealthScreen
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashBoard(
+fun DashBoardScaffold(
     bluetoothName: String,
     bluetoothAddress: String,
     values: Values,
     navMainController: NavHostController,
-
     navLambda: () -> Unit
-) {
+){
     val navController = rememberNavController()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -77,12 +88,9 @@ fun DashBoard(
 
         },
         bottomBar = { BottomNavigationBar(navController = navController) }
-
     )
 
-
 }
-
 
 @Composable
 fun NavigationHost(
@@ -154,12 +162,6 @@ fun BottomNavigationBar(navController: NavHostController) {
 @Composable
 fun DashBoardPreview() {
 
-    DashBoard(
-        bluetoothName = "Device Fake",
-        bluetoothAddress="000000",
-        values = MockData.values,
-        navMainController= rememberNavController(),
-        navLambda={}
-    )
+
 
 }

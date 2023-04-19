@@ -23,7 +23,7 @@ fun MyComposeBarChart(stepsList:()-> List<Int>){
 @Composable
 fun MyComposeBarChartPreview() {
     val stepsList = {
-        MockData.values.stepList
+        MockData.valuesToday.stepList
     }
 
     MyComposeBarChart(stepsList)

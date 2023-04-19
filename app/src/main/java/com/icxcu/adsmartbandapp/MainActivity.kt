@@ -26,20 +26,18 @@ import androidx.navigation.navArgument
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothLEManagerImp
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
 import com.icxcu.adsmartbandapp.screens.*
+import com.icxcu.adsmartbandapp.screens.dashBoard.DashBoard
 import com.icxcu.adsmartbandapp.screens.plotsFields.BloodPressureInfo
 import com.icxcu.adsmartbandapp.screens.plotsFields.PhysicalActivityInfo
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
 import com.icxcu.adsmartbandapp.viewModels.*
-import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Date
-import java.util.Locale
 
 const val REQUEST_ENABLE_BT: Int = 500
 
 class MainActivity : ComponentActivity() {
-    private lateinit var dViewModel: DataViewModel
+    private lateinit var dataViewModel: DataViewModel
     private lateinit var bluetoothLEManager: BluetoothManager
     private lateinit var mViewModel: BluetoothScannerViewModel
     private lateinit var pViewModel: PermissionsViewModel
@@ -85,7 +83,7 @@ class MainActivity : ComponentActivity() {
                         PermissionsViewModelFactory()
                     )
 
-                    dViewModel = viewModel(it,
+                    dataViewModel = viewModel(it,
                         "DataViewModel",
                         DataViewModelFactory(LocalContext.current.applicationContext
                                 as Application))
@@ -208,24 +206,17 @@ class MainActivity : ComponentActivity() {
                     val bluetoothName = backStackEntry.arguments?.getString("bluetoothName")
                     val bluetoothAddress =
                         backStackEntry.arguments?.getString("bluetoothAddress")
-                    dViewModel.macAddress=bluetoothAddress ?: "no address"
-                    dViewModel.name=bluetoothName ?: "no name"
+                    dataViewModel.macAddress=bluetoothAddress ?: "no address"
+                    dataViewModel.name=bluetoothName ?: "no name"
 
-/*                    LaunchedEffect(key1 = true){
-                        val physicalActivity = PhysicalActivity().apply {
-                            macAddress=dViewModel.macAddress
-                            val date = Date()
-                            val formattedDate =  SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                            dateData= formattedDate.format(date)
-                            data= randomData()
-                        }
-                        dViewModel.insertPhysicalActivityData(physicalActivity)
-                    }*/
+                    dataViewModel.getTodayPhysicalActivityData(dataViewModel.macAddress)
+                    dataViewModel.getYesterdayPhysicalActivityData(dataViewModel.macAddress)
 
                     DashBoard(
                         bluetoothName = bluetoothName ?: "no name",
                         bluetoothAddress = bluetoothAddress ?: "no address",
-                        values = dViewModel.todayDateValues,
+                        values = dataViewModel.todayDateValuesReadFromSW,
+                        dataViewModel = dataViewModel,
                         navMainController = navMainController
                     ) { navLambdaBackBluetoothScanner() }
                 }
@@ -234,16 +225,16 @@ class MainActivity : ComponentActivity() {
                     val myDateObj = LocalDateTime.now()
                     val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                     val formattedDate = myDateObj.format(myFormatObj)
-                    dViewModel.getTodayPhysicalActivityData(formattedDate,
-                        dViewModel.macAddress)
+                    dataViewModel.getDayPhysicalActivityData(formattedDate,
+                        dataViewModel.macAddress)
 
                     PhysicalActivityInfo(
-                        dataViewModel = dViewModel
+                        dataViewModel = dataViewModel
                     ){ navLambdaBackDataHome() }
                 }
 
                 composable(Routes.BloodPressurePlots.route){
-                    BloodPressureInfo(values = dViewModel.todayDateValues,){ navLambdaBackDataHome() }
+                    BloodPressureInfo(values = dataViewModel.todayDateValuesReadFromSW,){ navLambdaBackDataHome() }
                 }
 
 

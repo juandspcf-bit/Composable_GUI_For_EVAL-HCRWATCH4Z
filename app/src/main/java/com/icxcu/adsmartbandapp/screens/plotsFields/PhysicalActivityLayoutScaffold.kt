@@ -1,6 +1,5 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -187,13 +186,13 @@ fun DatePickerDialogSample(
 @Composable
 fun StepsPlotsPreview() {
     val stepsList = {
-        MockData.values.stepList
+        MockData.valuesToday.stepList
     }
     val distanceList = {
-        MockData.values.distanceList
+        MockData.valuesToday.distanceList
     }
     val caloriesList = {
-        MockData.values.caloriesList
+        MockData.valuesToday.caloriesList
     }
 
     var stateShowDialogDatePicker = {
