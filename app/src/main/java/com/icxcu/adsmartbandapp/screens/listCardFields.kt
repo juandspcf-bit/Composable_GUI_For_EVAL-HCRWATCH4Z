@@ -20,7 +20,7 @@ import com.icxcu.adsmartbandapp.screens.additionalWidgets.ArcCompose
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListCardFields(
-    values: Values,
+    dayDateValuesReadFromSW: () -> Values,
     navMainController: NavHostController
 ) {
 
@@ -30,7 +30,7 @@ fun ListCardFields(
             modifier = Modifier
                 .padding(5.dp),
             title = "Steps",
-            text = values.stepList.sum().toString(),
+            text = dayDateValuesReadFromSW().stepList.sum().toString(),
             fieldPlural = "Steps",
             resource = R.drawable.walk,
             iconPadding = 5.dp,
@@ -69,7 +69,7 @@ fun ListCardFields(
             size = 140.dp
         )
     )
-    val bPHighMaxValue = values.bloodPressureValuesList.maxOfOrNull { it[0] }
+    val bPHighMaxValue = dayDateValuesReadFromSW().bloodPressureValuesList.maxOfOrNull { it[0] }
     val stringValueBP= String.format("%.1f", bPHighMaxValue)
 
     listOf.add(

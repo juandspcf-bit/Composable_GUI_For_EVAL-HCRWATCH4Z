@@ -11,7 +11,6 @@ import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 fun DashBoard(
     bluetoothName: String,
     bluetoothAddress: String,
-    values: Values,
     dataViewModel: DataViewModel,
     navMainController: NavHostController,
     navLambda: () -> Unit
@@ -20,10 +19,14 @@ fun DashBoard(
     TodayPhysicalActivityDBHandler(dataViewModel = dataViewModel)
     YesterdayPhysicalActivityDBHandler(dataViewModel = dataViewModel)
 
+    val dayDateValuesReadFromSW = {
+        dataViewModel.todayDateValuesReadFromSW
+    }
+
     DashBoardScaffold(
         bluetoothName,
         bluetoothAddress,
-        values,
+        dayDateValuesReadFromSW,
         navMainController,
         navLambda
     )

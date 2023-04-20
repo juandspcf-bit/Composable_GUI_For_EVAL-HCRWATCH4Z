@@ -43,7 +43,7 @@ import com.icxcu.adsmartbandapp.screens.TestingHealthScreen
 fun DashBoardScaffold(
     bluetoothName: String,
     bluetoothAddress: String,
-    values: Values,
+    dayDateValuesReadFromSW: () -> Values,
     navMainController: NavHostController,
     navLambda: () -> Unit
 ){
@@ -83,7 +83,11 @@ fun DashBoardScaffold(
                     .padding(padding)
                     .fillMaxSize()
             ) {
-                NavigationHost(navController = navController, values = values, navMainController)
+                NavigationHost(
+                    navController = navController,
+                    dayDateValuesReadFromSW = dayDateValuesReadFromSW,
+                    navMainController
+                )
             }
 
         },
@@ -95,7 +99,7 @@ fun DashBoardScaffold(
 @Composable
 fun NavigationHost(
     navController: NavHostController,
-    values: Values,
+    dayDateValuesReadFromSW: () -> Values,
     navMainController: NavHostController
 ) {
     NavHost(
@@ -103,7 +107,7 @@ fun NavigationHost(
         startDestination = NavRoutes.Fields.route,
     ) {
         composable(NavRoutes.Fields.route) {
-            ListCardFields(values, navMainController)
+            ListCardFields(dayDateValuesReadFromSW, navMainController)
         }
         composable(NavRoutes.CheckHealth.route) {
             TestingHealthScreen()

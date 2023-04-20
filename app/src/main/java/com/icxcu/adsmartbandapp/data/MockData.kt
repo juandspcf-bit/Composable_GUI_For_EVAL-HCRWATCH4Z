@@ -262,9 +262,6 @@ class MockData {
             listOf(high, low)
         }.toList()
 
-  /*      val date = Date()
-        val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        val dateData = formattedDate.format(date)*/
 
         var myDateObj = LocalDateTime.now()
         var myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")

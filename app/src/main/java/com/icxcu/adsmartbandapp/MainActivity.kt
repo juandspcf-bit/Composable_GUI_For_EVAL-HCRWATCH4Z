@@ -215,7 +215,6 @@ class MainActivity : ComponentActivity() {
                     DashBoard(
                         bluetoothName = bluetoothName ?: "no name",
                         bluetoothAddress = bluetoothAddress ?: "no address",
-                        values = dataViewModel.todayDateValuesReadFromSW,
                         dataViewModel = dataViewModel,
                         navMainController = navMainController
                     ) { navLambdaBackBluetoothScanner() }
