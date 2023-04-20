@@ -3,18 +3,24 @@ package com.icxcu.adsmartbandapp.repositories
 import androidx.lifecycle.MutableLiveData
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.data.TypesTable
+import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
+import com.icxcu.adsmartbandapp.database.BloodPressureDao
 import com.icxcu.adsmartbandapp.database.PhysicalActivityDao
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
-class SWRepository(private val physicalActivityDao: PhysicalActivityDao) {
+class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private val bloodPressureDao: BloodPressureDao) {
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
     var dayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
     var todayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
     var yesterdayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
+
+    var dayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
+    var todayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
+    var yesterdayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
 
     private val _sharedStepsFlow = MutableSharedFlow<Values>(
         replay = 30,
@@ -23,11 +29,7 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao) {
     val sharedStepsFlow = _sharedStepsFlow.asSharedFlow()
 
 
-    fun insertPhysicalActivityData(physicalActivity: PhysicalActivity) {
-        coroutineScope.launch(Dispatchers.IO) {
-            physicalActivityDao.insertPhysicalActivityData(physicalActivity)
-        }
-    }
+
 
     fun requestStepsData() {
         CoroutineScope(Dispatchers.Default).launch {
@@ -90,6 +92,9 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao) {
 
         }
     }
+
+
+
 
     fun getTodayPhysicalActivityData(queryDate: String, queryMacAddress:String) {
         coroutineScope.launch(Dispatchers.Main) {
@@ -210,6 +215,156 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao) {
         }
     }
 
+    fun insertPhysicalActivityData(physicalActivity: PhysicalActivity) {
+        coroutineScope.launch(Dispatchers.IO) {
+            physicalActivityDao.insertPhysicalActivityData(physicalActivity)
+        }
+    }
+
+    fun getDayBloodPressureData(queryDate: String, queryMacAddress:String) {
+        coroutineScope.launch(Dispatchers.Main) {
+            val results = asyncDayBloodPressureData(queryDate, queryMacAddress)
+
+            if(results.isEmpty().not()){
+                dayBloodPressureResultsFromDB.value = results
+            }else{
+
+                val bloodPressureS = BloodPressure().apply {
+                    bloodPressureId=-1
+                    macAddress = queryMacAddress
+                    dateData= queryDate
+
+                    val newValuesList = mutableMapOf<String,String>()
+                    MutableList(48) { 0.0 }.forEachIndexed{ index, i ->
+                        newValuesList[index.toString()]= i.toString()
+                    }
+                    data= newValuesList.toString()
+                    typesTable = TypesTable.SYSTOLIC
+                }
+
+                val bloodPressureD = BloodPressure().apply {
+                    bloodPressureId=-1
+                    macAddress = queryMacAddress
+                    dateData= queryDate
+
+                    val newValuesList = mutableMapOf<String,String>()
+                    MutableList(48) { 0.0 }.forEachIndexed{ index, i ->
+                        newValuesList[index.toString()]= i.toString()
+                    }
+                    data= newValuesList.toString()
+                    typesTable = TypesTable.DIASTOLIC
+                }
+
+
+                dayBloodPressureResultsFromDB.value =  listOf(bloodPressureS, bloodPressureD)
+
+            }
+
+
+        }
+    }
+
+    fun getTodayBloodPressureData(queryDate: String, queryMacAddress:String) {
+        coroutineScope.launch(Dispatchers.Main) {
+            val results = asyncDayBloodPressureData(queryDate, queryMacAddress)
+
+            if(results.isEmpty().not()){
+                todayBloodPressureResultsFromDB.value = results
+            }else{
+
+                val bloodPressureS = BloodPressure().apply {
+                    bloodPressureId=-1
+                    macAddress = queryMacAddress
+                    dateData= queryDate
+
+                    val newValuesList = mutableMapOf<String,String>()
+                    MutableList(48) { 0.0 }.forEachIndexed{ index, i ->
+                        newValuesList[index.toString()]= i.toString()
+                    }
+                    data= newValuesList.toString()
+                    typesTable = TypesTable.SYSTOLIC
+                }
+
+                val bloodPressureD = BloodPressure().apply {
+                    bloodPressureId=-1
+                    macAddress = queryMacAddress
+                    dateData= queryDate
+
+                    val newValuesList = mutableMapOf<String,String>()
+                    MutableList(48) { 0.0 }.forEachIndexed{ index, i ->
+                        newValuesList[index.toString()]= i.toString()
+                    }
+                    data= newValuesList.toString()
+                    typesTable = TypesTable.DIASTOLIC
+                }
+
+
+                todayBloodPressureResultsFromDB.value =  listOf(bloodPressureS, bloodPressureD)
+
+            }
+
+
+        }
+    }
+
+    fun getYesterdayBloodPressureData(queryDate: String, queryMacAddress:String) {
+        coroutineScope.launch(Dispatchers.Main) {
+            val results = asyncDayBloodPressureData(queryDate, queryMacAddress)
+
+            if(results.isEmpty().not()){
+                yesterdayBloodPressureResultsFromDB.value = results
+            }else{
+
+                val bloodPressureS = BloodPressure().apply {
+                    bloodPressureId=-1
+                    macAddress = queryMacAddress
+                    dateData= queryDate
+
+                    val newValuesList = mutableMapOf<String,String>()
+                    MutableList(48) { 0.0 }.forEachIndexed{ index, i ->
+                        newValuesList[index.toString()]= i.toString()
+                    }
+                    data= newValuesList.toString()
+                    typesTable = TypesTable.SYSTOLIC
+                }
+
+                val bloodPressureD = BloodPressure().apply {
+                    bloodPressureId=-1
+                    macAddress = queryMacAddress
+                    dateData= queryDate
+
+                    val newValuesList = mutableMapOf<String,String>()
+                    MutableList(48) { 0.0 }.forEachIndexed{ index, i ->
+                        newValuesList[index.toString()]= i.toString()
+                    }
+                    data= newValuesList.toString()
+                    typesTable = TypesTable.DIASTOLIC
+                }
+
+
+                yesterdayBloodPressureResultsFromDB.value =  listOf(bloodPressureS, bloodPressureD)
+
+            }
+
+
+        }
+    }
+    private suspend fun asyncDayBloodPressureData(date: String, macAddress:String): List<BloodPressure> =
+        coroutineScope.async(Dispatchers.IO) {
+            return@async bloodPressureDao.getDayBloodPressureData(date, macAddress)
+        }.await()
+
+    fun updateBloodPressureData(bloodPressure: BloodPressure){
+        coroutineScope.launch(Dispatchers.IO) {
+            bloodPressureDao.updateBloodPressureData(bloodPressure = bloodPressure)
+        }
+    }
+
+    fun insertBloodPressureData(bloodPressure: BloodPressure) {
+        coroutineScope.launch(Dispatchers.IO) {
+            bloodPressureDao.insertBloodPressureData(bloodPressure = bloodPressure)
+        }
+    }
 
 }
 

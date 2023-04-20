@@ -9,7 +9,7 @@ import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 @Dao
 interface PhysicalActivityDao {
     @Insert
-    fun insertPhysicalActivityData(product: PhysicalActivity)
+    fun insertPhysicalActivityData(physicalActivity: PhysicalActivity)
     @Query("SELECT * FROM PhysicalActivity WHERE date_data = :date AND mac_address=:macAddress LIMIT 3")
     fun getThreeLatestDaysPhysicalActivityData(date: String, macAddress: String): List<PhysicalActivity>
 
@@ -20,6 +20,6 @@ interface PhysicalActivityDao {
     fun getThreeLatestDaysPhysicalActivityFlow(): List<PhysicalActivity>
 
     @Update
-    fun updatePhysicalActivityData(product: PhysicalActivity)
+    fun updatePhysicalActivityData(physicalActivity: PhysicalActivity)
 
 }
