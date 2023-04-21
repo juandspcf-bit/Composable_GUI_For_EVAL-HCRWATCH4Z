@@ -51,7 +51,8 @@ fun TodayBloodPressureDBHandler(
         isDayFieldListInDBAlreadyUpdated = dataViewModel.isTodaySystolicListInDBAlreadyUpdated,
         setIsDayFieldListAlreadyInsertedInDB = setIsTodaySystolicListAlreadyInsertedInDB,
         setIsDayFieldListInDBAlreadyUpdated = setIsTodaySystolicListInDBAlreadyUpdated,
-        TypesTable.SYSTOLIC
+        TypesTable.SYSTOLIC,
+        dataViewModel.todayFormattedDate
     )
 
 
@@ -84,7 +85,8 @@ fun TodayBloodPressureDBHandler(
         isDayFieldListInDBAlreadyUpdated = dataViewModel.isTodayDiastolicListInDBAlreadyUpdated,
         setIsDayFieldListAlreadyInsertedInDB = setIsTodayDiastolicListAlreadyInsertedInDB,
         setIsDayFieldListInDBAlreadyUpdated = setIsTodayDiastolicListInDBAlreadyUpdated,
-        TypesTable.DIASTOLIC
+        TypesTable.DIASTOLIC,
+        dataViewModel.todayFormattedDate
     )
 
 }

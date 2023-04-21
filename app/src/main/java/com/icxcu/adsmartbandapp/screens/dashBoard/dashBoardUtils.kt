@@ -20,7 +20,8 @@ fun integerFieldUpdateOrInsert(
     isDayFieldListInDBAlreadyUpdated: Boolean,
     setIsDayFieldListAlreadyInsertedInDB: (Boolean) -> Unit,
     setIsDayFieldListInDBAlreadyUpdated: (Boolean) -> Unit,
-    typesTableToModify: TypesTable
+    typesTableToModify: TypesTable,
+    dateData:String,
 ) {
 
     if (valuesReadFromSW.isEmpty().not() &&
@@ -57,10 +58,14 @@ fun integerFieldUpdateOrInsert(
         dayFromTableData[0].id == -1
         && isDayFieldListAlreadyInsertedInDB.not()
     ) {
+        if(valuesReadFromSW.max()==0){
+            return
+        }
         tableToInsertSelector(
             valuesReadFromSW,
             typesTableToModify,
             dataViewModel,
+            dateData
         )
 
         setIsDayFieldListAlreadyInsertedInDB(true)
@@ -78,8 +83,16 @@ fun doubleFieldUpdateOrInsert(
     isDayFieldListInDBAlreadyUpdated: Boolean,
     setIsDayFieldListAlreadyInsertedInDB: (Boolean) -> Unit,
     setIsDayFieldListInDBAlreadyUpdated: (Boolean) -> Unit,
-    typesTableToModify: TypesTable
+    typesTableToModify: TypesTable,
+    dateData: String
 ) {
+    if(dayFromTableData.isEmpty().not()){
+        //Log.d("Comparator", "doubleFieldUpdateOrInsert: ,  $valuesReadFromSW, $fieldListReadFromDB, $typesTableToModify")
+        Log.d("Comparator", "doubleFieldUpdateOrInsert: ,${dayFromTableData[0].id}  , $typesTableToModify, $valuesReadFromSW, $fieldListReadFromDB, ")
+    }
+
+    //Log.d("Comparator", "doubleFieldUpdateOrInsert: , $typesTableToModify, $valuesReadFromSW, $fieldListReadFromDB, ")
+
     if (valuesReadFromSW.isEmpty().not() &&
         dayFromTableData.isEmpty().not() &&
         dayFromTableData[0].id != -1 &&
@@ -116,11 +129,14 @@ fun doubleFieldUpdateOrInsert(
         isDayFieldListAlreadyInsertedInDB.not()
     ) {
 
-        Log.d("Comparision", "doubleFieldUpdateOrInsert:${dayFromTableData[0].id}, ${isDayFieldListAlreadyInsertedInDB} ${valuesReadFromSW.toList() != fieldListReadFromDB.toList()}, $typesTableToModify")
+        if(valuesReadFromSW.max()==0.0){
+            return
+        }
         tableToInsertSelector(
             valuesReadFromSW,
         typesTableToModify,
         dataViewModel,
+            dateData
         )
         setIsDayFieldListAlreadyInsertedInDB(true)
     }
@@ -145,14 +161,17 @@ fun tableToInsertSelector(
     valuesReadFromSW: List<Number>,
     typesTableToModify: TypesTable,
     dataViewModel: DataViewModel,
+    currentDateData: String
 ) {
+
     when (typesTableToModify) {
         TypesTable.STEPS -> {
+
+
             val physicalActivity = PhysicalActivity().apply {
                 macAddress = dataViewModel.macAddress
-                val date = Date()
-                val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                dateData = formattedDate.format(date)
+
+                dateData = currentDateData
                 typesTable = typesTableToModify
                 val newValuesList = mutableMapOf<String, String>()
                 valuesReadFromSW.forEachIndexed { index, i ->
@@ -166,9 +185,8 @@ fun tableToInsertSelector(
         TypesTable.DISTANCE -> {
             val physicalActivity = PhysicalActivity().apply {
                 macAddress = dataViewModel.macAddress
-                val date = Date()
-                val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                dateData = formattedDate.format(date)
+
+                dateData = currentDateData
                 typesTable = typesTableToModify
                 val newValuesList = mutableMapOf<String, String>()
                 valuesReadFromSW.forEachIndexed { index, i ->
@@ -181,9 +199,8 @@ fun tableToInsertSelector(
         TypesTable.CALORIES -> {
             val physicalActivity = PhysicalActivity().apply {
                 macAddress = dataViewModel.macAddress
-                val date = Date()
-                val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                dateData = formattedDate.format(date)
+
+                dateData = currentDateData
                 typesTable = typesTableToModify
                 val newValuesList = mutableMapOf<String, String>()
                 valuesReadFromSW.forEachIndexed { index, i ->
@@ -196,9 +213,8 @@ fun tableToInsertSelector(
         TypesTable.SYSTOLIC -> {
             val bloodPressure = BloodPressure().apply {
                 macAddress = dataViewModel.macAddress
-                val date = Date()
-                val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                dateData = formattedDate.format(date)
+
+                dateData = currentDateData
                 typesTable = typesTableToModify
                 val newValuesList = mutableMapOf<String, String>()
                 valuesReadFromSW.forEachIndexed { index, i ->
@@ -211,9 +227,8 @@ fun tableToInsertSelector(
         TypesTable.DIASTOLIC -> {
             val bloodPressure = BloodPressure().apply {
                 macAddress = dataViewModel.macAddress
-                val date = Date()
-                val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                dateData = formattedDate.format(date)
+
+                dateData = currentDateData
                 typesTable = typesTableToModify
                 val newValuesList = mutableMapOf<String, String>()
                 valuesReadFromSW.forEachIndexed { index, i ->

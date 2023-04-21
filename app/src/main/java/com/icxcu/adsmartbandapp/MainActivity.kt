@@ -211,6 +211,7 @@ class MainActivity : ComponentActivity() {
 
                     dataViewModel.getTodayPhysicalActivityData(dataViewModel.macAddress)
                     dataViewModel.getYesterdayPhysicalActivityData(dataViewModel.macAddress)
+                    dataViewModel.getTodayBloodPressureData(dataViewModel.macAddress)
 
                     DashBoard(
                         bluetoothName = bluetoothName ?: "no name",
@@ -225,6 +226,8 @@ class MainActivity : ComponentActivity() {
                     val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                     val formattedDate = myDateObj.format(myFormatObj)
                     dataViewModel.getDayPhysicalActivityData(formattedDate,
+                        dataViewModel.macAddress)
+                    dataViewModel.getDayBloodPressureData(formattedDate,
                         dataViewModel.macAddress)
 
                     PhysicalActivityInfo(

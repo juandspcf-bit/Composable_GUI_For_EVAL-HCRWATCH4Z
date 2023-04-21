@@ -52,7 +52,8 @@ fun YesterdayPhysicalActivityDBHandler(
         isDayFieldListInDBAlreadyUpdated = dataViewModel.isYesterdayStepsListInDBAlreadyUpdated,
         setIsDayFieldListAlreadyInsertedInDB = setIsYesterdayStepsListAlreadyInsertedInDB,
         setIsDayFieldListInDBAlreadyUpdated = setIsYesterdayStepsListInDBAlreadyUpdated,
-        TypesTable.STEPS
+        typesTableToModify = TypesTable.STEPS,
+        dateData = dataViewModel.yesterdayFormattedDate
     )
 
     val setYesterdayDistanceListReadFromDB: (List<Double>) -> Unit = {
@@ -85,7 +86,8 @@ fun YesterdayPhysicalActivityDBHandler(
         isDayFieldListInDBAlreadyUpdated = dataViewModel.isYesterdayDistanceListInDBAlreadyUpdated,
         setIsDayFieldListAlreadyInsertedInDB = setIsYesterdayDistanceListAlreadyInsertedInDB,
         setIsDayFieldListInDBAlreadyUpdated = setIsYesterdayDistanceListInDBAlreadyUpdated,
-        TypesTable.DISTANCE
+        TypesTable.DISTANCE,
+        dataViewModel.yesterdayFormattedDate
     )
 
 
@@ -119,7 +121,8 @@ fun YesterdayPhysicalActivityDBHandler(
         isDayFieldListInDBAlreadyUpdated = dataViewModel.isYesterdayCaloriesListInDBAlreadyUpdated,
         setIsDayFieldListAlreadyInsertedInDB = setIsYesterdayCaloriesListAlreadyInsertedInDB,
         setIsDayFieldListInDBAlreadyUpdated = setIsYesterdayCaloriesListInDBAlreadyUpdated,
-        TypesTable.CALORIES
+        TypesTable.CALORIES,
+        dataViewModel.yesterdayFormattedDate
     )
 
 }
