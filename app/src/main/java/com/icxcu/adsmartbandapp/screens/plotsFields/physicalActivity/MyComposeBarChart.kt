@@ -1,4 +1,4 @@
-package com.icxcu.adsmartbandapp.screens.plotsFields
+package com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview

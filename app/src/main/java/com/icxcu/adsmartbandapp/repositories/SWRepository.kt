@@ -48,7 +48,7 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
             }else{
 
                 val stepsActivity = PhysicalActivity().apply {
-                    physicalActivityId=-1
+                    id=-1
                     macAddress = queryMacAddress
                     dateData= queryDate
 
@@ -61,7 +61,7 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
                 }
 
                 val distanceActivity = PhysicalActivity().apply {
-                    physicalActivityId=-1
+                    id=-1
                     macAddress = queryMacAddress
                     dateData= queryDate
 
@@ -74,7 +74,7 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
                 }
 
                 val caloriesListActivity = PhysicalActivity().apply {
-                    physicalActivityId=-1
+                    id=-1
                     macAddress = queryMacAddress
                     dateData= queryDate
 
@@ -105,7 +105,7 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
             }else{
 
                 val stepsActivity = PhysicalActivity().apply {
-                    physicalActivityId=-1
+                    id=-1
                     macAddress = queryMacAddress
                     dateData= queryDate
 
@@ -118,7 +118,7 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
                 }
 
                 val distanceActivity = PhysicalActivity().apply {
-                    physicalActivityId=-1
+                    id=-1
                     macAddress = queryMacAddress
                     dateData= queryDate
 
@@ -131,7 +131,7 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
                 }
 
                 val caloriesListActivity = PhysicalActivity().apply {
-                    physicalActivityId=-1
+                    id=-1
                     macAddress = queryMacAddress
                     dateData= queryDate
 
@@ -159,7 +159,7 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
             }else{
 
                 val stepsActivity = PhysicalActivity().apply {
-                    physicalActivityId=-1
+                    id=-1
                     macAddress = queryMacAddress
                     dateData= queryDate
 
@@ -172,7 +172,7 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
                 }
 
                 val distanceActivity = PhysicalActivity().apply {
-                    physicalActivityId=-1
+                    id=-1
                     macAddress = queryMacAddress
                     dateData= queryDate
 
@@ -185,7 +185,7 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
                 }
 
                 val caloriesListActivity = PhysicalActivity().apply {
-                    physicalActivityId=-1
+                    id=-1
                     macAddress = queryMacAddress
                     dateData= queryDate
 
@@ -230,7 +230,7 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
             }else{
 
                 val bloodPressureS = BloodPressure().apply {
-                    bloodPressureId=-1
+                    id=-1
                     macAddress = queryMacAddress
                     dateData= queryDate
 
@@ -243,7 +243,7 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
                 }
 
                 val bloodPressureD = BloodPressure().apply {
-                    bloodPressureId=-1
+                    id=-1
                     macAddress = queryMacAddress
                     dateData= queryDate
 
@@ -273,7 +273,7 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
             }else{
 
                 val bloodPressureS = BloodPressure().apply {
-                    bloodPressureId=-1
+                    id=-1
                     macAddress = queryMacAddress
                     dateData= queryDate
 
@@ -286,7 +286,7 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
                 }
 
                 val bloodPressureD = BloodPressure().apply {
-                    bloodPressureId=-1
+                    id=-1
                     macAddress = queryMacAddress
                     dateData= queryDate
 
@@ -316,7 +316,7 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
             }else{
 
                 val bloodPressureS = BloodPressure().apply {
-                    bloodPressureId=-1
+                    id=-1
                     macAddress = queryMacAddress
                     dateData= queryDate
 
@@ -329,7 +329,7 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
                 }
 
                 val bloodPressureD = BloodPressure().apply {
-                    bloodPressureId=-1
+                    id=-1
                     macAddress = queryMacAddress
                     dateData= queryDate
 
@@ -372,6 +372,7 @@ data class Values(
     var stepList: List<Int>,
     var distanceList: List<Double>,
     var caloriesList: List<Double>,
-    var bloodPressureValuesList: List<List<Double>>,
+    var systolic: List<Double>,
+    var diastolic: List<Double>,
     var date: String
 )

@@ -18,6 +18,7 @@ fun DashBoard(
 
     TodayPhysicalActivityDBHandler(dataViewModel = dataViewModel)
     YesterdayPhysicalActivityDBHandler(dataViewModel = dataViewModel)
+    TodayBloodPressureDBHandler(dataViewModel = dataViewModel)
 
     val dayDateValuesReadFromSW = {
         dataViewModel.todayDateValuesReadFromSW

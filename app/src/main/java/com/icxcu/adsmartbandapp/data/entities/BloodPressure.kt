@@ -5,34 +5,35 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.icxcu.adsmartbandapp.data.TypesTable
 
+
 @Entity(tableName = "BloodPressure")
-class BloodPressure {
+class BloodPressure : Field {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "bloodPressureId")
-    var bloodPressureId: Int = 0
+    override var id: Int = 0
 
     @ColumnInfo(name = "mac_address")
-    var macAddress: String = ""
+    override var macAddress: String = ""
 
     @ColumnInfo(name = "types_table")
-    var typesTable: TypesTable = TypesTable.SYSTOLIC
+    override var typesTable: TypesTable = TypesTable.SYSTOLIC
 
     @ColumnInfo(name = "date_data")
-    var dateData: String = ""
+    override var dateData: String = ""
 
     @ColumnInfo(name = "data")
-    var data: String = ""
+    override var data: String = ""
 
     constructor() {}
-    constructor(physicalActivityId: Int, macAddress: String, dateData: String, data:String) {
-        this.bloodPressureId = physicalActivityId
+    constructor(bloodPressureId: Int, macAddress: String, dateData: String, data:String) {
+        this.id = bloodPressureId
         this.macAddress = macAddress
         this.dateData = dateData
         this.data = data
     }
 
     override fun toString(): String {
-        return "BloodPressure(bloodPressureId=$bloodPressureId, macAddress='$macAddress', typesTable=$typesTable, dateData='$dateData', data='$data')"
+        return "BloodPressure(bloodPressureId=$id, macAddress='$macAddress', typesTable=$typesTable, dateData='$dateData', data='$data')"
     }
 
 

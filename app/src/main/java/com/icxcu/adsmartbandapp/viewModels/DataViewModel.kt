@@ -34,7 +34,9 @@ class DataViewModel(var application: Application) : ViewModel() {
     var todayDateValuesReadFromSW by mutableStateOf(Values(MutableList(48){0}.toList(),
         MutableList(48){0.0}.toList(),
         MutableList(48){0.0}.toList(),
-        MutableList(48){ listOf(0.0, 0.0) }.toList(), todayFormattedDate) )
+        MutableList(48){ 0.0 }.toList(),
+        MutableList(48){ 0.0 }.toList(),
+        todayFormattedDate) )
 
     var todayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
     var todayStepListReadFromDB by mutableStateOf(listOf<Int>())
@@ -70,7 +72,9 @@ class DataViewModel(var application: Application) : ViewModel() {
     var yesterdayDateValuesFromSW by mutableStateOf(Values(MutableList(48){0}.toList(),
         MutableList(48){0.0}.toList(),
         MutableList(48){0.0}.toList(),
-        MutableList(48){ listOf(0.0, 0.0) }.toList(), yesterdayFormattedDate) )
+        MutableList(48){ 0.0 }.toList(),
+        MutableList(48){ 0.0 }.toList(),
+        yesterdayFormattedDate) )
 
     var yesterdayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
     var yesterdayStepListReadFromDB by mutableStateOf(listOf<Int>())

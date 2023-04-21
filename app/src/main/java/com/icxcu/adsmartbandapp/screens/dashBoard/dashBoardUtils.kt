@@ -1,6 +1,9 @@
 package com.icxcu.adsmartbandapp.screens.dashBoard
 
+import android.util.Log
 import com.icxcu.adsmartbandapp.data.TypesTable
+import com.icxcu.adsmartbandapp.data.entities.BloodPressure
+import com.icxcu.adsmartbandapp.data.entities.Field
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 import java.text.SimpleDateFormat
@@ -12,7 +15,7 @@ fun integerFieldUpdateOrInsert(
     dataViewModel: DataViewModel,
     fieldListReadFromDB: List<Int>,
     setDayFieldListReadFromDB: (List<Int>) -> Unit,
-    dayPhysicalActivityData: List<PhysicalActivity>,
+    dayFromTableData: List<Field>,
     isDayFieldListAlreadyInsertedInDB: Boolean,
     isDayFieldListInDBAlreadyUpdated: Boolean,
     setIsDayFieldListAlreadyInsertedInDB: (Boolean) -> Unit,
@@ -21,8 +24,8 @@ fun integerFieldUpdateOrInsert(
 ) {
 
     if (valuesReadFromSW.isEmpty().not() &&
-        dayPhysicalActivityData.isEmpty().not() &&
-        dayPhysicalActivityData[0].physicalActivityId != -1 &&
+        dayFromTableData.isEmpty().not() &&
+        dayFromTableData[0].id != -1 &&
         valuesReadFromSW.toList() != fieldListReadFromDB.toList() &&
         isDayFieldListInDBAlreadyUpdated.not()
     ) {
@@ -33,36 +36,33 @@ fun integerFieldUpdateOrInsert(
         }
 
         val listIndex = mutableListOf<Int>()
-        dayPhysicalActivityData.filterIndexed { index, physicalActivity ->
-            if (physicalActivity.typesTable == typesTableToModify) {
+        dayFromTableData.filterIndexed { index, field ->
+            if (field.typesTable == typesTableToModify) {
                 listIndex.add(index)
                 true
             } else false
         }
-        dayPhysicalActivityData[listIndex[0]].data = newValuesList.toString()
+        dayFromTableData[listIndex[0]].data = newValuesList.toString()
         setDayFieldListReadFromDB(valuesReadFromSW)
-        dataViewModel.updatePhysicalActivityData(dayPhysicalActivityData[0])
+        tableToUpdateSelector(
+            typesTableToModify,
+            dataViewModel,
+            dayFromTableData
+        )
 
         setIsDayFieldListInDBAlreadyUpdated(true)
 
     } else if (valuesReadFromSW.isEmpty().not() &&
-        dayPhysicalActivityData.isEmpty().not() &&
-        dayPhysicalActivityData[0].physicalActivityId == -1 && isDayFieldListAlreadyInsertedInDB.not()
+        dayFromTableData.isEmpty().not() &&
+        dayFromTableData[0].id == -1
+        && isDayFieldListAlreadyInsertedInDB.not()
     ) {
-        val physicalActivity = PhysicalActivity().apply {
-            macAddress = dataViewModel.macAddress
-            val date = Date()
-            val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-            dateData = formattedDate.format(date)
-            typesTable = typesTableToModify
-            val newValuesList = mutableMapOf<String, String>()
-            valuesReadFromSW.forEachIndexed { index, i ->
-                newValuesList[index.toString()] = i.toString()
-            }
-            data = newValuesList.toString()
-        }
-        dataViewModel.insertPhysicalActivityData(physicalActivity)
-        //stepsAlreadyInserted = true
+        tableToInsertSelector(
+            valuesReadFromSW,
+            typesTableToModify,
+            dataViewModel,
+        )
+
         setIsDayFieldListAlreadyInsertedInDB(true)
     }
 
@@ -73,20 +73,20 @@ fun doubleFieldUpdateOrInsert(
     dataViewModel: DataViewModel,
     fieldListReadFromDB: List<Double>,
     setDayFieldListReadFromDB: (List<Double>) -> Unit,
-    dayPhysicalActivityData: List<PhysicalActivity>,
+    dayFromTableData: List<Field>,
     isDayFieldListAlreadyInsertedInDB: Boolean,
     isDayFieldListInDBAlreadyUpdated: Boolean,
     setIsDayFieldListAlreadyInsertedInDB: (Boolean) -> Unit,
     setIsDayFieldListInDBAlreadyUpdated: (Boolean) -> Unit,
     typesTableToModify: TypesTable
 ) {
-
     if (valuesReadFromSW.isEmpty().not() &&
-        dayPhysicalActivityData.isEmpty().not() &&
-        dayPhysicalActivityData[0].physicalActivityId != -1 &&
+        dayFromTableData.isEmpty().not() &&
+        dayFromTableData[0].id != -1 &&
         valuesReadFromSW.toList() != fieldListReadFromDB.toList() &&
         isDayFieldListInDBAlreadyUpdated.not()
     ) {
+
 
         val newValuesList = mutableMapOf<String, String>()
         valuesReadFromSW.forEachIndexed { index, i ->
@@ -94,37 +94,134 @@ fun doubleFieldUpdateOrInsert(
         }
 
         val listIndex = mutableListOf<Int>()
-        dayPhysicalActivityData.filterIndexed { index, physicalActivity ->
-            if (physicalActivity.typesTable == typesTableToModify) {
+        dayFromTableData.filterIndexed { index, field ->
+            if (field.typesTable == typesTableToModify) {
                 listIndex.add(index)
                 true
             } else false
         }
-        dayPhysicalActivityData[listIndex[0]].data = newValuesList.toString()
+        dayFromTableData[listIndex[0]].data = newValuesList.toString()
         setDayFieldListReadFromDB(valuesReadFromSW)
-        dataViewModel.updatePhysicalActivityData(dayPhysicalActivityData[0])
 
+        tableToUpdateSelector(
+            typesTableToModify,
+            dataViewModel,
+            dayFromTableData
+        )
         setIsDayFieldListInDBAlreadyUpdated(true)
 
     } else if (valuesReadFromSW.isEmpty().not() &&
-        dayPhysicalActivityData.isEmpty().not() &&
-        dayPhysicalActivityData[0].physicalActivityId == -1 && isDayFieldListAlreadyInsertedInDB.not()
+        dayFromTableData.isEmpty().not() &&
+        dayFromTableData[0].id == -1 &&
+        isDayFieldListAlreadyInsertedInDB.not()
     ) {
-        val physicalActivity = PhysicalActivity().apply {
-            macAddress = dataViewModel.macAddress
-            val date = Date()
-            val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-            dateData = formattedDate.format(date)
-            typesTable = typesTableToModify
-            val newValuesList = mutableMapOf<String, String>()
-            valuesReadFromSW.forEachIndexed { index, i ->
-                newValuesList[index.toString()] = i.toString()
-            }
-            data = newValuesList.toString()
-        }
-        dataViewModel.insertPhysicalActivityData(physicalActivity)
-        //stepsAlreadyInserted = true
+
+        Log.d("Comparision", "doubleFieldUpdateOrInsert:${dayFromTableData[0].id}, ${isDayFieldListAlreadyInsertedInDB} ${valuesReadFromSW.toList() != fieldListReadFromDB.toList()}, $typesTableToModify")
+        tableToInsertSelector(
+            valuesReadFromSW,
+        typesTableToModify,
+        dataViewModel,
+        )
         setIsDayFieldListAlreadyInsertedInDB(true)
     }
 
+}
+
+fun tableToUpdateSelector(
+    typesTableToModify: TypesTable,
+    dataViewModel: DataViewModel,
+    dayFromTableData: List<Field>,
+) {
+    when (typesTableToModify) {
+        TypesTable.STEPS -> dataViewModel.updatePhysicalActivityData(dayFromTableData[0] as PhysicalActivity)
+        TypesTable.DISTANCE -> dataViewModel.updatePhysicalActivityData(dayFromTableData[0] as PhysicalActivity)
+        TypesTable.CALORIES -> dataViewModel.updatePhysicalActivityData(dayFromTableData[0] as PhysicalActivity)
+        TypesTable.SYSTOLIC -> dataViewModel.updateBloodPressureData(dayFromTableData[0] as BloodPressure)
+        TypesTable.DIASTOLIC -> dataViewModel.updateBloodPressureData(dayFromTableData[0] as BloodPressure)
+    }
+}
+
+fun tableToInsertSelector(
+    valuesReadFromSW: List<Number>,
+    typesTableToModify: TypesTable,
+    dataViewModel: DataViewModel,
+) {
+    when (typesTableToModify) {
+        TypesTable.STEPS -> {
+            val physicalActivity = PhysicalActivity().apply {
+                macAddress = dataViewModel.macAddress
+                val date = Date()
+                val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                dateData = formattedDate.format(date)
+                typesTable = typesTableToModify
+                val newValuesList = mutableMapOf<String, String>()
+                valuesReadFromSW.forEachIndexed { index, i ->
+                    newValuesList[index.toString()] = i.toInt().toString()
+                }
+                data = newValuesList.toString()
+            }
+            dataViewModel.insertPhysicalActivityData(physicalActivity)
+        }
+
+        TypesTable.DISTANCE -> {
+            val physicalActivity = PhysicalActivity().apply {
+                macAddress = dataViewModel.macAddress
+                val date = Date()
+                val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                dateData = formattedDate.format(date)
+                typesTable = typesTableToModify
+                val newValuesList = mutableMapOf<String, String>()
+                valuesReadFromSW.forEachIndexed { index, i ->
+                    newValuesList[index.toString()] = i.toDouble().toString()
+                }
+                data = newValuesList.toString()
+            }
+            dataViewModel.insertPhysicalActivityData(physicalActivity)
+        }
+        TypesTable.CALORIES -> {
+            val physicalActivity = PhysicalActivity().apply {
+                macAddress = dataViewModel.macAddress
+                val date = Date()
+                val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                dateData = formattedDate.format(date)
+                typesTable = typesTableToModify
+                val newValuesList = mutableMapOf<String, String>()
+                valuesReadFromSW.forEachIndexed { index, i ->
+                    newValuesList[index.toString()] = i.toDouble().toString()
+                }
+                data = newValuesList.toString()
+            }
+            dataViewModel.insertPhysicalActivityData(physicalActivity)
+        }
+        TypesTable.SYSTOLIC -> {
+            val bloodPressure = BloodPressure().apply {
+                macAddress = dataViewModel.macAddress
+                val date = Date()
+                val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                dateData = formattedDate.format(date)
+                typesTable = typesTableToModify
+                val newValuesList = mutableMapOf<String, String>()
+                valuesReadFromSW.forEachIndexed { index, i ->
+                    newValuesList[index.toString()] = i.toDouble().toString()
+                }
+                data = newValuesList.toString()
+            }
+            dataViewModel.insertBloodPressureData(bloodPressure)
+        }
+        TypesTable.DIASTOLIC -> {
+            val bloodPressure = BloodPressure().apply {
+                macAddress = dataViewModel.macAddress
+                val date = Date()
+                val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                dateData = formattedDate.format(date)
+                typesTable = typesTableToModify
+                val newValuesList = mutableMapOf<String, String>()
+                valuesReadFromSW.forEachIndexed { index, i ->
+                    newValuesList[index.toString()] = i.toDouble().toString()
+                }
+                data = newValuesList.toString()
+            }
+            dataViewModel.insertBloodPressureData(bloodPressure)
+        }
+    }
 }

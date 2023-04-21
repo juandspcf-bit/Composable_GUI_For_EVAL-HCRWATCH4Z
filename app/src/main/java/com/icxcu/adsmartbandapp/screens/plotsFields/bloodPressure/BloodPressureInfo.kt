@@ -1,4 +1,4 @@
-package com.icxcu.adsmartbandapp.screens.plotsFields
+package com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.repositories.Values
-import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
+import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.EntryHour
 import java.time.Duration
 
 @OptIn(ExperimentalMaterial3Api::class)

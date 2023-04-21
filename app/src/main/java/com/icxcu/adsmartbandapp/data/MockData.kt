@@ -160,7 +160,7 @@ class MockData {
             0.0
         )
 
-        private val bloodPressureHighValues = listOf(116.6666667,
+        private val systolic = listOf(116.6666667,
             120.3333333,
             120.1666667,
             121.6666667,
@@ -209,7 +209,7 @@ class MockData {
             119.4,
             0.0)
 
-        private val bloodPressureLowValues = listOf(81.0,
+        private val diastolic = listOf(81.0,
             84.0,
             82.33333333,
             78.0,
@@ -258,14 +258,10 @@ class MockData {
             81.8,
             0.0)
 
-        private val bloodPressureValues = bloodPressureHighValues.zip(bloodPressureLowValues) { high, low ->
-            listOf(high, low)
-        }.toList()
-
 
         var myDateObj = LocalDateTime.now()
         var myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
         var formattedDate = myDateObj.format(myFormatObj)
-        val valuesToday = Values(stepValues, distanceValues, caloriesValues, bloodPressureValues, formattedDate)
+        val valuesToday = Values(stepValues, distanceValues, caloriesValues, systolic, diastolic, formattedDate)
     }
 }

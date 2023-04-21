@@ -69,7 +69,7 @@ fun ListCardFields(
             size = 140.dp
         )
     )
-    val bPHighMaxValue = dayDateValuesReadFromSW().bloodPressureValuesList.maxOfOrNull { it[0] }
+    val bPHighMaxValue = dayDateValuesReadFromSW().systolic.max()
     val stringValueBP= String.format("%.1f", bPHighMaxValue)
 
     listOf.add(
