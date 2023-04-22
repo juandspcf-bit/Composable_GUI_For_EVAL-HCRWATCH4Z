@@ -20,6 +20,7 @@ import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.column.columnChart
+import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollSpec
 import com.patrykandpatrick.vico.compose.component.shapeComponent
 import com.patrykandpatrick.vico.compose.component.textComponent
 import com.patrykandpatrick.vico.compose.dimensions.dimensionsOf
@@ -35,6 +36,7 @@ import com.patrykandpatrick.vico.core.axis.formatter.DecimalFormatAxisValueForma
 import com.patrykandpatrick.vico.core.axis.formatter.PercentageFormatAxisValueFormatter
 import com.patrykandpatrick.vico.core.axis.horizontal.HorizontalAxis
 import com.patrykandpatrick.vico.core.chart.decoration.ThresholdLine
+import com.patrykandpatrick.vico.core.chart.scale.AutoScaleUp
 import com.patrykandpatrick.vico.core.component.shape.LineComponent
 import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.entry.ChartEntry
@@ -51,6 +53,7 @@ internal fun ComposeBartCharts(
     ProvideChartStyle(rememberChartStyle(chartColors)) {
         val defaultColumns = currentChartStyle.columnChart.columns
         Chart(
+            chartScrollSpec = rememberChartScrollSpec(isScrollEnabled = false),
             chart = columnChart(
                 spacing = 1.dp,
                 columns = remember(defaultColumns) {
@@ -69,7 +72,6 @@ internal fun ComposeBartCharts(
 
                     ),
                 maxLabelCount = 5,
-                //axis = LineComponent(thicknessDp = 90f, color = 0x0000ff),
                 valueFormatter = DecimalFormatAxisValueFormatter("#0", RoundingMode.FLOOR),
                 tickLength = 2.dp
             ),

@@ -207,7 +207,7 @@ class MockData {
             118.8333333,
             125.0,
             119.4,
-            0.0)
+            119.4)
 
         private val diastolic = listOf(81.0,
             84.0,
@@ -256,7 +256,7 @@ class MockData {
             84.0,
             84.66666667,
             81.8,
-            0.0)
+            119.4)
 
 
         var myDateObj = LocalDateTime.now()

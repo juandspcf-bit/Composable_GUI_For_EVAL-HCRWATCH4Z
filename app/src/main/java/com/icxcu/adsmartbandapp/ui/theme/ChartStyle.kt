@@ -16,6 +16,7 @@
 
 package com.icxcu.adsmartbandapp.ui.theme
 
+import android.hardware.camera2.params.ColorSpaceTransform
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -40,10 +41,10 @@ internal fun rememberChartStyle(columnChartColors: List<Color>, lineChartColors:
         val defaultColors = if (isSystemInDarkTheme) DefaultColors.Dark else DefaultColors.Light
         ChartStyle(
             ChartStyle.Axis(
-                axisLabelColor = Color(defaultColors.axisLabelColor),
-                axisGuidelineColor = Color(defaultColors.axisGuidelineColor),
-                axisLineColor = Color(defaultColors.axisLineColor),
-                axisGuidelineWidth = 0.dp,
+                axisLabelColor = Color.White,//Color(defaultColors.axisLabelColor),
+                axisGuidelineColor = Color.Transparent,//Color(defaultColors.axisGuidelineColor),
+                axisLineColor = Color.White,//Color(defaultColors.axisLineColor),
+                axisGuidelineWidth = 2.dp,
             ),
             ChartStyle.ColumnChart(
                 columnChartColors.map { columnChartColor ->

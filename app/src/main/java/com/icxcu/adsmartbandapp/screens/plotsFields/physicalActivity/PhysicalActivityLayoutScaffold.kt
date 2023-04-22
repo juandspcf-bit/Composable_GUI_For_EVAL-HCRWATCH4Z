@@ -31,6 +31,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.icxcu.adsmartbandapp.data.MockData
+import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityInfoContent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

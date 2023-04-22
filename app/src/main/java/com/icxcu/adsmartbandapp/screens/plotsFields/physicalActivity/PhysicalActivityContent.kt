@@ -1,4 +1,4 @@
-package com.icxcu.adsmartbandapp.screens.plotsFields
+package com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -31,7 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.R
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.MyComposeBarChart
+import com.icxcu.adsmartbandapp.screens.plotsFields.getHours
+import com.icxcu.adsmartbandapp.screens.plotsFields.getIntervals
 
 @Composable
 fun PhysicalActivityInfoContent(

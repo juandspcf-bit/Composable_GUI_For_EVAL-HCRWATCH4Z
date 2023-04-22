@@ -21,7 +21,7 @@ fun MyComposeBarChart(stepsList:()-> List<Int>){
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun MyComposeBarChartPreview() {
+fun MyComposeBarChartPreview2() {
     val stepsList = {
         MockData.valuesToday.stepList
     }
