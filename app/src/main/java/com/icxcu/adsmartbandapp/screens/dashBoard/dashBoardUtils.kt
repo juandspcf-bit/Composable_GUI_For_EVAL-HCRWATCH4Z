@@ -86,12 +86,7 @@ fun doubleFieldUpdateOrInsert(
     typesTableToModify: TypesTable,
     dateData: String
 ) {
-    if(dayFromTableData.isEmpty().not()){
-        //Log.d("Comparator", "doubleFieldUpdateOrInsert: ,  $valuesReadFromSW, $fieldListReadFromDB, $typesTableToModify")
-        Log.d("Comparator", "doubleFieldUpdateOrInsert: ,${dayFromTableData[0].id}  , $typesTableToModify, $valuesReadFromSW, $fieldListReadFromDB, ")
-    }
 
-    //Log.d("Comparator", "doubleFieldUpdateOrInsert: , $typesTableToModify, $valuesReadFromSW, $fieldListReadFromDB, ")
 
     if (valuesReadFromSW.isEmpty().not() &&
         dayFromTableData.isEmpty().not() &&
@@ -150,10 +145,10 @@ fun tableToUpdateSelector(
 ) {
     when (typesTableToModify) {
         TypesTable.STEPS -> dataViewModel.updatePhysicalActivityData(dayFromTableData[0] as PhysicalActivity)
-        TypesTable.DISTANCE -> dataViewModel.updatePhysicalActivityData(dayFromTableData[0] as PhysicalActivity)
-        TypesTable.CALORIES -> dataViewModel.updatePhysicalActivityData(dayFromTableData[0] as PhysicalActivity)
+        TypesTable.DISTANCE -> dataViewModel.updatePhysicalActivityData(dayFromTableData[1] as PhysicalActivity)
+        TypesTable.CALORIES -> dataViewModel.updatePhysicalActivityData(dayFromTableData[2] as PhysicalActivity)
         TypesTable.SYSTOLIC -> dataViewModel.updateBloodPressureData(dayFromTableData[0] as BloodPressure)
-        TypesTable.DIASTOLIC -> dataViewModel.updateBloodPressureData(dayFromTableData[0] as BloodPressure)
+        TypesTable.DIASTOLIC -> dataViewModel.updateBloodPressureData(dayFromTableData[1] as BloodPressure)
     }
 }
 

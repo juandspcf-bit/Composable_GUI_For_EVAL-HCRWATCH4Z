@@ -1,5 +1,6 @@
 package com.icxcu.adsmartbandapp.screens.dashBoard
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -75,7 +76,7 @@ fun YesterdayPhysicalActivityDBHandler(
         dataViewModel.isYesterdayDistanceListInDBAlreadyUpdated = it
     }
 
-
+    Log.d("Results", "YesterdayPhysicalActivityDBHandler: ${yesterdayDateValuesReadFromSW().distanceList}")
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = yesterdayDateValuesReadFromSW().distanceList,
         dataViewModel = dataViewModel,

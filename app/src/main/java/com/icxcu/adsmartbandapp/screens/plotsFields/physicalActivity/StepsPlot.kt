@@ -1,12 +1,12 @@
-package com.icxcu.adsmartbandapp.screens.plotsFields
+package com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
-import com.icxcu.adsmartbandapp.repositories.Values
+import com.icxcu.adsmartbandapp.screens.plotsFields.getDoubleListFromStringMap
+import com.icxcu.adsmartbandapp.screens.plotsFields.getIntegerListFromStringMap
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -23,6 +23,10 @@ fun PhysicalActivityInfo(
     val dayPhysicalActivityResultsFromDB by dataViewModel.dayPhysicalActivityResultsFromDB.observeAsState(
         MutableList(0) { PhysicalActivity() }.toList()
     )
+
+    if(dayPhysicalActivityResultsFromDB.isEmpty().not()){
+        dataViewModel.selectedDay = dayPhysicalActivityResultsFromDB[0].dateData
+    }
 
     dataViewModel.dayStepListFromDB = if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
         val filter = dayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.STEPS }
@@ -77,18 +81,10 @@ fun PhysicalActivityInfo(
     }
     val stateMiliSecondsDateDialogDatePickerSetter:(Long) -> Unit = { value ->
         dataViewModel.stateMiliSecondsDateDialogDatePicker = value
-        Log.d(
-            "Dialog",
-            "DatePickerDialogSample: $value"
-        )
 
         val date = Date(value)
         val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         val dateData = formattedDate.format(date)
-        Log.d(
-            "Dialog",
-            "DatePickerDialogSample: $dateData"
-        )
 
         dataViewModel.getDayPhysicalActivityData(dateData,
             dataViewModel.macAddress)
@@ -99,6 +95,7 @@ fun PhysicalActivityInfo(
         stepsListFromDB,
         distanceListFromDB,
         caloriesListFromDB,
+        dataViewModel.selectedDay,
         stateShowDialogDatePickerSetter,
         stateShowDialogDatePickerValue,
         stateMiliSecondsDateDialogDatePicker,

@@ -25,7 +25,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     val pastYesterdayLocalDateTime = todayLocalDateTime.minusDays(2)
     val pastYesterdayFormattedDate = pastYesterdayLocalDateTime.format(myFormatObj)
 
-
+    var selectedDay by mutableStateOf("")
     var dayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
     var dayStepListFromDB by mutableStateOf(listOf<Int>())
     var dayDistanceListFromDB by mutableStateOf(listOf<Double>())

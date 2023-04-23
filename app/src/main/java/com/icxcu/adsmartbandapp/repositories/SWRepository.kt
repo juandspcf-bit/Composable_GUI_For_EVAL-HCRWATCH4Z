@@ -1,5 +1,6 @@
 package com.icxcu.adsmartbandapp.repositories
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.data.TypesTable
@@ -42,7 +43,7 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
     fun getDayPhysicalActivityData(queryDate: String, queryMacAddress:String) {
         coroutineScope.launch(Dispatchers.Main) {
             val results = asyncDayPhysicalActivityData(queryDate, queryMacAddress)
-
+            Log.d("Results", "getDayPhysicalActivityData: $results")
             if(results!=null && results.isEmpty().not()){
                 dayPhysicalActivityResultsFromDB.value = results
             }else{
