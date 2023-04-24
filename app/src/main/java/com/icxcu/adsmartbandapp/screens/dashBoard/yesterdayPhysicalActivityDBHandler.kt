@@ -76,7 +76,7 @@ fun YesterdayPhysicalActivityDBHandler(
         dataViewModel.isYesterdayDistanceListInDBAlreadyUpdated = it
     }
 
-    Log.d("Results", "YesterdayPhysicalActivityDBHandler: ${yesterdayDateValuesReadFromSW().distanceList}")
+
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = yesterdayDateValuesReadFromSW().distanceList,
         dataViewModel = dataViewModel,

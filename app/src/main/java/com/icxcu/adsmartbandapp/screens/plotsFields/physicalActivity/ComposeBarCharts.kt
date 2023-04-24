@@ -77,6 +77,7 @@ internal fun ComposeBartCharts(
             ),
 
             bottomAxis = bottomAxis(
+                tickPosition= HorizontalAxis.TickPosition.Center(1,5),
                 sizeConstraint = Axis.SizeConstraint.TextWidth("sssss"),
                 valueFormatter = axisValueFormatter,
                 label = axisLabelComponent(
@@ -160,7 +161,7 @@ val axisValueFormatter = AxisValueFormatter<AxisPosition.Horizontal.Bottom> { va
     (chartValues.chartEntryModel.entries.first().getOrNull(value.toInt()) as? EntryHour)
         ?.x
         ?.run {
-            if (toInt() % 6L == 0L) {
+            if (toInt() % 1L == 0L) {
                 val hour = "${Duration.ofHours(0).plusMinutes(30L * toLong()).toHours()}"
                 val time = hour + if ((toInt() + 1) % 2 == 0) {
                     ":30"

@@ -25,6 +25,7 @@ fun integerFieldUpdateOrInsert(
 ) {
 
     if (valuesReadFromSW.isEmpty().not() &&
+        valuesReadFromSW.max()!=0 &&
         dayFromTableData.isEmpty().not() &&
         dayFromTableData[0].id != -1 &&
         valuesReadFromSW.toList() != fieldListReadFromDB.toList() &&
@@ -54,6 +55,7 @@ fun integerFieldUpdateOrInsert(
         setIsDayFieldListInDBAlreadyUpdated(true)
 
     } else if (valuesReadFromSW.isEmpty().not() &&
+        valuesReadFromSW.max()!=0 &&
         dayFromTableData.isEmpty().not() &&
         dayFromTableData[0].id == -1
         && isDayFieldListAlreadyInsertedInDB.not()
@@ -86,9 +88,8 @@ fun doubleFieldUpdateOrInsert(
     typesTableToModify: TypesTable,
     dateData: String
 ) {
-
-
     if (valuesReadFromSW.isEmpty().not() &&
+        valuesReadFromSW.max()!=0.0 &&
         dayFromTableData.isEmpty().not() &&
         dayFromTableData[0].id != -1 &&
         valuesReadFromSW.toList() != fieldListReadFromDB.toList() &&
@@ -119,6 +120,7 @@ fun doubleFieldUpdateOrInsert(
         setIsDayFieldListInDBAlreadyUpdated(true)
 
     } else if (valuesReadFromSW.isEmpty().not() &&
+        valuesReadFromSW.max()!=0.0 &&
         dayFromTableData.isEmpty().not() &&
         dayFromTableData[0].id == -1 &&
         isDayFieldListAlreadyInsertedInDB.not()

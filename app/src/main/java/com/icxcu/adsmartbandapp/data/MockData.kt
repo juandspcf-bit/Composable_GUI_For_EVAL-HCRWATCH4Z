@@ -256,7 +256,7 @@ class MockData {
             84.0,
             84.66666667,
             81.8,
-            119.4)
+            81.8)
 
 
         var myDateObj = LocalDateTime.now()
