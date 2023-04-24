@@ -103,14 +103,14 @@ internal fun ComposeBartCharts(
     }
 }
 
-private val legendItemLabelTextSize = 12.sp
-private val legendItemIconSize = 8.dp
-private val legendItemIconPaddingValue = 10.dp
-private val legendItemSpacing = 4.dp
+val legendItemLabelTextSize = 12.sp
+val legendItemIconSize = 8.dp
+val legendItemIconPaddingValue = 10.dp
+val legendItemSpacing = 4.dp
 private val legendTopPaddingValue = 8.dp
-private val legendPadding = dimensionsOf(top = legendTopPaddingValue)
+val legendPadding = dimensionsOf(top = legendTopPaddingValue)
 @Composable
-private fun rememberLegend() = verticalLegend(
+fun rememberLegend() = verticalLegend(
     items = chartColors.mapIndexed { index, chartColor ->
         verticalLegendItem(
             icon = shapeComponent(Shapes.pillShape, chartColor),
@@ -189,7 +189,7 @@ private const val BOTTOM_AXIS_TICK_SPACING = 1
 
 private val color1 = Color(COLOR_1_CODE)
 private val color2 = Color(COLOR_2_CODE)
-private val chartColors = listOf(color1)
+val chartColors = listOf(color1, color2)
 private val thresholdLineLabelMarginValue = 4.dp
 private val thresholdLineLabelHorizontalPaddingValue = 8.dp
 private val thresholdLineLabelVerticalPaddingValue = 2.dp

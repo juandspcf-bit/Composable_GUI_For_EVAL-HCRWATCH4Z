@@ -118,7 +118,7 @@ class DataViewModel(var application: Application) : ViewModel() {
         todayPhysicalActivityResultsFromDB = swRepository.todayPhysicalActivityResultsFromDB
         yesterdayPhysicalActivityResultsFromDB = swRepository.yesterdayPhysicalActivityResultsFromDB
 
-        dayBloodPressureResultsFromDB = swRepository.todayBloodPressureResultsFromDB
+        dayBloodPressureResultsFromDB = swRepository.dayBloodPressureResultsFromDB
         todayBloodPressureResultsFromDB = swRepository.todayBloodPressureResultsFromDB
         yesterdayBloodPressureResultsFromDB = swRepository.yesterdayBloodPressureResultsFromDB
 

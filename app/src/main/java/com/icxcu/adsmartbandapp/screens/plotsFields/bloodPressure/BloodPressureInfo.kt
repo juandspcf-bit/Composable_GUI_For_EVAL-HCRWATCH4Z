@@ -1,130 +1,93 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.*
+import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
-import com.icxcu.adsmartbandapp.repositories.Values
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.EntryHour
-import java.time.Duration
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import com.icxcu.adsmartbandapp.data.TypesTable
+import com.icxcu.adsmartbandapp.data.entities.BloodPressure
+import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
+import com.icxcu.adsmartbandapp.screens.plotsFields.getDoubleListFromStringMap
+import com.icxcu.adsmartbandapp.screens.plotsFields.getIntegerListFromStringMap
+import com.icxcu.adsmartbandapp.viewModels.DataViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BloodPressureInfo(
-    values: Values,
+    dataViewModel: DataViewModel,
     navLambda: () -> Unit
-) {
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = "Blood Pressure", maxLines = 1,
-                        overflow = TextOverflow.Ellipsis, color = Color.White
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        navLambda()
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Go Back",
-                            tint = Color.White
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color(0xff0d1721),
-                ),
-                modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                scrollBehavior = scrollBehavior,
-                actions = {
-                    IconButton(onClick = {
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.DateRange,
-                            contentDescription = "Date Range",
-                            tint = Color.White
-                        )
-                    }
-                }
-            )
-        },
-        content = { padding ->
-            Box(
-                Modifier
-                    .padding(padding)
-                    .fillMaxSize(), contentAlignment = Alignment.TopCenter
-            ) {
+){
 
+    val dayBloodPressureResultsFromDB by dataViewModel.dayBloodPressureResultsFromDB.observeAsState(
+        MutableList(0) { BloodPressure() }.toList()
+    )
 
+    if(dayBloodPressureResultsFromDB.isEmpty().not()){
+        Log.d("date", "BloodPressureInfo: $dayBloodPressureResultsFromDB")
+        dataViewModel.selectedDay = dayBloodPressureResultsFromDB[0].dateData
+    }
 
-            }
+    dataViewModel.daySystolicListFromDB = if (dayBloodPressureResultsFromDB.isEmpty().not()) {
+        val filter = dayBloodPressureResultsFromDB.filter { it.typesTable == TypesTable.SYSTOLIC }
+        getDoubleListFromStringMap(filter[0].data)
+    } else {
+        MutableList(48) { 0.0 }.toList()
+    }
 
-        },)
-}
-
-@Composable
-fun BloodPressureInfoContent(values: Values){
-    ConstraintLayout(
-        modifier = Modifier
-            .background(Color(0xff1d2a35))
-            .fillMaxSize()
-    ) {
-        val (plot, divider, tabRow, list) = createRefs()
-        val guideH3 = createGuidelineFromTop(fraction = 0.4f)
-
-
-        val stepsEntries = values.stepList.mapIndexed { index, y ->
-            val entry = EntryHour(
-                Duration.ofHours(24).minusMinutes(30L * index.toLong()),
-                index.toFloat(), y.toFloat()
-            )
-            entry
+    dataViewModel.dayDiastolicListFromDB = if (dayBloodPressureResultsFromDB.isEmpty().not()) {
+        val filter = dayBloodPressureResultsFromDB.filter { it.typesTable == TypesTable.DIASTOLIC }
+        if (filter.isEmpty()) {
+            MutableList(48) { 0.0 }.toList()
+        } else {
+            getDoubleListFromStringMap(filter[0].data)
         }
+    } else {
+        MutableList(48) { 0.0 }.toList()
+    }
 
 
+    val systolicListFromDB = {
+        dataViewModel.daySystolicListFromDB
+    }
+    val diastolicListFromDB = {
+        dataViewModel.dayDiastolicListFromDB
+    }
 
-        Box(modifier = Modifier
-/*            .padding(start = 10.dp, end = 10.dp)
-            .clip(shape = RoundedCornerShape(size = 25.dp))*/
-            .background(
-                Color(0xfff5f5f7)
-            )
-            .constrainAs(plot) {
-                top.linkTo(parent.top)
-                bottom.linkTo(guideH3)
-                linkTo(start = parent.start, end = parent.end)
-                height = Dimension.fillToConstraints
-            }
-        ) {
+    //DialogDatePicker State
+    val stateShowDialogDatePickerValue = {
+        dataViewModel.stateShowDialogDatePicker
+    }
+    val stateShowDialogDatePickerSetter:(Boolean) -> Unit = { value ->
+        dataViewModel.stateShowDialogDatePicker = value
+    }
 
-            //ComposeBartCharts(chartEntryModelProducer = ChartEntryModelProducer(stepsEntries))
-        }
+    val stateMiliSecondsDateDialogDatePicker = {
+        dataViewModel.stateMiliSecondsDateDialogDatePicker
+    }
+    val stateMiliSecondsDateDialogDatePickerSetter:(Long) -> Unit = { value ->
+        dataViewModel.stateMiliSecondsDateDialogDatePicker = value
 
-        Divider(modifier = Modifier
-            .constrainAs(divider) {
-                top.linkTo(guideH3)
-                //bottom.linkTo(list.top)
-                linkTo(start = parent.start, end = parent.end)
-            }
-            .height(2.dp))
+        val date = Date(value)
+        val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val dateData = formattedDate.format(date)
+
+        Log.d("date", "BloodPressureInfo: $dateData")
+        dataViewModel.getDayBloodPressureData(dateData,
+            dataViewModel.macAddress)
 
     }
+
+    BloodPressureLayoutScaffold(
+        systolicList = systolicListFromDB,
+    diastolicList= diastolicListFromDB,
+    selectedDay = dataViewModel.selectedDay,
+    stateShowDialogDatePickerSetter = stateShowDialogDatePickerSetter,
+    stateShowDialogDatePickerValue = stateShowDialogDatePickerValue,
+    stateMiliSecondsDateDialogDatePickerS = stateMiliSecondsDateDialogDatePicker,
+    stateMiliSecondsDateDialogDatePickerSetterS= stateMiliSecondsDateDialogDatePickerSetter,
+    navLambda= navLambda
+    )
+
 }

@@ -35,7 +35,7 @@ import com.icxcu.adsmartbandapp.screens.plotsFields.getHours
 import com.icxcu.adsmartbandapp.screens.plotsFields.getIntervals
 
 @Composable
-fun PhysicalActivityInfoContent(
+fun PhysicalActivityContent(
     stepsListContent: () -> List<Int>,
     distanceListContent: () -> List<Double>,
     caloriesListContent: () -> List<Double>,
@@ -82,6 +82,7 @@ fun PhysicalActivityInfoContent(
                 top.linkTo(guideH3)
                 //bottom.linkTo(list.top)
                 linkTo(start = parent.start, end = parent.end)
+                height = Dimension.wrapContent
             }
             .height(2.dp))
 

@@ -34,6 +34,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.icxcu.adsmartbandapp.data.MockData
+import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -116,7 +117,7 @@ fun PhysicalActivityLayoutScaffold(
                 val caloriesListScaffold = {
                     caloriesList()
                 }
-                PhysicalActivityInfoContent(
+                PhysicalActivityContent(
                     stepsListScaffold,
                     distanceListScaffold,
                     caloriesListScaffold
@@ -136,60 +137,7 @@ fun PhysicalActivityLayoutScaffold(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DatePickerDialogSample(
-    modifyShowDialog: (Boolean) -> Unit,
-    stateMiliSecondsDateDialogDatePicker: () -> Long,
-    stateMiliSecondsDateDialogDatePickerSetter: (Long) -> Unit,
-) {
-    // Decoupled snackbar host state from scaffold state for demo purposes.
-    val snackState = remember { SnackbarHostState() }
-    val snackScope = rememberCoroutineScope()
-    SnackbarHost(hostState = snackState, Modifier)
-    val openDialog = remember { mutableStateOf(true) }
-// TODO demo how to read the selected date from the state.
-    if (openDialog.value) {
-        val datePickerState = rememberDatePickerState()
-        val confirmEnabled =
-            remember { derivedStateOf { datePickerState.selectedDateMillis != null } }
-        DatePickerDialog(
-            onDismissRequest = {
-                openDialog.value = false
-                modifyShowDialog(false)
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        openDialog.value = false
 
-                        datePickerState.selectedDateMillis?.let {
-                            stateMiliSecondsDateDialogDatePickerSetter(
-                                it
-                            )
-                        }
-                        modifyShowDialog(false)
-                    },
-                    enabled = confirmEnabled.value
-                ) {
-                    Text("OK")
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        openDialog.value = false
-                        modifyShowDialog(false)
-                    }
-                ) {
-                    Text("Cancel")
-                }
-            }
-        ) {
-            DatePicker(state = datePickerState)
-        }
-    }
-}
 
 
 @Preview(showBackground = true, showSystemUi = true)

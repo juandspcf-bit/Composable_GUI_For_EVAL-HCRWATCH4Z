@@ -28,6 +28,7 @@ import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
 import com.icxcu.adsmartbandapp.screens.*
 import com.icxcu.adsmartbandapp.screens.dashBoard.DashBoard
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureInfo
+import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureLayoutScaffold
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityInfo
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
 import com.icxcu.adsmartbandapp.viewModels.*
@@ -227,8 +228,7 @@ class MainActivity : ComponentActivity() {
                     val formattedDate = myDateObj.format(myFormatObj)
                     dataViewModel.getDayPhysicalActivityData(formattedDate,
                         dataViewModel.macAddress)
-                    dataViewModel.getDayBloodPressureData(formattedDate,
-                        dataViewModel.macAddress)
+
 
                     PhysicalActivityInfo(
                         dataViewModel = dataViewModel
@@ -236,7 +236,15 @@ class MainActivity : ComponentActivity() {
                 }
 
                 composable(Routes.BloodPressurePlots.route){
-                    BloodPressureInfo(values = dataViewModel.todayDateValuesReadFromSW,){ navLambdaBackDataHome() }
+                    val myDateObj = LocalDateTime.now()
+                    val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                    val formattedDate = myDateObj.format(myFormatObj)
+                    dataViewModel.getDayBloodPressureData(formattedDate,
+                        dataViewModel.macAddress)
+                    BloodPressureInfo(dataViewModel=dataViewModel){
+                        navLambdaBackDataHome()
+                    }
+
                 }
 
 
