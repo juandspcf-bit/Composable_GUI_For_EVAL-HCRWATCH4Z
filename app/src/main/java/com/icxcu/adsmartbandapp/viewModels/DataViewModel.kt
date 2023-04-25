@@ -12,6 +12,7 @@ import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.database.SWRoomDatabase
 import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.repositories.Values
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -24,6 +25,9 @@ class DataViewModel(var application: Application) : ViewModel() {
     val yesterdayFormattedDate = yesterdayLocalDateTime.format(myFormatObj)
     val pastYesterdayLocalDateTime = todayLocalDateTime.minusDays(2)
     val pastYesterdayFormattedDate = pastYesterdayLocalDateTime.format(myFormatObj)
+
+    var progressbarForFetchingDataFromSW by mutableStateOf(false)
+
 
     var selectedDay by mutableStateOf("")
     var dayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
@@ -126,8 +130,13 @@ class DataViewModel(var application: Application) : ViewModel() {
             swRepository.sharedStepsFlow.collect{
 
                 when(it.date){
-                    todayFormattedDate -> todayDateValuesReadFromSW = it
-                    yesterdayFormattedDate -> yesterdayDateValuesFromSW = it
+                    todayFormattedDate -> {
+                        todayDateValuesReadFromSW = it
+                    }
+                    yesterdayFormattedDate -> {
+                        yesterdayDateValuesFromSW = it
+                        progressbarForFetchingDataFromSW = false
+                    }
                 }
 
 
@@ -139,7 +148,14 @@ class DataViewModel(var application: Application) : ViewModel() {
 
 
     fun requestSmartWatchData(name:String="", macAddress: String=""){
+
         swRepository.requestSmartWatchData()
+
+        viewModelScope.launch {
+            delay(1000)
+            progressbarForFetchingDataFromSW=true
+        }
+
     }
 
     fun getDayPhysicalActivityData(dateData:String, macAddress:String) {

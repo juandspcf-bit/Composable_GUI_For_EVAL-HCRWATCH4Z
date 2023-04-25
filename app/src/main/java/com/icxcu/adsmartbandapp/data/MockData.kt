@@ -259,9 +259,14 @@ class MockData {
             81.8)
 
 
-        var myDateObj = LocalDateTime.now()
+
         var myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-        var formattedDate = myDateObj.format(myFormatObj)
-        val valuesToday = Values(stepValues, distanceValues, caloriesValues, systolic, diastolic, formattedDate)
+        var myDateObj = LocalDateTime.now()
+        var formattedDateToday = myDateObj.format(myFormatObj)
+        var myDateObj2 = LocalDateTime.now().minusDays(1)
+        var formattedDateYesterday = myDateObj2.format(myFormatObj)
+
+        val valuesToday = Values(stepValues, distanceValues, caloriesValues, systolic, diastolic, formattedDateToday)
+        val valuesYesterday = Values(stepValues, distanceValues, caloriesValues, systolic, diastolic, formattedDateYesterday)
     }
 }

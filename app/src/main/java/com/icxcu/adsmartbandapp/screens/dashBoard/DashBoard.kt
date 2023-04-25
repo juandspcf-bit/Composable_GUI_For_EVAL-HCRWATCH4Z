@@ -22,11 +22,14 @@ fun DashBoard(
     val dayDateValuesReadFromSW = {
         dataViewModel.todayDateValuesReadFromSW
     }
-
+    val getVisibility = {
+        dataViewModel.progressbarForFetchingDataFromSW
+    }
     DashBoardScaffold(
         bluetoothName,
         bluetoothAddress,
         dayDateValuesReadFromSW,
+        getVisibility,
         navMainController,
         navLambda
     )

@@ -33,6 +33,8 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
         CoroutineScope(Dispatchers.Default).launch {
             delay(5000)
             _sharedStepsFlow.emit(MockData.valuesToday)
+            delay(5000)
+            _sharedStepsFlow.emit(MockData.valuesYesterday)
         }
     }
 

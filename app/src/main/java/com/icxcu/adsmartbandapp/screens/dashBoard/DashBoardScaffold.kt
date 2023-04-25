@@ -1,11 +1,22 @@
 package com.icxcu.adsmartbandapp.screens.dashBoard
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -16,7 +27,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
@@ -24,6 +41,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -31,21 +49,25 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.bottombardemo.screens.Favorites
+import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.ListCardFields
 import com.icxcu.adsmartbandapp.screens.NavBarItems
 import com.icxcu.adsmartbandapp.screens.NavRoutes
 import com.icxcu.adsmartbandapp.screens.TestingHealthScreen
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashBoardScaffold(
-    bluetoothName: String,
-    bluetoothAddress: String,
-    dayDateValuesReadFromSW: () -> Values,
-    navMainController: NavHostController,
-    navLambda: () -> Unit
+    bluetoothName: String = "no name",
+    bluetoothAddress: String = "no address",
+    dayDateValuesReadFromSW: () -> Values = {MockData.valuesToday},
+    getVisibility:()->Boolean = { false },
+    navMainController: NavHostController = rememberNavController(),
+    navLambda: () -> Unit = {}
 ){
     val navController = rememberNavController()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -78,11 +100,36 @@ fun DashBoardScaffold(
             )
         },
         content = { padding ->
-            Box(
-                Modifier
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
                     .padding(padding)
                     .fillMaxSize()
             ) {
+/*
+                var visibility by remember{ mutableStateOf(false) }
+                LaunchedEffect(key1 = true){
+                    delay(500)
+                    visibility = getVisibility()
+                }
+*/
+
+                AnimatedVisibility(
+                    modifier = Modifier
+                        .background(Color(0xFFFFB74D))
+                        .padding(top = 15.dp, bottom = 15.dp),
+                    visible = getVisibility(),
+                    enter = expandVertically(animationSpec = tween(durationMillis = 1000)),
+                    exit = shrinkVertically(animationSpec = tween(durationMillis = 1000)),
+                ) {
+                    Box(contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxWidth()){
+                        CircularProgressIndicator(
+                            color = Color(0xFF443B2E)
+                        )
+                    }
+                }
+
                 NavigationHost(
                     navController = navController,
                     dayDateValuesReadFromSW = dayDateValuesReadFromSW,
@@ -165,7 +212,10 @@ fun BottomNavigationBar(navController: NavHostController) {
 @Preview(showBackground = true)
 @Composable
 fun DashBoardPreview() {
+    DashBoardScaffold(
+        getVisibility = {true}
+    ) {
 
-
+    }
 
 }
