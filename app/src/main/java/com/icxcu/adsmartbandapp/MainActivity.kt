@@ -214,6 +214,7 @@ class MainActivity : ComponentActivity() {
                     dataViewModel.getTodayPhysicalActivityData(dataViewModel.macAddress)
                     dataViewModel.getYesterdayPhysicalActivityData(dataViewModel.macAddress)
                     dataViewModel.getTodayBloodPressureData(dataViewModel.macAddress)
+                    dataViewModel.getYesterdayBloodPressureData(dataViewModel.macAddress)
 
                     DashBoard(
                         bluetoothName = bluetoothName ?: "no name",
@@ -229,8 +230,6 @@ class MainActivity : ComponentActivity() {
                     val formattedDate = myDateObj.format(myFormatObj)
                     dataViewModel.getDayPhysicalActivityData(formattedDate,
                         dataViewModel.macAddress)
-
-
                     PhysicalActivityInfo(
                         dataViewModel = dataViewModel
                     ){ navLambdaBackDataHome() }

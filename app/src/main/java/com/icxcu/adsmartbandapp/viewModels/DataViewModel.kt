@@ -143,7 +143,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     }
 
     fun getDayPhysicalActivityData(dateData:String, macAddress:String) {
-        swRepository.getDayPhysicalActivityData(dateData, macAddress)
+        swRepository.getAnyDayPhysicalActivityData(dateData, macAddress)
     }
 
     fun getTodayPhysicalActivityData(macAddress:String) {
@@ -164,14 +164,14 @@ class DataViewModel(var application: Application) : ViewModel() {
 
 
     fun getDayBloodPressureData(dateData:String, macAddress:String) {
-        swRepository.getDayBloodPressureData(dateData, macAddress)
+        swRepository.getAnyDayBloodPressureData(dateData, macAddress)
     }
 
     fun getTodayBloodPressureData(macAddress:String) {
         swRepository.getTodayBloodPressureData(todayFormattedDate, macAddress)
     }
     fun getYesterdayBloodPressureData(macAddress:String) {
-        swRepository.getYesterdayPhysicalActivityData(yesterdayFormattedDate, macAddress)
+        swRepository.getYesterdayBloodPressureData(yesterdayFormattedDate, macAddress)
     }
 
     fun insertBloodPressureData(bloodPressure: BloodPressure) {

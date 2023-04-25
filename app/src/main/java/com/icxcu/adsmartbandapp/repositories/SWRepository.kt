@@ -1,6 +1,5 @@
 package com.icxcu.adsmartbandapp.repositories
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.data.TypesTable
@@ -30,8 +29,6 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
     val sharedStepsFlow = _sharedStepsFlow.asSharedFlow()
 
 
-
-
     fun requestSmartWatchData(name:String="", macAddress: String="") {
         CoroutineScope(Dispatchers.Default).launch {
             delay(5000)
@@ -39,177 +36,17 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
         }
     }
 
-
-
-    fun getDayPhysicalActivityData(queryDate: String, queryMacAddress:String) {
-        coroutineScope.launch(Dispatchers.Main) {
-            val results = asyncDayPhysicalActivityData(queryDate, queryMacAddress)
-            Log.d("Results", "getDayPhysicalActivityData: $results")
-            if(results!=null && results.isEmpty().not()){
-                dayPhysicalActivityResultsFromDB.value = results
-            }else{
-
-                val stepsActivity = PhysicalActivity().apply {
-                    id=-1
-                    macAddress = queryMacAddress
-                    dateData= queryDate
-
-                    val newValuesList = mutableMapOf<String,String>()
-                    MutableList(48) { 0 }.forEachIndexed{ index, i ->
-                        newValuesList[index.toString()]= i.toString()
-                    }
-                    data= newValuesList.toString()
-                    typesTable = TypesTable.STEPS
-                }
-
-                val distanceActivity = PhysicalActivity().apply {
-                    id=-1
-                    macAddress = queryMacAddress
-                    dateData= queryDate
-
-                    val newValuesList = mutableMapOf<String,String>()
-                    MutableList(48) { 0.0 }.forEachIndexed{ index, i ->
-                        newValuesList[index.toString()]= i.toString()
-                    }
-                    data= newValuesList.toString()
-                    typesTable = TypesTable.DISTANCE
-                }
-
-                val caloriesListActivity = PhysicalActivity().apply {
-                    id=-1
-                    macAddress = queryMacAddress
-                    dateData= queryDate
-
-                    val newValuesList = mutableMapOf<String,String>()
-                    MutableList(48) { 0.0 }.forEachIndexed{ index, i ->
-                        newValuesList[index.toString()]= i.toString()
-                    }
-                    data= newValuesList.toString()
-                    typesTable = TypesTable.CALORIES
-                }
-                dayPhysicalActivityResultsFromDB.value =  listOf(stepsActivity, distanceActivity, caloriesListActivity)
-
-            }
-
-
-        }
+    fun getAnyDayPhysicalActivityData(queryDate: String, queryMacAddress:String) {
+        getDayPhysicalActivityData(queryDate, queryMacAddress, dayPhysicalActivityResultsFromDB)
     }
 
-
-
-
     fun getTodayPhysicalActivityData(queryDate: String, queryMacAddress:String) {
-        coroutineScope.launch(Dispatchers.Main) {
-            val results = asyncDayPhysicalActivityData(queryDate, queryMacAddress)
-
-            if(results!=null && results.isEmpty().not()){
-                todayPhysicalActivityResultsFromDB.value = results
-            }else{
-
-                val stepsActivity = PhysicalActivity().apply {
-                    id=-1
-                    macAddress = queryMacAddress
-                    dateData= queryDate
-
-                    val newValuesList = mutableMapOf<String,String>()
-                    MutableList(48) { 0 }.forEachIndexed{ index, i ->
-                        newValuesList[index.toString()]= i.toString()
-                    }
-                    data= newValuesList.toString()
-                    typesTable = TypesTable.STEPS
-                }
-
-                val distanceActivity = PhysicalActivity().apply {
-                    id=-1
-                    macAddress = queryMacAddress
-                    dateData= queryDate
-
-                    val newValuesList = mutableMapOf<String,String>()
-                    MutableList(48) { 0.0 }.forEachIndexed{ index, i ->
-                        newValuesList[index.toString()]= i.toString()
-                    }
-                    data= newValuesList.toString()
-                    typesTable = TypesTable.DISTANCE
-                }
-
-                val caloriesListActivity = PhysicalActivity().apply {
-                    id=-1
-                    macAddress = queryMacAddress
-                    dateData= queryDate
-
-                    val newValuesList = mutableMapOf<String,String>()
-                    MutableList(48) { 0.0 }.forEachIndexed{ index, i ->
-                        newValuesList[index.toString()]= i.toString()
-                    }
-                    data= newValuesList.toString()
-                    typesTable = TypesTable.CALORIES
-                }
-                todayPhysicalActivityResultsFromDB.value =  listOf(stepsActivity, distanceActivity, caloriesListActivity)
-
-            }
-
-
-        }
+        getDayPhysicalActivityData(queryDate, queryMacAddress, todayPhysicalActivityResultsFromDB)
     }
 
     fun getYesterdayPhysicalActivityData(queryDate: String, queryMacAddress:String) {
-        coroutineScope.launch(Dispatchers.Main) {
-            val results = asyncDayPhysicalActivityData(queryDate, queryMacAddress)
-
-            if(results!=null && results.isEmpty().not()){
-                yesterdayPhysicalActivityResultsFromDB.value = results
-            }else{
-
-                val stepsActivity = PhysicalActivity().apply {
-                    id=-1
-                    macAddress = queryMacAddress
-                    dateData= queryDate
-
-                    val newValuesList = mutableMapOf<String,String>()
-                    MutableList(48) { 0 }.forEachIndexed{ index, i ->
-                        newValuesList[index.toString()]= i.toString()
-                    }
-                    data= newValuesList.toString()
-                    typesTable = TypesTable.STEPS
-                }
-
-                val distanceActivity = PhysicalActivity().apply {
-                    id=-1
-                    macAddress = queryMacAddress
-                    dateData= queryDate
-
-                    val newValuesList = mutableMapOf<String,String>()
-                    MutableList(48) { 0.0 }.forEachIndexed{ index, i ->
-                        newValuesList[index.toString()]= i.toString()
-                    }
-                    data= newValuesList.toString()
-                    typesTable = TypesTable.DISTANCE
-                }
-
-                val caloriesListActivity = PhysicalActivity().apply {
-                    id=-1
-                    macAddress = queryMacAddress
-                    dateData= queryDate
-
-                    val newValuesList = mutableMapOf<String,String>()
-                    MutableList(48) { 0.0 }.forEachIndexed{ index, i ->
-                        newValuesList[index.toString()]= i.toString()
-                    }
-                    data= newValuesList.toString()
-                    typesTable = TypesTable.CALORIES
-                }
-                yesterdayPhysicalActivityResultsFromDB.value =  listOf(stepsActivity, distanceActivity, caloriesListActivity)
-
-            }
-
-
-        }
+        getDayPhysicalActivityData(queryDate, queryMacAddress, yesterdayPhysicalActivityResultsFromDB)
     }
-
-    private suspend fun asyncDayPhysicalActivityData(date: String, macAddress:String): List<PhysicalActivity>? =
-        coroutineScope.async(Dispatchers.IO) {
-            return@async physicalActivityDao.getDayPhysicalActivityData(date, macAddress)
-        }.await()
 
     fun updatePhysicalActivityData(physicalActivity: PhysicalActivity){
         coroutineScope.launch(Dispatchers.IO) {
@@ -223,15 +60,31 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
         }
     }
 
-    fun getDayBloodPressureData(queryDate: String, queryMacAddress:String) {
+    private fun getDayPhysicalActivityData(
+        queryDate: String,
+        queryMacAddress: String,
+        dayPhysicalActivityMLVData: MutableLiveData<List<PhysicalActivity>>
+    ) {
         coroutineScope.launch(Dispatchers.Main) {
-            val results = asyncDayBloodPressureData(queryDate, queryMacAddress)
-
-            if(results.isEmpty().not()){
-                dayBloodPressureResultsFromDB.value = results
+            val results = asyncDayPhysicalActivityData(queryDate, queryMacAddress)
+            if(results!=null && results.isEmpty().not()){
+                dayPhysicalActivityMLVData.value = results
             }else{
 
-                val bloodPressureS = BloodPressure().apply {
+                val stepsActivity = PhysicalActivity().apply {
+                    id=-1
+                    macAddress = queryMacAddress
+                    dateData= queryDate
+
+                    val newValuesList = mutableMapOf<String,String>()
+                    MutableList(48) { 0 }.forEachIndexed{ index, i ->
+                        newValuesList[index.toString()]= i.toString()
+                    }
+                    data= newValuesList.toString()
+                    typesTable = TypesTable.STEPS
+                }
+
+                val distanceActivity = PhysicalActivity().apply {
                     id=-1
                     macAddress = queryMacAddress
                     dateData= queryDate
@@ -241,10 +94,10 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
                         newValuesList[index.toString()]= i.toString()
                     }
                     data= newValuesList.toString()
-                    typesTable = TypesTable.SYSTOLIC
+                    typesTable = TypesTable.DISTANCE
                 }
 
-                val bloodPressureD = BloodPressure().apply {
+                val caloriesListActivity = PhysicalActivity().apply {
                     id=-1
                     macAddress = queryMacAddress
                     dateData= queryDate
@@ -254,107 +107,34 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
                         newValuesList[index.toString()]= i.toString()
                     }
                     data= newValuesList.toString()
-                    typesTable = TypesTable.DIASTOLIC
+                    typesTable = TypesTable.CALORIES
                 }
-
-
-                dayBloodPressureResultsFromDB.value =  listOf(bloodPressureS, bloodPressureD)
+                dayPhysicalActivityMLVData.value =  listOf(stepsActivity, distanceActivity, caloriesListActivity)
 
             }
-
-
         }
+    }
+
+
+    private suspend fun asyncDayPhysicalActivityData(date: String, macAddress:String): List<PhysicalActivity>? =
+        coroutineScope.async(Dispatchers.IO) {
+            return@async physicalActivityDao.getDayPhysicalActivityData(date, macAddress)
+        }.await()
+
+
+
+    fun getAnyDayBloodPressureData(queryDate: String,
+                                   queryMacAddress:String) {
+        getDayBloodPressureData(queryDate, queryMacAddress, dayBloodPressureResultsFromDB)
     }
 
     fun getTodayBloodPressureData(queryDate: String, queryMacAddress:String) {
-        coroutineScope.launch(Dispatchers.Main) {
-            val results = asyncDayBloodPressureData(queryDate, queryMacAddress)
-
-            if(results.isEmpty().not()){
-                todayBloodPressureResultsFromDB.value = results
-            }else{
-
-                val bloodPressureS = BloodPressure().apply {
-                    id=-1
-                    macAddress = queryMacAddress
-                    dateData= queryDate
-
-                    val newValuesList = mutableMapOf<String,String>()
-                    MutableList(48) { 0.0 }.forEachIndexed{ index, i ->
-                        newValuesList[index.toString()]= i.toString()
-                    }
-                    data= newValuesList.toString()
-                    typesTable = TypesTable.SYSTOLIC
-                }
-
-                val bloodPressureD = BloodPressure().apply {
-                    id=-1
-                    macAddress = queryMacAddress
-                    dateData= queryDate
-
-                    val newValuesList = mutableMapOf<String,String>()
-                    MutableList(48) { 0.0 }.forEachIndexed{ index, i ->
-                        newValuesList[index.toString()]= i.toString()
-                    }
-                    data= newValuesList.toString()
-                    typesTable = TypesTable.DIASTOLIC
-                }
-
-
-                todayBloodPressureResultsFromDB.value =  listOf(bloodPressureS, bloodPressureD)
-
-            }
-
-
-        }
+        getDayBloodPressureData(queryDate, queryMacAddress, todayBloodPressureResultsFromDB)
     }
 
     fun getYesterdayBloodPressureData(queryDate: String, queryMacAddress:String) {
-        coroutineScope.launch(Dispatchers.Main) {
-            val results = asyncDayBloodPressureData(queryDate, queryMacAddress)
-
-            if(results.isEmpty().not()){
-                yesterdayBloodPressureResultsFromDB.value = results
-            }else{
-
-                val bloodPressureS = BloodPressure().apply {
-                    id=-1
-                    macAddress = queryMacAddress
-                    dateData= queryDate
-
-                    val newValuesList = mutableMapOf<String,String>()
-                    MutableList(48) { 0.0 }.forEachIndexed{ index, i ->
-                        newValuesList[index.toString()]= i.toString()
-                    }
-                    data= newValuesList.toString()
-                    typesTable = TypesTable.SYSTOLIC
-                }
-
-                val bloodPressureD = BloodPressure().apply {
-                    id=-1
-                    macAddress = queryMacAddress
-                    dateData= queryDate
-
-                    val newValuesList = mutableMapOf<String,String>()
-                    MutableList(48) { 0.0 }.forEachIndexed{ index, i ->
-                        newValuesList[index.toString()]= i.toString()
-                    }
-                    data= newValuesList.toString()
-                    typesTable = TypesTable.DIASTOLIC
-                }
-
-
-                yesterdayBloodPressureResultsFromDB.value =  listOf(bloodPressureS, bloodPressureD)
-
-            }
-
-
-        }
+        getDayBloodPressureData(queryDate, queryMacAddress, yesterdayBloodPressureResultsFromDB)
     }
-    private suspend fun asyncDayBloodPressureData(date: String, macAddress:String): List<BloodPressure> =
-        coroutineScope.async(Dispatchers.IO) {
-            return@async bloodPressureDao.getDayBloodPressureData(date, macAddress)
-        }.await()
 
     fun updateBloodPressureData(bloodPressure: BloodPressure){
         coroutineScope.launch(Dispatchers.IO) {
@@ -367,6 +147,58 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
             bloodPressureDao.insertBloodPressureData(bloodPressure = bloodPressure)
         }
     }
+
+    private fun getDayBloodPressureData(queryDate: String,
+                                        queryMacAddress:String,
+                                        dayBloodPressureMLVData: MutableLiveData<List<BloodPressure>>) {
+        coroutineScope.launch(Dispatchers.Main) {
+            val results = asyncDayBloodPressureData(queryDate, queryMacAddress)
+
+            if(results.isEmpty().not()){
+                dayBloodPressureMLVData.value = results
+            }else{
+
+                val bloodPressureS = BloodPressure().apply {
+                    id=-1
+                    macAddress = queryMacAddress
+                    dateData= queryDate
+
+                    val newValuesList = mutableMapOf<String,String>()
+                    MutableList(48) { 0.0 }.forEachIndexed{ index, i ->
+                        newValuesList[index.toString()]= i.toString()
+                    }
+                    data= newValuesList.toString()
+                    typesTable = TypesTable.SYSTOLIC
+                }
+
+                val bloodPressureD = BloodPressure().apply {
+                    id=-1
+                    macAddress = queryMacAddress
+                    dateData= queryDate
+
+                    val newValuesList = mutableMapOf<String,String>()
+                    MutableList(48) { 0.0 }.forEachIndexed{ index, i ->
+                        newValuesList[index.toString()]= i.toString()
+                    }
+                    data= newValuesList.toString()
+                    typesTable = TypesTable.DIASTOLIC
+                }
+
+
+                dayBloodPressureMLVData.value =  listOf(bloodPressureS, bloodPressureD)
+
+            }
+
+
+        }
+    }
+
+    private suspend fun asyncDayBloodPressureData(date: String, macAddress:String): List<BloodPressure> =
+        coroutineScope.async(Dispatchers.IO) {
+            return@async bloodPressureDao.getDayBloodPressureData(date, macAddress)
+        }.await()
+
+
 
 }
 

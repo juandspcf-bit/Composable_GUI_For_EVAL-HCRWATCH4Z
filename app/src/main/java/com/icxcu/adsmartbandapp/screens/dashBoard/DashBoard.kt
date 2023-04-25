@@ -3,7 +3,6 @@ package com.icxcu.adsmartbandapp.screens.dashBoard
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 
 
