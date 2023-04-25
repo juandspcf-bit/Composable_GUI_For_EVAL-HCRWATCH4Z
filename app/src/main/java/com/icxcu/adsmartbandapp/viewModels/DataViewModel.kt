@@ -134,9 +134,13 @@ class DataViewModel(var application: Application) : ViewModel() {
             }
         }
 
-        swRepository.requestStepsData()
+
     }
 
+
+    fun requestSmartWatchData(name:String="", macAddress: String=""){
+        swRepository.requestSmartWatchData()
+    }
 
     fun getDayPhysicalActivityData(dateData:String, macAddress:String) {
         swRepository.getDayPhysicalActivityData(dateData, macAddress)

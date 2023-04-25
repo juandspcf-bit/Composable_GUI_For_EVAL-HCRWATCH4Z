@@ -28,7 +28,6 @@ import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
 import com.icxcu.adsmartbandapp.screens.*
 import com.icxcu.adsmartbandapp.screens.dashBoard.DashBoard
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureInfo
-import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureLayoutScaffold
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityInfo
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
 import com.icxcu.adsmartbandapp.viewModels.*
@@ -203,10 +202,12 @@ class MainActivity : ComponentActivity() {
                     )
                 ) { backStackEntry ->
 
-                    // Extracting exact values and passing it to Profile() screen
                     val bluetoothName = backStackEntry.arguments?.getString("bluetoothName")
                     val bluetoothAddress =
                         backStackEntry.arguments?.getString("bluetoothAddress")
+
+                    dataViewModel.requestSmartWatchData(bluetoothName ?: "no name",
+                        bluetoothAddress ?: "no address")
                     dataViewModel.macAddress=bluetoothAddress ?: "no address"
                     dataViewModel.name=bluetoothName ?: "no name"
 

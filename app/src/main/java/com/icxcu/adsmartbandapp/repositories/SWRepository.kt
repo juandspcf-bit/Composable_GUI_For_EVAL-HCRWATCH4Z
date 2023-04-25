@@ -32,8 +32,9 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
 
 
 
-    fun requestStepsData() {
+    fun requestSmartWatchData(name:String="", macAddress: String="") {
         CoroutineScope(Dispatchers.Default).launch {
+            delay(5000)
             _sharedStepsFlow.emit(MockData.valuesToday)
         }
     }
