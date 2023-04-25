@@ -27,7 +27,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     val pastYesterdayFormattedDate = pastYesterdayLocalDateTime.format(myFormatObj)
 
     var progressbarForFetchingDataFromSW by mutableStateOf(false)
-
+    var isRequestForFetchingDataFromSWBeginning by mutableStateOf(false)
 
     var selectedDay by mutableStateOf("")
     var dayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
@@ -136,6 +136,7 @@ class DataViewModel(var application: Application) : ViewModel() {
                     yesterdayFormattedDate -> {
                         yesterdayDateValuesFromSW = it
                         progressbarForFetchingDataFromSW = false
+                        isRequestForFetchingDataFromSWBeginning = true
                     }
                 }
 

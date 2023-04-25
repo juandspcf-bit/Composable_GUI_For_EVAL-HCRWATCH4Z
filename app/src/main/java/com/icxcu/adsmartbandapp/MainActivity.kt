@@ -25,6 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothLEManagerImp
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
+import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.*
 import com.icxcu.adsmartbandapp.screens.dashBoard.DashBoard
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureInfo
@@ -158,6 +159,7 @@ class MainActivity : ComponentActivity() {
                 navMainController.popBackStack()
                 mViewModel.liveBasicBluetoothAdapter.value = mutableListOf()
                 mViewModel.liveStatusResults = -2
+                dataViewModel.isRequestForFetchingDataFromSWBeginning = false
             }
 
             val navLambdaBackDataHome = {
@@ -183,6 +185,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 composable(Routes.BluetoothScanner.route) {
+                    dataViewModel.isRequestForFetchingDataFromSWBeginning = false
                     BluetoothScanScreen(
                         basicBluetoothAdapters = basicBluetoothAdapters,
                         statusResultState = mViewModel.liveStatusResults,
@@ -206,8 +209,18 @@ class MainActivity : ComponentActivity() {
                     val bluetoothAddress =
                         backStackEntry.arguments?.getString("bluetoothAddress")
 
-                    dataViewModel.requestSmartWatchData(bluetoothName ?: "no name",
-                        bluetoothAddress ?: "no address")
+                    if(dataViewModel.isRequestForFetchingDataFromSWBeginning.not()){
+                        dataViewModel.todayDateValuesReadFromSW=Values(MutableList(48){0}.toList(),
+                            MutableList(48){0.0}.toList(),
+                            MutableList(48){0.0}.toList(),
+                            MutableList(48){ 0.0 }.toList(),
+                            MutableList(48){ 0.0 }.toList(),
+                            dataViewModel.todayFormattedDate)
+                        dataViewModel.requestSmartWatchData(bluetoothName ?: "no name",
+                            bluetoothAddress ?: "no address")
+                    }
+
+
                     dataViewModel.macAddress=bluetoothAddress ?: "no address"
                     dataViewModel.name=bluetoothName ?: "no name"
 
