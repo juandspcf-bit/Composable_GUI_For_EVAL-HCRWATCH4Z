@@ -27,8 +27,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
-import com.icxcu.adsmartbandapp.screens.plotsFields.getHours
-import com.icxcu.adsmartbandapp.screens.plotsFields.getIntervals
+import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getHours
+import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getIntervals
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.EntryHour
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import java.time.Duration
@@ -129,6 +129,27 @@ fun BloodPressureInfoContent(
     diastolicListContent: () -> List<Double>,
 ) {
 
+    val maxValueSystolic = systolicListContent().max()
+    var hourMax = ""
+    if(maxValueSystolic>0){
+        val filterIndexed = systolicListContent().mapIndexed{ index, d ->
+            if(d == maxValueSystolic){index}else{0}
+        }.filter {
+            it>0
+        }
+        hourMax = getHours()[filterIndexed[0]]
+    }
+
+    val minValueSystolic = systolicListContent().min()
+    var hourMin = ""
+    if(minValueSystolic>0){
+        val filterIndexed = systolicListContent().mapIndexed{ index, d ->
+            if(d == minValueSystolic){index}else{0}
+        }.filter {
+            it>0
+        }
+        hourMin = getHours()[filterIndexed[0]]
+    }
 
 
     ConstraintLayout(
@@ -180,6 +201,9 @@ fun BloodPressureInfoContent(
                 height = Dimension.wrapContent
             }
             .height(2.dp))
+
+
+
 
         BloodPressureSList(
             systolicListContent,

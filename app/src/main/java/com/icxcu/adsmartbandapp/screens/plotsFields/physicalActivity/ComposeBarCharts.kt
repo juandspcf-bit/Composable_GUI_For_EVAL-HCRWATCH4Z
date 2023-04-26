@@ -31,7 +31,6 @@ import com.patrykandpatrick.vico.core.axis.Axis
 import com.patrykandpatrick.vico.core.axis.AxisPosition
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
 import com.patrykandpatrick.vico.core.axis.formatter.DecimalFormatAxisValueFormatter
-import com.patrykandpatrick.vico.core.axis.formatter.PercentageFormatAxisValueFormatter
 import com.patrykandpatrick.vico.core.axis.horizontal.HorizontalAxis
 import com.patrykandpatrick.vico.core.chart.decoration.ThresholdLine
 import com.patrykandpatrick.vico.core.component.shape.LineComponent
@@ -66,7 +65,6 @@ internal fun ComposeBartCharts(
             startAxis = startAxis(
                 label = axisLabelComponent(
                     color= Color.White,
-
                     ),
                 maxLabelCount = 5,
                 valueFormatter = DecimalFormatAxisValueFormatter("#0", RoundingMode.FLOOR),
@@ -108,7 +106,7 @@ private val legendTopPaddingValue = 8.dp
 val legendPadding = dimensionsOf(top = legendTopPaddingValue)
 @Composable
 fun rememberLegend() = verticalLegend(
-    items = chartColorsPhysicalActivity.mapIndexed { index, chartColor ->
+    items = chartColorsPhysicalActivity.mapIndexed { _, chartColor ->
         verticalLegendItem(
             icon = shapeComponent(Shapes.pillShape, chartColor),
             label = textComponent(
@@ -146,7 +144,7 @@ private fun rememberThresholdLine(): ThresholdLine {
 
 
 class EntryHour(
-    val duration: Duration,
+    private val duration: Duration,
     override val x: Float,
     override val y: Float,
 ) : ChartEntry {
@@ -158,17 +156,9 @@ val axisValueFormatter = AxisValueFormatter<AxisPosition.Horizontal.Bottom> { va
     (chartValues.chartEntryModel.entries.first().getOrNull(value.toInt()) as? EntryHour)
         ?.x
         ?.run {
-            if (toInt() % 1L == 0L) {
-                val hour = "${Duration.ofHours(0).plusMinutes(30L * toLong()).toHours()}"
-                val time = hour + if ((toInt() + 1) % 2 == 0) {
-                    ":30"
-                } else {
-                    ":00"
-                }
-                time
-            } else {
-                " "
-            }
+            val hour = "${Duration.ofHours(0).plusMinutes(30L * toLong()).toHours()}"
+            val time = hour + if ((toInt() + 1) % 2 == 0) { ":30" } else { ":00" }
+            time
         }
         .orEmpty()
 }
@@ -176,13 +166,10 @@ val axisValueFormatter = AxisValueFormatter<AxisPosition.Horizontal.Bottom> { va
 
 private const val COLOR_1_CODE = 0xffff5500
 private const val COLOR_2_CODE = 0xffd3d826
-private const val PERSISTENT_MARKER_X = 1000f
 
 private const val COLUMN_WIDTH_DP = 5f
 private const val THRESHOLD_LINE_VALUE = 500f
-private const val START_AXIS_LABEL_COUNT = 5
-private const val BOTTOM_AXIS_TICK_OFFSET = 0
-private const val BOTTOM_AXIS_TICK_SPACING = 1
+
 
 private val color1 = Color(COLOR_1_CODE)
 private val color2 = Color(COLOR_2_CODE)
@@ -194,8 +181,5 @@ private val thresholdLineThickness = 2.dp
 private val thresholdLineLabelPadding =
     dimensionsOf(thresholdLineLabelHorizontalPaddingValue, thresholdLineLabelVerticalPaddingValue)
 private val thresholdLineLabelMargins = dimensionsOf(thresholdLineLabelMarginValue)
-private val startAxisValueFormatter =
-    PercentageFormatAxisValueFormatter<AxisPosition.Vertical.Start>()
-private val bottomAxisTickPosition =
-    HorizontalAxis.TickPosition.Center(BOTTOM_AXIS_TICK_OFFSET, BOTTOM_AXIS_TICK_SPACING)
+
 

@@ -31,8 +31,6 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.R
-import com.icxcu.adsmartbandapp.screens.plotsFields.getHours
-import com.icxcu.adsmartbandapp.screens.plotsFields.getIntervals
 
 @Composable
 fun PhysicalActivityContent(

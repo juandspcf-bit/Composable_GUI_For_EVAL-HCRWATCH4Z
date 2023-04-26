@@ -1,4 +1,4 @@
-package com.icxcu.adsmartbandapp.screens.plotsFields
+package com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity
 
 import android.util.Log
 import java.time.Duration

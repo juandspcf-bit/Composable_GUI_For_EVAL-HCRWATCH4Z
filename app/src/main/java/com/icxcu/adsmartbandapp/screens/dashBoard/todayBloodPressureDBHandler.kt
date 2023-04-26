@@ -5,7 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.BloodPressure
-import com.icxcu.adsmartbandapp.screens.plotsFields.getDoubleListFromStringMap
+import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getDoubleListFromStringMap
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 
 @Composable
