@@ -22,10 +22,12 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.R
+import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getHours
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getIntervals
@@ -49,7 +51,7 @@ fun BloodPressureLayoutScaffold(
     val stateMiliSecondsDateDialogDatePicker = {
         stateMiliSecondsDateDialogDatePickerS()
     }
-    val stateMiliSecondsDateDialogDatePickerSetter:(Long) -> Unit = { value ->
+    val stateMiliSecondsDateDialogDatePickerSetter: (Long) -> Unit = { value ->
         stateMiliSecondsDateDialogDatePickerSetterS(value)
     }
     Scaffold(
@@ -112,7 +114,8 @@ fun BloodPressureLayoutScaffold(
                 )
 
                 if (stateShowDialogDatePickerValue()) {
-                    DatePickerDialogSample(stateShowDialogDatePickerSetter,
+                    DatePickerDialogSample(
+                        stateShowDialogDatePickerSetter,
                         stateMiliSecondsDateDialogDatePicker,
                         stateMiliSecondsDateDialogDatePickerSetter
                     )
@@ -131,22 +134,30 @@ fun BloodPressureInfoContent(
 
     val maxValueSystolic = systolicListContent().max()
     var hourMax = ""
-    if(maxValueSystolic>0){
-        val filterIndexed = systolicListContent().mapIndexed{ index, d ->
-            if(d == maxValueSystolic){index}else{0}
+    if (maxValueSystolic > 0) {
+        val filterIndexed = systolicListContent().mapIndexed { index, d ->
+            if (d == maxValueSystolic) {
+                index
+            } else {
+                0
+            }
         }.filter {
-            it>0
+            it > 0
         }
         hourMax = getHours()[filterIndexed[0]]
     }
 
     val minValueSystolic = systolicListContent().min()
     var hourMin = ""
-    if(minValueSystolic>0){
-        val filterIndexed = systolicListContent().mapIndexed{ index, d ->
-            if(d == minValueSystolic){index}else{0}
+    if (minValueSystolic > 0) {
+        val filterIndexed = systolicListContent().mapIndexed { index, d ->
+            if (d == minValueSystolic) {
+                index
+            } else {
+                0
+            }
         }.filter {
-            it>0
+            it > 0
         }
         hourMin = getHours()[filterIndexed[0]]
     }
@@ -162,13 +173,17 @@ fun BloodPressureInfoContent(
 
 
         val mapSystolic = systolicListContent().mapIndexed { index, y ->
-            val entry =EntryHour(Duration.ofHours(24).minusMinutes(30L*index.toLong()),
-                index.toFloat(), y.toFloat())
+            val entry = EntryHour(
+                Duration.ofHours(24).minusMinutes(30L * index.toLong()),
+                index.toFloat(), y.toFloat()
+            )
             entry
         }
         val mapDiastolic = diastolicListContent().mapIndexed { index, y ->
-            val entry =EntryHour(Duration.ofHours(24).minusMinutes(30L*index.toLong()),
-                index.toFloat(), y.toFloat())
+            val entry = EntryHour(
+                Duration.ofHours(24).minusMinutes(30L * index.toLong()),
+                index.toFloat(), y.toFloat()
+            )
             entry
         }
 
@@ -275,8 +290,8 @@ fun BloodPressureList(
             val systolicValue = pair.first
             val diastolicValue = pair.second
 
-            val stringSystolicValue= String.format("%.1f", systolicValue)
-            val stringDiastolicValue= String.format("%.1f", diastolicValue)
+            val stringSystolicValue = String.format("%.1f", systolicValue)
+            val stringDiastolicValue = String.format("%.1f", diastolicValue)
             RowBloodPressure(
                 valueSteps = "$stringSystolicValue, $stringDiastolicValue",
                 hourTime = getIntervals(index, hourList)
@@ -343,3 +358,13 @@ fun RowBloodPressure(
 }
 
 
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun BloodPressureLayoutScaffoldPreview() {
+    BloodPressureInfoContent(
+        { MockData.valuesToday.systolic },
+        { MockData.valuesToday.diastolic },
+   )
+
+
+}
