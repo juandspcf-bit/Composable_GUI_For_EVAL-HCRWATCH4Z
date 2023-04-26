@@ -43,17 +43,17 @@ class DataViewModel(var application: Application) : ViewModel() {
         todayFormattedDate) )
 
     var todayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
-    var todayStepListReadFromDB by mutableStateOf(listOf<Int>())
-    var isTodayStepsListAlreadyInsertedInDB by mutableStateOf(false)
-    var isTodayStepsListInDBAlreadyUpdated by mutableStateOf(false)
+    var todayStepListReadFromDB =listOf<Int>()//by mutableStateOf(listOf<Int>())
+    var isTodayStepsListAlreadyInsertedInDB = false//by mutableStateOf(false)
+    var isTodayStepsListInDBAlreadyUpdated = false//by mutableStateOf(false)
 
-    var todayDistanceListReadFromDB by mutableStateOf(listOf<Double>())
-    var isTodayDistanceListAlreadyInsertedInDB by mutableStateOf(false)
-    var isTodayDistanceListInDBAlreadyUpdated by mutableStateOf(false)
+    var todayDistanceListReadFromDB = listOf<Double>()//by mutableStateOf(listOf<Double>())
+    var isTodayDistanceListAlreadyInsertedInDB = false// by mutableStateOf(false)
+    var isTodayDistanceListInDBAlreadyUpdated = false//by mutableStateOf(false)
 
-    var todayCaloriesListReadFromDB by mutableStateOf(listOf<Double>())
-    var isTodayCaloriesListAlreadyInsertedInDB by mutableStateOf(false)
-    var isTodayCaloriesListInDBAlreadyUpdated by mutableStateOf(false)
+    var todayCaloriesListReadFromDB = listOf<Double>()//by mutableStateOf(listOf<Double>())
+    var isTodayCaloriesListAlreadyInsertedInDB = false//by mutableStateOf(false)
+    var isTodayCaloriesListInDBAlreadyUpdated = false//by mutableStateOf(false)
 
 
     var dayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
@@ -61,13 +61,13 @@ class DataViewModel(var application: Application) : ViewModel() {
     var dayDiastolicListFromDB by mutableStateOf(listOf<Double>())
 
     var todayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
-    var todaySystolicListReadFromDB by mutableStateOf(listOf<Double>())
-    var isTodaySystolicListAlreadyInsertedInDB by mutableStateOf(false)
-    var isTodaySystolicListInDBAlreadyUpdated by mutableStateOf(false)
+    var todaySystolicListReadFromDB = listOf<Double>()//by mutableStateOf(listOf<Double>())
+    var isTodaySystolicListAlreadyInsertedInDB=false// by mutableStateOf(false)
+    var isTodaySystolicListInDBAlreadyUpdated=false// by mutableStateOf(false)
 
-    var todayDiastolicListReadFromDB by mutableStateOf(listOf<Double>())
-    var isTodayDiastolicListAlreadyInsertedInDB by mutableStateOf(false)
-    var isTodayDiastolicListInDBAlreadyUpdated by mutableStateOf(false)
+    var todayDiastolicListReadFromDB=listOf<Double>()// by mutableStateOf(listOf<Double>())
+    var isTodayDiastolicListAlreadyInsertedInDB=false// by mutableStateOf(false)
+    var isTodayDiastolicListInDBAlreadyUpdated=false// by mutableStateOf(false)
 
 
 

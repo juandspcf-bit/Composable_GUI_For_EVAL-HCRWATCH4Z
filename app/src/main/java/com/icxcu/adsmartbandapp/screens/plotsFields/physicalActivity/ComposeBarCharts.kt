@@ -3,7 +3,6 @@ package com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.text.TextUtils
-import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,7 +27,6 @@ import com.patrykandpatrick.vico.compose.legend.verticalLegend
 import com.patrykandpatrick.vico.compose.legend.verticalLegendItem
 import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
 import com.patrykandpatrick.vico.compose.style.currentChartStyle
-import com.patrykandpatrick.vico.core.Animation
 import com.patrykandpatrick.vico.core.axis.Axis
 import com.patrykandpatrick.vico.core.axis.AxisPosition
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
@@ -36,7 +34,6 @@ import com.patrykandpatrick.vico.core.axis.formatter.DecimalFormatAxisValueForma
 import com.patrykandpatrick.vico.core.axis.formatter.PercentageFormatAxisValueFormatter
 import com.patrykandpatrick.vico.core.axis.horizontal.HorizontalAxis
 import com.patrykandpatrick.vico.core.chart.decoration.ThresholdLine
-import com.patrykandpatrick.vico.core.chart.scale.AutoScaleUp
 import com.patrykandpatrick.vico.core.component.shape.LineComponent
 import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.entry.ChartEntry
@@ -50,7 +47,7 @@ internal fun ComposeBartCharts(
     modifier: Modifier = Modifier
 ) {
     val thresholdLine = rememberThresholdLine()
-    ProvideChartStyle(rememberChartStyle(chartColors)) {
+    ProvideChartStyle(rememberChartStyle(chartColorsPhysicalActivity)) {
         val defaultColumns = currentChartStyle.columnChart.columns
         Chart(
             chartScrollSpec = rememberChartScrollSpec(isScrollEnabled = false),
@@ -111,7 +108,7 @@ private val legendTopPaddingValue = 8.dp
 val legendPadding = dimensionsOf(top = legendTopPaddingValue)
 @Composable
 fun rememberLegend() = verticalLegend(
-    items = chartColors.mapIndexed { index, chartColor ->
+    items = chartColorsPhysicalActivity.mapIndexed { index, chartColor ->
         verticalLegendItem(
             icon = shapeComponent(Shapes.pillShape, chartColor),
             label = textComponent(
@@ -189,7 +186,7 @@ private const val BOTTOM_AXIS_TICK_SPACING = 1
 
 private val color1 = Color(COLOR_1_CODE)
 private val color2 = Color(COLOR_2_CODE)
-val chartColors = listOf(color1, color2)
+val chartColorsPhysicalActivity = listOf(color1)
 private val thresholdLineLabelMarginValue = 4.dp
 private val thresholdLineLabelHorizontalPaddingValue = 8.dp
 private val thresholdLineLabelVerticalPaddingValue = 2.dp

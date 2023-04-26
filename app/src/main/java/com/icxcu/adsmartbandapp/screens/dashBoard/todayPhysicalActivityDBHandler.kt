@@ -1,8 +1,11 @@
 package com.icxcu.adsmartbandapp.screens.dashBoard
 
+import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.screens.plotsFields.getDoubleListFromStringMap
@@ -13,10 +16,12 @@ import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 fun TodayPhysicalActivityDBHandler(
     dataViewModel: DataViewModel,
 ) {
+    Log.d("Recompositions", "TodayPhysicalActivityDBHandler: ")
     //Data Sources
     val todayPhysicalActivityResultsFromDB by dataViewModel.todayPhysicalActivityResultsFromDB.observeAsState(
         MutableList(0) { PhysicalActivity(physicalActivityId=-1,macAddress="", dateData="", data="") }.toList()
     )
+
 
     val todayDateValuesReadFromSW = {
         dataViewModel.todayDateValuesReadFromSW
@@ -27,12 +32,14 @@ fun TodayPhysicalActivityDBHandler(
         dataViewModel.todayStepListReadFromDB = it
     }
 
+
     dataViewModel.todayStepListReadFromDB = if (todayPhysicalActivityResultsFromDB.isEmpty().not()) {
         val filter = todayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.STEPS }
         getIntegerListFromStringMap(filter[0].data)
     } else {
         MutableList(48) { 0 }.toList()
     }
+
 
     val setIsTodayStepsListAlreadyInsertedInDB: (Boolean) -> Unit = {
         dataViewModel.isTodayStepsListAlreadyInsertedInDB = it
@@ -59,6 +66,7 @@ fun TodayPhysicalActivityDBHandler(
     val setTodayDistanceListReadFromDB: (List<Double>) -> Unit = {
         dataViewModel.todayDistanceListReadFromDB = it
     }
+
 
     dataViewModel.todayDistanceListReadFromDB = if (todayPhysicalActivityResultsFromDB.isEmpty().not()) {
         val filter = todayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.DISTANCE }
@@ -94,6 +102,7 @@ fun TodayPhysicalActivityDBHandler(
     val setTodayCaloriesListReadFromDB: (List<Double>) -> Unit = {
         dataViewModel.todayCaloriesListReadFromDB = it
     }
+
 
     dataViewModel.todayCaloriesListReadFromDB = if (todayPhysicalActivityResultsFromDB.isEmpty().not()) {
         val filter = todayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.CALORIES }

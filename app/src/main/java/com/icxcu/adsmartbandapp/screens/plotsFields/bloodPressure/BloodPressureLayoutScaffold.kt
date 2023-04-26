@@ -1,8 +1,5 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure
 
-import android.graphics.Paint
-import android.graphics.Typeface
-import android.text.TextUtils
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -18,7 +15,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,7 +23,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.R
@@ -35,34 +30,7 @@ import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
 import com.icxcu.adsmartbandapp.screens.plotsFields.getHours
 import com.icxcu.adsmartbandapp.screens.plotsFields.getIntervals
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.EntryHour
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.axisValueFormatter
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.chartColors
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemIconPaddingValue
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemIconSize
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemLabelTextSize
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemSpacing
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendPadding
-import com.icxcu.adsmartbandapp.ui.theme.rememberChartStyle
-import com.icxcu.adsmartbandapp.ui.theme.rememberMarker
-import com.patrykandpatrick.vico.compose.axis.axisLabelComponent
-import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
-import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
-import com.patrykandpatrick.vico.compose.chart.Chart
-import com.patrykandpatrick.vico.compose.chart.line.lineChart
-import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollSpec
-import com.patrykandpatrick.vico.compose.component.shapeComponent
-import com.patrykandpatrick.vico.compose.component.textComponent
-import com.patrykandpatrick.vico.compose.legend.verticalLegend
-import com.patrykandpatrick.vico.compose.legend.verticalLegendItem
-import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
-import com.patrykandpatrick.vico.compose.style.currentChartStyle
-import com.patrykandpatrick.vico.core.axis.Axis
-import com.patrykandpatrick.vico.core.axis.formatter.DecimalFormatAxisValueFormatter
-import com.patrykandpatrick.vico.core.axis.horizontal.HorizontalAxis
-import com.patrykandpatrick.vico.core.chart.copy
-import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
-import java.math.RoundingMode
 import java.time.Duration
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -200,58 +168,8 @@ fun BloodPressureInfoContent(
         ) {
 
             val chartEntryModel = ChartEntryModelProducer(mapSystolic, mapDiastolic)
+            MyComposePlotChart(chartEntryModel)
 
-
-            ProvideChartStyle(rememberChartStyle(chartColors)) {
-                val defaultLines = currentChartStyle.lineChart.lines
-                Chart(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Black)
-                        .padding(0.dp),
-                    marker = rememberMarker(),
-                    chartScrollSpec = rememberChartScrollSpec(isScrollEnabled = false),
-                    chart = lineChart(
-                        remember(defaultLines) {
-                            defaultLines.map { defaultLine -> defaultLine.copy(lineBackgroundShader = null) }
-                        },
-
-                        ),
-                    model = chartEntryModel.getModel(),
-                    startAxis = startAxis(
-                        label = axisLabelComponent(
-                            horizontalMargin = 0.dp,
-                            horizontalPadding = 0.dp,
-                            textSize = 15.sp,
-                            color= Color.White,
-
-                            ),
-                        maxLabelCount = 2,
-                        valueFormatter = DecimalFormatAxisValueFormatter("#0", RoundingMode.FLOOR),
-                        tickLength = 3.dp
-                    ),
-
-                    bottomAxis = bottomAxis(
-                        tickPosition= HorizontalAxis.TickPosition.Center(1,5),
-                        sizeConstraint = Axis.SizeConstraint.TextWidth("sssss"),
-                        valueFormatter = axisValueFormatter,
-                        label = axisLabelComponent(
-
-                            color= Color.White,
-                            ellipsize = TextUtils.TruncateAt.MARQUEE,
-                            textSize = 15.sp,
-                            lineCount = 3,
-                            typeface = Typeface.SERIF,
-                            textAlign = Paint.Align.CENTER,
-                            horizontalPadding = 0.dp,
-                            horizontalMargin = 100.dp,
-                            verticalMargin = 10.dp,
-                        ),
-                        labelRotationDegrees = 90f
-                    ),
-                    legend = rememberLegendBloodPressure(),
-                )
-            }
         }
 
         Divider(modifier = Modifier
@@ -401,21 +319,3 @@ fun RowBloodPressure(
 }
 
 
-@Composable
-fun rememberLegendBloodPressure() = verticalLegend(
-    items = chartColors.mapIndexed { index, chartColor ->
-        verticalLegendItem(
-            icon = shapeComponent(Shapes.pillShape, chartColor),
-            label = textComponent(
-                color = Color.White,
-                textSize = legendItemLabelTextSize,
-                typeface = Typeface.MONOSPACE,
-            ),
-            labelText = if(index==0){"Systolic"}else{"Diastolic"},
-        )
-    },
-    iconSize = legendItemIconSize,
-    iconPadding = legendItemIconPaddingValue,
-    spacing = legendItemSpacing,
-    padding = legendPadding,
-)

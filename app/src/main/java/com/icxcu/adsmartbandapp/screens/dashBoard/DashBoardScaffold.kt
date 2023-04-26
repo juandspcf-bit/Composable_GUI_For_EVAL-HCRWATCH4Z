@@ -106,13 +106,6 @@ fun DashBoardScaffold(
                     .padding(padding)
                     .fillMaxSize()
             ) {
-/*
-                var visibility by remember{ mutableStateOf(false) }
-                LaunchedEffect(key1 = true){
-                    delay(500)
-                    visibility = getVisibility()
-                }
-*/
 
                 AnimatedVisibility(
                     modifier = Modifier
