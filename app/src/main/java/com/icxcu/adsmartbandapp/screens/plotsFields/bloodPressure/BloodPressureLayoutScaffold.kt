@@ -2,13 +2,19 @@ package com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -132,44 +138,14 @@ fun BloodPressureInfoContent(
     diastolicListContent: () -> List<Double>,
 ) {
 
-    val maxValueSystolic = systolicListContent().max()
-    var hourMax = ""
-    if (maxValueSystolic > 0) {
-        val filterIndexed = systolicListContent().mapIndexed { index, d ->
-            if (d == maxValueSystolic) {
-                index
-            } else {
-                0
-            }
-        }.filter {
-            it > 0
-        }
-        hourMax = getHours()[filterIndexed[0]]
-    }
-
-    val minValueSystolic = systolicListContent().min()
-    var hourMin = ""
-    if (minValueSystolic > 0) {
-        val filterIndexed = systolicListContent().mapIndexed { index, d ->
-            if (d == minValueSystolic) {
-                index
-            } else {
-                0
-            }
-        }.filter {
-            it > 0
-        }
-        hourMin = getHours()[filterIndexed[0]]
-    }
-
-
     ConstraintLayout(
         modifier = Modifier
             .background(Color(0xff1d2a35))
             .fillMaxSize()
     ) {
-        val (plot, divider, list) = createRefs()
-        val guideH3 = createGuidelineFromTop(fraction = 0.4f)
+        val (plot, divider, statistics, list) = createRefs()
+        val guide4f = createGuidelineFromTop(fraction = 0.4f)
+        val guide6f = createGuidelineFromTop(fraction = 0.6f)
 
 
         val mapSystolic = systolicListContent().mapIndexed { index, y ->
@@ -187,17 +163,13 @@ fun BloodPressureInfoContent(
             entry
         }
 
-
-
         Box(modifier = Modifier
-            /*            .padding(start = 10.dp, end = 10.dp)
-                        .clip(shape = RoundedCornerShape(size = 25.dp))*/
             .background(
                 Color(0xFFE57373)
             )
             .constrainAs(plot) {
                 top.linkTo(parent.top)
-                bottom.linkTo(guideH3)
+                bottom.linkTo(guide4f)
                 linkTo(start = parent.start, end = parent.end)
                 height = Dimension.fillToConstraints
             }
@@ -210,14 +182,23 @@ fun BloodPressureInfoContent(
 
         Divider(modifier = Modifier
             .constrainAs(divider) {
-                top.linkTo(guideH3)
-                bottom.linkTo(list.top)
+                top.linkTo(guide4f)
+
                 linkTo(start = parent.start, end = parent.end)
                 height = Dimension.wrapContent
             }
             .height(2.dp))
 
-
+        StatisticsBloodPressure(systolicListContent = systolicListContent,
+            modifier = Modifier
+                .constrainAs(statistics) {
+                    top.linkTo(divider.bottom)
+                    bottom.linkTo(guide6f)
+                    linkTo(start = parent.start, end = parent.end)
+                    height = Dimension.fillToConstraints
+                }
+                .background(Color(0xFF6B1A79))
+                .fillMaxSize())
 
 
         BloodPressureSList(
@@ -226,7 +207,7 @@ fun BloodPressureInfoContent(
             //.padding(top = 20.dp, bottom = 20.dp, start = 50.dp, end = 50.dp),
             modifierList = Modifier
                 .constrainAs(list) {
-                    top.linkTo(divider.bottom)
+                    top.linkTo(guide6f)
                     bottom.linkTo(parent.bottom)
                     linkTo(start = parent.start, end = parent.end)
                     height = Dimension.fillToConstraints
@@ -235,6 +216,133 @@ fun BloodPressureInfoContent(
 
     }
 }
+
+
+@Composable
+fun StatisticsBloodPressure(
+    systolicListContent: () -> List<Double>,
+    modifier: Modifier = Modifier
+) {
+    val maxValueSystolic = systolicListContent().max()
+    val maxValueSystolicValue= String.format("%.1f mmHg", maxValueSystolic)
+    val hourMax = findIndex(maxValueSystolic, systolicListContent())
+
+
+    val minValueSystolic = systolicListContent().min()
+    val minValueSystolicValue= String.format("%.1f mmHg", minValueSystolic)
+    val hourMin = findIndex(minValueSystolic, systolicListContent())
+
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        modifier = modifier.padding(top = 10.dp, bottom = 10.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        item {
+            Column(
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth(0.5f).fillMaxHeight()
+            ) {
+                Text(
+                    text = "Max Value",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.White
+                )
+                Text(
+                    text = maxValueSystolicValue,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.White
+                )
+            }
+        }
+
+        item{
+            Column(
+                verticalArrangement = Arrangement.SpaceAround,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth(0.5f).fillMaxHeight()
+            ) {
+                Text(
+                    text = "Min Value",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.White
+                )
+                Text(
+                    text = minValueSystolicValue,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.White
+                )
+            }
+        }
+
+        item{
+            Column(
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                Text(
+                    text = "Time",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.White
+                )
+                Text(
+                    hourMax,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.White
+                )
+            }
+        }
+
+        item{
+            Column(
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Time",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.White
+                )
+                Text(
+                    hourMin,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.White
+                )
+            }
+
+        }
+
+
+
+    }
+
+
+
+
+}
+
+fun findIndex(value:Double, data:List<Double>):String{
+    var hour = " "
+    if (value > 0) {
+        val filterIndexed = data.mapIndexed { index, d ->
+            if (d == value) {
+                index
+            } else {
+                -1
+            }
+        }.filter {
+            it>-1
+        }
+        if (filterIndexed.isNotEmpty()) {
+            hour = getHours()[filterIndexed[0]]
+        }
+    }
+
+    return hour
+}
+
 
 @Composable
 fun BloodPressureSList(
@@ -293,7 +401,7 @@ fun BloodPressureList(
             val stringSystolicValue = String.format("%.1f", systolicValue)
             val stringDiastolicValue = String.format("%.1f", diastolicValue)
             RowBloodPressure(
-                valueSteps = "$stringSystolicValue, $stringDiastolicValue",
+                valueSteps = "$stringSystolicValue/$stringDiastolicValue mmHg",
                 hourTime = getIntervals(index, hourList)
             )
 
@@ -358,13 +466,13 @@ fun RowBloodPressure(
 }
 
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 fun BloodPressureLayoutScaffoldPreview() {
     BloodPressureInfoContent(
         { MockData.valuesToday.systolic },
         { MockData.valuesToday.diastolic },
-   )
+    )
 
 
 }
