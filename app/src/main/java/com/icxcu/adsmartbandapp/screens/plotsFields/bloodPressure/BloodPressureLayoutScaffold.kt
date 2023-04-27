@@ -5,8 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -35,9 +33,9 @@ import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
+import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.EntryHour
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getHours
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getIntervals
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.EntryHour
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import java.time.Duration
 
@@ -145,7 +143,7 @@ fun BloodPressureInfoContent(
     ) {
         val (plot, divider, statistics, list) = createRefs()
         val guide4f = createGuidelineFromTop(fraction = 0.4f)
-        val guide6f = createGuidelineFromTop(fraction = 0.6f)
+        createGuidelineFromTop(fraction = 0.6f)
 
 
         val mapSystolic = systolicListContent().mapIndexed { index, y ->
@@ -193,21 +191,21 @@ fun BloodPressureInfoContent(
             modifier = Modifier
                 .constrainAs(statistics) {
                     top.linkTo(divider.bottom)
-                    bottom.linkTo(guide6f)
+                    //bottom.linkTo(guide6f)
                     linkTo(start = parent.start, end = parent.end)
                     height = Dimension.fillToConstraints
                 }
                 .background(Color(0xFF6B1A79))
-                .fillMaxSize())
+                .fillMaxWidth())
 
 
         BloodPressureSList(
             systolicListContent,
             diastolicListContent,
             //.padding(top = 20.dp, bottom = 20.dp, start = 50.dp, end = 50.dp),
-            modifierList = Modifier
+            modifier = Modifier
                 .constrainAs(list) {
-                    top.linkTo(guide6f)
+                    top.linkTo(statistics.bottom)
                     bottom.linkTo(parent.bottom)
                     linkTo(start = parent.start, end = parent.end)
                     height = Dimension.fillToConstraints
@@ -234,7 +232,7 @@ fun StatisticsBloodPressure(
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        modifier = modifier.padding(top = 10.dp, bottom = 10.dp),
+        modifier = modifier.padding(top = 20.dp, bottom = 20.dp),
         horizontalArrangement = Arrangement.Center,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
@@ -242,7 +240,7 @@ fun StatisticsBloodPressure(
             Column(
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth(0.5f).fillMaxHeight()
+                modifier = Modifier.fillMaxWidth(0.5f).padding(bottom = 20.dp)
             ) {
                 Text(
                     text = "Max Value",
@@ -261,7 +259,7 @@ fun StatisticsBloodPressure(
             Column(
                 verticalArrangement = Arrangement.SpaceAround,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth(0.5f).fillMaxHeight()
+                modifier = Modifier.fillMaxWidth(0.5f).padding(bottom = 20.dp)
             ) {
                 Text(
                     text = "Min Value",
@@ -279,7 +277,8 @@ fun StatisticsBloodPressure(
         item{
             Column(
                 verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(top = 20.dp)
             ) {
 
                 Text(
@@ -298,7 +297,8 @@ fun StatisticsBloodPressure(
         item{
             Column(
                 verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(top = 20.dp)
             ) {
                 Text(
                     text = "Time",
@@ -348,7 +348,7 @@ fun findIndex(value:Double, data:List<Double>):String{
 fun BloodPressureSList(
     systolicListContent: () -> List<Double>,
     diastolicListContent: () -> List<Double>,
-    modifierList: Modifier
+    modifier: Modifier
 ) {
 
     val systolicList = {
@@ -361,7 +361,7 @@ fun BloodPressureSList(
 
 
     Box(
-        modifier = modifierList
+        modifier = modifier
     ) {
         val hoursList = getHours()
         BloodPressureList(
