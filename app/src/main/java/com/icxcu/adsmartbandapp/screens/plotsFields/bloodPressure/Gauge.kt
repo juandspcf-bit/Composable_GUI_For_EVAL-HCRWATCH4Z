@@ -1,5 +1,6 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.offset
@@ -24,11 +25,13 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 @Composable
-fun Gauge() {
+fun Gauge(modifier: Modifier= Modifier) {
     var fullSize=300f
-    Canvas(modifier = Modifier.size(300.dp, 150.dp)
-        .offset(y= (0).dp)
-        .padding(top = 30.dp , bottom = 30.dp , start = 60.dp, end=60.dp).background(Color.DarkGray)) {
+    Canvas(modifier = modifier.then(Modifier
+        .size(300.dp, 150.dp)
+        .offset(y = (10).dp)
+        .padding(top = 30.dp , bottom = 30.dp , start = 60.dp, end=60.dp))
+        ) {
         val height = size.height
         val width = size.width
 
@@ -103,10 +106,12 @@ fun Gauge() {
 
 
 
-        val angleOffset = 90.0
-        val angle = 10.0 + angleOffset
-        val x = cos(angle* PI/180)*width/2f + width/2f
-        val y = sin(angle* PI/180)*height/2f + height
+        val angleOffset = 90
+        val angle = 180
+        val x = -cos((angle)* PI/180)*width/2+width/2f
+        val y = -sin((angle)* PI/180)*height+height
+
+        Log.d("Angles", "Gauge: $x, $y")
 
         drawLine(
             start = Offset(x = width/2f, y = height/1f),

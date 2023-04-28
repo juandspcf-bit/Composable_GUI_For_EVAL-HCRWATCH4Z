@@ -175,7 +175,7 @@ fun BloodPressureInfoContent(
             MyComposePlotChart(chartEntryModel, modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Black)
-                .padding(bottom=15.dp),)
+                .padding(bottom = 15.dp),)
 
         }
 
@@ -241,7 +241,9 @@ fun StatisticsBloodPressure(
             Column(
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth(0.5f).padding(bottom = 20.dp)
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+                    .padding(bottom = 20.dp)
             ) {
                 Text(
                     text = "Max Value",
@@ -260,7 +262,9 @@ fun StatisticsBloodPressure(
             Column(
                 verticalArrangement = Arrangement.SpaceAround,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth(0.5f).padding(bottom = 20.dp)
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+                    .padding(bottom = 20.dp)
             ) {
                 Text(
                     text = "Min Value",
@@ -433,7 +437,7 @@ fun RowBloodPressure(
                 bottom.linkTo(parent.bottom)
                 height = Dimension.wrapContent
             })
-
+/*
             Image(
                 painter = painterResource(resource),
                 contentScale = ContentScale.FillHeight,
@@ -447,7 +451,17 @@ fun RowBloodPressure(
                     }
                     .size(50.dp)
 
-            )
+            )*/
+
+            Gauge(modifier = Modifier
+                .constrainAs(icon) {
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(guideHourIcon)
+                    end.linkTo(gideIconValue)
+                    height= Dimension.wrapContent
+                    width= Dimension.wrapContent
+                }.size(200.dp, 100.dp))
 
             Text(text = valueSteps, color = Color.White, modifier = Modifier.constrainAs(value) {
                 linkTo(start = gideIconValue, end = parent.end)
