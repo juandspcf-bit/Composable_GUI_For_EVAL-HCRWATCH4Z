@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -162,9 +163,6 @@ fun BloodPressureInfoContent(
         }
 
         Box(modifier = Modifier
-            .background(
-                Color(0xFFE57373)
-            )
             .constrainAs(plot) {
                 top.linkTo(parent.top)
                 bottom.linkTo(guide4f)
@@ -174,7 +172,10 @@ fun BloodPressureInfoContent(
         ) {
 
             val chartEntryModel = ChartEntryModelProducer(mapSystolic, mapDiastolic)
-            MyComposePlotChart(chartEntryModel)
+            MyComposePlotChart(chartEntryModel, modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black)
+                .padding(bottom=15.dp),)
 
         }
 
@@ -423,14 +424,14 @@ fun RowBloodPressure(
 
         ) {
             val (hour, icon, value) = createRefs()
-            val guideHourIcon = createGuidelineFromStart(fraction = 0.25f)
-            val gideIconValue = createGuidelineFromStart(fraction = 0.75f)
+            val guideHourIcon = createGuidelineFromStart(fraction = 0.35f)
+            val gideIconValue = createGuidelineFromStart(fraction = 0.65f)
 
             Text(text = hourTime, color = Color.White, modifier = Modifier.constrainAs(hour) {
                 linkTo(start = parent.start, end = guideHourIcon)
                 top.linkTo(parent.top)
                 bottom.linkTo(parent.bottom)
-                height = Dimension.fillToConstraints
+                height = Dimension.wrapContent
             })
 
             Image(
@@ -452,7 +453,7 @@ fun RowBloodPressure(
                 linkTo(start = gideIconValue, end = parent.end)
                 top.linkTo(parent.top)
                 bottom.linkTo(parent.bottom)
-
+                height = Dimension.wrapContent
             })
 
 

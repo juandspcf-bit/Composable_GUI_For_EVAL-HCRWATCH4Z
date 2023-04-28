@@ -6,6 +6,7 @@ import android.text.TextUtils
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.magnifier
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -42,15 +43,12 @@ import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import java.math.RoundingMode
 
 @Composable
-fun MyComposePlotChart(chartEntryModel: ChartEntryModelProducer){
+fun MyComposePlotChart(chartEntryModel: ChartEntryModelProducer, modifier: Modifier = Modifier){
 
     ProvideChartStyle(rememberChartStyle(chartColorsPLot)) {
         val defaultLines = currentChartStyle.lineChart.lines
         Chart(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black)
-                .padding(0.dp),
+            modifier = modifier,
             marker = rememberMarker(),
             chartScrollSpec = rememberChartScrollSpec(isScrollEnabled = false),
             chart = lineChart(
