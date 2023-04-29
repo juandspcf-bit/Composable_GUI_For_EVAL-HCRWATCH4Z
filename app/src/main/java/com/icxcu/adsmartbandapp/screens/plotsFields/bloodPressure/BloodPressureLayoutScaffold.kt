@@ -405,9 +405,18 @@ fun BloodPressureList(
 
             val stringSystolicValue = String.format("%.1f", systolicValue)
             val stringDiastolicValue = String.format("%.1f", diastolicValue)
+
+            val getCategory =getBloodPressureCategory(systolicValue, diastolicValue)
+            val category = mapCategories[getCategory]
+            val readableCategory = mapToReadableCategories[getCategory]
+
+
             RowBloodPressure(
-                valueSteps = "$stringSystolicValue/$stringDiastolicValue mmHg",
+                valueBloodPressure = "$stringSystolicValue/$stringDiastolicValue mmHg",
+                resource = category?:R.drawable.blood_pressure_gauge,
+                readableCategory= readableCategory?:"No Category",
                 hourTime = getIntervals(index, hourList)
+
             )
 
         }
@@ -416,14 +425,15 @@ fun BloodPressureList(
 
 @Composable
 fun RowBloodPressure(
-    valueSteps: String,
+    valueBloodPressure: String,
     resource: Int = R.drawable.blood_pressure_gauge,
+    readableCategory: String = "No category",
     hourTime: String
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         ConstraintLayout(
             modifier = Modifier
-                .padding(top = 5.dp, bottom = 5.dp)
+                .padding(top = 10.dp, bottom = 10.dp)
                 .fillMaxSize()
 
         ) {
@@ -437,33 +447,32 @@ fun RowBloodPressure(
                 bottom.linkTo(parent.bottom)
                 height = Dimension.wrapContent
             })
-/*
-            Image(
-                painter = painterResource(resource),
-                contentScale = ContentScale.FillHeight,
-                contentDescription = null,
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .constrainAs(icon) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(guideHourIcon)
-                        end.linkTo(gideIconValue)
-                    }
-                    .size(50.dp)
-
-            )*/
-
-            Gauge(modifier = Modifier
                 .constrainAs(icon) {
                     top.linkTo(parent.top)
                     bottom.linkTo(parent.bottom)
                     start.linkTo(guideHourIcon)
                     end.linkTo(gideIconValue)
-                    height= Dimension.wrapContent
-                    width= Dimension.wrapContent
-                }.size(200.dp, 100.dp))
+                    width = Dimension.fillToConstraints
+                }) {
+                Image(
+                    painter = painterResource(resource),
+                    contentScale = ContentScale.FillWidth,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(80.dp).fillMaxWidth()
+                )
 
-            Text(text = valueSteps, color = Color.White, modifier = Modifier.constrainAs(value) {
+                Text(readableCategory, color = Color.White, textAlign = TextAlign.Center)
+            }
+
+
+
+
+            Text(text = valueBloodPressure, color = Color.White, modifier = Modifier.constrainAs(value) {
                 linkTo(start = gideIconValue, end = parent.end)
                 top.linkTo(parent.top)
                 bottom.linkTo(parent.bottom)

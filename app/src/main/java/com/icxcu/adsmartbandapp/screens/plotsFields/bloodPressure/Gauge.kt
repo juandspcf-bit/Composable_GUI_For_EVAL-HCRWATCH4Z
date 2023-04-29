@@ -26,20 +26,18 @@ import kotlin.math.sin
 
 @Composable
 fun Gauge(modifier: Modifier= Modifier) {
-    var fullSize=300f
+
     Canvas(modifier = modifier.then(Modifier
-        .size(300.dp, 150.dp)
-        .offset(y = (10).dp)
-        .padding(top = 30.dp , bottom = 30.dp , start = 60.dp, end=60.dp))
-        ) {
+        .size(150.dp, 75.dp)
+        .offset(y = (0).dp)
+        .padding(top = 20.dp , bottom = 20.dp , start = 40.dp, end=40.dp)
+    )) {
         val height = size.height
         val width = size.width
 
-
-
-
-
         val cut = 00f
+
+        val strokeWidth = 70f
 
         drawArc(
             Color(0xffba3a02),
@@ -48,7 +46,7 @@ fun Gauge(modifier: Modifier= Modifier) {
             useCenter = false,
             size = Size(width, height*2),
             style = Stroke(
-                width = 150f,
+                width = strokeWidth,
                 cap = StrokeCap.Butt
             )
         )
@@ -61,7 +59,7 @@ fun Gauge(modifier: Modifier= Modifier) {
             useCenter = false,
             size = Size(width, height*2),
             style = Stroke(
-                width = 150f,
+                width = strokeWidth,
                 cap = StrokeCap.Butt
             )
         )
@@ -75,7 +73,7 @@ fun Gauge(modifier: Modifier= Modifier) {
         useCenter = false,
         size = Size(width, height*2),
         style = Stroke(
-            width =150f,
+            width = strokeWidth,
             cap = StrokeCap.Butt
         )
         )
@@ -87,7 +85,7 @@ fun Gauge(modifier: Modifier= Modifier) {
             useCenter = false,
             size = Size(width, height*2),
             style = Stroke(
-                width = 150f,
+                width = strokeWidth,
                 cap = StrokeCap.Butt
             )
         )
@@ -99,7 +97,7 @@ fun Gauge(modifier: Modifier= Modifier) {
             useCenter = false,
             size = Size(width, height*2),
             style = Stroke(
-                width = 150f,
+                width = strokeWidth,
                 cap = StrokeCap.Butt
             )
         )
@@ -107,7 +105,8 @@ fun Gauge(modifier: Modifier= Modifier) {
 
 
         val angleOffset = 90
-        val angle = 180
+        val angle = 18*9
+
         val x = -cos((angle)* PI/180)*width/2+width/2f
         val y = -sin((angle)* PI/180)*height+height
 
