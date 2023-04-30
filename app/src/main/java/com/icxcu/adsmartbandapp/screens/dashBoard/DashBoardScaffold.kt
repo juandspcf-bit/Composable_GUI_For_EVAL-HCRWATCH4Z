@@ -3,15 +3,12 @@ package com.icxcu.adsmartbandapp.screens.dashBoard
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -27,12 +24,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -51,12 +43,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.bottombardemo.screens.Favorites
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.repositories.Values
-import com.icxcu.adsmartbandapp.screens.ListCardFields
+import com.icxcu.adsmartbandapp.screens.ListDashBoardCardFields
 import com.icxcu.adsmartbandapp.screens.NavBarItems
 import com.icxcu.adsmartbandapp.screens.NavRoutes
 import com.icxcu.adsmartbandapp.screens.TestingHealthScreen
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -110,13 +100,14 @@ fun DashBoardScaffold(
                 AnimatedVisibility(
                     modifier = Modifier
                         .background(Color(0xFFFFB74D))
-                        .padding(top = 15.dp, bottom = 15.dp),
+                        ,
                     visible = getVisibility(),
                     enter = expandVertically(animationSpec = tween(durationMillis = 1000)),
                     exit = shrinkVertically(animationSpec = tween(durationMillis = 1000)),
                 ) {
                     Box(contentAlignment = Alignment.Center,
-                        modifier = Modifier.fillMaxWidth()){
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(top = 15.dp, bottom = 15.dp)){
                         CircularProgressIndicator(
                             color = Color(0xFF443B2E)
                         )
@@ -147,7 +138,7 @@ fun NavigationHost(
         startDestination = NavRoutes.Fields.route,
     ) {
         composable(NavRoutes.Fields.route) {
-            ListCardFields(dayDateValuesReadFromSW, navMainController)
+            ListDashBoardCardFields(dayDateValuesReadFromSW, navMainController)
         }
         composable(NavRoutes.CheckHealth.route) {
             TestingHealthScreen()

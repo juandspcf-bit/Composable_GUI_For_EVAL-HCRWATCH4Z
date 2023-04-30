@@ -13,13 +13,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.icxcu.adsmartbandapp.R
+import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.additionalWidgets.ArcCompose
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ListCardFields(
+fun ListDashBoardCardFields(
     dayDateValuesReadFromSW: () -> Values,
     navMainController: NavHostController
 ) {
@@ -36,12 +38,16 @@ fun ListCardFields(
             iconPadding = 5.dp,
             size = 280.dp,
             isWithIconTitle = true,
-            resourceIconTitle = { ArcCompose(stepsMade =9000,
-                stepsGoal = 10000,
-                sizeContainer = 110.dp,
-                radius = 60.dp)},
+            resourceIconTitle = {
+                ArcCompose(
+                    stepsMade = 9000,
+                    stepsGoal = 10000,
+                    sizeContainer = 110.dp,
+                    radius = 60.dp
+                )
+            },
             callBack = { navMainController.navigate(Routes.StepsPlots.route) },
-            guidelineFromBottomFraction =0.35f
+            guidelineFromBottomFraction = 0.35f
         )
     )
     listOf.add(
@@ -70,7 +76,7 @@ fun ListCardFields(
         )
     )
     val bPHighMaxValue = dayDateValuesReadFromSW().systolic.max()
-    val stringValueBP= String.format("%.1f", bPHighMaxValue)
+    val stringValueBP = String.format("%.1f", bPHighMaxValue)
 
     listOf.add(
         DashBoardCardData(
@@ -109,7 +115,7 @@ fun ListCardFields(
             fieldPlural = "°C",
             resource = R.drawable.thermometer,
             iconPadding = 5.dp,
-            size =140.dp,
+            size = 140.dp,
             verticalChainData = false
         )
     )
@@ -138,12 +144,18 @@ fun ListCardFields(
                 isWithIconTitle = it.isWithIconTitle,
                 resourceIconTitle = it.resourceIconTitle,
                 guidelineFromBottomFraction = it.guidelineFromBottomFraction
-                )
+            )
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
-fun ListFieldsPreview() {
-
+fun ListDashBoardCardFieldsPreview() {
+    ListDashBoardCardFields(
+        dayDateValuesReadFromSW = {
+            MockData.valuesToday
+        },
+        navMainController = rememberNavController()
+    )
 }
