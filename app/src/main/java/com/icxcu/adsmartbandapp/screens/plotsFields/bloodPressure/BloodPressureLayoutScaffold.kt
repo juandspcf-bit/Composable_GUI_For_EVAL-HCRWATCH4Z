@@ -192,11 +192,10 @@ fun BloodPressureInfoContent(
             modifier = Modifier
                 .constrainAs(statistics) {
                     top.linkTo(divider.bottom)
-                    //bottom.linkTo(guide6f)
                     linkTo(start = parent.start, end = parent.end)
                     height = Dimension.fillToConstraints
                 }
-                .background(Color(0xFF6B1A79))
+                .background(Color(0xFF715077))
                 .fillMaxWidth())
 
 
@@ -317,9 +316,6 @@ fun StatisticsBloodPressure(
             }
 
         }
-
-
-
     }
 
 
@@ -475,10 +471,6 @@ fun RowBloodPressure(
                 Text(text = valueBloodPressure, color = Color.White)
                 Text(readableCategory, color = Color(0x9fffffff), textAlign = TextAlign.Center)
             }
-
-
-
-
 
         }
 
