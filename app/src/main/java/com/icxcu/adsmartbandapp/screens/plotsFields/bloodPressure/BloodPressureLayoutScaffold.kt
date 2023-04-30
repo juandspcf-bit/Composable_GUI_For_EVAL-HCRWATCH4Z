@@ -203,7 +203,6 @@ fun BloodPressureInfoContent(
         BloodPressureSList(
             systolicListContent,
             diastolicListContent,
-            //.padding(top = 20.dp, bottom = 20.dp, start = 50.dp, end = 50.dp),
             modifier = Modifier
                 .constrainAs(list) {
                     top.linkTo(statistics.bottom)
@@ -233,7 +232,7 @@ fun StatisticsBloodPressure(
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        modifier = modifier.padding(top = 20.dp, bottom = 20.dp),
+        modifier = modifier.padding(top = 10.dp, bottom = 10.dp),
         horizontalArrangement = Arrangement.Center,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
@@ -243,7 +242,7 @@ fun StatisticsBloodPressure(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth(0.5f)
-                    .padding(bottom = 20.dp)
+                    .padding(bottom = 10.dp)
             ) {
                 Text(
                     text = "Max Value",
@@ -264,7 +263,7 @@ fun StatisticsBloodPressure(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth(0.5f)
-                    .padding(bottom = 20.dp)
+                    .padding(bottom = 10.dp)
             ) {
                 Text(
                     text = "Min Value",
@@ -283,7 +282,7 @@ fun StatisticsBloodPressure(
             Column(
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(top = 20.dp)
+                modifier = Modifier.padding(top = 10.dp)
             ) {
 
                 Text(
@@ -303,7 +302,7 @@ fun StatisticsBloodPressure(
             Column(
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(top = 20.dp)
+                modifier = Modifier.padding(top = 10.dp)
             ) {
                 Text(
                     text = "Time",
@@ -416,7 +415,6 @@ fun BloodPressureList(
                 resource = category?:R.drawable.blood_pressure_gauge,
                 readableCategory= readableCategory?:"No Category",
                 hourTime = getIntervals(index, hourList)
-
             )
 
         }
@@ -433,7 +431,7 @@ fun RowBloodPressure(
     Column(modifier = Modifier.fillMaxSize()) {
         ConstraintLayout(
             modifier = Modifier
-                .padding(top = 10.dp, bottom = 10.dp)
+                .padding(top = 5.dp, bottom = 5.dp)
                 .fillMaxSize()
 
         ) {
@@ -448,36 +446,38 @@ fun RowBloodPressure(
                 height = Dimension.wrapContent
             })
 
+            Image(
+                painter = painterResource(resource),
+                contentScale = ContentScale.Fit,
+                contentDescription = null,
+                modifier = Modifier
+                    .constrainAs(icon) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(guideHourIcon)
+                        end.linkTo(gideIconValue)
+                        width = Dimension.fillToConstraints
+                    }
+                    .size(30.dp).fillMaxWidth()
+            )
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                .constrainAs(icon) {
+                .constrainAs(value) {
                     top.linkTo(parent.top)
                     bottom.linkTo(parent.bottom)
-                    start.linkTo(guideHourIcon)
-                    end.linkTo(gideIconValue)
+                    start.linkTo(gideIconValue)
+                    end.linkTo(parent.end)
                     width = Dimension.fillToConstraints
                 }) {
-                Image(
-                    painter = painterResource(resource),
-                    contentScale = ContentScale.FillWidth,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(80.dp).fillMaxWidth()
-                )
 
-                Text(readableCategory, color = Color.White, textAlign = TextAlign.Center)
+                Text(text = valueBloodPressure, color = Color.White)
+                Text(readableCategory, color = Color(0x9fffffff), textAlign = TextAlign.Center)
             }
 
 
 
-
-            Text(text = valueBloodPressure, color = Color.White, modifier = Modifier.constrainAs(value) {
-                linkTo(start = gideIconValue, end = parent.end)
-                top.linkTo(parent.top)
-                bottom.linkTo(parent.bottom)
-                height = Dimension.wrapContent
-            })
 
 
         }
