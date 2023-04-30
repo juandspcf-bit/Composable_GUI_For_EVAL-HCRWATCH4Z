@@ -75,6 +75,23 @@ fun ListDashBoardCardFields(
             size = 140.dp
         )
     )
+
+
+    listOf.add(
+        DashBoardCardData(
+            modifier = Modifier
+                .padding(5.dp),
+            title = "Heart Rate",
+            text = "96",
+            fieldPlural = "bpm",
+            resource = R.drawable.heart_rate,
+            iconPadding = 5.dp,
+            size = 140.dp,
+            callBack = { navMainController.navigate(Routes.BloodPressurePlots.route) },
+        )
+    )
+
+
     val bPHighMaxValue = dayDateValuesReadFromSW().systolic.max()
     val stringValueBP = String.format("%.1f", bPHighMaxValue)
 
