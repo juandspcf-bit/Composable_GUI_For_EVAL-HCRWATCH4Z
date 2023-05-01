@@ -229,6 +229,8 @@ class MainActivity : ComponentActivity() {
                     dataViewModel.getYesterdayPhysicalActivityData(dataViewModel.macAddress)
                     dataViewModel.getTodayBloodPressureData(dataViewModel.macAddress)
                     dataViewModel.getYesterdayBloodPressureData(dataViewModel.macAddress)
+                    dataViewModel.getTodayHeartRateData(dataViewModel.macAddress)
+                    dataViewModel.getYesterdayHeartRateData(dataViewModel.macAddress)
 
                     DashBoard(
                         bluetoothName = bluetoothName ?: "no name",

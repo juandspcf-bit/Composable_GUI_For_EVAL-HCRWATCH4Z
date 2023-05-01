@@ -1,14 +1,11 @@
 package com.icxcu.adsmartbandapp.screens.dashBoard
 
-import android.util.Log
 import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.data.entities.Field
+import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 fun integerFieldUpdateOrInsert(
     valuesReadFromSW: List<Int>,
@@ -151,6 +148,7 @@ fun tableToUpdateSelector(
         TypesTable.CALORIES -> dataViewModel.updatePhysicalActivityData(dayFromTableData[2] as PhysicalActivity)
         TypesTable.SYSTOLIC -> dataViewModel.updateBloodPressureData(dayFromTableData[0] as BloodPressure)
         TypesTable.DIASTOLIC -> dataViewModel.updateBloodPressureData(dayFromTableData[1] as BloodPressure)
+        TypesTable.HEART_RATE -> dataViewModel.updateHeartRateData(dayFromTableData[0] as HeartRate)
     }
 }
 
@@ -234,6 +232,21 @@ fun tableToInsertSelector(
                 data = newValuesList.toString()
             }
             dataViewModel.insertBloodPressureData(bloodPressure)
+        }
+
+        TypesTable.HEART_RATE -> {
+            val heartRate = HeartRate().apply {
+                macAddress = dataViewModel.macAddress
+
+                dateData = currentDateData
+                typesTable = typesTableToModify
+                val newValuesList = mutableMapOf<String, String>()
+                valuesReadFromSW.forEachIndexed { index, i ->
+                    newValuesList[index.toString()] = i.toDouble().toString()
+                }
+                data = newValuesList.toString()
+            }
+            dataViewModel.insertHeartRateData(heartRate)
         }
     }
 }

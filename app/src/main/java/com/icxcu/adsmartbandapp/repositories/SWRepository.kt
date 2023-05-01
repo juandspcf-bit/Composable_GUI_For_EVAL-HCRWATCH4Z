@@ -281,8 +281,8 @@ data class Values(
     var stepList: List<Int>,
     var distanceList: List<Double>,
     var caloriesList: List<Double>,
-    var heartRate: List<Double>,
-    var systolic: List<Double>,
-    var diastolic: List<Double>,
+    var heartRateList: List<Double>,
+    var systolicList: List<Double>,
+    var diastolicList: List<Double>,
     var date: String
 )

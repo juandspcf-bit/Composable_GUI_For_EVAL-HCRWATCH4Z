@@ -8,7 +8,7 @@ internal class BloodPressureLayoutScaffoldKtTest {
 
     @BeforeEach
     fun initEach(){
-        val systolic = MockData.valuesToday.systolic
+        val systolic = MockData.valuesToday.systolicList
     }
 
     @org.junit.jupiter.api.Test

@@ -92,7 +92,7 @@ fun ListDashBoardCardFields(
     )
 
 
-    val bPHighMaxValue = dayDateValuesReadFromSW().systolic.max()
+    val bPHighMaxValue = dayDateValuesReadFromSW().systolicList.max()
     val stringValueBP = String.format("%.1f", bPHighMaxValue)
 
     listOf.add(

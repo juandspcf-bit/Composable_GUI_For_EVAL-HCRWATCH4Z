@@ -42,7 +42,7 @@ fun TodayBloodPressureDBHandler(
     }
 
     doubleFieldUpdateOrInsert(
-        valuesReadFromSW = todayDateValuesReadFromSW().systolic,
+        valuesReadFromSW = todayDateValuesReadFromSW().systolicList,
         dataViewModel = dataViewModel,
         fieldListReadFromDB = dataViewModel.todaySystolicListReadFromDB,
         setDayFieldListReadFromDB = setTodaySystolicListReadFromDB,
@@ -76,7 +76,7 @@ fun TodayBloodPressureDBHandler(
     }
 
     doubleFieldUpdateOrInsert(
-        valuesReadFromSW = todayDateValuesReadFromSW().diastolic,
+        valuesReadFromSW = todayDateValuesReadFromSW().diastolicList,
         dataViewModel = dataViewModel,
         fieldListReadFromDB = dataViewModel.todayDiastolicListReadFromDB,
         setDayFieldListReadFromDB = setTodayDiastolicListReadFromDB,

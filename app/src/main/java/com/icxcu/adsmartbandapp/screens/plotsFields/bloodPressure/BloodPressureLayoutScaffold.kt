@@ -486,8 +486,8 @@ fun RowBloodPressure(
 @Composable
 fun BloodPressureLayoutScaffoldPreview() {
     BloodPressureInfoContent(
-        { MockData.valuesToday.systolic },
-        { MockData.valuesToday.diastolic },
+        { MockData.valuesToday.systolicList },
+        { MockData.valuesToday.diastolicList },
     )
 
 
