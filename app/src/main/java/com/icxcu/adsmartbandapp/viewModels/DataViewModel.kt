@@ -31,6 +31,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     var isRequestForFetchingDataFromSWBeginning by mutableStateOf(false)
 
     var selectedDay by mutableStateOf("")
+
     var dayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
     var dayStepListFromDB by mutableStateOf(listOf<Int>())
     var dayDistanceListFromDB by mutableStateOf(listOf<Double>())
@@ -112,6 +113,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     var isYesterdayDiastolicListAlreadyInsertedInDB by mutableStateOf(false)
     var isYesterdayDiastolicListInDBAlreadyUpdated by mutableStateOf(false)
 
+    var yesterdayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
     var yesterdayHeartRateListReadFromDB by mutableStateOf(listOf<Double>())
     var isYesterdayHeartRateListAlreadyInsertedInDB by mutableStateOf(false)
     var isYesterdayHeartRateListInDBAlreadyUpdated by mutableStateOf(false)
@@ -143,6 +145,11 @@ class DataViewModel(var application: Application) : ViewModel() {
         dayBloodPressureResultsFromDB = swRepository.dayBloodPressureResultsFromDB
         todayBloodPressureResultsFromDB = swRepository.todayBloodPressureResultsFromDB
         yesterdayBloodPressureResultsFromDB = swRepository.yesterdayBloodPressureResultsFromDB
+
+        dayHeartRateResultsFromDB = swRepository.dayHeartRateResultsFromDB
+        todayHeartRateResultsFromDB = swRepository.todayHeartRateResultsFromDB
+        yesterdayHeartRateResultsFromDB = swRepository.yesterdayHeartRateResultsFromDB
+
 
         viewModelScope.launch{
             swRepository.sharedStepsFlow.collect{
@@ -196,7 +203,7 @@ class DataViewModel(var application: Application) : ViewModel() {
         swRepository.updatePhysicalActivityData(physicalActivity)
     }
 
-
+//Blood Pressure
 
     fun getDayBloodPressureData(dateData:String, macAddress:String) {
         swRepository.getAnyDayBloodPressureData(dateData, macAddress)
@@ -215,6 +222,27 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     fun updateBloodPressureData(bloodPressure: BloodPressure){
         swRepository.updateBloodPressureData(bloodPressure)
+    }
+
+
+    //Heart Rate
+    fun getDayHeartRateData(dateData:String, macAddress:String) {
+        swRepository.getAnyDayHeartRateData(dateData, macAddress)
+    }
+
+    fun getTodayHeartRateData(macAddress:String) {
+        swRepository.getTodayHeartRateData(todayFormattedDate, macAddress)
+    }
+    fun getYesterdayHeartRateData(macAddress:String) {
+        swRepository.getYesterdayHeartRateData(yesterdayFormattedDate, macAddress)
+    }
+
+    fun insertHeartRateData(heartRate: HeartRate) {
+        swRepository.insertHeartRateData(heartRate)
+    }
+
+    fun updateHeartRateData(heartRate: HeartRate){
+        swRepository.updateHeartRateData(heartRate)
     }
 
 }
