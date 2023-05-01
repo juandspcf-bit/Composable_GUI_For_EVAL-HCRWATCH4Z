@@ -215,6 +215,7 @@ class MainActivity : ComponentActivity() {
                             MutableList(48){0.0}.toList(),
                             MutableList(48){ 0.0 }.toList(),
                             MutableList(48){ 0.0 }.toList(),
+                            MutableList(48){ 0.0 }.toList(),
                             dataViewModel.todayFormattedDate)
                         dataViewModel.requestSmartWatchData(bluetoothName ?: "no name",
                             bluetoothAddress ?: "no address")

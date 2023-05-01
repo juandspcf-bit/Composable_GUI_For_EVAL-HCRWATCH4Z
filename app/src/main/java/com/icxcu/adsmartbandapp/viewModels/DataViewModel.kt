@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.icxcu.adsmartbandapp.data.entities.BloodPressure
+import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.database.SWRoomDatabase
 import com.icxcu.adsmartbandapp.repositories.SWRepository
@@ -40,6 +41,7 @@ class DataViewModel(var application: Application) : ViewModel() {
         MutableList(48){0.0}.toList(),
         MutableList(48){ 0.0 }.toList(),
         MutableList(48){ 0.0 }.toList(),
+        MutableList(48){ 0.0 }.toList(),
         todayFormattedDate) )
 
     var todayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
@@ -61,21 +63,29 @@ class DataViewModel(var application: Application) : ViewModel() {
     var dayDiastolicListFromDB by mutableStateOf(listOf<Double>())
 
     var todayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
-    var todaySystolicListReadFromDB = listOf<Double>()//by mutableStateOf(listOf<Double>())
-    var isTodaySystolicListAlreadyInsertedInDB=false// by mutableStateOf(false)
-    var isTodaySystolicListInDBAlreadyUpdated=false// by mutableStateOf(false)
+    var todaySystolicListReadFromDB = listOf<Double>()
+    var isTodaySystolicListAlreadyInsertedInDB=false
+    var isTodaySystolicListInDBAlreadyUpdated=false
 
-    var todayDiastolicListReadFromDB=listOf<Double>()// by mutableStateOf(listOf<Double>())
-    var isTodayDiastolicListAlreadyInsertedInDB=false// by mutableStateOf(false)
-    var isTodayDiastolicListInDBAlreadyUpdated=false// by mutableStateOf(false)
+    var todayDiastolicListReadFromDB=listOf<Double>()
+    var isTodayDiastolicListAlreadyInsertedInDB=false
+    var isTodayDiastolicListInDBAlreadyUpdated=false
 
 
+    var dayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
+    var dayHeartRateListFromDB by mutableStateOf(listOf<Double>())
 
+
+    var todayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
+    var todayHeartRateListReadFromDB = listOf<Double>()
+    var isTodayHeartRateListAlreadyInsertedInDB=false
+    var isTodayHeartRateListInDBAlreadyUpdated=false
 
 
     var yesterdayDateValuesFromSW by mutableStateOf(Values(MutableList(48){0}.toList(),
         MutableList(48){0.0}.toList(),
         MutableList(48){0.0}.toList(),
+        MutableList(48){ 0.0 }.toList(),
         MutableList(48){ 0.0 }.toList(),
         MutableList(48){ 0.0 }.toList(),
         yesterdayFormattedDate) )
@@ -102,6 +112,10 @@ class DataViewModel(var application: Application) : ViewModel() {
     var isYesterdayDiastolicListAlreadyInsertedInDB by mutableStateOf(false)
     var isYesterdayDiastolicListInDBAlreadyUpdated by mutableStateOf(false)
 
+    var yesterdayHeartRateListReadFromDB by mutableStateOf(listOf<Double>())
+    var isYesterdayHeartRateListAlreadyInsertedInDB by mutableStateOf(false)
+    var isYesterdayHeartRateListInDBAlreadyUpdated by mutableStateOf(false)
+
     private var swRepository: SWRepository
 
 
@@ -116,8 +130,12 @@ class DataViewModel(var application: Application) : ViewModel() {
         val swDb = SWRoomDatabase.getInstance(application)
         val physicalActivityDao = swDb.physicalActivityDao()
         val bloodPressureDao = swDb.bloodPressureDao()
+        val heartRateDao = swDb.heartRateDao()
         swRepository = SWRepository(physicalActivityDao,
-            bloodPressureDao)
+            bloodPressureDao,
+        heartRateDao)
+
+
         dayPhysicalActivityResultsFromDB = swRepository.dayPhysicalActivityResultsFromDB
         todayPhysicalActivityResultsFromDB = swRepository.todayPhysicalActivityResultsFromDB
         yesterdayPhysicalActivityResultsFromDB = swRepository.yesterdayPhysicalActivityResultsFromDB

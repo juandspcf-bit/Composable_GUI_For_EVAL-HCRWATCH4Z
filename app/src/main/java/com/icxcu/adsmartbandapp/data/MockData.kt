@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter
 
 class MockData {
 
-    companion object{
+    companion object {
         private val stepValues = listOf(
             0,
             0,
@@ -160,7 +160,8 @@ class MockData {
             0.0
         )
 
-        private val systolic = listOf(116.6666667,
+        private val systolic = listOf(
+            116.6666667,
             120.3333333,
             120.1666667,
             121.6666667,
@@ -207,9 +208,11 @@ class MockData {
             118.8333333,
             125.0,
             119.4,
-            119.4)
+            119.4
+        )
 
-        private val diastolic = listOf(81.0,
+        private val diastolic = listOf(
+            81.0,
             84.0,
             82.33333333,
             78.0,
@@ -256,8 +259,60 @@ class MockData {
             84.0,
             84.66666667,
             81.8,
-            81.8)
+            81.8
+        )
 
+
+        val heartRate = listOf(
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            111.3,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+            113.0,
+        )
 
 
         var myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
@@ -266,7 +321,23 @@ class MockData {
         var myDateObj2 = LocalDateTime.now().minusDays(1)
         var formattedDateYesterday = myDateObj2.format(myFormatObj)
 
-        val valuesToday = Values(stepValues, distanceValues, caloriesValues, systolic, diastolic, formattedDateToday)
-        val valuesYesterday = Values(stepValues, distanceValues, caloriesValues, systolic, diastolic, formattedDateYesterday)
+        val valuesToday = Values(
+            stepValues,
+            distanceValues,
+            caloriesValues,
+            heartRate,
+            systolic,
+            diastolic,
+            formattedDateToday
+        )
+        val valuesYesterday = Values(
+            stepValues,
+            distanceValues,
+            caloriesValues,
+            heartRate,
+            systolic,
+            diastolic,
+            formattedDateYesterday
+        )
     }
 }

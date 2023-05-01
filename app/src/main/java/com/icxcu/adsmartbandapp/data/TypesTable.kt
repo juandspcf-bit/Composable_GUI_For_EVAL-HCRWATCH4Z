@@ -4,6 +4,7 @@ enum class TypesTable {
     STEPS,
     DISTANCE,
     CALORIES,
+    HEART_RATE,
     SYSTOLIC,
     DIASTOLIC
 }

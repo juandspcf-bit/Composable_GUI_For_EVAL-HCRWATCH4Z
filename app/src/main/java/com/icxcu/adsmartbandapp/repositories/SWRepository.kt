@@ -4,15 +4,20 @@ import androidx.lifecycle.MutableLiveData
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.BloodPressure
+import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.database.BloodPressureDao
+import com.icxcu.adsmartbandapp.database.HeartRateDao
 import com.icxcu.adsmartbandapp.database.PhysicalActivityDao
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
-class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private val bloodPressureDao: BloodPressureDao) {
+class SWRepository(private val physicalActivityDao: PhysicalActivityDao,
+                   private val bloodPressureDao: BloodPressureDao,
+                   private val heartRateDao: HeartRateDao
+) {
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
     var dayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
     var todayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
@@ -21,6 +26,10 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
     var dayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
     var todayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
     var yesterdayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
+
+    var dayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
+    var todayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
+    var yesterdayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
 
     private val _sharedStepsFlow = MutableSharedFlow<Values>(
         replay = 30,
@@ -202,12 +211,77 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao, private
 
 
 
+    fun getAnyDayHeartRateData(queryDate: String,
+                                   queryMacAddress:String) {
+        getDayHeartRateData(queryDate, queryMacAddress, dayHeartRateResultsFromDB)
+    }
+
+    fun getTodayHeartRateData(queryDate: String, queryMacAddress:String) {
+        getDayHeartRateData(queryDate, queryMacAddress, todayHeartRateResultsFromDB)
+    }
+
+    fun getYesterdayHeartRateData(queryDate: String, queryMacAddress:String) {
+        getDayHeartRateData(queryDate, queryMacAddress, yesterdayHeartRateResultsFromDB)
+    }
+
+    fun updateHeartRateData(heartRate: HeartRate){
+        coroutineScope.launch(Dispatchers.IO) {
+            heartRateDao.updateHeartRateData(heartRate = heartRate)
+        }
+    }
+
+    fun insertHeartRateData(heartRate: HeartRate) {
+        coroutineScope.launch(Dispatchers.IO) {
+            heartRateDao.insertHeartRateData(heartRate = heartRate)
+        }
+    }
+
+    private fun getDayHeartRateData(queryDate: String,
+                                    queryMacAddress:String,
+                                    dayHeartRateMLVData: MutableLiveData<List<HeartRate>>) {
+        coroutineScope.launch(Dispatchers.Main) {
+            val results = asyncDayHeartRateData(queryDate, queryMacAddress)
+
+            if(results.isEmpty().not()){
+                dayHeartRateMLVData.value = results
+            }else{
+
+                val heartRateS = HeartRate().apply {
+                    id=-1
+                    macAddress = queryMacAddress
+                    dateData= queryDate
+
+                    val newValuesList = mutableMapOf<String,String>()
+                    MutableList(48) { 0.0 }.forEachIndexed{ index, i ->
+                        newValuesList[index.toString()]= i.toString()
+                    }
+                    data= newValuesList.toString()
+                    typesTable = TypesTable.HEART_RATE
+                }
+
+
+                dayHeartRateMLVData.value =  listOf(heartRateS)
+
+            }
+
+
+        }
+    }
+
+    private suspend fun asyncDayHeartRateData(date: String, macAddress:String): List<HeartRate> =
+        coroutineScope.async(Dispatchers.IO) {
+            return@async heartRateDao.getDayHeartRateData(date, macAddress)
+        }.await()
+
+
+
 }
 
 data class Values(
     var stepList: List<Int>,
     var distanceList: List<Double>,
     var caloriesList: List<Double>,
+    var heartRate: List<Double>,
     var systolic: List<Double>,
     var diastolic: List<Double>,
     var date: String
