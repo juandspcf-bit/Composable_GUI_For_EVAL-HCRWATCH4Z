@@ -50,12 +50,16 @@ fun ListDashBoardCardFields(
             guidelineFromBottomFraction = 0.35f
         )
     )
+
+    val sumDistanceList = dayDateValuesReadFromSW().distanceList.sum()
+    val stringSumDistanceList = String.format("%.1f", sumDistanceList)
+
     listOf.add(
         DashBoardCardData(
             modifier = Modifier
                 .padding(5.dp),
             title = "Distance",
-            text = "10000",
+            text = stringSumDistanceList,
             fieldPlural = "Km",
             resource = R.drawable.measure_distance,
             iconPadding = 5.dp,
@@ -63,12 +67,15 @@ fun ListDashBoardCardFields(
         )
     )
 
+    val sumCaloriesList = dayDateValuesReadFromSW().caloriesList.sum()
+    val stringSumCaloriesList = String.format("%.1f", sumCaloriesList)
+
     listOf.add(
         DashBoardCardData(
             modifier = Modifier
                 .padding(5.dp),
             title = "Calories",
-            text = "10000",
+            text = stringSumCaloriesList,
             fieldPlural = "KCal",
             resource = R.drawable.calories,
             iconPadding = 5.dp,
@@ -76,13 +83,15 @@ fun ListDashBoardCardFields(
         )
     )
 
+    val avgHeartRate = dayDateValuesReadFromSW().heartRateList.average()
+    val stringAvgHeartRate = String.format("%.1f", avgHeartRate)
 
     listOf.add(
         DashBoardCardData(
             modifier = Modifier
                 .padding(5.dp),
             title = "Heart Rate",
-            text = "96",
+            text = stringAvgHeartRate,
             fieldPlural = "bpm",
             resource = R.drawable.heart_rate,
             iconPadding = 5.dp,
