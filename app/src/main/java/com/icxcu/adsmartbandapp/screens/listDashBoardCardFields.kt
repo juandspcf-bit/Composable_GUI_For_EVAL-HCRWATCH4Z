@@ -96,7 +96,7 @@ fun ListDashBoardCardFields(
             resource = R.drawable.heart_rate,
             iconPadding = 5.dp,
             size = 140.dp,
-            callBack = {  },
+            callBack = { navMainController.navigate(Routes.HeartRatePlot.route) },
         )
     )
 

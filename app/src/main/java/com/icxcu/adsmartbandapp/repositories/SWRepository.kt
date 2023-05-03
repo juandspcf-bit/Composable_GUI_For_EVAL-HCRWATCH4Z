@@ -278,11 +278,11 @@ class SWRepository(private val physicalActivityDao: PhysicalActivityDao,
 }
 
 data class Values(
-    var stepList: List<Int>,
-    var distanceList: List<Double>,
-    var caloriesList: List<Double>,
-    var heartRateList: List<Double>,
-    var systolicList: List<Double>,
-    var diastolicList: List<Double>,
-    var date: String
+    val stepList: List<Int>,
+    val distanceList: List<Double>,
+    val caloriesList: List<Double>,
+    val heartRateList: List<Double>,
+    val systolicList: List<Double>,
+    val diastolicList: List<Double>,
+    val date: String
 )

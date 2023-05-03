@@ -1,4 +1,4 @@
-package com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure
+package com.icxcu.adsmartbandapp.screens.plotsFields.heartRate
 
 import android.graphics.Typeface
 import androidx.compose.foundation.Image
@@ -18,7 +18,15 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.*
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumTopAppBar
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,13 +36,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.R
-import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
+import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.MyComposePlotChart
+import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.chartColorsPLot
+import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.findIndex
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.EntryHour
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getHours
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getIntervals
@@ -53,9 +62,8 @@ import java.time.Duration
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BloodPressureLayoutScaffold(
-    systolicList: () -> List<Double>,
-    diastolicList: () -> List<Double>,
+fun HeartRateLayoutScaffold(
+    heartRateList: () -> List<Double>,
     selectedDay: String,
     stateShowDialogDatePickerSetter: (Boolean) -> Unit,
     stateShowDialogDatePickerValue: () -> Boolean,
@@ -63,6 +71,7 @@ fun BloodPressureLayoutScaffold(
     stateMiliSecondsDateDialogDatePickerSetterS: (Long) -> Unit,
     navLambda: () -> Unit
 ) {
+
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val stateMiliSecondsDateDialogDatePicker = {
         stateMiliSecondsDateDialogDatePickerS()
@@ -75,7 +84,7 @@ fun BloodPressureLayoutScaffold(
             MediumTopAppBar(
                 title = {
                     Text(
-                        text = "Blood Pressure for $selectedDay",
+                        text = "Heart Rate for $selectedDay",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.White,
@@ -117,16 +126,13 @@ fun BloodPressureLayoutScaffold(
                     .padding(padding)
                     .fillMaxSize(), contentAlignment = Alignment.TopCenter
             ) {
-                val systolicListScaffold = {
-                    systolicList()
-                }
-                val diastolicListScaffold = {
-                    diastolicList()
+                val heartRateListScaffold = {
+                    heartRateList()
                 }
 
-                BloodPressureInfoContent(
-                    systolicListScaffold,
-                    diastolicListScaffold,
+
+                HeartRateInfoContent(
+                    heartRateListScaffold,
                 )
 
                 if (stateShowDialogDatePickerValue()) {
@@ -140,14 +146,13 @@ fun BloodPressureLayoutScaffold(
 
         },
     )
+
+
+
 }
 
 @Composable
-fun BloodPressureInfoContent(
-    systolicListContent: () -> List<Double>,
-    diastolicListContent: () -> List<Double>,
-) {
-
+fun HeartRateInfoContent(heartRateListContent: () -> List<Double>) {
     ConstraintLayout(
         modifier = Modifier
             .background(Color(0xff1d2a35))
@@ -158,14 +163,7 @@ fun BloodPressureInfoContent(
         createGuidelineFromTop(fraction = 0.6f)
 
 
-        val mapSystolic = systolicListContent().mapIndexed { index, y ->
-            val entry = EntryHour(
-                Duration.ofHours(24).minusMinutes(30L * index.toLong()),
-                index.toFloat(), y.toFloat()
-            )
-            entry
-        }
-        val mapDiastolic = diastolicListContent().mapIndexed { index, y ->
+        val mapHeartRate = heartRateListContent().mapIndexed { index, y ->
             val entry = EntryHour(
                 Duration.ofHours(24).minusMinutes(30L * index.toLong()),
                 index.toFloat(), y.toFloat()
@@ -182,12 +180,12 @@ fun BloodPressureInfoContent(
             }
         ) {
 
-            val chartEntryModel = ChartEntryModelProducer(mapSystolic, mapDiastolic)
+            val chartEntryModel = ChartEntryModelProducer(mapHeartRate)
             MyComposePlotChart(chartEntryModel, modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Black)
                 .padding(bottom = 15.dp),
-                rememberLegendBloodPressure())
+                rememberLegendHeartRate())
 
         }
 
@@ -200,7 +198,7 @@ fun BloodPressureInfoContent(
             }
             .height(2.dp))
 
-        StatisticsBloodPressure(systolicListContent = systolicListContent,
+        StatisticsHeartRate(heartRateListContent = heartRateListContent,
             modifier = Modifier
                 .constrainAs(statistics) {
                     top.linkTo(divider.bottom)
@@ -211,9 +209,8 @@ fun BloodPressureInfoContent(
                 .fillMaxWidth())
 
 
-        BloodPressureSList(
-            systolicListContent,
-            diastolicListContent,
+        HeartRateListS(
+            heartRateListContent,
             modifier = Modifier
                 .constrainAs(list) {
                     top.linkTo(statistics.bottom)
@@ -227,19 +224,17 @@ fun BloodPressureInfoContent(
 }
 
 
+
 @Composable
-fun StatisticsBloodPressure(
-    systolicListContent: () -> List<Double>,
-    modifier: Modifier = Modifier
-) {
-    val maxValueSystolic = systolicListContent().max()
-    val maxValueSystolicValue= String.format("%.1f mmHg", maxValueSystolic)
-    val hourMax = findIndex(maxValueSystolic, systolicListContent())
+fun StatisticsHeartRate(heartRateListContent: () -> List<Double>, modifier: Modifier) {
+    val maxValueSystolic = heartRateListContent().max()
+    val maxValueSystolicValue= String.format("%.1f bpm", maxValueSystolic)
+    val hourMax = findIndex(maxValueSystolic, heartRateListContent())
 
 
-    val minValueSystolic = systolicListContent().min()
-    val minValueSystolicValue= String.format("%.1f mmHg", minValueSystolic)
-    val hourMin = findIndex(minValueSystolic, systolicListContent())
+    val minValueSystolic = heartRateListContent().min()
+    val minValueSystolicValue= String.format("%.1f bpm", minValueSystolic)
+    val hourMin = findIndex(minValueSystolic, heartRateListContent())
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -329,46 +324,15 @@ fun StatisticsBloodPressure(
 
         }
     }
-
-
-
-
-}
-
-fun findIndex(value:Double, data:List<Double>):String{
-    var hour = " "
-    if (value > 0) {
-        val filterIndexed = data.mapIndexed { index, d ->
-            if (d == value) {
-                index
-            } else {
-                -1
-            }
-        }.filter {
-            it>-1
-        }
-        if (filterIndexed.isNotEmpty()) {
-            hour = getHours()[filterIndexed[0]]
-        }
-    }
-
-    return hour
 }
 
 
 @Composable
-fun BloodPressureSList(
-    systolicListContent: () -> List<Double>,
-    diastolicListContent: () -> List<Double>,
-    modifier: Modifier
-) {
+fun HeartRateListS(heartRateListContent: () -> List<Double>, modifier: Modifier) {
 
-    val systolicList = {
-        systolicListContent()
-    }
 
-    val diastolicList = {
-        diastolicListContent()
+    val heartRateList = {
+        heartRateListContent()
     }
 
 
@@ -376,64 +340,46 @@ fun BloodPressureSList(
         modifier = modifier
     ) {
         val hoursList = getHours()
-        BloodPressureList(
-            systolicList,
-            diastolicList,
+        HeartRateList(
+            heartRateList,
             hoursList,
             modifier = Modifier
                 .fillMaxSize()
         )
 
     }
+
 }
 
-
 @Composable
-fun BloodPressureList(
-    systolicListContent: () -> List<Double>,
-    diastolicListContent: () -> List<Double>,
-    hourList: List<String>,
-    modifier: Modifier = Modifier
-) {
-    val systolicList = {
-        systolicListContent()
-    }
+fun HeartRateList(heartRateListContent: () -> List<Double>,
+                  hoursList: List<String>,
+                  modifier: Modifier) {
 
-    val diastolicList = {
-        diastolicListContent()
-    }
-
-    val bloodPressureFullList = systolicList().zip(diastolicList()).toList()
 
     LazyColumn(modifier = modifier) {
-        itemsIndexed(bloodPressureFullList) { index, pair ->
-            val systolicValue = pair.first
-            val diastolicValue = pair.second
+        itemsIndexed(items = heartRateListContent(),
+        key = {index, value->
+            getIntervals(index, hoursList)
+        }) { index, heartRateValue ->
+            val stringHeartRateValue = String.format("%.1f", heartRateValue)
 
-            val stringSystolicValue = String.format("%.1f", systolicValue)
-            val stringDiastolicValue = String.format("%.1f", diastolicValue)
-
-            val getCategory =getBloodPressureCategory(systolicValue, diastolicValue)
-            val category = mapCategories[getCategory]
-            val readableCategory = mapToReadableCategories[getCategory]
-
-
-            RowBloodPressure(
-                valueBloodPressure = "$stringSystolicValue/$stringDiastolicValue mmHg",
-                resource = category?:R.drawable.blood_pressure_gauge,
-                readableCategory= readableCategory?:"No Category",
-                hourTime = getIntervals(index, hourList)
+            RowHeartRate(
+                valueHeartRate = "$stringHeartRateValue bpm",
+                resource = R.drawable.heart_rate,
+                readableCategory= "No Category",
+                hourTime = getIntervals(index, hoursList)
             )
-
         }
     }
+
 }
 
 @Composable
-fun RowBloodPressure(
-    valueBloodPressure: String,
-    resource: Int = R.drawable.blood_pressure_gauge,
-    readableCategory: String = "No category",
+fun RowHeartRate(
+    valueHeartRate: String,
+    resource: Int,
+    readableCategory: String,
     hourTime: String
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
@@ -472,15 +418,15 @@ fun RowBloodPressure(
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                .constrainAs(value) {
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(gideIconValue)
-                    end.linkTo(parent.end)
-                    width = Dimension.fillToConstraints
-                }) {
+                    .constrainAs(value) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(gideIconValue)
+                        end.linkTo(parent.end)
+                        width = Dimension.fillToConstraints
+                    }) {
 
-                Text(text = valueBloodPressure, color = Color.White)
+                Text(text = valueHeartRate, color = Color.White)
                 Text(readableCategory, color = Color(0x9fffffff), textAlign = TextAlign.Center)
             }
 
@@ -490,40 +436,28 @@ fun RowBloodPressure(
 
 
     }
-
 }
 
 
 @Composable
-fun rememberLegendBloodPressure() = verticalLegend(
-    items = chartColorsPLot.mapIndexed { index, chartColor ->
+fun rememberLegendHeartRate() = verticalLegend(
+    items = listOf(
         verticalLegendItem(
-            icon = shapeComponent(Shapes.pillShape, chartColor),
+            icon = shapeComponent(Shapes.pillShape, chartHeartRateColorsPLot),
             label = textComponent(
                 color = Color.White,
                 textSize = legendItemLabelTextSize,
                 typeface = Typeface.MONOSPACE,
             ),
-            labelText = if (index == 0) {
-                "Systolic"
-            } else {
-                "Diastolic"
-            },
+            labelText = "Heart Rate bpm"
         )
-    },
+    ),
     iconSize = legendItemIconSize,
     iconPadding = legendItemIconPaddingValue,
     spacing = legendItemSpacing,
     padding = legendPadding,
 )
 
-@Preview(showBackground = true)
-@Composable
-fun BloodPressureLayoutScaffoldPreview() {
-    BloodPressureInfoContent(
-        { MockData.valuesToday.systolicList },
-        { MockData.valuesToday.diastolicList },
-    )
-
-
-}
+private const val COLOR_1_CODE = 0xffff5500
+private val color1 = Color(COLOR_1_CODE)
+val chartHeartRateColorsPLot = color1

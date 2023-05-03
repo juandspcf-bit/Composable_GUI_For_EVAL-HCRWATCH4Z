@@ -40,10 +40,15 @@ import com.patrykandpatrick.vico.core.axis.horizontal.HorizontalAxis
 import com.patrykandpatrick.vico.core.chart.copy
 import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
+import com.patrykandpatrick.vico.core.legend.VerticalLegend
 import java.math.RoundingMode
 
 @Composable
-fun MyComposePlotChart(chartEntryModel: ChartEntryModelProducer, modifier: Modifier = Modifier){
+fun MyComposePlotChart(
+    chartEntryModel: ChartEntryModelProducer,
+    modifier: Modifier = Modifier,
+    legend: VerticalLegend
+) {
 
     ProvideChartStyle(rememberChartStyle(chartColorsPLot)) {
         val defaultLines = currentChartStyle.lineChart.lines
@@ -63,7 +68,7 @@ fun MyComposePlotChart(chartEntryModel: ChartEntryModelProducer, modifier: Modif
                     horizontalMargin = 0.dp,
                     horizontalPadding = 0.dp,
                     textSize = 15.sp,
-                    color= Color.White,
+                    color = Color.White,
 
                     ),
                 maxLabelCount = 2,
@@ -72,12 +77,12 @@ fun MyComposePlotChart(chartEntryModel: ChartEntryModelProducer, modifier: Modif
             ),
 
             bottomAxis = bottomAxis(
-                tickPosition= HorizontalAxis.TickPosition.Center(1,5),
+                tickPosition = HorizontalAxis.TickPosition.Center(1, 5),
                 sizeConstraint = Axis.SizeConstraint.TextWidth("sssss"),
                 valueFormatter = axisValueFormatter,
                 label = axisLabelComponent(
 
-                    color= Color.White,
+                    color = Color.White,
                     ellipsize = TextUtils.TruncateAt.MARQUEE,
                     textSize = 15.sp,
                     lineCount = 3,
@@ -89,31 +94,14 @@ fun MyComposePlotChart(chartEntryModel: ChartEntryModelProducer, modifier: Modif
                 ),
                 labelRotationDegrees = 90f
             ),
-            legend = rememberLegendBloodPressure(),
+            legend = legend,
         )
     }
 
 }
 
 
-@Composable
-fun rememberLegendBloodPressure() = verticalLegend(
-    items = chartColorsPLot.mapIndexed { index, chartColor ->
-        verticalLegendItem(
-            icon = shapeComponent(Shapes.pillShape, chartColor),
-            label = textComponent(
-                color = Color.White,
-                textSize = legendItemLabelTextSize,
-                typeface = Typeface.MONOSPACE,
-            ),
-            labelText = if(index==0){"Systolic"}else{"Diastolic"},
-        )
-    },
-    iconSize = legendItemIconSize,
-    iconPadding = legendItemIconPaddingValue,
-    spacing = legendItemSpacing,
-    padding = legendPadding,
-)
+
 
 private const val COLOR_1_CODE = 0xffff5500
 private const val COLOR_2_CODE = 0xffd3d826

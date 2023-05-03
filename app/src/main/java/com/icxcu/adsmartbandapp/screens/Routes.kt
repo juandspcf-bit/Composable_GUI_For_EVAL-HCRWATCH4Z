@@ -8,4 +8,6 @@ sealed class Routes(val route: String) {
     object StepsPlots : Routes("stepsPlot")
     object BloodPressurePlots : Routes("bloodPressurePlot")
 
+    object HeartRatePlot : Routes("heartRatePlot")
+
 }

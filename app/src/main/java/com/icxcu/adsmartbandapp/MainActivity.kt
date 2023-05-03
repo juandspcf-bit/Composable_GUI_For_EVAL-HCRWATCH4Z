@@ -25,10 +25,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothLEManagerImp
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
+import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.*
 import com.icxcu.adsmartbandapp.screens.dashBoard.DashBoard
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureInfo
+import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateInfo
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityInfo
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
 import com.icxcu.adsmartbandapp.viewModels.*
@@ -260,7 +262,17 @@ class MainActivity : ComponentActivity() {
                     BloodPressureInfo(dataViewModel=dataViewModel){
                         navLambdaBackDataHome()
                     }
+                }
 
+                composable(Routes.HeartRatePlot.route){
+                    val myDateObj = LocalDateTime.now()
+                    val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                    val formattedDate = myDateObj.format(myFormatObj)
+                    dataViewModel.getDayHeartRateData(formattedDate,
+                        dataViewModel.macAddress)
+                    HeartRateInfo(dataViewModel=dataViewModel){
+                        navLambdaBackDataHome()
+                    }
                 }
 
 
