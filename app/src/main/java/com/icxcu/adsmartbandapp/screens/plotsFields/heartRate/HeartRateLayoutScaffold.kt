@@ -42,7 +42,6 @@ import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.MyComposePlotChart
-import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.chartColorsPLot
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.findIndex
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.EntryHour
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getHours
@@ -148,7 +147,6 @@ fun HeartRateLayoutScaffold(
     )
 
 
-
 }
 
 @Composable
@@ -181,11 +179,13 @@ fun HeartRateInfoContent(heartRateListContent: () -> List<Double>) {
         ) {
 
             val chartEntryModel = ChartEntryModelProducer(mapHeartRate)
-            MyComposePlotChart(chartEntryModel, modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black)
-                .padding(bottom = 15.dp),
-                rememberLegendHeartRate())
+            MyComposePlotChart(
+                chartEntryModel, modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black)
+                    .padding(bottom = 15.dp),
+                rememberLegendHeartRate()
+            )
 
         }
 
@@ -224,16 +224,15 @@ fun HeartRateInfoContent(heartRateListContent: () -> List<Double>) {
 }
 
 
-
 @Composable
 fun StatisticsHeartRate(heartRateListContent: () -> List<Double>, modifier: Modifier) {
     val maxValueSystolic = heartRateListContent().max()
-    val maxValueSystolicValue= String.format("%.1f bpm", maxValueSystolic)
+    val maxValueSystolicValue = String.format("%.1f bpm", maxValueSystolic)
     val hourMax = findIndex(maxValueSystolic, heartRateListContent())
 
 
     val minValueSystolic = heartRateListContent().min()
-    val minValueSystolicValue= String.format("%.1f bpm", minValueSystolic)
+    val minValueSystolicValue = String.format("%.1f bpm", minValueSystolic)
     val hourMin = findIndex(minValueSystolic, heartRateListContent())
 
     LazyVerticalGrid(
@@ -263,7 +262,7 @@ fun StatisticsHeartRate(heartRateListContent: () -> List<Double>, modifier: Modi
             }
         }
 
-        item{
+        item {
             Column(
                 verticalArrangement = Arrangement.SpaceAround,
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -284,7 +283,7 @@ fun StatisticsHeartRate(heartRateListContent: () -> List<Double>, modifier: Modi
             }
         }
 
-        item{
+        item {
             Column(
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -304,7 +303,7 @@ fun StatisticsHeartRate(heartRateListContent: () -> List<Double>, modifier: Modi
             }
         }
 
-        item{
+        item {
             Column(
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -352,27 +351,99 @@ fun HeartRateListS(heartRateListContent: () -> List<Double>, modifier: Modifier)
 }
 
 @Composable
-fun HeartRateList(heartRateListContent: () -> List<Double>,
-                  hoursList: List<String>,
-                  modifier: Modifier) {
+fun HeartRateList(
+    heartRateListContent: () -> List<Double>,
+    hoursList: List<String>,
+    modifier: Modifier
+) {
 
 
     LazyColumn(modifier = modifier) {
         itemsIndexed(items = heartRateListContent(),
-        key = {index, value->
-            getIntervals(index, hoursList)
-        }) { index, heartRateValue ->
+            key = { index, value ->
+                getIntervals(index, hoursList)
+            }) { index, heartRateValue ->
             val stringHeartRateValue = String.format("%.1f", heartRateValue)
+
+            val myAge = 41
+            val zoneResource = getHeartRateZones(heartRateValue, myAge)
+            val zoneReadable = getReadableHeartRateZones(heartRateValue, myAge)
 
             RowHeartRate(
                 valueHeartRate = "$stringHeartRateValue bpm",
-                resource = R.drawable.heart_rate,
-                readableCategory= "No Category",
+                resource = zoneResource,
+                readableCategory = zoneReadable,
                 hourTime = getIntervals(index, hoursList)
             )
         }
     }
 
+}
+
+fun getHeartRateZones(heartRateValue: Double, age: Int): Int {
+    val maxHeartRate = 220 - age
+    val percentageOfMax = 100 * heartRateValue / maxHeartRate
+    val resource:Int
+    when {
+        (percentageOfMax < 60.0 && 50.0 >= percentageOfMax) -> {
+            resource = R.drawable.heart_rate_zone_1
+        }
+
+        (percentageOfMax < 70.0 && 60.0 >= percentageOfMax) -> {
+            resource = R.drawable.heart_rate_zone_2
+        }
+
+        (percentageOfMax < 80.0 && 70.0 >= percentageOfMax) -> {
+            resource = R.drawable.heart_rate_zone_3
+        }
+
+        (percentageOfMax < 90.0 && 80.0 >= percentageOfMax) -> {
+            resource = R.drawable.heart_rate_zone_4
+        }
+
+        (percentageOfMax < 100.0 && 90.0 >= percentageOfMax) -> {
+            resource = R.drawable.heart_rate_zone_5
+        }
+
+        else->{
+            resource = R.drawable.heart_rate
+        }
+    }
+
+    return resource
+}
+
+fun getReadableHeartRateZones(heartRateValue: Double, age: Int): String {
+    val maxHeartRate = 220 - age
+    val percentageOfMax = 100 * heartRateValue / maxHeartRate
+    val resource:String
+    when {
+        (percentageOfMax < 60.0 && 50.0 >= percentageOfMax) -> {
+            resource = "Very light"
+        }
+
+        (percentageOfMax < 70.0 && 60.0 >= percentageOfMax) -> {
+            resource = "Light"
+        }
+
+        (percentageOfMax < 80.0 && 70.0 >= percentageOfMax) -> {
+            resource = "Moderate"
+        }
+
+        (percentageOfMax < 90.0 && 80.0 >= percentageOfMax) -> {
+            resource = "Hard"
+        }
+
+        (percentageOfMax < 100.0 && 90.0 >= percentageOfMax) -> {
+            resource = "Maximum"
+        }
+
+        else->{
+            resource = "No zone"
+        }
+    }
+
+    return resource
 }
 
 @Composable
@@ -400,6 +471,8 @@ fun RowHeartRate(
                 height = Dimension.wrapContent
             })
 
+
+
             Image(
                 painter = painterResource(resource),
                 contentScale = ContentScale.Fit,
@@ -412,7 +485,8 @@ fun RowHeartRate(
                         end.linkTo(gideIconValue)
                         width = Dimension.fillToConstraints
                     }
-                    .size(30.dp).fillMaxWidth()
+                    .size(50.dp)
+                    .fillMaxWidth()
             )
 
             Column(
