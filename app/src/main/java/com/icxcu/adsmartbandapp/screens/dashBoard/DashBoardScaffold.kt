@@ -40,7 +40,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.bottombardemo.screens.Favorites
+import com.icxcu.adsmartbandapp.screens.Settings
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.ListDashBoardCardFields
@@ -145,7 +145,7 @@ fun NavigationHost(
         }
 
         composable(NavRoutes.Settings.route) {
-            Favorites()
+            Settings()
         }
     }
 }
@@ -178,7 +178,8 @@ fun BottomNavigationBar(navController: NavHostController) {
 
                 icon = {
                     Icon(
-                        modifier = Modifier.scale(1.2f), painter = painterResource(navItem.image),
+                        modifier = Modifier.scale(1.2f),
+                        painter = painterResource(navItem.image),
                         contentDescription = navItem.title,
                         tint = Color.White
                     )
