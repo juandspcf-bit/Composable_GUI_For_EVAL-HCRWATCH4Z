@@ -35,11 +35,14 @@ import androidx.compose.ui.unit.sp
 import com.icxcu.adsmartbandapp.R
 
 @Composable
-fun WeightTextFieldComposable(
-    currentWeight: () -> String,
-    currentWeightTextFieldVisibility: () -> Boolean,
-    onWeightTextChange: (String) -> Unit,
-    onWeightTextFieldVisibilityChange: (Boolean) -> Unit,
+fun NumericUnitTextFieldComposable(
+    currentNumericUnit: () -> String,
+    currentNumericUnitTextFieldVisibility: () -> Boolean,
+    onNumericUnitTextChange: (String) -> Unit,
+    onNumericUnitTextFieldVisibilityChange: (Boolean) -> Unit,
+    unit:String,
+    contentDescription:String = "",
+    resourceIcon1:Int = R.drawable.ic_launcher_foreground
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
 
@@ -51,43 +54,49 @@ fun WeightTextFieldComposable(
                 .background(color = Color(0xFFE91E63))
         ) {
 
-            val displayWeight = if (currentWeight() == "") {
-                "Your age"
+            val displayNumericUnit = if (currentNumericUnit() == "") {
+                "Your weight"
             } else {
-                currentWeight()
+                currentNumericUnit() + " $unit"
             }
 
             Text(
-                displayWeight,
+                displayNumericUnit,
                 textAlign = TextAlign.Start,
                 color = Color.White,
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(start = 10.dp, top = 10.dp, bottom = 10.dp)
+                modifier = Modifier.padding(
+                    start = 10.dp,
+                    top = 10.dp,
+                    bottom = 10.dp
+                )
             )
         }
 
         Icon(
-            painter = painterResource(R.drawable.baseline_point_of_sale_24),
-            contentDescription = "Age",
+            painter = painterResource(resourceIcon1),
+            contentDescription = contentDescription,
             tint = Color(0xFFFFC107),
             modifier = Modifier
                 .size(50.dp)
                 .clickable {
-                    onWeightTextFieldVisibilityChange(!currentWeightTextFieldVisibility())
+                    onNumericUnitTextFieldVisibilityChange(!currentNumericUnitTextFieldVisibility())
                 }
         )
     }
 
     AnimatedVisibility(
-        visible = currentWeightTextFieldVisibility(),
+        visible = currentNumericUnitTextFieldVisibility(),
         enter = expandVertically(animationSpec = tween(durationMillis = 1000)),
         exit = slideOutVertically()
     ) {
-        WeightTexField(
-            value = currentWeight,
-            onWeightTextChange = onWeightTextChange,
-            currentWeightTextFieldVisibility,
-            onWeightTextFieldVisibilityChange,
+        NumericUnitTexField(
+            value = currentNumericUnit,
+            onNumericUnitTextChange = onNumericUnitTextChange,
+            currentNumericUnitTextFieldVisibility,
+            onNumericUnitTextFieldVisibilityChange,
+            contentDescription = contentDescription,
+            resourceIcon1 = resourceIcon1
         )
     }
 
@@ -96,22 +105,24 @@ fun WeightTextFieldComposable(
 
 
 @Composable
-fun WeightTexField(
+fun NumericUnitTexField(
     value: () -> String,
-    onWeightTextChange: (String) -> Unit,
-    currentWeightTextFieldVisibility: () -> Boolean,
-    onWeightTextFieldVisibilityChange: (Boolean) -> Unit,
+    onNumericUnitTextChange: (String) -> Unit,
+    currentNumericUnitTextFieldVisibility: () -> Boolean,
+    onNumericUnitTextFieldVisibilityChange: (Boolean) -> Unit,
+    contentDescription:String = "",
+    resourceIcon1:Int = R.drawable.ic_launcher_foreground
 ) {
 
     OutlinedTextField(
         value = value(),
-        onValueChange = onWeightTextChange,
+        onValueChange = onNumericUnitTextChange,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Done
         ),
         singleLine = true,
-        label = { Text("Your weight") },
+        label = { Text("Your $contentDescription") },
         modifier = Modifier.padding(10.dp)
             .background(Color(0xff1d2a35)),
         textStyle = TextStyle(
@@ -120,13 +131,13 @@ fun WeightTexField(
         ),
         trailingIcon = {
             Icon(
-                painter = painterResource(R.drawable.baseline_point_of_sale_24),
-                contentDescription = "weight",
+                painter = painterResource(resourceIcon1),
+                contentDescription = contentDescription,
             )
         },
         keyboardActions = KeyboardActions(
             onDone = {
-                onWeightTextFieldVisibilityChange(!currentWeightTextFieldVisibility())
+                onNumericUnitTextFieldVisibilityChange(!currentNumericUnitTextFieldVisibility())
             }
         ),
         colors = TextFieldDefaults.colors(focusedTextColor = Color.White,

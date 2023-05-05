@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.icxcu.adsmartbandapp.R
 
 @Composable
 fun PersonalDataForm() {
@@ -120,11 +121,15 @@ fun PersonalDataForm() {
                 onDateTextFieldVisibilityChange = onDateTextFieldVisibilityChange
             )
 
-            WeightTextFieldComposable(
-                currentWeight = currentWeight,
-                currentWeightTextFieldVisibility = currentWeightTextFieldVisibility,
-                onWeightTextChange = onWeightTextChange,
-                onWeightTextFieldVisibilityChange = onWeightTextFieldVisibilityChange,
+            NumericUnitTextFieldComposable(
+                currentNumericUnit = currentWeight,
+                currentNumericUnitTextFieldVisibility = currentWeightTextFieldVisibility,
+                onNumericUnitTextChange = onWeightTextChange,
+                onNumericUnitTextFieldVisibilityChange = onWeightTextFieldVisibilityChange,
+                unit = "Kg",
+                contentDescription = "weight",
+                resourceIcon1 = R.drawable.baseline_point_of_sale_24
+
             )
 
         }
