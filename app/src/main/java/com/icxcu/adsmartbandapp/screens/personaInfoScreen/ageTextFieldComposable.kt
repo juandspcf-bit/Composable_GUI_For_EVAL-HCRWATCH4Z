@@ -14,12 +14,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,11 +35,11 @@ import androidx.compose.ui.unit.sp
 import com.icxcu.adsmartbandapp.R
 
 @Composable
-fun NameTextFieldComposable(
-    currentName: () -> String,
-    currentNameTextFieldVisibility: () -> Boolean,
-    onTextChange: (String) -> Unit,
-    onNameTextFieldVisibilityChange: (Boolean) -> Unit,
+fun WeightTextFieldComposable(
+    currentWeight: () -> String,
+    currentWeightTextFieldVisibility: () -> Boolean,
+    onWeightTextChange: (String) -> Unit,
+    onWeightTextFieldVisibilityChange: (Boolean) -> Unit,
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
 
@@ -52,14 +51,14 @@ fun NameTextFieldComposable(
                 .background(color = Color(0xFFE91E63))
         ) {
 
-            val displayName = if (currentName() == "") {
-                "Your name"
+            val displayWeight = if (currentWeight() == "") {
+                "Your age"
             } else {
-                currentName()
+                currentWeight()
             }
 
             Text(
-                displayName,
+                displayWeight,
                 textAlign = TextAlign.Start,
                 color = Color.White,
                 style = MaterialTheme.typography.bodyMedium,
@@ -68,27 +67,27 @@ fun NameTextFieldComposable(
         }
 
         Icon(
-            painter = painterResource(R.drawable.baseline_person_24),
-            contentDescription = "Date Range",
-            tint = Color(0xFFC73030),
+            painter = painterResource(R.drawable.baseline_point_of_sale_24),
+            contentDescription = "Age",
+            tint = Color(0xFFFFC107),
             modifier = Modifier
                 .size(50.dp)
                 .clickable {
-                    onNameTextFieldVisibilityChange(!currentNameTextFieldVisibility())
+                    onWeightTextFieldVisibilityChange(!currentWeightTextFieldVisibility())
                 }
         )
     }
 
     AnimatedVisibility(
-        visible = currentNameTextFieldVisibility(),
+        visible = currentWeightTextFieldVisibility(),
         enter = expandVertically(animationSpec = tween(durationMillis = 1000)),
         exit = slideOutVertically()
     ) {
-        NameTexField(
-            value = currentName,
-            onTextChange = onTextChange,
-            currentNameTextFieldVisibility,
-            onNameTextFieldVisibilityChange,
+        WeightTexField(
+            value = currentWeight,
+            onWeightTextChange = onWeightTextChange,
+            currentWeightTextFieldVisibility,
+            onWeightTextFieldVisibilityChange,
         )
     }
 
@@ -97,37 +96,45 @@ fun NameTextFieldComposable(
 
 
 @Composable
-fun NameTexField(
+fun WeightTexField(
     value: () -> String,
-    onTextChange: (String) -> Unit,
-    currentNameTextFieldVisibility: () -> Boolean,
-    onNameTextFieldVisibilityChange: (Boolean) -> Unit,
+    onWeightTextChange: (String) -> Unit,
+    currentWeightTextFieldVisibility: () -> Boolean,
+    onWeightTextFieldVisibilityChange: (Boolean) -> Unit,
 ) {
 
     OutlinedTextField(
         value = value(),
-        onValueChange = onTextChange,
+        onValueChange = onWeightTextChange,
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
+            keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Done
         ),
         singleLine = true,
-        label = { Text("Your Name") },
-        modifier = Modifier.padding(10.dp),
+        label = { Text("Your weight") },
+        modifier = Modifier.padding(10.dp)
+            .background(Color(0xff1d2a35)),
         textStyle = TextStyle(
             fontWeight = FontWeight.Bold,
-            fontSize = 30.sp
+            fontSize = 20.sp
         ),
         trailingIcon = {
             Icon(
-                imageVector = Icons.Default.Person,
-                contentDescription = "Person Icon"
+                painter = painterResource(R.drawable.baseline_point_of_sale_24),
+                contentDescription = "weight",
             )
         },
         keyboardActions = KeyboardActions(
             onDone = {
-                onNameTextFieldVisibilityChange(!currentNameTextFieldVisibility())
+                onWeightTextFieldVisibilityChange(!currentWeightTextFieldVisibility())
             }
+        ),
+        colors = TextFieldDefaults.colors(focusedTextColor = Color.White,
+            focusedLabelColor = Color.White,
+            focusedContainerColor = Color(0xff1d2a35),
+            focusedIndicatorColor = Color(0xFFFFC107),
+            focusedSupportingTextColor = Color.Red,
+            focusedTrailingIconColor = Color(0xFFFFC107),
         )
 
     )

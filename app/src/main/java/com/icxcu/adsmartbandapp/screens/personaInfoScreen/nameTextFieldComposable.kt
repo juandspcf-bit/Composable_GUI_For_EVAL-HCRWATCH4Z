@@ -15,11 +15,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,28 +29,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.OffsetMapping
-import androidx.compose.ui.text.input.TransformedText
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.icxcu.adsmartbandapp.R
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 
 @Composable
-fun DateTextFieldComposable(
-    currentDate: () -> String,
-    currentDateTextFieldVisibility: () -> Boolean,
-    onDateTextChange: (String) -> Unit,
-    onDateTextFieldVisibilityChange: (Boolean) -> Unit,
+fun NameTextFieldComposable(
+    currentName: () -> String,
+    currentNameTextFieldVisibility: () -> Boolean,
+    onTextChange: (String) -> Unit,
+    onNameTextFieldVisibilityChange: (Boolean) -> Unit,
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
 
@@ -60,27 +55,14 @@ fun DateTextFieldComposable(
                 .background(color = Color(0xFFE91E63))
         ) {
 
-            val displayDate = if (currentDate() == "") {
-                "Your birthdate"
+            val displayName = if (currentName() == "") {
+                "Your name"
             } else {
-                val trimmed = if (currentDate().length >= 8) currentDate().substring(0..7) else currentDate()
-                var out = ""
-                for (i in trimmed.indices) {
-                    out += trimmed[i]
-                    if (i % 2 == 1 && i < 4) out += "/"
-                }
-
-                try {
-                    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-                    LocalDate.parse(out, formatter)
-                }catch (e: DateTimeParseException){
-                    out = "Enter a valid date"
-                }
-                out
+                currentName()
             }
 
             Text(
-                displayDate,
+                displayName,
                 textAlign = TextAlign.Start,
                 color = Color.White,
                 style = MaterialTheme.typography.bodyMedium,
@@ -89,27 +71,27 @@ fun DateTextFieldComposable(
         }
 
         Icon(
-            painter = painterResource(R.drawable.baseline_date_range_24),
+            painter = painterResource(R.drawable.baseline_person_24),
             contentDescription = "Date Range",
             tint = Color(0xFFFFC107),
             modifier = Modifier
                 .size(50.dp)
                 .clickable {
-                    onDateTextFieldVisibilityChange(!currentDateTextFieldVisibility())
+                    onNameTextFieldVisibilityChange(!currentNameTextFieldVisibility())
                 }
         )
     }
 
     AnimatedVisibility(
-        visible = currentDateTextFieldVisibility(),
+        visible = currentNameTextFieldVisibility(),
         enter = expandVertically(animationSpec = tween(durationMillis = 1000)),
         exit = slideOutVertically()
     ) {
-        DateTexField(
-            value = currentDate,
-            onDateTextChange = onDateTextChange,
-            currentDateTextFieldVisibility,
-            onDateTextFieldVisibilityChange,
+        NameTexField(
+            value = currentName,
+            onTextChange = onTextChange,
+            currentNameTextFieldVisibility,
+            onNameTextFieldVisibilityChange,
         )
     }
 
@@ -117,41 +99,44 @@ fun DateTextFieldComposable(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DateTexField(
+fun NameTexField(
     value: () -> String,
-    onDateTextChange: (String) -> Unit,
-    currentDateTextFieldVisibility: () -> Boolean,
-    onDateTextFieldVisibilityChange: (Boolean) -> Unit,
+    onTextChange: (String) -> Unit,
+    currentNameTextFieldVisibility: () -> Boolean,
+    onNameTextFieldVisibilityChange: (Boolean) -> Unit,
 ) {
 
     OutlinedTextField(
+
         value = value(),
-        onValueChange = onDateTextChange,
+        onValueChange = onTextChange,
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Number,
+            keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Done
         ),
         singleLine = true,
-        label = { Text("Your Birthday") },
-        modifier = Modifier.padding(10.dp)
-            .background(Color(0xff1d2a35)),
+        label = { Text("Your Name") },
+        modifier = Modifier
+            .padding(10.dp)
+            .background(Color(0xff1d2a35))
+            ,
         textStyle = TextStyle(
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp
         ),
         trailingIcon = {
             Icon(
-                imageVector = Icons.Default.DateRange,
-                contentDescription = "Birthday Icon"
+                imageVector = Icons.Default.Person,
+                contentDescription = "Person Icon"
             )
         },
         keyboardActions = KeyboardActions(
             onDone = {
-                onDateTextFieldVisibilityChange(!currentDateTextFieldVisibility())
+                onNameTextFieldVisibilityChange(!currentNameTextFieldVisibility())
             }
         ),
-        visualTransformation = DateTransformation(),
         colors = TextFieldDefaults.colors(focusedTextColor = Color.White,
             focusedLabelColor = Color.White,
             focusedContainerColor = Color(0xff1d2a35),
@@ -160,40 +145,7 @@ fun DateTexField(
             focusedTrailingIconColor = Color(0xFFFFC107),
         )
 
+
+
     )
-}
-
-
-class DateTransformation() : VisualTransformation {
-    override fun filter(text: AnnotatedString): TransformedText {
-        return dateFilter(text)
-    }
-}
-
-fun dateFilter(text: AnnotatedString): TransformedText {
-
-    val trimmed = if (text.text.length >= 8) text.text.substring(0..7) else text.text
-    var out = ""
-    for (i in trimmed.indices) {
-        out += trimmed[i]
-        if (i % 2 == 1 && i < 4) out += "/"
-    }
-
-    val numberOffsetTranslator = object : OffsetMapping {
-        override fun originalToTransformed(offset: Int): Int {
-            if (offset <= 1) return offset
-            if (offset <= 3) return offset +1
-            if (offset <= 8) return offset +2
-            return 10
-        }
-
-        override fun transformedToOriginal(offset: Int): Int {
-            if (offset <=2) return offset
-            if (offset <=5) return offset -1
-            if (offset <=10) return offset -2
-            return 8
-        }
-    }
-
-    return TransformedText(AnnotatedString(out), numberOffsetTranslator)
 }
