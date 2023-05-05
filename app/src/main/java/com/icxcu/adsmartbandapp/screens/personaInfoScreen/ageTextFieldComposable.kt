@@ -55,7 +55,7 @@ fun NumericUnitTextFieldComposable(
         ) {
 
             val displayNumericUnit = if (currentNumericUnit() == "") {
-                "Your weight"
+                "Your $contentDescription"
             } else {
                 currentNumericUnit() + " $unit"
             }

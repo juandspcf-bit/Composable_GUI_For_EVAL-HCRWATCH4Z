@@ -93,6 +93,29 @@ fun PersonalDataForm() {
 
 
 
+    var height by remember {
+        mutableStateOf("")
+    }
+    val currentHeight = {
+        height
+    }
+
+    val onHeightTextChange = { valueFromHeightTextField: String ->
+        height = valueFromHeightTextField
+    }
+
+    var heightTextFieldVisibility by remember {
+        mutableStateOf(false)
+    }
+
+    val currentHeightTextFieldVisibility = {
+        heightTextFieldVisibility
+    }
+
+    val onHeightTextFieldVisibilityChange = { visibility: Boolean ->
+        heightTextFieldVisibility = visibility
+    }
+
 
 
 
@@ -129,6 +152,16 @@ fun PersonalDataForm() {
                 unit = "Kg",
                 contentDescription = "weight",
                 resourceIcon1 = R.drawable.baseline_point_of_sale_24
+            )
+
+            NumericUnitTextFieldComposable(
+                currentNumericUnit = currentHeight,
+                currentNumericUnitTextFieldVisibility = currentHeightTextFieldVisibility,
+                onNumericUnitTextChange = onHeightTextChange,
+                onNumericUnitTextFieldVisibilityChange = onHeightTextFieldVisibilityChange,
+                unit = "m",
+                contentDescription = "height",
+                resourceIcon1 = R.drawable.baseline_boy_24
 
             )
 
