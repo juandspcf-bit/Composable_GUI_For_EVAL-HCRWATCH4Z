@@ -1,6 +1,7 @@
 package com.icxcu.adsmartbandapp.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,10 +22,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.icxcu.adsmartbandapp.R
 
 @Composable
-fun Settings() {
+fun Settings(navMainController: NavController) {
 
     Box(
         modifier = Modifier
@@ -39,7 +42,7 @@ fun Settings() {
                 Box(modifier = Modifier
                     .fillMaxWidth(0.8f)
                     .padding(end = 20.dp,)
-                    .clip(shape= RoundedCornerShape(size = 12.dp))
+                    .clip(shape = RoundedCornerShape(size = 12.dp))
                     .background(color = Color(0xFFE91E63))
                    ) {
 
@@ -55,7 +58,11 @@ fun Settings() {
                     painter = painterResource(R.drawable.baseline_person_24),
                     contentDescription = "Date Range",
                     tint = Color.White,
-                    modifier = Modifier.size(50.dp)
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clickable {
+                            navMainController.navigate(Routes.PersonalInfoForm.route)
+                        }
 
                 )
             }
@@ -66,5 +73,5 @@ fun Settings() {
 @Preview(showBackground = true)
 @Composable
 fun SettingsPreview() {
-    Settings()
+    Settings(rememberNavController())
 }

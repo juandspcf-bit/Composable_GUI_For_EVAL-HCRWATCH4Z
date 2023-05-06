@@ -8,16 +8,19 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.data.entities.HeartRate
+import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [PhysicalActivity::class, BloodPressure::class, HeartRate::class], version = 1)
+@Database(entities = [PhysicalActivity::class, BloodPressure::class, HeartRate::class, PersonalInfo::class], version = 1)
 abstract class  SWRoomDatabase : RoomDatabase() {
     abstract fun physicalActivityDao(): PhysicalActivityDao
     abstract fun bloodPressureDao(): BloodPressureDao
     abstract fun heartRateDao(): HeartRateDao
+    abstract fun personalInfoDao(): PersonalInfoDao
+
     companion object {
         private var INSTANCE: SWRoomDatabase? = null
         private val coroutineScope = CoroutineScope(Dispatchers.Main)

@@ -6,5 +6,7 @@ enum class TypesTable {
     CALORIES,
     HEART_RATE,
     SYSTOLIC,
-    DIASTOLIC
+    DIASTOLIC,
+    PERSONAL_INFO,
+
 }

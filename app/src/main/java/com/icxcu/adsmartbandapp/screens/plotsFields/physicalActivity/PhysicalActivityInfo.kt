@@ -85,7 +85,7 @@ fun PhysicalActivityInfo(
         val dateData = formattedDate.format(date)
 
         dataViewModel.getDayPhysicalActivityData(dateData,
-            dataViewModel.macAddress)
+            dataViewModel.macAddressDeviceBluetooth)
 
     }
 

@@ -145,7 +145,7 @@ fun NavigationHost(
         }
 
         composable(NavRoutes.Settings.route) {
-            Settings()
+            Settings( navMainController)
         }
     }
 }

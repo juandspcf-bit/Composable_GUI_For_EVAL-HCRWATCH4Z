@@ -3,12 +3,14 @@ package com.icxcu.adsmartbandapp.viewModels
 import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.data.entities.HeartRate
+import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.database.SWRoomDatabase
 import com.icxcu.adsmartbandapp.repositories.SWRepository
@@ -37,16 +39,20 @@ class DataViewModel(var application: Application) : ViewModel() {
     var dayDistanceListFromDB by mutableStateOf(listOf<Double>())
     var dayCaloriesListFromDB by mutableStateOf(listOf<Double>())
 
-    var todayDateValuesReadFromSW by mutableStateOf(Values(MutableList(48){0}.toList(),
-        MutableList(48){0.0}.toList(),
-        MutableList(48){0.0}.toList(),
-        MutableList(48){ 0.0 }.toList(),
-        MutableList(48){ 0.0 }.toList(),
-        MutableList(48){ 0.0 }.toList(),
-        todayFormattedDate) )
+    var todayDateValuesReadFromSW by mutableStateOf(
+        Values(
+            MutableList(48) { 0 }.toList(),
+            MutableList(48) { 0.0 }.toList(),
+            MutableList(48) { 0.0 }.toList(),
+            MutableList(48) { 0.0 }.toList(),
+            MutableList(48) { 0.0 }.toList(),
+            MutableList(48) { 0.0 }.toList(),
+            todayFormattedDate
+        )
+    )
 
     var todayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
-    var todayStepListReadFromDB =listOf<Int>()//by mutableStateOf(listOf<Int>())
+    var todayStepListReadFromDB = listOf<Int>()//by mutableStateOf(listOf<Int>())
     var isTodayStepsListAlreadyInsertedInDB = false//by mutableStateOf(false)
     var isTodayStepsListInDBAlreadyUpdated = false//by mutableStateOf(false)
 
@@ -65,12 +71,12 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     var todayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
     var todaySystolicListReadFromDB = listOf<Double>()
-    var isTodaySystolicListAlreadyInsertedInDB=false
-    var isTodaySystolicListInDBAlreadyUpdated=false
+    var isTodaySystolicListAlreadyInsertedInDB = false
+    var isTodaySystolicListInDBAlreadyUpdated = false
 
-    var todayDiastolicListReadFromDB=listOf<Double>()
-    var isTodayDiastolicListAlreadyInsertedInDB=false
-    var isTodayDiastolicListInDBAlreadyUpdated=false
+    var todayDiastolicListReadFromDB = listOf<Double>()
+    var isTodayDiastolicListAlreadyInsertedInDB = false
+    var isTodayDiastolicListInDBAlreadyUpdated = false
 
 
     var dayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
@@ -79,17 +85,21 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     var todayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
     var todayHeartRateListReadFromDB = listOf<Double>()
-    var isTodayHeartRateListAlreadyInsertedInDB=false
-    var isTodayHeartRateListInDBAlreadyUpdated=false
+    var isTodayHeartRateListAlreadyInsertedInDB = false
+    var isTodayHeartRateListInDBAlreadyUpdated = false
 
 
-    var yesterdayDateValuesFromSW by mutableStateOf(Values(MutableList(48){0}.toList(),
-        MutableList(48){0.0}.toList(),
-        MutableList(48){0.0}.toList(),
-        MutableList(48){ 0.0 }.toList(),
-        MutableList(48){ 0.0 }.toList(),
-        MutableList(48){ 0.0 }.toList(),
-        yesterdayFormattedDate) )
+    var yesterdayDateValuesFromSW by mutableStateOf(
+        Values(
+            MutableList(48) { 0 }.toList(),
+            MutableList(48) { 0.0 }.toList(),
+            MutableList(48) { 0.0 }.toList(),
+            MutableList(48) { 0.0 }.toList(),
+            MutableList(48) { 0.0 }.toList(),
+            MutableList(48) { 0.0 }.toList(),
+            yesterdayFormattedDate
+        )
+    )
 
     var yesterdayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
     var yesterdayStepListReadFromDB by mutableStateOf(listOf<Int>())
@@ -121,21 +131,37 @@ class DataViewModel(var application: Application) : ViewModel() {
     private var swRepository: SWRepository
 
 
-    var macAddress:String=""
-    var name:String=""
+    var personalInfoFromDB = MutableLiveData<List<PersonalInfo>>()
+
+    var macAddressDeviceBluetooth: String = ""
+    var nameDeviceBluetooth: String = ""
 
     //DatePicker for physical activity plots
     var stateShowDialogDatePicker by mutableStateOf(false)
     var stateMiliSecondsDateDialogDatePicker by mutableStateOf(0L)
+
+
+    var name by mutableStateOf("")
+    var nameTextFieldVisibility by mutableStateOf(false)
+    var date by mutableStateOf("")
+    var dateTextFieldVisibility by mutableStateOf(false)
+    var weight by mutableStateOf("")
+    var weightTextFieldVisibility by mutableStateOf(false)
+    var height by mutableStateOf("")
+    var heightTextFieldVisibility by mutableStateOf(false)
 
     init {
         val swDb = SWRoomDatabase.getInstance(application)
         val physicalActivityDao = swDb.physicalActivityDao()
         val bloodPressureDao = swDb.bloodPressureDao()
         val heartRateDao = swDb.heartRateDao()
-        swRepository = SWRepository(physicalActivityDao,
+        val personalInfoDao = swDb.personalInfoDao()
+        swRepository = SWRepository(
+            physicalActivityDao,
             bloodPressureDao,
-        heartRateDao)
+            heartRateDao,
+            personalInfoDao
+        )
 
 
         dayPhysicalActivityResultsFromDB = swRepository.dayPhysicalActivityResultsFromDB
@@ -150,14 +176,17 @@ class DataViewModel(var application: Application) : ViewModel() {
         todayHeartRateResultsFromDB = swRepository.todayHeartRateResultsFromDB
         yesterdayHeartRateResultsFromDB = swRepository.yesterdayHeartRateResultsFromDB
 
+        personalInfoFromDB = swRepository.personalInfoFromDB
 
-        viewModelScope.launch{
-            swRepository.sharedStepsFlow.collect{
 
-                when(it.date){
+        viewModelScope.launch {
+            swRepository.sharedStepsFlow.collect {
+
+                when (it.date) {
                     todayFormattedDate -> {
                         todayDateValuesReadFromSW = it
                     }
+
                     yesterdayFormattedDate -> {
                         yesterdayDateValuesFromSW = it
                         progressbarForFetchingDataFromSW = false
@@ -173,25 +202,26 @@ class DataViewModel(var application: Application) : ViewModel() {
     }
 
 
-    fun requestSmartWatchData(name:String="", macAddress: String=""){
+    fun requestSmartWatchData(name: String = "", macAddress: String = "") {
 
         swRepository.requestSmartWatchData()
 
         viewModelScope.launch {
             delay(1000)
-            progressbarForFetchingDataFromSW=true
+            progressbarForFetchingDataFromSW = true
         }
 
     }
 
-    fun getDayPhysicalActivityData(dateData:String, macAddress:String) {
+    fun getDayPhysicalActivityData(dateData: String, macAddress: String) {
         swRepository.getAnyDayPhysicalActivityData(dateData, macAddress)
     }
 
-    fun getTodayPhysicalActivityData(macAddress:String) {
+    fun getTodayPhysicalActivityData(macAddress: String) {
         swRepository.getTodayPhysicalActivityData(todayFormattedDate, macAddress)
     }
-    fun getYesterdayPhysicalActivityData(macAddress:String) {
+
+    fun getYesterdayPhysicalActivityData(macAddress: String) {
         swRepository.getYesterdayPhysicalActivityData(yesterdayFormattedDate, macAddress)
     }
 
@@ -199,20 +229,21 @@ class DataViewModel(var application: Application) : ViewModel() {
         swRepository.insertPhysicalActivityData(physicalActivity)
     }
 
-    fun updatePhysicalActivityData(physicalActivity: PhysicalActivity){
+    fun updatePhysicalActivityData(physicalActivity: PhysicalActivity) {
         swRepository.updatePhysicalActivityData(physicalActivity)
     }
 
 //Blood Pressure
 
-    fun getDayBloodPressureData(dateData:String, macAddress:String) {
+    fun getDayBloodPressureData(dateData: String, macAddress: String) {
         swRepository.getAnyDayBloodPressureData(dateData, macAddress)
     }
 
-    fun getTodayBloodPressureData(macAddress:String) {
+    fun getTodayBloodPressureData(macAddress: String) {
         swRepository.getTodayBloodPressureData(todayFormattedDate, macAddress)
     }
-    fun getYesterdayBloodPressureData(macAddress:String) {
+
+    fun getYesterdayBloodPressureData(macAddress: String) {
         swRepository.getYesterdayBloodPressureData(yesterdayFormattedDate, macAddress)
     }
 
@@ -220,20 +251,21 @@ class DataViewModel(var application: Application) : ViewModel() {
         swRepository.insertBloodPressureData(bloodPressure)
     }
 
-    fun updateBloodPressureData(bloodPressure: BloodPressure){
+    fun updateBloodPressureData(bloodPressure: BloodPressure) {
         swRepository.updateBloodPressureData(bloodPressure)
     }
 
 
     //Heart Rate
-    fun getDayHeartRateData(dateData:String, macAddress:String) {
+    fun getDayHeartRateData(dateData: String, macAddress: String) {
         swRepository.getAnyDayHeartRateData(dateData, macAddress)
     }
 
-    fun getTodayHeartRateData(macAddress:String) {
+    fun getTodayHeartRateData(macAddress: String) {
         swRepository.getTodayHeartRateData(todayFormattedDate, macAddress)
     }
-    fun getYesterdayHeartRateData(macAddress:String) {
+
+    fun getYesterdayHeartRateData(macAddress: String) {
         swRepository.getYesterdayHeartRateData(yesterdayFormattedDate, macAddress)
     }
 
@@ -241,20 +273,30 @@ class DataViewModel(var application: Application) : ViewModel() {
         swRepository.insertHeartRateData(heartRate)
     }
 
-    fun updateHeartRateData(heartRate: HeartRate){
+    fun updateHeartRateData(heartRate: HeartRate) {
         swRepository.updateHeartRateData(heartRate)
+    }
+
+
+    //Personal data
+    fun storePersonalData() {
+
+    }
+
+    fun getPersonalInfoData(macAddress: String){
+        swRepository.getPersonalInfoData(macAddress)
     }
 
 }
 
-fun randomData():String{
-    var fakeData = MutableList(48){
+fun randomData(): String {
+    var fakeData = MutableList(48) {
         (1..10000).random()
     }
-    var values = mutableMapOf<String,String>()
+    var values = mutableMapOf<String, String>()
 
-    fakeData.forEachIndexed{ index, i ->
-        values[index.toString()]= i.toString()
+    fakeData.forEachIndexed { index, i ->
+        values[index.toString()] = i.toString()
     }
 
     return values.toString()

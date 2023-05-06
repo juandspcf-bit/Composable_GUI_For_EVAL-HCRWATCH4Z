@@ -72,7 +72,7 @@ fun BloodPressureInfo(
 
         Log.d("date", "BloodPressureInfo: $dateData")
         dataViewModel.getDayBloodPressureData(dateData,
-            dataViewModel.macAddress)
+            dataViewModel.macAddressDeviceBluetooth)
 
     }
 

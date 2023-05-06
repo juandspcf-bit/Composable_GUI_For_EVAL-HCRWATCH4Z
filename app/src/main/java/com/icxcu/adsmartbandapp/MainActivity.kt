@@ -25,10 +25,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothLEManagerImp
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
-import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.*
 import com.icxcu.adsmartbandapp.screens.dashBoard.DashBoard
+import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalDataForm
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureInfo
 import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateInfo
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityInfo
@@ -224,15 +224,15 @@ class MainActivity : ComponentActivity() {
                     }
 
 
-                    dataViewModel.macAddress=bluetoothAddress ?: "no address"
-                    dataViewModel.name=bluetoothName ?: "no name"
+                    dataViewModel.macAddressDeviceBluetooth=bluetoothAddress ?: "no address"
+                    dataViewModel.nameDeviceBluetooth=bluetoothName ?: "no name"
 
-                    dataViewModel.getTodayPhysicalActivityData(dataViewModel.macAddress)
-                    dataViewModel.getYesterdayPhysicalActivityData(dataViewModel.macAddress)
-                    dataViewModel.getTodayBloodPressureData(dataViewModel.macAddress)
-                    dataViewModel.getYesterdayBloodPressureData(dataViewModel.macAddress)
-                    dataViewModel.getTodayHeartRateData(dataViewModel.macAddress)
-                    dataViewModel.getYesterdayHeartRateData(dataViewModel.macAddress)
+                    dataViewModel.getTodayPhysicalActivityData(dataViewModel.macAddressDeviceBluetooth)
+                    dataViewModel.getYesterdayPhysicalActivityData(dataViewModel.macAddressDeviceBluetooth)
+                    dataViewModel.getTodayBloodPressureData(dataViewModel.macAddressDeviceBluetooth)
+                    dataViewModel.getYesterdayBloodPressureData(dataViewModel.macAddressDeviceBluetooth)
+                    dataViewModel.getTodayHeartRateData(dataViewModel.macAddressDeviceBluetooth)
+                    dataViewModel.getYesterdayHeartRateData(dataViewModel.macAddressDeviceBluetooth)
 
                     DashBoard(
                         bluetoothName = bluetoothName ?: "no name",
@@ -247,7 +247,7 @@ class MainActivity : ComponentActivity() {
                     val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                     val formattedDate = myDateObj.format(myFormatObj)
                     dataViewModel.getDayPhysicalActivityData(formattedDate,
-                        dataViewModel.macAddress)
+                        dataViewModel.macAddressDeviceBluetooth)
                     PhysicalActivityInfo(
                         dataViewModel = dataViewModel
                     ){ navLambdaBackDataHome() }
@@ -258,7 +258,7 @@ class MainActivity : ComponentActivity() {
                     val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                     val formattedDate = myDateObj.format(myFormatObj)
                     dataViewModel.getDayBloodPressureData(formattedDate,
-                        dataViewModel.macAddress)
+                        dataViewModel.macAddressDeviceBluetooth)
                     BloodPressureInfo(dataViewModel=dataViewModel){
                         navLambdaBackDataHome()
                     }
@@ -269,8 +269,14 @@ class MainActivity : ComponentActivity() {
                     val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                     val formattedDate = myDateObj.format(myFormatObj)
                     dataViewModel.getDayHeartRateData(formattedDate,
-                        dataViewModel.macAddress)
+                        dataViewModel.macAddressDeviceBluetooth)
                     HeartRateInfo(dataViewModel=dataViewModel){
+                        navLambdaBackDataHome()
+                    }
+                }
+
+                composable(Routes.PersonalInfoForm.route){
+                    PersonalDataForm(dataViewModel=dataViewModel){
                         navLambdaBackDataHome()
                     }
                 }

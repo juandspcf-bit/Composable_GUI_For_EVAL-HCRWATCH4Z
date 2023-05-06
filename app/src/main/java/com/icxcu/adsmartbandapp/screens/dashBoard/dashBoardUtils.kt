@@ -164,7 +164,7 @@ fun tableToInsertSelector(
 
 
             val physicalActivity = PhysicalActivity().apply {
-                macAddress = dataViewModel.macAddress
+                macAddress = dataViewModel.macAddressDeviceBluetooth
 
                 dateData = currentDateData
                 typesTable = typesTableToModify
@@ -179,7 +179,7 @@ fun tableToInsertSelector(
 
         TypesTable.DISTANCE -> {
             val physicalActivity = PhysicalActivity().apply {
-                macAddress = dataViewModel.macAddress
+                macAddress = dataViewModel.macAddressDeviceBluetooth
 
                 dateData = currentDateData
                 typesTable = typesTableToModify
@@ -193,7 +193,7 @@ fun tableToInsertSelector(
         }
         TypesTable.CALORIES -> {
             val physicalActivity = PhysicalActivity().apply {
-                macAddress = dataViewModel.macAddress
+                macAddress = dataViewModel.macAddressDeviceBluetooth
 
                 dateData = currentDateData
                 typesTable = typesTableToModify
@@ -207,7 +207,7 @@ fun tableToInsertSelector(
         }
         TypesTable.SYSTOLIC -> {
             val bloodPressure = BloodPressure().apply {
-                macAddress = dataViewModel.macAddress
+                macAddress = dataViewModel.macAddressDeviceBluetooth
 
                 dateData = currentDateData
                 typesTable = typesTableToModify
@@ -221,7 +221,7 @@ fun tableToInsertSelector(
         }
         TypesTable.DIASTOLIC -> {
             val bloodPressure = BloodPressure().apply {
-                macAddress = dataViewModel.macAddress
+                macAddress = dataViewModel.macAddressDeviceBluetooth
 
                 dateData = currentDateData
                 typesTable = typesTableToModify
@@ -236,7 +236,7 @@ fun tableToInsertSelector(
 
         TypesTable.HEART_RATE -> {
             val heartRate = HeartRate().apply {
-                macAddress = dataViewModel.macAddress
+                macAddress = dataViewModel.macAddressDeviceBluetooth
 
                 dateData = currentDateData
                 typesTable = typesTableToModify

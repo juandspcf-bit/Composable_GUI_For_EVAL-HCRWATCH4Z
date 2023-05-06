@@ -58,7 +58,7 @@ fun HeartRateInfo(
 
         Log.d("date", "BloodPressureInfo: $dateData")
         dataViewModel.getDayHeartRateData(dateData,
-            dataViewModel.macAddress)
+            dataViewModel.macAddressDeviceBluetooth)
 
     }
 
