@@ -137,12 +137,17 @@ fun NameTexField(
                 onNameTextFieldVisibilityChange(!currentNameTextFieldVisibility())
             }
         ),
-        colors = TextFieldDefaults.colors(focusedTextColor = Color.White,
+        colors = TextFieldDefaults.colors(
+            focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White,
             focusedLabelColor = Color.White,
+            unfocusedLabelColor = Color.White,
             focusedContainerColor = Color(0xff1d2a35),
+            unfocusedContainerColor = Color(0xff1d2a35),
             focusedIndicatorColor = Color(0xFFFFC107),
-            focusedSupportingTextColor = Color.Red,
+            unfocusedIndicatorColor = Color(0xFFFFC107),
             focusedTrailingIconColor = Color(0xFFFFC107),
+            unfocusedTrailingIconColor = Color(0xFFFFC107),
         )
 
 

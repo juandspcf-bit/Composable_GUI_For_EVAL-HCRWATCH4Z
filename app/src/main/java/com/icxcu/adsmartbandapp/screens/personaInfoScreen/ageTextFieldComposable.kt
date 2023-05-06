@@ -42,7 +42,8 @@ fun NumericUnitTextFieldComposable(
     onNumericUnitTextFieldVisibilityChange: (Boolean) -> Unit,
     unit:String,
     contentDescription:String = "",
-    resourceIcon1:Int = R.drawable.ic_launcher_foreground
+    resourceIcon1:Int = R.drawable.ic_launcher_foreground,
+    validator: (String) -> String
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
 
@@ -54,10 +55,12 @@ fun NumericUnitTextFieldComposable(
                 .background(color = Color(0xFFE91E63))
         ) {
 
-            val displayNumericUnit = if (currentNumericUnit() == "") {
+            val numberValidated = validator(currentNumericUnit())
+
+            val displayNumericUnit = if (numberValidated == "") {
                 "Your $contentDescription"
             } else {
-                currentNumericUnit() + " $unit"
+                "$numberValidated $unit"
             }
 
             Text(
@@ -111,7 +114,8 @@ fun NumericUnitTexField(
     currentNumericUnitTextFieldVisibility: () -> Boolean,
     onNumericUnitTextFieldVisibilityChange: (Boolean) -> Unit,
     contentDescription:String = "",
-    resourceIcon1:Int = R.drawable.ic_launcher_foreground
+    resourceIcon1:Int = R.drawable.ic_launcher_foreground,
+
 ) {
 
     OutlinedTextField(
@@ -140,12 +144,17 @@ fun NumericUnitTexField(
                 onNumericUnitTextFieldVisibilityChange(!currentNumericUnitTextFieldVisibility())
             }
         ),
-        colors = TextFieldDefaults.colors(focusedTextColor = Color.White,
+        colors = TextFieldDefaults.colors(
+            focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White,
             focusedLabelColor = Color.White,
+            unfocusedLabelColor = Color.White,
             focusedContainerColor = Color(0xff1d2a35),
+            unfocusedContainerColor = Color(0xff1d2a35),
             focusedIndicatorColor = Color(0xFFFFC107),
-            focusedSupportingTextColor = Color.Red,
+            unfocusedIndicatorColor = Color(0xFFFFC107),
             focusedTrailingIconColor = Color(0xFFFFC107),
+            unfocusedTrailingIconColor = Color(0xFFFFC107),
         )
 
     )

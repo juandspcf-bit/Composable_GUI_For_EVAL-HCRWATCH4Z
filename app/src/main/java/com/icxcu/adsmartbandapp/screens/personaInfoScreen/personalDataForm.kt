@@ -151,7 +151,8 @@ fun PersonalDataForm() {
                 onNumericUnitTextFieldVisibilityChange = onWeightTextFieldVisibilityChange,
                 unit = "Kg",
                 contentDescription = "weight",
-                resourceIcon1 = R.drawable.baseline_point_of_sale_24
+                resourceIcon1 = R.drawable.baseline_point_of_sale_24,
+                validator = weightValidator
             )
 
             NumericUnitTextFieldComposable(
@@ -161,14 +162,43 @@ fun PersonalDataForm() {
                 onNumericUnitTextFieldVisibilityChange = onHeightTextFieldVisibilityChange,
                 unit = "m",
                 contentDescription = "height",
-                resourceIcon1 = R.drawable.baseline_boy_24
-
+                resourceIcon1 = R.drawable.baseline_boy_24,
+                validator = heightValidator
             )
 
         }
     }
 
 
+}
+
+
+val weightValidator = {number:String ->
+    val numberD:Double
+    var numberS:String=number
+    try {
+        numberD = number.toDouble()
+        if (numberD<0){
+            numberS=""
+        }
+    }catch (e: NumberFormatException){
+        numberS=""
+    }
+    numberS
+}
+
+val heightValidator = {number:String ->
+    val numberD:Double
+    var numberS:String=number
+    try {
+        numberD = number.toDouble()
+        if (numberD<0){
+            numberS=""
+        }
+    }catch (e: NumberFormatException){
+        numberS=""
+    }
+    numberS
 }
 
 
