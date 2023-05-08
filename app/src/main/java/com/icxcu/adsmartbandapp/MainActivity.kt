@@ -29,6 +29,7 @@ import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.*
 import com.icxcu.adsmartbandapp.screens.dashBoard.DashBoard
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalDataForm
+import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDBHandler
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureInfo
 import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateInfo
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityInfo
@@ -236,6 +237,9 @@ class MainActivity : ComponentActivity() {
 
                     dataViewModel.getPersonalInfoData(dataViewModel.macAddressDeviceBluetooth)
 
+                    PersonalInfoDBHandler(
+                        dataViewModel
+                    )
                     DashBoard(
                         bluetoothName = bluetoothName ?: "no name",
                         bluetoothAddress = bluetoothAddress ?: "no address",

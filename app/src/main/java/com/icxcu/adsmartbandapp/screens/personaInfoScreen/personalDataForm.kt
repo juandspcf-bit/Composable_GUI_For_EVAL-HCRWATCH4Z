@@ -11,10 +11,6 @@ fun PersonalDataForm(
     navLambda: () -> Unit
 ) {
 
-    PersonalInfoDBHandler(
-        dataViewModel
-    )
-
     val currentName = {
         dataViewModel.name
     }

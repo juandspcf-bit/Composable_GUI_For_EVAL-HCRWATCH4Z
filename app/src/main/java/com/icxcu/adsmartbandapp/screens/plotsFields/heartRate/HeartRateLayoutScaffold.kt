@@ -1,6 +1,7 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields.heartRate
 
 import android.graphics.Typeface
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -68,6 +69,7 @@ fun HeartRateLayoutScaffold(
     stateShowDialogDatePickerValue: () -> Boolean,
     stateMiliSecondsDateDialogDatePickerS: () -> Long,
     stateMiliSecondsDateDialogDatePickerSetterS: (Long) -> Unit,
+    getAgeCalculated:()->Int,
     navLambda: () -> Unit
 ) {
 
@@ -132,6 +134,7 @@ fun HeartRateLayoutScaffold(
 
                 HeartRateInfoContent(
                     heartRateListScaffold,
+                    getAgeCalculated
                 )
 
                 if (stateShowDialogDatePickerValue()) {
@@ -150,7 +153,9 @@ fun HeartRateLayoutScaffold(
 }
 
 @Composable
-fun HeartRateInfoContent(heartRateListContent: () -> List<Double>) {
+fun HeartRateInfoContent(heartRateListContent: () -> List<Double>,
+                         getAgeCalculated:()->Int,
+) {
     ConstraintLayout(
         modifier = Modifier
             .background(Color(0xff1d2a35))
@@ -211,6 +216,7 @@ fun HeartRateInfoContent(heartRateListContent: () -> List<Double>) {
 
         HeartRateListS(
             heartRateListContent,
+            getAgeCalculated,
             modifier = Modifier
                 .constrainAs(list) {
                     top.linkTo(statistics.bottom)
@@ -327,7 +333,9 @@ fun StatisticsHeartRate(heartRateListContent: () -> List<Double>, modifier: Modi
 
 
 @Composable
-fun HeartRateListS(heartRateListContent: () -> List<Double>, modifier: Modifier) {
+fun HeartRateListS(heartRateListContent: () -> List<Double>,
+                   getAgeCalculated:()->Int,
+                   modifier: Modifier) {
 
 
     val heartRateList = {
@@ -342,6 +350,7 @@ fun HeartRateListS(heartRateListContent: () -> List<Double>, modifier: Modifier)
         HeartRateList(
             heartRateList,
             hoursList,
+            getAgeCalculated,
             modifier = Modifier
                 .fillMaxSize()
         )
@@ -354,6 +363,7 @@ fun HeartRateListS(heartRateListContent: () -> List<Double>, modifier: Modifier)
 fun HeartRateList(
     heartRateListContent: () -> List<Double>,
     hoursList: List<String>,
+    getAgeCalculated:()->Int,
     modifier: Modifier
 ) {
 
@@ -365,7 +375,8 @@ fun HeartRateList(
             }) { index, heartRateValue ->
             val stringHeartRateValue = String.format("%.1f", heartRateValue)
 
-            val myAge = 41
+            Log.d("MyCalculatedAge", "HeartRateList: ${getAgeCalculated()}")
+            val myAge = if(getAgeCalculated()>0)(getAgeCalculated())else{41}
             val zoneResource = getHeartRateZones(heartRateValue, myAge)
             val zoneReadable = getReadableHeartRateZones(heartRateValue, myAge)
 
@@ -380,7 +391,9 @@ fun HeartRateList(
 
 }
 
-fun getHeartRateZones(heartRateValue: Double, age: Int): Int {
+fun getHeartRateZones(heartRateValue: Double,
+                      age: Int
+): Int {
     val maxHeartRate = 220 - age
     val percentageOfMax = 100 * heartRateValue / maxHeartRate
     val resource:Int
