@@ -234,6 +234,8 @@ class MainActivity : ComponentActivity() {
                     dataViewModel.getTodayHeartRateData(dataViewModel.macAddressDeviceBluetooth)
                     dataViewModel.getYesterdayHeartRateData(dataViewModel.macAddressDeviceBluetooth)
 
+                    dataViewModel.getPersonalInfoData(dataViewModel.macAddressDeviceBluetooth)
+
                     DashBoard(
                         bluetoothName = bluetoothName ?: "no name",
                         bluetoothAddress = bluetoothAddress ?: "no address",

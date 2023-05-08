@@ -149,6 +149,7 @@ fun tableToUpdateSelector(
         TypesTable.SYSTOLIC -> dataViewModel.updateBloodPressureData(dayFromTableData[0] as BloodPressure)
         TypesTable.DIASTOLIC -> dataViewModel.updateBloodPressureData(dayFromTableData[1] as BloodPressure)
         TypesTable.HEART_RATE -> dataViewModel.updateHeartRateData(dayFromTableData[0] as HeartRate)
+        else -> {}
     }
 }
 
@@ -248,5 +249,7 @@ fun tableToInsertSelector(
             }
             dataViewModel.insertHeartRateData(heartRate)
         }
+
+        else -> {}
     }
 }

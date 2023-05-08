@@ -334,6 +334,18 @@ class SWRepository(
             return@async personalInfoDao.getPersonalInfo(macAddress)
         }.await()
 
+    fun insertPersonalInfo(personalInfo: PersonalInfo) {
+        coroutineScope.launch(Dispatchers.IO) {
+            personalInfoDao.insertPersonalInfoData(personalInfo = personalInfo)
+        }
+    }
+
+    fun updatePersonalInfo(personalInfo: PersonalInfo) {
+        coroutineScope.launch(Dispatchers.IO) {
+            personalInfoDao.updatePersonalInfoData(personalInfo = personalInfo)
+        }
+    }
+
 }
 
 data class Values(

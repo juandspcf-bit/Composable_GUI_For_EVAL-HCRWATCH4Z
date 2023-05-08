@@ -8,6 +8,7 @@ import com.icxcu.adsmartbandapp.data.TypesTable
 @Entity(tableName = "PersonalInfo")
 class PersonalInfo {
 
+
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "personalInfoId")
     var id: Int = 0
@@ -29,4 +30,29 @@ class PersonalInfo {
 
     @ColumnInfo(name = "height")
     var height: Double = 0.0
+
+    constructor()
+    constructor(
+        id: Int,
+        macAddress: String,
+        typesTable: TypesTable,
+        name: String,
+        birthdate: String,
+        weight: Double,
+        height: Double
+    ) {
+        this.id = id
+        this.macAddress = macAddress
+        this.typesTable = typesTable
+        this.name = name
+        this.birthdate = birthdate
+        this.weight = weight
+        this.height = height
+    }
+
+    override fun toString(): String {
+        return "PersonalInfo(id=$id, macAddress='$macAddress', typesTable=$typesTable, name='$name', birthdate='$birthdate', weight=$weight, height=$height)"
+    }
+
+
 }

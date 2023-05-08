@@ -1,5 +1,6 @@
 package com.icxcu.adsmartbandapp.screens.personaInfoScreen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -20,28 +20,30 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.icxcu.adsmartbandapp.R
-import com.icxcu.adsmartbandapp.screens.Routes
-import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
-import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateInfoContent
+import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 @Composable
 fun PersonalDataForm(
     dataViewModel: DataViewModel,
     navLambda: () -> Unit
 ) {
+
+    PersonalInfoDBHandler(
+        dataViewModel
+    )
 
     val currentName = {
         dataViewModel.name
@@ -108,8 +110,21 @@ fun PersonalDataForm(
         dataViewModel.heightTextFieldVisibility = visibility
     }
 
-    val storePersonalData = {
-        dataViewModel.storePersonalData()
+    val getPersonalInfoListReadFromDB = {
+        dataViewModel.personalInfoListReadFromDB
+    }
+
+    val isValidPersonalInfo={
+        dataViewModel.isValidPersonalInfo( currentName,currentDate, currentWeight, currentHeight)
+    }
+
+    val insertPersonalData= { personalInfo:PersonalInfo->
+        personalInfo.macAddress = dataViewModel.macAddressDeviceBluetooth
+        dataViewModel.insertPersonalData(personalInfo)
+    }
+
+    val updatePersonalData= { personalInfo:PersonalInfo->
+        dataViewModel.updatePersonalData(personalInfo)
     }
 
     PersonalInfoFormScaffold(
@@ -130,7 +145,10 @@ fun PersonalDataForm(
         currentHeightTextFieldVisibility,
         onHeightTextChange,
         onHeightTextFieldVisibilityChange,
-        storePersonalData
+        getPersonalInfoListReadFromDB,
+        isValidPersonalInfo,
+        updatePersonalData,
+        insertPersonalData
     )
 
 }
@@ -156,7 +174,10 @@ fun PersonalInfoFormScaffold(
     currentHeightTextFieldVisibility: () -> Boolean,
     onHeightTextChange: (String) -> Unit,
     onHeightTextFieldVisibilityChange: (Boolean) -> Unit,
-    storePersonalData:()->Unit = {}
+    getPersonalInfoListReadFromDB:()->List<PersonalInfo>,
+    isValidPersonalInfo:()->Boolean={false},
+    updatePersonalData:(PersonalInfo)->Unit ={},
+    insertPersonalData:(PersonalInfo)->Unit ={},
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
@@ -238,12 +259,35 @@ fun PersonalInfoFormScaffold(
                     )
 
                     Button(
-                        modifier = Modifier.fillMaxWidth(0.8f)
-                            .padding(top=50.dp, end = 20.dp),
+                        modifier = Modifier
+                            .fillMaxWidth(0.8f)
+                            .padding(top = 50.dp, end = 20.dp),
                         onClick = {
-                        storePersonalData()
+                            if(isValidPersonalInfo().not()){
+                                Log.d("Flow", "PersonalInfoFormScaffold: no valid")
+                                return@Button
+                            }
+
+                            val personalInfoListReadFromDB = getPersonalInfoListReadFromDB()
+                            if (personalInfoListReadFromDB.isNotEmpty() && personalInfoListReadFromDB[0].id!=-1){
+                                personalInfoListReadFromDB[0].name = currentName()
+                                personalInfoListReadFromDB[0].birthdate = dateValidator(currentDate())
+                                personalInfoListReadFromDB[0].weight = currentWeight().toDouble()
+                                personalInfoListReadFromDB[0].height = currentHeight().toDouble()
+                                Log.d("Flow", "PersonalInfoFormScaffold: updating")
+                                updatePersonalData(personalInfoListReadFromDB[0])
+                            }else {
+                                val personalInfo = PersonalInfo()
+                                personalInfo.name = currentName()
+                                personalInfo.birthdate = currentDate()
+                                personalInfo.weight = currentWeight().toDouble()
+                                personalInfo.height = currentHeight().toDouble()
+                                Log.d("Flow", "PersonalInfoFormScaffold: inserting")
+                                insertPersonalData(personalInfo)
+                            }
                     }) {
-                        Text("Save data")
+
+                        Text(text = "Save info", color = Color.White, textAlign = TextAlign.Center, )
                     }
 
                 }
@@ -280,6 +324,29 @@ val heightValidator = { number: String ->
         numberS = ""
     }
     numberS
+}
+
+val dateValidator = { currentDate: String ->
+    val displayDate = if (currentDate == "") {
+        ""
+    } else {
+        val trimmed = if (currentDate.length >= 8) currentDate.substring(0..7) else currentDate
+        var out = ""
+        for (i in trimmed.indices) {
+            out += trimmed[i]
+            if (i % 2 == 1 && i < 4) out += "/"
+        }
+
+        try {
+            val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+            LocalDate.parse(out, formatter)
+        }catch (e: DateTimeParseException){
+            out = "Enter a valid date"
+        }
+        out
+    }
+    displayDate
+
 }
 
 
