@@ -135,8 +135,7 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     var personalInfoFromDB = MutableLiveData<List<PersonalInfo>>()
     var personalInfoListReadFromDB = listOf<PersonalInfo>()
-    var isPersonalInfoListAlreadyInsertedInDB = false
-    var isPersonalInfoListInDBAlreadyUpdated = false
+
 
     var macAddressDeviceBluetooth: String = ""
     var nameDeviceBluetooth: String = ""
