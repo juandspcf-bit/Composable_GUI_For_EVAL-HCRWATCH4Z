@@ -209,7 +209,12 @@ fun StepsList(
         stepsListContent()
     }
     LazyColumn(modifier = modifier) {
-        itemsIndexed(stepList()) { index, item ->
+        itemsIndexed(
+            stepList(),
+            key = { index, value ->
+                getIntervals(index, hourList)
+            }
+        ) { index, item ->
             RowSteps(
                 valueSteps = "$item Steps",
                 resource = R.drawable.runner_for_lazy_colum_list,
@@ -229,7 +234,12 @@ fun DistanceList(
         distanceListContent()
     }
     LazyColumn(modifier = modifier) {
-        itemsIndexed(distanceList()) { index, item ->
+        itemsIndexed(
+            distanceList(),
+            key = { index, value ->
+                getIntervals(index, hourList)
+            }
+        ) { index, item ->
             RowSteps(
                 valueSteps = "$item Kms",
                 resource = R.drawable.distance_for_lazy_list,
@@ -250,7 +260,12 @@ fun CaloriesList(
     }
 
     LazyColumn(modifier = modifier) {
-        itemsIndexed(caloriesList()) { index, item ->
+        itemsIndexed(
+            caloriesList(),
+            key = { index, value ->
+                getIntervals(index, hourList)
+            }
+        ) { index, item ->
             RowSteps(
                 valueSteps = "$item Kcal",
                 resource = R.drawable.calories_for_lazy_list,

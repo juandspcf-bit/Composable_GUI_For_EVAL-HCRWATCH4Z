@@ -183,11 +183,13 @@ fun BloodPressureInfoContent(
         ) {
 
             val chartEntryModel = ChartEntryModelProducer(mapSystolic, mapDiastolic)
-            MyComposePlotChart(chartEntryModel, modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black)
-                .padding(bottom = 15.dp),
-                rememberLegendBloodPressure())
+            MyComposePlotChart(
+                chartEntryModel, modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black)
+                    .padding(bottom = 15.dp),
+                rememberLegendBloodPressure()
+            )
 
         }
 
@@ -233,12 +235,12 @@ fun StatisticsBloodPressure(
     modifier: Modifier = Modifier
 ) {
     val maxValueSystolic = systolicListContent().max()
-    val maxValueSystolicValue= String.format("%.1f mmHg", maxValueSystolic)
+    val maxValueSystolicValue = String.format("%.1f mmHg", maxValueSystolic)
     val hourMax = findIndex(maxValueSystolic, systolicListContent())
 
 
     val minValueSystolic = systolicListContent().min()
-    val minValueSystolicValue= String.format("%.1f mmHg", minValueSystolic)
+    val minValueSystolicValue = String.format("%.1f mmHg", minValueSystolic)
     val hourMin = findIndex(minValueSystolic, systolicListContent())
 
     LazyVerticalGrid(
@@ -268,7 +270,7 @@ fun StatisticsBloodPressure(
             }
         }
 
-        item{
+        item {
             Column(
                 verticalArrangement = Arrangement.SpaceAround,
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -289,7 +291,7 @@ fun StatisticsBloodPressure(
             }
         }
 
-        item{
+        item {
             Column(
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -309,7 +311,7 @@ fun StatisticsBloodPressure(
             }
         }
 
-        item{
+        item {
             Column(
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -331,11 +333,9 @@ fun StatisticsBloodPressure(
     }
 
 
-
-
 }
 
-fun findIndex(value:Double, data:List<Double>):String{
+fun findIndex(value: Double, data: List<Double>): String {
     var hour = " "
     if (value > 0) {
         val filterIndexed = data.mapIndexed { index, d ->
@@ -345,7 +345,7 @@ fun findIndex(value:Double, data:List<Double>):String{
                 -1
             }
         }.filter {
-            it>-1
+            it > -1
         }
         if (filterIndexed.isNotEmpty()) {
             hour = getHours()[filterIndexed[0]]
@@ -406,22 +406,27 @@ fun BloodPressureList(
     val bloodPressureFullList = systolicList().zip(diastolicList()).toList()
 
     LazyColumn(modifier = modifier) {
-        itemsIndexed(bloodPressureFullList) { index, pair ->
+        itemsIndexed(
+            bloodPressureFullList,
+            key = { index, value ->
+                getIntervals(index, hourList)
+            }
+        ) { index, pair ->
             val systolicValue = pair.first
             val diastolicValue = pair.second
 
             val stringSystolicValue = String.format("%.1f", systolicValue)
             val stringDiastolicValue = String.format("%.1f", diastolicValue)
 
-            val getCategory =getBloodPressureCategory(systolicValue, diastolicValue)
+            val getCategory = getBloodPressureCategory(systolicValue, diastolicValue)
             val category = mapCategories[getCategory]
             val readableCategory = mapToReadableCategories[getCategory]
 
 
             RowBloodPressure(
                 valueBloodPressure = "$stringSystolicValue/$stringDiastolicValue mmHg",
-                resource = category?:R.drawable.blood_pressure_gauge,
-                readableCategory= readableCategory?:"No Category",
+                resource = category ?: R.drawable.blood_pressure_gauge,
+                readableCategory = readableCategory ?: "No Category",
                 hourTime = getIntervals(index, hourList)
             )
 
@@ -466,19 +471,20 @@ fun RowBloodPressure(
                         end.linkTo(gideIconValue)
                         width = Dimension.fillToConstraints
                     }
-                    .size(30.dp).fillMaxWidth()
+                    .size(30.dp)
+                    .fillMaxWidth()
             )
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                .constrainAs(value) {
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(gideIconValue)
-                    end.linkTo(parent.end)
-                    width = Dimension.fillToConstraints
-                }) {
+                    .constrainAs(value) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(gideIconValue)
+                        end.linkTo(parent.end)
+                        width = Dimension.fillToConstraints
+                    }) {
 
                 Text(text = valueBloodPressure, color = Color.White)
                 Text(readableCategory, color = Color(0x9fffffff), textAlign = TextAlign.Center)

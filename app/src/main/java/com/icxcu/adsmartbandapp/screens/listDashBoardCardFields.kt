@@ -155,7 +155,7 @@ fun ListDashBoardCardFields(
         horizontalArrangement = Arrangement.spacedBy(20.dp),
         verticalItemSpacing = 0.dp
     ) {
-        items(listOf) {
+        items(listOf,  key = { it.title },) {
             DashBoardCard(
                 modifier = it.modifier.clickable {
                     it.callBack()
