@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -18,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -50,10 +53,12 @@ fun PersonalInfoFormScaffold(
     currentHeightTextFieldVisibility: () -> Boolean,
     onHeightTextChange: (String) -> Unit,
     onHeightTextFieldVisibilityChange: (Boolean) -> Unit,
-    getPersonalInfoListReadFromDB:()->List<PersonalInfo>,
-    isValidPersonalInfo:()->Boolean={false},
-    updatePersonalData:(PersonalInfo)->Unit ={},
-    insertPersonalData:(PersonalInfo)->Unit ={},
+    getPersonalInfoListReadFromDB: () -> List<PersonalInfo>,
+    validatePersonalInfo: () -> Boolean = { false },
+    visibilityAlertDialogStatusPersonalInfo: () -> Boolean,
+    setVisibilityAlertDialogStatusPersonalInfo: (Boolean) -> Unit,
+    updatePersonalData: (PersonalInfo) -> Unit = {},
+    insertPersonalData: (PersonalInfo) -> Unit = {},
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
@@ -139,20 +144,22 @@ fun PersonalInfoFormScaffold(
                             .fillMaxWidth(0.8f)
                             .padding(top = 50.dp, end = 20.dp),
                         onClick = {
-                            if(isValidPersonalInfo().not()){
+
+                            if (validatePersonalInfo().not()) {
                                 Log.d("Flow", "PersonalInfoFormScaffold: no valid")
+                                setVisibilityAlertDialogStatusPersonalInfo(true)
                                 return@Button
                             }
 
                             val personalInfoListReadFromDB = getPersonalInfoListReadFromDB()
-                            if (personalInfoListReadFromDB.isNotEmpty() && personalInfoListReadFromDB[0].id!=-1){
+                            if (personalInfoListReadFromDB.isNotEmpty() && personalInfoListReadFromDB[0].id != -1) {
                                 personalInfoListReadFromDB[0].name = currentName()
                                 personalInfoListReadFromDB[0].birthdate = currentDate()
                                 personalInfoListReadFromDB[0].weight = currentWeight().toDouble()
                                 personalInfoListReadFromDB[0].height = currentHeight().toDouble()
                                 Log.d("Flow", "PersonalInfoFormScaffold: updating")
                                 updatePersonalData(personalInfoListReadFromDB[0])
-                            }else {
+                            } else {
                                 val personalInfo = PersonalInfo()
                                 personalInfo.name = currentName()
                                 personalInfo.birthdate = currentDate()
@@ -161,14 +168,66 @@ fun PersonalInfoFormScaffold(
                                 Log.d("Flow", "PersonalInfoFormScaffold: inserting")
                                 insertPersonalData(personalInfo)
                             }
-                        }) {
-
+                        }
+                    ) {
                         Text(text = "Save info", color = Color.White, textAlign = TextAlign.Center)
                     }
+
+                    if(visibilityAlertDialogStatusPersonalInfo()){
+                        ValidationAlertDialog(setVisibilityAlertDialogStatusPersonalInfo)
+                    }
+
 
                 }
             }
 
         },
     )
+}
+
+
+@Composable
+fun ValidationAlertDialog(
+    setVisibilityAlertDialogStatusPersonalInfo: (Boolean) -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = {
+            // Dismiss the dialog when the user clicks outside the dialog or on the back button.
+            // If you want to disable that functionality, simply leave this block empty.
+            setVisibilityAlertDialogStatusPersonalInfo(false)
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    // perform the confirm action and
+                    // close the dialog
+                    setVisibilityAlertDialogStatusPersonalInfo(false)
+                }
+            ) {
+                Text(text = "Confirm")
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    // close the dialog
+                    setVisibilityAlertDialogStatusPersonalInfo(false)
+                }
+            ) {
+                Text(text = "Dismiss")
+            }
+        },
+        title = {
+            Text(text = "Invalid data in the form")
+        },
+        text = {
+            Text(text = "The following fields are invalid")
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(32.dp)
+            .background(Color.White),
+        shape = RoundedCornerShape(5.dp),
+
+        )
 }

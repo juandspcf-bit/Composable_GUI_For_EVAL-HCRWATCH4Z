@@ -80,8 +80,16 @@ fun PersonalDataForm(
         dataViewModel.personalInfoListReadFromDB
     }
 
-    val isValidPersonalInfo={
-        dataViewModel.isValidPersonalInfo( currentName,currentDate, currentWeight, currentHeight)
+    val validatePersonalInfo={
+        dataViewModel.validatePersonalInfo( currentName,currentDate, currentWeight, currentHeight)
+    }
+
+    val visibilityAlertDialogStatusPersonalInfo = {
+        dataViewModel.alertDialogPersonalFieldVisibility
+    }
+
+    val setVisibilityAlertDialogStatusPersonalInfo = { visibility:Boolean->
+        dataViewModel.alertDialogPersonalFieldVisibility = visibility
     }
 
     val insertPersonalData= { personalInfo:PersonalInfo->
@@ -112,7 +120,9 @@ fun PersonalDataForm(
         onHeightTextChange,
         onHeightTextFieldVisibilityChange,
         getPersonalInfoListReadFromDB,
-        isValidPersonalInfo,
+        validatePersonalInfo,
+        visibilityAlertDialogStatusPersonalInfo,
+        setVisibilityAlertDialogStatusPersonalInfo,
         updatePersonalData,
         insertPersonalData
     )

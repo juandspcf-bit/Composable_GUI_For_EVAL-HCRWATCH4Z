@@ -1,6 +1,7 @@
 package com.icxcu.adsmartbandapp.viewModels
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -135,7 +136,7 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     var personalInfoFromDB = MutableLiveData<List<PersonalInfo>>()
     var personalInfoListReadFromDB = listOf<PersonalInfo>()
-
+    var alertDialogPersonalFieldVisibility by mutableStateOf(false)
 
     var macAddressDeviceBluetooth: String = ""
     var nameDeviceBluetooth: String = ""
@@ -295,17 +296,21 @@ class DataViewModel(var application: Application) : ViewModel() {
         swRepository.getPersonalInfoData(macAddress)
     }
 
-    fun isValidPersonalInfo(
+    fun validatePersonalInfo(
         currentName: () -> String,
         currentDate: () -> String,
         currentWeight: () -> String,
         currentHeight: () -> String
     ): Boolean {
-
+        Log.d(
+            "Validation",
+            "validatePersonalInfo: ${ValidatorsPersonalField.weightValidator(currentWeight()).isNotBlank()}, currentWeight=${currentWeight()}"
+        )
         return currentName().isNotBlank()
                 && ValidatorsPersonalField.dateValidator(currentDate()).isNotBlank()
                 && ValidatorsPersonalField.weightValidator(currentWeight()).isNotBlank()
                 && ValidatorsPersonalField.heightValidator(currentHeight()).isNotBlank()
+
     }
 
 }
