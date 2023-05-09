@@ -1,5 +1,6 @@
 package com.icxcu.adsmartbandapp.screens.personaInfoScreen
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
@@ -69,6 +70,8 @@ fun DateTextFieldComposable(
                     out += trimmed[i]
                     if (i % 2 == 1 && i < 4) out += "/"
                 }
+
+                Log.d("FilteringForm", "PersonalInfoDBHandler: $out")
 
                 try {
                     val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")

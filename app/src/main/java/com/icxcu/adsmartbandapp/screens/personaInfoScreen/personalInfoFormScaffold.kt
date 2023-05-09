@@ -147,8 +147,7 @@ fun PersonalInfoFormScaffold(
                             val personalInfoListReadFromDB = getPersonalInfoListReadFromDB()
                             if (personalInfoListReadFromDB.isNotEmpty() && personalInfoListReadFromDB[0].id!=-1){
                                 personalInfoListReadFromDB[0].name = currentName()
-                                personalInfoListReadFromDB[0].birthdate = ValidatorsPersonalField
-                                    .dateValidator(currentDate())
+                                personalInfoListReadFromDB[0].birthdate = currentDate()
                                 personalInfoListReadFromDB[0].weight = currentWeight().toDouble()
                                 personalInfoListReadFromDB[0].height = currentHeight().toDouble()
                                 Log.d("Flow", "PersonalInfoFormScaffold: updating")
