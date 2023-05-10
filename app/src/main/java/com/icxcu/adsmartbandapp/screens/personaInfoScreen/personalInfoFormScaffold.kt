@@ -204,7 +204,10 @@ fun ValidationAlertDialog(
                     setVisibilityAlertDialogStatusPersonalInfo(false)
                 }
             ) {
-                Text(text = "Confirm")
+                Text(
+                    text = "Confirm",
+                    color = Color(0xFFDCE775),
+                )
             }
         },
         dismissButton = {
@@ -214,7 +217,10 @@ fun ValidationAlertDialog(
                     setVisibilityAlertDialogStatusPersonalInfo(false)
                 }
             ) {
-                Text(text = "Dismiss")
+                Text(
+                    text = "Dismiss",
+                    color = Color(0xFFDCE775),
+                )
             }
         },
         title = {
@@ -226,8 +232,11 @@ fun ValidationAlertDialog(
         modifier = Modifier
             .fillMaxWidth()
             .padding(32.dp)
-            .background(Color.White),
-        shape = RoundedCornerShape(5.dp),
+            .background(Color.Transparent),
+        shape = RoundedCornerShape(20.dp),
+        containerColor = Color(0xFF2196F3),
+        textContentColor = Color.White,
+        titleContentColor = Color.White
 
         )
 }
