@@ -2,6 +2,7 @@ package com.icxcu.adsmartbandapp.screens.personaInfoScreen
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -186,57 +187,3 @@ fun PersonalInfoFormScaffold(
 }
 
 
-@Composable
-fun ValidationAlertDialog(
-    setVisibilityAlertDialogStatusPersonalInfo: (Boolean) -> Unit,
-) {
-    AlertDialog(
-        onDismissRequest = {
-            // Dismiss the dialog when the user clicks outside the dialog or on the back button.
-            // If you want to disable that functionality, simply leave this block empty.
-            setVisibilityAlertDialogStatusPersonalInfo(false)
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    // perform the confirm action and
-                    // close the dialog
-                    setVisibilityAlertDialogStatusPersonalInfo(false)
-                }
-            ) {
-                Text(
-                    text = "Confirm",
-                    color = Color(0xFFDCE775),
-                )
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    // close the dialog
-                    setVisibilityAlertDialogStatusPersonalInfo(false)
-                }
-            ) {
-                Text(
-                    text = "Dismiss",
-                    color = Color(0xFFDCE775),
-                )
-            }
-        },
-        title = {
-            Text(text = "Invalid data in the form")
-        },
-        text = {
-            Text(text = "The following fields are invalid")
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(32.dp)
-            .background(Color.Transparent),
-        shape = RoundedCornerShape(20.dp),
-        containerColor = Color(0xFF2196F3),
-        textContentColor = Color.White,
-        titleContentColor = Color.White
-
-        )
-}

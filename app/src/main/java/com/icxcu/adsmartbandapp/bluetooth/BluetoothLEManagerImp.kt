@@ -19,14 +19,13 @@ import kotlinx.coroutines.*
 class BluetoothLEManagerImp(
     private var activity: Activity,
     private var mViewModel: BluetoothScannerViewModel
-):com.icxcu.adsmartbandapp.bluetooth.BluetoothManager {
+) : com.icxcu.adsmartbandapp.bluetooth.BluetoothManager {
     private var scanning = false
     private var statusResults = -1
-    private var jobs:Job? = null
+    private var jobs: Job? = null
 
 
     override fun scanLocalBluetooth(activity: Activity): BluetoothLeScanner? {
-
 
 
         val bluetoothManager: BluetoothManager? =
@@ -37,7 +36,7 @@ class BluetoothLEManagerImp(
 
             activity.let {
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     return if (ContextCompat.checkSelfPermission(
                             activity,
                             Manifest.permission.BLUETOOTH_CONNECT
@@ -51,7 +50,7 @@ class BluetoothLEManagerImp(
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
                     return bluetoothAdapter?.bluetoothLeScanner
-                }else{
+                } else {
                     return null
                 }
 
@@ -81,7 +80,10 @@ class BluetoothLEManagerImp(
     private val SCAN_PERIOD: Long = 10000
 
 
-    override fun scanLeDevice(bluetoothLeScanner: BluetoothLeScanner?, leScanCallback: ScanCallback) {
+    override fun scanLeDevice(
+        bluetoothLeScanner: BluetoothLeScanner?,
+        leScanCallback: ScanCallback
+    ) {
         if (!scanning) {
 
             val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -91,7 +93,7 @@ class BluetoothLEManagerImp(
 
             jobs = coroutineScope.launch {
                 delay(SCAN_PERIOD)
-                if(isActive){
+                if (isActive) {
                     scanning = false
                     statusResults = 1
                     mViewModel.liveStatusResults = statusResults
@@ -107,7 +109,7 @@ class BluetoothLEManagerImp(
                         }
                         bluetoothLeScanner?.stopScan(leScanCallback)
                     }
-                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
                         bluetoothLeScanner?.stopScan(leScanCallback)
                     }
 
@@ -127,7 +129,7 @@ class BluetoothLEManagerImp(
             statusResults = -1
             mViewModel.liveStatusResults = statusResults
             jobs?.cancel()
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 if (ContextCompat.checkSelfPermission(
                         activity,
                         Manifest.permission.BLUETOOTH_SCAN
@@ -139,7 +141,7 @@ class BluetoothLEManagerImp(
                 bluetoothLeScanner?.stopScan(leScanCallback)
 
             }
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
 
                 bluetoothLeScanner?.stopScan(leScanCallback)
             }
