@@ -1,7 +1,9 @@
 package com.icxcu.adsmartbandapp
 
 import android.Manifest
+import android.app.Activity
 import android.app.Application
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -18,6 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
@@ -48,7 +53,6 @@ class MainActivity : ComponentActivity() {
     private lateinit var mViewModel: BluetoothScannerViewModel
     private lateinit var pViewModel: PermissionsViewModel
     private lateinit var startDestination:String
-
 
     private val permissionsRequired = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         listOf(
@@ -114,6 +118,12 @@ class MainActivity : ComponentActivity() {
                 } else {
                     Routes.Permissions.route
                 }
+
+                val context = LocalContext.current
+
+
+
+
                 bluetoothLEManager = BluetoothLEManagerImp(this@MainActivity, mViewModel)
                 MainContent()
             }
@@ -294,6 +304,12 @@ class MainActivity : ComponentActivity() {
 
 
         }
+
+    fun dataStoreSetup(context:ContextCompat){
+
+
+    }
+
 
     }
 

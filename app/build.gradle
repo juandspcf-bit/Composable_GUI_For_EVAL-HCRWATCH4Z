@@ -113,7 +113,7 @@ dependencies {
     //for room database
     implementation "androidx.room:room-runtime:2.5.1"
     implementation "androidx.room:room-ktx:2.5.1"
-    implementation "androidx.compose.runtime:runtime-livedata:1.4.1"
+    implementation "androidx.compose.runtime:runtime-livedata:1.4.3"
     annotationProcessor "androidx.room:room-compiler:2.5.1"
     kapt "androidx.room:room-compiler:2.5.1"
 
@@ -124,6 +124,11 @@ dependencies {
 
     // (Optional) If you need "Parameterized Tests"
     testImplementation "org.junit.jupiter:junit-jupiter-params:5.8.2"
+
+    //DataStore Preferences
+    implementation "androidx.datastore:datastore-preferences:1.1.0-alpha04"
+
+
 
 
 }
