@@ -14,6 +14,10 @@ import androidx.compose.material.*
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -71,7 +75,7 @@ fun BluetoothScanScreen(
                 .background(Color(0xff0d1721))) {
             Text(
                 text = textState,
-                style = MaterialTheme.typography.h4,
+                style = MaterialTheme.typography.displayMedium,
                 color = Color.White, modifier = Modifier
                     .align(Alignment.Center)
                     .padding(30.dp)
@@ -85,9 +89,10 @@ fun BluetoothScanScreen(
                 top.linkTo(rowBar.bottom)
                 linkTo(parent.start, parent.end)
                 height = Dimension.fillToConstraints
-            }
-            .size(2.dp)
-            .background(Color.Black))
+            },
+        thickness = 2.dp,
+        color = Color.Black
+        )
 
 
         Box(contentAlignment = Alignment.TopCenter,
@@ -189,7 +194,7 @@ fun ListAlbumData(
                     modifier = Modifier
                         .padding(20.dp)
                         .fillMaxWidth(),
-                    style = MaterialTheme.typography.h3, color = Color.White
+                    style = MaterialTheme.typography.displaySmall, color = Color.White
                 )
 
             }
@@ -221,7 +226,7 @@ fun ListAlbumDataEmpty(
                     modifier = Modifier
                         .padding(100.dp)
                         .fillMaxWidth(),
-                    style = MaterialTheme.typography.h3, color = Color.White
+                    style = MaterialTheme.typography.bodyLarge, color = Color.White
                 )
 
             }
