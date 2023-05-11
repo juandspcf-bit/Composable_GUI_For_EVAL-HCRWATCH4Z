@@ -142,7 +142,6 @@ class BluetoothLEManagerImp(
 
             }
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-
                 bluetoothLeScanner?.stopScan(leScanCallback)
             }
         }

@@ -52,12 +52,11 @@ class BluetoothScannerViewModel(var application: Application) : ViewModel() {
                 }
 
             }
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
                 val basicBluetoothAdapter = BasicBluetoothAdapter(
                     result.device?.name ?: "no name",
                     result.device?.address ?: "no address"
                 )
-
                 val coroutineScope = CoroutineScope(Dispatchers.Main)
                 coroutineScope.launch {
                     partialList.add(basicBluetoothAdapter)
