@@ -92,7 +92,7 @@ fun PersonalInfoFormScaffold(
                 scrollBehavior = scrollBehavior,
             )
         },
-        content = {
+        content = { padding->
             Box(
                 modifier = Modifier
                     .fillMaxSize()
