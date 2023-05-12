@@ -1,19 +1,7 @@
 package com.icxcu.adsmartbandapp.screens.personaInfoScreen
 
-import android.util.Log
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,17 +9,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -92,95 +75,32 @@ fun PersonalInfoFormScaffold(
                 scrollBehavior = scrollBehavior,
             )
         },
-        content = { padding->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0xff1d2a35)),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    modifier = Modifier.padding(start = 10.dp, bottom = 10.dp),
-                    verticalArrangement = Arrangement.SpaceEvenly
-                ) {
-
-                    NameTextFieldComposable(
-                        currentName = currentName,
-                        currentNameTextFieldVisibility = currentNameTextFieldVisibility,
-                        onTextChange = onTextChange,
-                        onNameTextFieldVisibilityChange = onNameTextFieldVisibilityChange
-                    )
-
-                    DateTextFieldComposable(
-                        currentDate = currentDate,
-                        currentDateTextFieldVisibility = currentDateTextFieldVisibility,
-                        onDateTextChange = onDateTextChange,
-                        onDateTextFieldVisibilityChange = onDateTextFieldVisibilityChange
-                    )
-
-                    NumericUnitTextFieldComposable(
-                        currentNumericUnit = currentWeight,
-                        currentNumericUnitTextFieldVisibility = currentWeightTextFieldVisibility,
-                        onNumericUnitTextChange = onWeightTextChange,
-                        onNumericUnitTextFieldVisibilityChange = onWeightTextFieldVisibilityChange,
-                        unit = "Kg",
-                        contentDescription = "weight",
-                        resourceIcon1 = R.drawable.baseline_point_of_sale_24,
-                        validator = ValidatorsPersonalField.weightValidator
-                    )
-
-                    NumericUnitTextFieldComposable(
-                        currentNumericUnit = currentHeight,
-                        currentNumericUnitTextFieldVisibility = currentHeightTextFieldVisibility,
-                        onNumericUnitTextChange = onHeightTextChange,
-                        onNumericUnitTextFieldVisibilityChange = onHeightTextFieldVisibilityChange,
-                        unit = "m",
-                        contentDescription = "height",
-                        resourceIcon1 = R.drawable.baseline_boy_24,
-                        validator = ValidatorsPersonalField.heightValidator
-                    )
-
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth(0.8f)
-                            .padding(top = 50.dp, end = 20.dp),
-                        onClick = {
-
-                            if (validatePersonalInfo().not()) {
-                                Log.d("Flow", "PersonalInfoFormScaffold: no valid")
-                                setVisibilityAlertDialogStatusPersonalInfo(true)
-                                return@Button
-                            }
-
-                            val personalInfoListReadFromDB = getPersonalInfoListReadFromDB()
-                            if (personalInfoListReadFromDB.isNotEmpty() && personalInfoListReadFromDB[0].id != -1) {
-                                personalInfoListReadFromDB[0].name = currentName()
-                                personalInfoListReadFromDB[0].birthdate = currentDate()
-                                personalInfoListReadFromDB[0].weight = currentWeight().toDouble()
-                                personalInfoListReadFromDB[0].height = currentHeight().toDouble()
-                                Log.d("Flow", "PersonalInfoFormScaffold: updating")
-                                updatePersonalData(personalInfoListReadFromDB[0])
-                            } else {
-                                val personalInfo = PersonalInfo()
-                                personalInfo.name = currentName()
-                                personalInfo.birthdate = currentDate()
-                                personalInfo.weight = currentWeight().toDouble()
-                                personalInfo.height = currentHeight().toDouble()
-                                Log.d("Flow", "PersonalInfoFormScaffold: inserting")
-                                insertPersonalData(personalInfo)
-                            }
-                        }
-                    ) {
-                        Text(text = "Save info", color = Color.White, textAlign = TextAlign.Center)
-                    }
-
-                    if(visibilityAlertDialogStatusPersonalInfo()){
-                        ValidationAlertDialog(setVisibilityAlertDialogStatusPersonalInfo)
-                    }
-
-
-                }
-            }
+        content = { padding ->
+            padding
+            PersonalInfoContent(
+                currentName,
+                currentNameTextFieldVisibility,
+                onTextChange,
+                onNameTextFieldVisibilityChange,
+                currentDate,
+                currentDateTextFieldVisibility,
+                onDateTextChange,
+                onDateTextFieldVisibilityChange,
+                currentWeight,
+                currentWeightTextFieldVisibility,
+                onWeightTextChange,
+                onWeightTextFieldVisibilityChange,
+                currentHeight,
+                currentHeightTextFieldVisibility,
+                onHeightTextChange,
+                onHeightTextFieldVisibilityChange,
+                getPersonalInfoListReadFromDB,
+                validatePersonalInfo,
+                visibilityAlertDialogStatusPersonalInfo,
+                setVisibilityAlertDialogStatusPersonalInfo,
+                updatePersonalData,
+                insertPersonalData,
+            )
 
         },
     )
