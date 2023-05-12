@@ -36,7 +36,8 @@ fun ListDashBoardCardFields(
             fieldPlural = "Steps",
             resource = R.drawable.walk,
             iconPadding = 5.dp,
-            size = 280.dp,
+            heightCard = 300.dp,
+            widthCard = 500.dp,
             isWithIconTitle = true,
             resourceIconTitle = {
                 ArcCompose(
@@ -62,8 +63,10 @@ fun ListDashBoardCardFields(
             text = stringSumDistanceList,
             fieldPlural = "Km",
             resource = R.drawable.measure_distance,
-            iconPadding = 5.dp,
-            size = 140.dp
+            iconPadding = 15.dp,
+            heightCard = 143.dp,
+            widthCard = 250.dp
+
         )
     )
 
@@ -78,8 +81,9 @@ fun ListDashBoardCardFields(
             text = stringSumCaloriesList,
             fieldPlural = "KCal",
             resource = R.drawable.calories,
-            iconPadding = 5.dp,
-            size = 140.dp
+            iconPadding = 15.dp,
+            heightCard = 143.dp,
+            widthCard = 250.dp
         )
     )
 
@@ -94,8 +98,9 @@ fun ListDashBoardCardFields(
             text = stringAvgHeartRate,
             fieldPlural = "bpm",
             resource = R.drawable.heart_rate,
-            iconPadding = 5.dp,
-            size = 140.dp,
+            iconPadding = 15.dp,
+            heightCard = 143.dp,
+            widthCard = 250.dp,
             callBack = { navMainController.navigate(Routes.HeartRatePlot.route) },
         )
     )
@@ -112,8 +117,9 @@ fun ListDashBoardCardFields(
             text = stringValueBP,
             fieldPlural = "mmHg",
             resource = R.drawable.blood_pressure_gauge,
-            iconPadding = 5.dp,
-            size = 140.dp,
+            iconPadding = 15.dp,
+            heightCard = 143.dp,
+            widthCard = 500.dp,
             callBack = { navMainController.navigate(Routes.BloodPressurePlots.route) },
         )
     )
@@ -126,8 +132,9 @@ fun ListDashBoardCardFields(
             text = "95",
             fieldPlural = "%",
             resource = R.drawable.oxygen_saturation,
-            iconPadding = 5.dp,
-            size = 140.dp,
+            iconPadding = 15.dp,
+            heightCard = 143.dp,
+            widthCard = 250.dp,
             verticalChainData = false
         )
     )
@@ -140,8 +147,9 @@ fun ListDashBoardCardFields(
             text = "30",
             fieldPlural = "°C",
             resource = R.drawable.thermometer,
-            iconPadding = 5.dp,
-            size = 140.dp,
+            iconPadding = 15.dp,
+            heightCard = 143.dp,
+            widthCard = 500.dp,
             verticalChainData = false
         )
     )
@@ -152,7 +160,7 @@ fun ListDashBoardCardFields(
             .fillMaxSize()
             .background(Color(0xff1d2a35)),
         contentPadding = PaddingValues(10.dp),
-        horizontalArrangement = Arrangement.spacedBy(20.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
         verticalItemSpacing = 0.dp
     ) {
         items(listOf,  key = { it.title },) {
@@ -165,7 +173,8 @@ fun ListDashBoardCardFields(
                 fieldPlural = it.fieldPlural,
                 resource = it.resource,
                 iconPadding = it.iconPadding,
-                size = it.size,
+                heightCard = it.heightCard,
+                widthCard = it.widthCard,
                 verticalChainData = it.verticalChainData,
                 isWithIconTitle = it.isWithIconTitle,
                 resourceIconTitle = it.resourceIconTitle,
