@@ -119,7 +119,7 @@ class MainActivity : ComponentActivity() {
                     Routes.Permissions.route
                 }
 
-                val context = LocalContext.current
+
 
 
 
@@ -305,10 +305,6 @@ class MainActivity : ComponentActivity() {
 
         }
 
-    fun dataStoreSetup(context:ContextCompat){
-
-
-    }
 
 
     }
