@@ -1,28 +1,22 @@
 package com.icxcu.adsmartbandapp
 
 import android.Manifest
-import android.app.Activity
 import android.app.Application
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
@@ -33,7 +27,9 @@ import androidx.navigation.navArgument
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothLEManagerImp
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
 import com.icxcu.adsmartbandapp.repositories.Values
-import com.icxcu.adsmartbandapp.screens.*
+import com.icxcu.adsmartbandapp.screens.BluetoothScanScreen
+import com.icxcu.adsmartbandapp.screens.PermissionsScreen
+import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.dashBoard.DashBoard
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalDataForm
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDBHandler
@@ -41,7 +37,12 @@ import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureI
 import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateInfo
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityInfo
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
-import com.icxcu.adsmartbandapp.viewModels.*
+import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
+import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModelFactory
+import com.icxcu.adsmartbandapp.viewModels.DataViewModel
+import com.icxcu.adsmartbandapp.viewModels.DataViewModelFactory
+import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModel
+import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModelFactory
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
