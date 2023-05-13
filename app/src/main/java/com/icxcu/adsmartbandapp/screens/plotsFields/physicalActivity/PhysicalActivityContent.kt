@@ -110,9 +110,11 @@ fun MyTab(title: String, onClick: () -> Unit, selected: Boolean) {
     Tab(
         selected,
         onClick,
-        selectedContentColor = Color.Red,
+        selectedContentColor = Color(0xFF7FC54C),
         unselectedContentColor = Color.Green,
-        modifier = Modifier.fillMaxHeight()
+        modifier = Modifier
+            .fillMaxHeight()
+            .height(52.dp)
     ) {
         Text(
             text = title,
@@ -121,6 +123,10 @@ fun MyTab(title: String, onClick: () -> Unit, selected: Boolean) {
             modifier = Modifier.align(Alignment.CenterHorizontally),
 
             )
+/*        Box(modifier = Modifier
+            .height(22.dp)
+            .fillMaxWidth()
+            .background(Color.Blue))*/
     }
 }
 
@@ -150,10 +156,10 @@ fun ListSelector(
 
     TabRow(
         selectedTabIndex = state,
-        modifier = modifierTabs.height(52.dp),
+        modifier = modifierTabs,//.height(52.dp),
         containerColor = Color.DarkGray,
         divider = {
-            Divider(modifier = Modifier.fillMaxWidth(), color = Color(0xFF855454))
+            Divider(modifier = Modifier.fillMaxWidth(), color = Color(0xFFF44336))
         },
     ) {
 
