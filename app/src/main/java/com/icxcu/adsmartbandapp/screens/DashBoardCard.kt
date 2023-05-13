@@ -125,7 +125,7 @@ fun DashBoardCard(
                     Column(
                         verticalArrangement = Arrangement.SpaceEvenly,
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.fillMaxWidth(0.6f)
+
                     ) {
 
                         Text(
