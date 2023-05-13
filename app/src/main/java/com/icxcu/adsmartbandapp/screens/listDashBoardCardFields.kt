@@ -35,7 +35,7 @@ fun ListDashBoardCardFields(
             text = dayDateValuesReadFromSW().stepList.sum().toString(),
             fieldPlural = "Steps",
             resource = R.drawable.walk,
-            iconPadding = 5.dp,
+            iconPadding = 0.dp,
             heightCard = 300.dp,
             widthCard = 500.dp,
             isWithIconTitle = true,
@@ -163,7 +163,10 @@ fun ListDashBoardCardFields(
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalItemSpacing = 0.dp
     ) {
-        items(listOf,  key = { it.title },) {
+        items(
+            listOf,
+            key = { it.title }
+        ) {
             DashBoardCard(
                 modifier = it.modifier.clickable {
                     it.callBack()

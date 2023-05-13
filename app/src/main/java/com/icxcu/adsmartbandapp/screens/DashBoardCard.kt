@@ -6,9 +6,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,8 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
+
 import androidx.navigation.compose.rememberNavController
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.screens.additionalWidgets.ArcCompose
@@ -47,7 +49,7 @@ fun DashBoardCard(
             .width(widthCard),
         shape = RoundedCornerShape(size = 26.dp),
         border = BorderStroke(width = 1.dp, color = Color.Green),
-        elevation = 4.dp,
+        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
 
         ) {
 
@@ -55,7 +57,7 @@ fun DashBoardCard(
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .background(backgroundCard)
         ) {
 
@@ -71,7 +73,7 @@ fun DashBoardCard(
 
                     color = Color.White,
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.h5
+                    style = MaterialTheme.typography.titleLarge
                 )
 
 
@@ -82,13 +84,12 @@ fun DashBoardCard(
                         text = title,
                         color = Color.White,
                         textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.h5
+                        style = MaterialTheme.typography.titleLarge
                     )
 
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
-                        //.constrainAs(pointer) { centerHorizontallyTo(parent) },
                     ) {
                         resourceIconTitle()
                     }
@@ -106,7 +107,9 @@ fun DashBoardCard(
 
                 Box(
                     contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxWidth(0.5f).padding(iconPadding)
+                    modifier = Modifier
+                        .padding(iconPadding)
+                        .fillMaxWidth(0.3f)
                 ) {
                     Image(
                         painter = painterResource(resource),
@@ -122,7 +125,7 @@ fun DashBoardCard(
                     Column(
                         verticalArrangement = Arrangement.SpaceEvenly,
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
+                        modifier = Modifier.fillMaxWidth(0.6f)
                     ) {
 
                         Text(
@@ -130,7 +133,7 @@ fun DashBoardCard(
                             text = text,
                             color = Color.White,
                             textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.h5
+                            style = MaterialTheme.typography.bodyLarge
                         )
 
                         Text(
@@ -138,7 +141,7 @@ fun DashBoardCard(
                             text = fieldPlural,
                             color = Color.White,
                             textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.h5
+                            style = MaterialTheme.typography.bodyLarge
                         )
 
                     }
@@ -154,7 +157,7 @@ fun DashBoardCard(
                             text = text,
                             color = Color.White,
                             textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.h5
+                            style = MaterialTheme.typography.bodyLarge
                         )
 
                         Text(
@@ -162,7 +165,7 @@ fun DashBoardCard(
                             text = fieldPlural,
                             color = Color.White,
                             textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.h5
+                            style = MaterialTheme.typography.bodyLarge
                         )
                     }
 
@@ -192,7 +195,7 @@ data class DashBoardCardData(
     var isWithIconTitle: Boolean = false,
     var resourceIconTitle: @Composable () -> Unit = { Spacer(modifier = Modifier.size(0.dp)) },
     var heightCard: Dp = 256.dp,
-    var widthCard: Dp = 200.dp,
+    var widthCard: Dp = 400.dp,
     var verticalChainData: Boolean = true,
     var callBack: () -> Unit = {},
     var guidelineFromBottomFraction: Float = 0.5f
