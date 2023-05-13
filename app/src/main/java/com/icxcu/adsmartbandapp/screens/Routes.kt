@@ -11,6 +11,7 @@ sealed class Routes(val route: String) {
     object HeartRatePlot : Routes("heartRatePlot")
 
     object PersonalInfoForm : Routes("personalInfoForm")
+    object PersonalInfoFormInit : Routes("personalInfoFormInit")
 
 
 }

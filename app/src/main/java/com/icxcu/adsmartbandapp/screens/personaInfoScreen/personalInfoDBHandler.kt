@@ -33,8 +33,6 @@ fun PersonalInfoDBHandler(
         dataViewModel.date = filter[0].birthdate
         dataViewModel.weight = filter[0].weight.toString()
         dataViewModel.height = filter[0].height.toString()
-        Log.d("FilteringForm", "PersonalInfoDBHandler: ${filter[0].name}")
-        Log.d("FilteringForm", "PersonalInfoDBHandler: ${filter[0].birthdate}")
         filter
     } else {
         mutableListOf()

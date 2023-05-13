@@ -33,6 +33,8 @@ import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.dashBoard.DashBoard
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalDataForm
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDBHandler
+import com.icxcu.adsmartbandapp.screens.personalnfoInit.PersonalInfoInit
+import com.icxcu.adsmartbandapp.screens.personalnfoInit.PersonalInfoInitDBHandler
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureInfo
 import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateInfo
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityInfo
@@ -114,6 +116,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 // if the list if empty, all permissions are granted
+
                 startDestination = if (askPermissions.isEmpty()) {
                     Routes.BluetoothScanner.route
                 } else {
@@ -247,8 +250,8 @@ class MainActivity : ComponentActivity() {
                     dataViewModel.getYesterdayBloodPressureData(dataViewModel.macAddressDeviceBluetooth)
                     dataViewModel.getTodayHeartRateData(dataViewModel.macAddressDeviceBluetooth)
                     dataViewModel.getYesterdayHeartRateData(dataViewModel.macAddressDeviceBluetooth)
-
                     dataViewModel.getPersonalInfoData(dataViewModel.macAddressDeviceBluetooth)
+
 
                     PersonalInfoDBHandler(
                         dataViewModel
@@ -295,11 +298,21 @@ class MainActivity : ComponentActivity() {
                 }
 
                 composable(Routes.PersonalInfoForm.route){
+
                     PersonalDataForm(dataViewModel=dataViewModel){
                         navLambdaBackDataHome()
                     }
                 }
 
+                composable(Routes.PersonalInfoFormInit.route){
+                    dataViewModel.getPersonalInfoData(dataViewModel.macAddressDeviceBluetooth)
+                    PersonalInfoInitDBHandler(
+                        dataViewModel
+                    )
+                    PersonalInfoInit(dataViewModel=dataViewModel){
+                        navLambdaToBlueScanScreen()
+                    }
+                }
 
             }
 

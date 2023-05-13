@@ -155,6 +155,8 @@ class DataViewModel(var application: Application) : ViewModel() {
     var height by mutableStateOf("")
     var heightTextFieldVisibility by mutableStateOf(false)
 
+    var isPersonalInfoInit by mutableStateOf(false)
+
     init {
         val swDb = SWRoomDatabase.getInstance(application)
         val physicalActivityDao = swDb.physicalActivityDao()
