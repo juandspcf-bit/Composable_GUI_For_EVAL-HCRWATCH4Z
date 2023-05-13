@@ -90,6 +90,23 @@ fun PersonalDataForm(
 
     val setVisibilityAlertDialogStatusPersonalInfo = { visibility:Boolean->
         dataViewModel.alertDialogPersonalFieldVisibility = visibility
+
+    }
+
+    val getInvalidFields = {
+        dataViewModel.invalidFields
+    }
+    val setInvalidFields = { invalidFields:List<String> ->
+        dataViewModel.invalidFields = invalidFields
+    }
+
+    val visibilityAlertDialogStatusPersonalInfoU = {
+        dataViewModel.alertDialogUPersonalFieldVisibility
+    }
+
+    val setVisibilityAlertDialogStatusPersonalInfoU = { visibility:Boolean->
+        dataViewModel.alertDialogUPersonalFieldVisibility = visibility
+        dataViewModel.personalInfoAlertDialogUVLiveData.value = visibility
     }
 
     val insertPersonalData= { personalInfo:PersonalInfo->
@@ -123,6 +140,10 @@ fun PersonalDataForm(
         validatePersonalInfo,
         visibilityAlertDialogStatusPersonalInfo,
         setVisibilityAlertDialogStatusPersonalInfo,
+        getInvalidFields,
+        setInvalidFields,
+        visibilityAlertDialogStatusPersonalInfoU,
+        setVisibilityAlertDialogStatusPersonalInfoU,
         updatePersonalData,
         insertPersonalData
     )

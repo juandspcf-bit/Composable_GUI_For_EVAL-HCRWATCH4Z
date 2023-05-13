@@ -50,13 +50,17 @@ fun PersonalInfoInitScaffold(
     onHeightTextChange: (String) -> Unit,
     onHeightTextFieldVisibilityChange: (Boolean) -> Unit,
     getPersonalInfoListReadFromDB: () -> List<PersonalInfo>,
-    validatePersonalInfo: () -> Boolean = { false },
+    validatePersonalInfo: () -> List<String> = { listOf() },
     visibilityAlertDialogStatusPersonalInfo: () -> Boolean,
     setVisibilityAlertDialogStatusPersonalInfo: (Boolean) -> Unit,
+    getInvalidFields: () -> List<String>,
+    setInvalidFields: (List<String>) -> Unit,
+    visibilityAlertDialogStatusPersonalInfoU: () -> Boolean,
+    setVisibilityAlertDialogStatusPersonalInfoU: (Boolean) -> Unit,
     updatePersonalData: (PersonalInfo) -> Unit = {},
     insertPersonalData: (PersonalInfo) -> Unit = {},
-    isPersonalInfoInit:()->Boolean,
-){
+    isPersonalInfoInit: () -> Boolean,
+) {
     val scope = rememberCoroutineScope()
     LaunchedEffect(key1 = true) {
         scope.launch() {
@@ -99,11 +103,11 @@ fun PersonalInfoInitScaffold(
             padding
 
 
-            Box (
+            Box(
                 contentAlignment = Alignment.Center
-            ){
+            ) {
 
-                if(isPersonalInfoInit().not()){
+                if (isPersonalInfoInit().not()) {
                     PersonalInfoContent(
                         currentName,
                         currentNameTextFieldVisibility,
@@ -125,10 +129,14 @@ fun PersonalInfoInitScaffold(
                         validatePersonalInfo,
                         visibilityAlertDialogStatusPersonalInfo,
                         setVisibilityAlertDialogStatusPersonalInfo,
+                        getInvalidFields,
+                        setInvalidFields,
+                        visibilityAlertDialogStatusPersonalInfoU,
+                        setVisibilityAlertDialogStatusPersonalInfoU,
                         updatePersonalData,
                         insertPersonalData,
                     )
-                }else{
+                } else {
                     CircularProgressIndicator(
                         color = Color(0xFFE57373)
                     )
@@ -136,8 +144,6 @@ fun PersonalInfoInitScaffold(
 
 
             }
-
-
 
 
         },

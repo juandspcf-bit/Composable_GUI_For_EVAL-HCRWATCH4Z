@@ -3,6 +3,7 @@ package com.icxcu.adsmartbandapp.viewModels
 import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
@@ -137,6 +138,10 @@ class DataViewModel(var application: Application) : ViewModel() {
     var personalInfoFromDB = MutableLiveData<List<PersonalInfo>>()
     var personalInfoListReadFromDB = listOf<PersonalInfo>()
     var alertDialogPersonalFieldVisibility by mutableStateOf(false)
+    var personalInfoAlertDialogUVLiveData = MutableLiveData(false)
+    var alertDialogUPersonalFieldVisibility by mutableStateOf(false)
+    var invalidFields by mutableStateOf(listOf<String>())
+
 
     var macAddressDeviceBluetooth: String = ""
     var nameDeviceBluetooth: String = ""
@@ -156,6 +161,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     var heightTextFieldVisibility by mutableStateOf(false)
 
     var isPersonalInfoInit by mutableStateOf(false)
+
 
     init {
         val swDb = SWRoomDatabase.getInstance(application)
@@ -184,7 +190,7 @@ class DataViewModel(var application: Application) : ViewModel() {
         yesterdayHeartRateResultsFromDB = swRepository.yesterdayHeartRateResultsFromDB
 
         personalInfoFromDB = swRepository.personalInfoFromDB
-
+        personalInfoAlertDialogUVLiveData = swRepository.personalInfoAlertDialogUVStateLiveData
 
         viewModelScope.launch {
             swRepository.sharedStepsFlow.collect {
@@ -303,15 +309,23 @@ class DataViewModel(var application: Application) : ViewModel() {
         currentDate: () -> String,
         currentWeight: () -> String,
         currentHeight: () -> String
-    ): Boolean {
-        Log.d(
-            "Validation",
-            "validatePersonalInfo: ${ValidatorsPersonalField.weightValidator(currentWeight()).isNotBlank()}, currentWeight=${currentWeight()}"
+    ): List<String> {
+        val validationFields = mapOf(
+            "Name" to currentName().isNotBlank(),
+            "Birthday" to ValidatorsPersonalField.dateValidator(currentDate()).isNotBlank(),
+            "Weight" to ValidatorsPersonalField.weightValidator(currentWeight()).isNotBlank(),
+            "Height" to ValidatorsPersonalField.heightValidator(currentHeight()).isNotBlank()
         )
-        return currentName().isNotBlank()
-                && ValidatorsPersonalField.dateValidator(currentDate()).isNotBlank()
-                && ValidatorsPersonalField.weightValidator(currentWeight()).isNotBlank()
-                && ValidatorsPersonalField.heightValidator(currentHeight()).isNotBlank()
+
+        val invalidFields = mutableListOf<String>()
+        validationFields.forEach{ (key, value) ->
+            if (value.not()){
+                invalidFields.add(key)
+            }
+        }
+
+        return invalidFields.toList()
+
 
     }
 

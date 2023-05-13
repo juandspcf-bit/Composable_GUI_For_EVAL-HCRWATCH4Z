@@ -27,6 +27,7 @@ fun PersonalInfoInitDBHandler(
 
 
 
+
     dataViewModel.personalInfoListReadFromDB = if (personalInfoResultsFromDB.isEmpty().not() && personalInfoResultsFromDB[0].id!=-1) {
         val filter = personalInfoResultsFromDB.filter { it.typesTable == TypesTable.PERSONAL_INFO }
         dataViewModel.name = filter[0].name
@@ -40,4 +41,8 @@ fun PersonalInfoInitDBHandler(
         dataViewModel.isPersonalInfoInit = false
         mutableListOf()
     }
+
+
+
+
 }

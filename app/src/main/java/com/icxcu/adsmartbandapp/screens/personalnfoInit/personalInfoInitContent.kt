@@ -94,6 +94,22 @@ fun PersonalInfoInit(
         dataViewModel.alertDialogPersonalFieldVisibility = visibility
     }
 
+    val getInvalidFields = {
+        dataViewModel.invalidFields
+    }
+    val setInvalidFields = { invalidFields:List<String> ->
+        dataViewModel.invalidFields = invalidFields
+    }
+
+
+    val visibilityAlertDialogStatusPersonalInfoU = {
+        dataViewModel.alertDialogUPersonalFieldVisibility
+    }
+
+    val setVisibilityAlertDialogStatusPersonalInfoU = { visibility:Boolean->
+        dataViewModel.alertDialogUPersonalFieldVisibility = visibility
+    }
+
     val insertPersonalData = { personalInfo: PersonalInfo ->
         personalInfo.macAddress = dataViewModel.macAddressDeviceBluetooth
         dataViewModel.insertPersonalData(personalInfo)
@@ -126,6 +142,10 @@ fun PersonalInfoInit(
         validatePersonalInfo,
         visibilityAlertDialogStatusPersonalInfo,
         setVisibilityAlertDialogStatusPersonalInfo,
+        getInvalidFields,
+        setInvalidFields,
+        visibilityAlertDialogStatusPersonalInfoU,
+        setVisibilityAlertDialogStatusPersonalInfoU,
         updatePersonalData,
         insertPersonalData,
         isPersonalInfoInit,

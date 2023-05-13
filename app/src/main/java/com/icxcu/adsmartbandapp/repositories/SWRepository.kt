@@ -1,5 +1,6 @@
 package com.icxcu.adsmartbandapp.repositories
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.data.TypesTable
@@ -36,6 +37,7 @@ class SWRepository(
     var yesterdayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
 
     var personalInfoFromDB = MutableLiveData<List<PersonalInfo>>()
+    var personalInfoAlertDialogUVStateLiveData = MutableLiveData(false)
 
     private val _sharedStepsFlow = MutableSharedFlow<Values>(
         replay = 30,
@@ -343,8 +345,13 @@ class SWRepository(
     fun updatePersonalInfo(personalInfo: PersonalInfo) {
         coroutineScope.launch(Dispatchers.IO) {
             personalInfoDao.updatePersonalInfoData(personalInfo = personalInfo)
+            withContext(Dispatchers.Main){
+                personalInfoAlertDialogUVStateLiveData.value = true
+                Log.d("Steps", "updatePersonalInfo: Firsts ${personalInfoAlertDialogUVStateLiveData.value}")
+            }
         }
     }
+
 
 }
 

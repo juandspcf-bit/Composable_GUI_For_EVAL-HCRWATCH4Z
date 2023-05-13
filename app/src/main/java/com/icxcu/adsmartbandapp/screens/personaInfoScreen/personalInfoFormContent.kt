@@ -11,12 +11,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.icxcu.adsmartbandapp.R
+import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 
 @Composable
@@ -38,12 +41,16 @@ fun PersonalInfoContent(
     onHeightTextChange: (String) -> Unit,
     onHeightTextFieldVisibilityChange: (Boolean) -> Unit,
     getPersonalInfoListReadFromDB: () -> List<PersonalInfo>,
-    validatePersonalInfo: () -> Boolean = { false },
+    validatePersonalInfo: () -> List<String> = { listOf() },
     visibilityAlertDialogStatusPersonalInfo: () -> Boolean,
     setVisibilityAlertDialogStatusPersonalInfo: (Boolean) -> Unit,
+    getInvalidFields: () -> List<String>,
+    setInvalidFields: (List<String>) -> Unit,
+    visibilityAlertDialogStatusPersonalInfoU: () -> Boolean,
+    setVisibilityAlertDialogStatusPersonalInfoU: (Boolean) -> Unit,
     updatePersonalData: (PersonalInfo) -> Unit = {},
     insertPersonalData: (PersonalInfo) -> Unit = {},
-){
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -97,9 +104,9 @@ fun PersonalInfoContent(
                     .padding(top = 50.dp, end = 20.dp),
                 onClick = {
 
-                    if (validatePersonalInfo().not()) {
-                        Log.d("Flow", "PersonalInfoFormScaffold: no valid")
+                    if (validatePersonalInfo().isNotEmpty()) {
                         setVisibilityAlertDialogStatusPersonalInfo(true)
+                        setInvalidFields(validatePersonalInfo())
                         return@Button
                     }
 
@@ -120,13 +127,24 @@ fun PersonalInfoContent(
                         Log.d("Flow", "PersonalInfoFormScaffold: inserting")
                         insertPersonalData(personalInfo)
                     }
+
+
                 }
             ) {
                 Text(text = "Save info", color = Color.White, textAlign = TextAlign.Center)
+
             }
 
-            if(visibilityAlertDialogStatusPersonalInfo()){
-                ValidationAlertDialog(setVisibilityAlertDialogStatusPersonalInfo)
+            if (visibilityAlertDialogStatusPersonalInfo()) {
+                ValidationAlertDialog(
+                    setVisibilityAlertDialogStatusPersonalInfo,
+                    getInvalidFields,
+                    setInvalidFields
+                )
+            }
+
+            if (visibilityAlertDialogStatusPersonalInfoU()) {
+                UpdateAlertDialog(setVisibilityAlertDialogStatusPersonalInfoU)
             }
 
         }

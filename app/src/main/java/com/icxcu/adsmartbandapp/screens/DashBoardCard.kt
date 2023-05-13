@@ -115,8 +115,7 @@ fun DashBoardCard(
                         painter = painterResource(resource),
                         contentDescription = null,
                         contentScale = ContentScale.Fit,
-                        alignment = Alignment.Center
-
+                        alignment = Alignment.Center,
                     )
                 }
 

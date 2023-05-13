@@ -33,6 +33,7 @@ import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.dashBoard.DashBoard
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalDataForm
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDBHandler
+import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoInitDBHandlerAD
 import com.icxcu.adsmartbandapp.screens.personalnfoInit.PersonalInfoInit
 import com.icxcu.adsmartbandapp.screens.personalnfoInit.PersonalInfoInitDBHandler
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureInfo
@@ -298,7 +299,9 @@ class MainActivity : ComponentActivity() {
                 }
 
                 composable(Routes.PersonalInfoForm.route){
-
+                    PersonalInfoInitDBHandlerAD(
+                        dataViewModel
+                    )
                     PersonalDataForm(dataViewModel=dataViewModel){
                         navLambdaBackDataHome()
                     }
