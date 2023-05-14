@@ -15,7 +15,9 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
+import androidx.compose.material3.TabPosition
 import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -106,29 +108,44 @@ fun PhysicalActivityContent(
 }
 
 @Composable
-fun MyTab(title: String, onClick: () -> Unit, selected: Boolean) {
+fun MyPhysicalActivityTab(title: String, onClick: () -> Unit, selected: Boolean) {
     Tab(
         selected,
         onClick,
-        selectedContentColor = Color(0xFF7FC54C),
-        unselectedContentColor = Color.Green,
+        selectedContentColor = Color(0xFFFFF176),
         modifier = Modifier
             .fillMaxHeight()
             .height(52.dp)
     ) {
         Text(
             text = title,
-            color = Color.White,
+            color = if(selected){Color(0xFFFFF176)
+            }else{Color(0xFF7986CB)
+            },
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.align(Alignment.CenterHorizontally),
 
             )
-/*        Box(modifier = Modifier
-            .height(22.dp)
-            .fillMaxWidth()
-            .background(Color.Blue))*/
+
     }
 }
+
+@Composable
+fun MyPhysicalActivityIndicator(color: Color, modifier: Modifier){
+    Box(
+        modifier
+            //.padding(5.dp)
+            .fillMaxSize()
+            //.border(BorderStroke(2.dp, color), RoundedCornerShape(5.dp))
+    ){
+        Divider(thickness = 2.dp,
+            color = Color.White,
+        modifier = Modifier.align(Alignment.BottomCenter))
+    }
+}
+
+
+
 
 
 @Composable
@@ -139,8 +156,7 @@ fun ListSelector(
     modifierTabs: Modifier,
     modifierList: Modifier
 ) {
-    var state by remember { mutableStateOf(0) }
-    val titles = listOf("Steps", "Distance", "Calories")
+
 
     val stepList = {
         stepsListContent()
@@ -154,17 +170,28 @@ fun ListSelector(
         caloriesListContent()
     }
 
+    var state by remember { mutableStateOf(0) }
+    val titles = listOf("Steps", "Distance", "Calories")
+
+// Reuse the default offset animation modifier, but use our own indicator
+    val indicator = @Composable { tabPositions: List<TabPosition> ->
+        MyPhysicalActivityIndicator(
+            MaterialTheme.colorScheme.primary,
+            Modifier.tabIndicatorOffset(tabPositions[state])
+        )
+    }
+
     TabRow(
         selectedTabIndex = state,
         modifier = modifierTabs,//.height(52.dp),
         containerColor = Color.DarkGray,
+        indicator = indicator,
         divider = {
-            Divider(modifier = Modifier.fillMaxWidth(), color = Color(0xFFF44336))
+            Divider(modifier = Modifier.fillMaxWidth(), color = Color(0xFF7986CB))
         },
     ) {
-
         titles.forEachIndexed { index, title ->
-            MyTab(title = title, onClick = { state = index }, selected = (index == state))
+            MyPhysicalActivityTab(title = title, onClick = { state = index }, selected = (index == state))
         }
     }
 
