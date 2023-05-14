@@ -1,5 +1,6 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity
 
+import android.graphics.Typeface
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -30,9 +31,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.R
+import com.patrykandpatrick.vico.compose.component.shapeComponent
+import com.patrykandpatrick.vico.compose.component.textComponent
+import com.patrykandpatrick.vico.compose.dimensions.dimensionsOf
+import com.patrykandpatrick.vico.compose.legend.verticalLegend
+import com.patrykandpatrick.vico.compose.legend.verticalLegendItem
+import com.patrykandpatrick.vico.core.component.shape.Shapes
+import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
+import java.time.Duration
 
 @Composable
 fun PhysicalActivityContent(
@@ -73,7 +83,23 @@ fun PhysicalActivityContent(
             }
         ) {
 
-            MyComposeBarChart(stepList)
+            val stepsEntries = stepsListContent().mapIndexed { index, y ->
+                val entry = EntryHour(
+                    Duration.ofHours(24).minusMinutes(30L * index.toLong()),
+                    index.toFloat(), y.toFloat()
+                )
+                entry
+            }
+            val chartEntryModel = ChartEntryModelProducer(stepsEntries)
+
+            MyComposeBarChart(
+                chartEntryModel = chartEntryModel,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black)
+                    .padding(bottom = 15.dp),
+                legend = rememberLegendPhysicalActivity()
+            )
 
         }
 
@@ -363,3 +389,29 @@ fun RowSteps(
     }
 
 }
+
+
+val legendItemLabelTextSize = 12.sp
+val legendItemIconSize = 8.dp
+val legendItemIconPaddingValue = 10.dp
+val legendItemSpacing = 4.dp
+private val legendTopPaddingValue = 8.dp
+val legendPadding = dimensionsOf(top = legendTopPaddingValue)
+@Composable
+fun rememberLegendPhysicalActivity() = verticalLegend(
+    items = chartColorsPhysicalActivity.mapIndexed { _, chartColor ->
+        verticalLegendItem(
+            icon = shapeComponent(Shapes.pillShape, chartColor),
+            label = textComponent(
+                color = Color.White,
+                textSize = legendItemLabelTextSize,
+                typeface = Typeface.MONOSPACE,
+            ),
+            labelText = "Steps",
+        )
+    },
+    iconSize = legendItemIconSize,
+    iconPadding = legendItemIconPaddingValue,
+    spacing = legendItemSpacing,
+    padding = legendPadding,
+)

@@ -184,7 +184,8 @@ fun BloodPressureInfoContent(
 
             val chartEntryModel = ChartEntryModelProducer(mapSystolic, mapDiastolic)
             MyComposePlotChart(
-                chartEntryModel, modifier = Modifier
+                chartEntryModel,
+                modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black)
                     .padding(bottom = 15.dp),
