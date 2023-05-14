@@ -35,9 +35,9 @@ import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
+import com.icxcu.adsmartbandapp.screens.plotsFields.PlotsConstants
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.EntryHour
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getHours
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getIntervals
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemIconPaddingValue
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemIconSize
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemLabelTextSize
@@ -376,11 +376,10 @@ fun BloodPressureSList(
     Box(
         modifier = modifier
     ) {
-        val hoursList = getHours()
+        getHours()
         BloodPressureList(
             systolicList,
             diastolicList,
-            hoursList,
             modifier = Modifier
                 .fillMaxSize()
         )
@@ -393,7 +392,6 @@ fun BloodPressureSList(
 fun BloodPressureList(
     systolicListContent: () -> List<Double>,
     diastolicListContent: () -> List<Double>,
-    hourList: List<String>,
     modifier: Modifier = Modifier
 ) {
     val systolicList = {
@@ -409,8 +407,8 @@ fun BloodPressureList(
     LazyColumn(modifier = modifier) {
         itemsIndexed(
             bloodPressureFullList,
-            key = { index, value ->
-                getIntervals(index, hourList)
+            key = { index, _ ->
+                PlotsConstants.HOUR_INTERVALS[index]
             }
         ) { index, pair ->
             val systolicValue = pair.first
@@ -428,7 +426,7 @@ fun BloodPressureList(
                 valueBloodPressure = "$stringSystolicValue/$stringDiastolicValue mmHg",
                 resource = category ?: R.drawable.blood_pressure_gauge,
                 readableCategory = readableCategory ?: "No Category",
-                hourTime = getIntervals(index, hourList)
+                hourTime =  PlotsConstants.HOUR_INTERVALS[index]
             )
 
         }

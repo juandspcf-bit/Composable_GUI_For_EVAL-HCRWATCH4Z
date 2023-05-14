@@ -42,11 +42,11 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
+import com.icxcu.adsmartbandapp.screens.plotsFields.PlotsConstants
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.MyComposePlotChart
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.findIndex
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.EntryHour
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getHours
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getIntervals
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemIconPaddingValue
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemIconSize
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemLabelTextSize
@@ -346,10 +346,9 @@ fun HeartRateListS(heartRateListContent: () -> List<Double>,
     Box(
         modifier = modifier
     ) {
-        val hoursList = getHours()
+        getHours()
         HeartRateList(
             heartRateList,
-            hoursList,
             getAgeCalculated,
             modifier = Modifier
                 .fillMaxSize()
@@ -362,8 +361,7 @@ fun HeartRateListS(heartRateListContent: () -> List<Double>,
 @Composable
 fun HeartRateList(
     heartRateListContent: () -> List<Double>,
-    hoursList: List<String>,
-    getAgeCalculated:()->Int,
+    getAgeCalculated: () -> Int,
     modifier: Modifier
 ) {
 
@@ -371,7 +369,7 @@ fun HeartRateList(
     LazyColumn(modifier = modifier) {
         itemsIndexed(items = heartRateListContent(),
             key = { index, value ->
-                getIntervals(index, hoursList)
+                PlotsConstants.HOUR_INTERVALS[index]
             }) { index, heartRateValue ->
             val stringHeartRateValue = String.format("%.1f", heartRateValue)
 
@@ -384,7 +382,7 @@ fun HeartRateList(
                 valueHeartRate = "$stringHeartRateValue bpm",
                 resource = zoneResource,
                 readableCategory = zoneReadable,
-                hourTime = getIntervals(index, hoursList)
+                hourTime =  PlotsConstants.HOUR_INTERVALS[index]
             )
         }
     }

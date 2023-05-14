@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.R
+import com.icxcu.adsmartbandapp.screens.plotsFields.PlotsConstants
 import com.patrykandpatrick.vico.compose.component.shapeComponent
 import com.patrykandpatrick.vico.compose.component.textComponent
 import com.patrykandpatrick.vico.compose.dimensions.dimensionsOf
@@ -157,7 +158,7 @@ fun MyPhysicalActivityTab(title: String, onClick: () -> Unit, selected: Boolean)
 }
 
 @Composable
-fun MyPhysicalActivityIndicator(color: Color, modifier: Modifier){
+fun MyPhysicalActivityIndicator(modifier: Modifier){
     Box(
         modifier
             //.padding(5.dp)
@@ -202,7 +203,6 @@ fun ListSelector(
 // Reuse the default offset animation modifier, but use our own indicator
     val indicator = @Composable { tabPositions: List<TabPosition> ->
         MyPhysicalActivityIndicator(
-            MaterialTheme.colorScheme.primary,
             Modifier.tabIndicatorOffset(tabPositions[state])
         )
     }
@@ -224,12 +224,11 @@ fun ListSelector(
     Box(
         modifier = modifierList
     ) {
-        val hoursList = getHours()
+        getHours()
         when (state) {
             0 -> {
                 StepsList(
                     stepsListContent = stepList,
-                    hoursList,
                     modifier = Modifier
                         .fillMaxSize()
                 )
@@ -238,7 +237,6 @@ fun ListSelector(
             1 -> {
                 DistanceList(
                     distanceListContent = distanceList,
-                    hoursList,
                     modifier = Modifier
                         .fillMaxSize()
                 )
@@ -247,7 +245,6 @@ fun ListSelector(
             2 -> {
                 CaloriesList(
                     caloriesListContent = caloriesList,
-                    hoursList,
                     modifier = Modifier
                         .fillMaxSize()
                 )
@@ -261,7 +258,6 @@ fun ListSelector(
 @Composable
 fun StepsList(
     stepsListContent: () -> List<Int>,
-    hourList: List<String>,
     modifier: Modifier = Modifier
 ) {
     val stepList = {
@@ -270,14 +266,15 @@ fun StepsList(
     LazyColumn(modifier = modifier) {
         itemsIndexed(
             stepList(),
-            key = { index, value ->
-                getIntervals(index, hourList)
+            key = { index, _ ->
+                PlotsConstants.HOUR_INTERVALS[index]
+            //getIntervals(index, hourList)
             }
         ) { index, item ->
             RowSteps(
                 valueSteps = "$item Steps",
                 resource = R.drawable.runner_for_lazy_colum_list,
-                hourTime = getIntervals(index, hourList)
+                hourTime = PlotsConstants.HOUR_INTERVALS[index]//getIntervals(index, hourList)
             )
         }
     }
@@ -285,8 +282,7 @@ fun StepsList(
 
 @Composable
 fun DistanceList(
-    distanceListContent:()-> List<Double>,
-    hourList: List<String>,
+    distanceListContent: () -> List<Double>,
     modifier: Modifier = Modifier
 ) {
     val distanceList={
@@ -295,14 +291,14 @@ fun DistanceList(
     LazyColumn(modifier = modifier) {
         itemsIndexed(
             distanceList(),
-            key = { index, value ->
-                getIntervals(index, hourList)
+            key = { index, _ ->
+                PlotsConstants.HOUR_INTERVALS[index]
             }
         ) { index, item ->
             RowSteps(
                 valueSteps = "$item Kms",
                 resource = R.drawable.distance_for_lazy_list,
-                hourTime = getIntervals(index, hourList)
+                hourTime = PlotsConstants.HOUR_INTERVALS[index]
             )
         }
     }
@@ -311,7 +307,6 @@ fun DistanceList(
 @Composable
 fun CaloriesList(
     caloriesListContent: () -> List<Double>,
-    hourList: List<String>,
     modifier: Modifier = Modifier
 ) {
     val caloriesList={
@@ -321,14 +316,14 @@ fun CaloriesList(
     LazyColumn(modifier = modifier) {
         itemsIndexed(
             caloriesList(),
-            key = { index, value ->
-                getIntervals(index, hourList)
+            key = { index, _ ->
+                PlotsConstants.HOUR_INTERVALS[index]
             }
         ) { index, item ->
             RowSteps(
                 valueSteps = "$item Kcal",
                 resource = R.drawable.calories_for_lazy_list,
-                hourTime = getIntervals(index, hourList)
+                hourTime = PlotsConstants.HOUR_INTERVALS[index]
             )
         }
     }
