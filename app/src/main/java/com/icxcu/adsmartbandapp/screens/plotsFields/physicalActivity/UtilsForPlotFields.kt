@@ -3,7 +3,7 @@ package com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity
 import android.util.Log
 import java.time.Duration
 
-fun getHours() = MutableList(48) { 0 }.mapIndexed { index, value ->
+fun getHours() = MutableList(48) { 0 }.mapIndexed { index, _ ->
     val hour = "${Duration.ofHours(0).plusMinutes(30L * index).toHours()}"
     val time = hour + if ((index + 1) % 2 == 0) {
         ":30"
