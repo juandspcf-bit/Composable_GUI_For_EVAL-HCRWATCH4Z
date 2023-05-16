@@ -42,6 +42,11 @@ fun DashBoard(
         dataViewModel.requestSmartWatchDataHeartRate()
     }
 
+    val stopRequestRealTimeHeartRate = {
+        dataViewModel.stopRequestSmartWatchDataHeartRate()
+
+    }
+
     DashBoardScaffold(
         bluetoothName,
         bluetoothAddress,
@@ -49,6 +54,7 @@ fun DashBoard(
         getVisibility,
         requestRealTimeHeartRate,
         getRealTimeHeartRate,
+        stopRequestRealTimeHeartRate,
         navMainController,
         navLambda,
     )

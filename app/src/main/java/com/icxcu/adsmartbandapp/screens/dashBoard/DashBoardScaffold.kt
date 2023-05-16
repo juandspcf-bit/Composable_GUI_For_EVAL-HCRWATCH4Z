@@ -58,6 +58,7 @@ fun DashBoardScaffold(
     getVisibility:()->Boolean = { false },
     requestRealTimeHeartRate: () -> Unit,
     getRealTimeHeartRate: () -> Int,
+    stopRequestRealTimeHeartRate: () -> Unit,
     navMainController: NavHostController = rememberNavController(),
     navLambda: () -> Unit = {}
 ){
@@ -121,6 +122,7 @@ fun DashBoardScaffold(
                     dayDateValuesReadFromSW = dayDateValuesReadFromSW,
                     requestRealTimeHeartRate,
                     getRealTimeHeartRate,
+                    stopRequestRealTimeHeartRate,
                     navMainController
                 )
             }
@@ -137,6 +139,7 @@ fun NavigationHost(
     dayDateValuesReadFromSW: () -> Values,
     requestRealTimeHeartRate: () -> Unit,
     getRealTimeHeartRate: () -> Int,
+    stopRequestRealTimeHeartRate: () -> Unit,
     navMainController: NavHostController
 ) {
     NavHost(
@@ -152,7 +155,8 @@ fun NavigationHost(
         composable(NavRoutes.CheckHealth.route) {
             TestingHealthScreen(
                 requestRealTimeHeartRate,
-                getRealTimeHeartRate
+                getRealTimeHeartRate,
+                stopRequestRealTimeHeartRate,
             )
         }
 
@@ -212,7 +216,8 @@ fun DashBoardPreview() {
     DashBoardScaffold(
         getVisibility = {true},
         getRealTimeHeartRate = {0},
-        requestRealTimeHeartRate = {}
+        requestRealTimeHeartRate = {},
+        stopRequestRealTimeHeartRate = {}
     ) {
 
     }

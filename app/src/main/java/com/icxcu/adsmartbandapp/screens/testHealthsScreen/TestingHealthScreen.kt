@@ -39,6 +39,7 @@ import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 fun TestingHealthScreen(
     requestRealTimeHeartRate: () -> Unit,
     getRealTimeHeartRate: () -> Int,
+    stopRequestRealTimeHeartRate: () -> Unit,
 ) {
 
 
@@ -69,6 +70,7 @@ fun TestingHealthScreen(
                     imageResource = R.drawable.heart_rate,
                     requestRealTimeHeartRate,
                     getRealTimeHeartRate,
+                    stopRequestRealTimeHeartRate,
                 ) { status: Boolean ->
                     dialogOpen = status
                 }
@@ -249,6 +251,7 @@ data class AlertDialogTestHealth(
 fun TestingHealthScreenPreview() {
     TestingHealthScreen(
         requestRealTimeHeartRate = {},
-        getRealTimeHeartRate = {20}
+        getRealTimeHeartRate = {20},
+        stopRequestRealTimeHeartRate = {}
     )
 }

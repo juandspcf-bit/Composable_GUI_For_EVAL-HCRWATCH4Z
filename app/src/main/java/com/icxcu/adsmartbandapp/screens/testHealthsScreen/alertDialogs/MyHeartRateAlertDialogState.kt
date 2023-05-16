@@ -8,6 +8,7 @@ fun MyHeartRateAlertDialogState(
     imageResource: Int = R.drawable.ic_launcher_foreground,
     requestRealTimeHeartRate: () -> Unit,
     getRealTimeHeartRate: () -> Int,
+    stopRequestRealTimeHeartRate: () -> Unit,
     setDialogStatus: (Boolean) -> Unit
 
 ){
@@ -18,6 +19,7 @@ fun MyHeartRateAlertDialogState(
         imageResource = imageResource,
         requestRealTimeHeartRate,
         getRealTimeHeartRate,
+        stopRequestRealTimeHeartRate,
         setDialogStatus
     )
 

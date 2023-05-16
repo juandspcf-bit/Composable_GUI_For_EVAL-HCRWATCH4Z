@@ -40,11 +40,13 @@ fun MyHeartRateAlertDialogContent(
     imageResource: Int = R.drawable.ic_launcher_foreground,
     requestRealTimeHeartRate: () -> Unit,
     getRealTimeHeartRate: () -> Int,
+    stopRequestRealTimeHeartRate: () -> Unit,
     setDialogStatus: (Boolean) -> Unit
 ) {
     Dialog(
         onDismissRequest = {
             setDialogStatus(false)
+            stopRequestRealTimeHeartRate()
         },
         properties = DialogProperties(
             dismissOnClickOutside = true,
@@ -91,6 +93,7 @@ fun MyHeartRateAlertDialogContent(
                 FilledIconToggleButtonSample(
                     Modifier.padding(top = 20.dp, bottom = 20.dp),
                     requestRealTimeHeartRate,
+                    stopRequestRealTimeHeartRate,
                 )
 
                 Button(
@@ -103,6 +106,7 @@ fun MyHeartRateAlertDialogContent(
                     ),
                     onClick = {
                         setDialogStatus(false)
+                        stopRequestRealTimeHeartRate()
 
                     }) {
                     Text(
@@ -121,6 +125,7 @@ fun MyHeartRateAlertDialogContent(
 fun FilledIconToggleButtonSample(
     modifier: Modifier,
     requestRealTimeHeartRate: () -> Unit,
+    stopRequestRealTimeHeartRate: () -> Unit,
 ) {
     var checked by remember { mutableStateOf(false) }
 
@@ -133,8 +138,10 @@ fun FilledIconToggleButtonSample(
             checked = checked,
             onCheckedChange = {
                 checked = it
-                if(checked){
+                if (checked) {
                     requestRealTimeHeartRate()
+                } else {
+                    stopRequestRealTimeHeartRate()
                 }
 
             },

@@ -1,9 +1,7 @@
 package com.icxcu.adsmartbandapp.viewModels
 
 import android.app.Application
-import android.util.Log
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
@@ -17,8 +15,7 @@ import com.icxcu.adsmartbandapp.database.SWRoomDatabase
 import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.ValidatorsPersonalField
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -232,6 +229,7 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     }
 
+    var jobHeartRate: Job? = null
     private val _sharedFlowHeartRate = MutableSharedFlow<Int>(
         replay = 10,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
@@ -241,12 +239,23 @@ class DataViewModel(var application: Application) : ViewModel() {
 
 
     fun requestSmartWatchDataHeartRate(){
-        viewModelScope.launch {
-            for (i in 1..20) {
-                _sharedFlowHeartRate.emit(i)
-                delay(2000)
+
+        jobHeartRate = viewModelScope.launch {
+            while (true) {
+                _sharedFlowHeartRate.emit((90..100).random())
+                delay(1000)
             }
         }
+
+        jobHeartRate?.invokeOnCompletion {
+            viewModelScope.launch {
+                _sharedFlowHeartRate.emit(0)
+            }
+        }
+    }
+
+    fun stopRequestSmartWatchDataHeartRate(){
+        jobHeartRate?.cancel()
     }
 
     fun getDayPhysicalActivityData(dateData: String, macAddress: String) {
