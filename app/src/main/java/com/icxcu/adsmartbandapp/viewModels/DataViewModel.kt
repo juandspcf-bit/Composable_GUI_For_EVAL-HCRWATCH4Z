@@ -17,10 +17,16 @@ import com.icxcu.adsmartbandapp.database.SWRoomDatabase
 import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.ValidatorsPersonalField
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.random.Random
 
 class DataViewModel(var application: Application) : ViewModel() {
 
@@ -224,6 +230,23 @@ class DataViewModel(var application: Application) : ViewModel() {
             progressbarForFetchingDataFromSW = true
         }
 
+    }
+
+    private val _sharedFlowHeartRate = MutableSharedFlow<Int>(
+        replay = 10,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    val sharedFlow = _sharedFlowHeartRate.asSharedFlow()
+
+
+
+    fun requestSmartWatchDataHeartRate(){
+        viewModelScope.launch {
+            for (i in 1..20) {
+                _sharedFlowHeartRate.emit(i)
+                delay(2000)
+            }
+        }
     }
 
     fun getDayPhysicalActivityData(dateData: String, macAddress: String) {

@@ -6,12 +6,18 @@ import com.icxcu.adsmartbandapp.R
 @Composable
 fun MyHeartRateAlertDialogState(
     imageResource: Int = R.drawable.ic_launcher_foreground,
+    requestRealTimeHeartRate: () -> Unit,
+    getRealTimeHeartRate: () -> Int,
     setDialogStatus: (Boolean) -> Unit
 
 ){
 
+
+
     MyHeartRateAlertDialogContent(
         imageResource = imageResource,
+        requestRealTimeHeartRate,
+        getRealTimeHeartRate,
         setDialogStatus
     )
 

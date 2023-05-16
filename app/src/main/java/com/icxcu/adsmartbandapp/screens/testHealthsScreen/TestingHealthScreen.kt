@@ -33,9 +33,13 @@ import androidx.compose.ui.unit.dp
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyHeartRateAlertDialogContent
 import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyHeartRateAlertDialogState
+import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 
 @Composable
-fun TestingHealthScreen() {
+fun TestingHealthScreen(
+    requestRealTimeHeartRate: () -> Unit,
+    getRealTimeHeartRate: () -> Int,
+) {
 
 
     var dialogOpen by remember {
@@ -63,6 +67,8 @@ fun TestingHealthScreen() {
             {
                 MyHeartRateAlertDialogState(
                     imageResource = R.drawable.heart_rate,
+                    requestRealTimeHeartRate,
+                    getRealTimeHeartRate,
                 ) { status: Boolean ->
                     dialogOpen = status
                 }
@@ -86,11 +92,11 @@ fun TestingHealthScreen() {
                 }
             },
             {
-                MyHeartRateAlertDialogState(
+/*                MyHeartRateAlertDialogState(
                     imageResource = R.drawable.blood_pressure_gauge,
                 ) { status: Boolean ->
                     dialogOpen = status
-                }
+                }*/
             }
         )
     )
@@ -241,5 +247,8 @@ data class AlertDialogTestHealth(
 @Preview(showBackground = true)
 @Composable
 fun TestingHealthScreenPreview() {
-    TestingHealthScreen()
+    TestingHealthScreen(
+        requestRealTimeHeartRate = {},
+        getRealTimeHeartRate = {20}
+    )
 }

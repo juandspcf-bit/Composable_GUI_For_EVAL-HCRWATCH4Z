@@ -3,6 +3,8 @@ package com.icxcu.adsmartbandapp.screens.dashBoard
 
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 
@@ -29,13 +31,26 @@ fun DashBoard(
     val getVisibility = {
         dataViewModel.progressbarForFetchingDataFromSW
     }
+
+    val heartRate by dataViewModel.sharedFlow.collectAsState(initial = 0)
+
+    val getRealTimeHeartRate={
+        heartRate
+    }
+
+    val requestRealTimeHeartRate = {
+        dataViewModel.requestSmartWatchDataHeartRate()
+    }
+
     DashBoardScaffold(
         bluetoothName,
         bluetoothAddress,
         dayDateValuesReadFromSW,
         getVisibility,
+        requestRealTimeHeartRate,
+        getRealTimeHeartRate,
         navMainController,
-        navLambda
+        navLambda,
     )
 
 

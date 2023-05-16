@@ -56,6 +56,8 @@ fun DashBoardScaffold(
     bluetoothAddress: String = "no address",
     dayDateValuesReadFromSW: () -> Values = {MockData.valuesToday},
     getVisibility:()->Boolean = { false },
+    requestRealTimeHeartRate: () -> Unit,
+    getRealTimeHeartRate: () -> Int,
     navMainController: NavHostController = rememberNavController(),
     navLambda: () -> Unit = {}
 ){
@@ -117,6 +119,8 @@ fun DashBoardScaffold(
                 NavigationHost(
                     navController = navController,
                     dayDateValuesReadFromSW = dayDateValuesReadFromSW,
+                    requestRealTimeHeartRate,
+                    getRealTimeHeartRate,
                     navMainController
                 )
             }
@@ -131,6 +135,8 @@ fun DashBoardScaffold(
 fun NavigationHost(
     navController: NavHostController,
     dayDateValuesReadFromSW: () -> Values,
+    requestRealTimeHeartRate: () -> Unit,
+    getRealTimeHeartRate: () -> Int,
     navMainController: NavHostController
 ) {
     NavHost(
@@ -138,10 +144,16 @@ fun NavigationHost(
         startDestination = NavRoutes.Fields.route,
     ) {
         composable(NavRoutes.Fields.route) {
-            ListDashBoardCardFields(dayDateValuesReadFromSW, navMainController)
+            ListDashBoardCardFields(
+                dayDateValuesReadFromSW,
+                navMainController
+            )
         }
         composable(NavRoutes.CheckHealth.route) {
-            TestingHealthScreen()
+            TestingHealthScreen(
+                requestRealTimeHeartRate,
+                getRealTimeHeartRate
+            )
         }
 
         composable(NavRoutes.Settings.route) {
@@ -198,7 +210,9 @@ fun BottomNavigationBar(navController: NavHostController) {
 @Composable
 fun DashBoardPreview() {
     DashBoardScaffold(
-        getVisibility = {true}
+        getVisibility = {true},
+        getRealTimeHeartRate = {0},
+        requestRealTimeHeartRate = {}
     ) {
 
     }

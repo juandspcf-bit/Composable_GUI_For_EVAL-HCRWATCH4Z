@@ -38,6 +38,8 @@ import com.icxcu.adsmartbandapp.R
 @Composable
 fun MyHeartRateAlertDialogContent(
     imageResource: Int = R.drawable.ic_launcher_foreground,
+    requestRealTimeHeartRate: () -> Unit,
+    getRealTimeHeartRate: () -> Int,
     setDialogStatus: (Boolean) -> Unit
 ) {
     Dialog(
@@ -79,31 +81,34 @@ fun MyHeartRateAlertDialogContent(
                 )
 
                 Text(
-                    text = "0 BPM",
+                    text = "${getRealTimeHeartRate()} BPM",
                     modifier = Modifier.padding(top = 20.dp, bottom = 20.dp),
                     style = MaterialTheme.typography.displayMedium,
                     color = Color.White
                 )
 
 
-                FilledIconToggleButtonSample(Modifier.padding(top = 20.dp, bottom = 20.dp))
+                FilledIconToggleButtonSample(
+                    Modifier.padding(top = 20.dp, bottom = 20.dp),
+                    requestRealTimeHeartRate,
+                )
 
                 Button(
-                    modifier = Modifier.fillMaxWidth().padding(10.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
                     colors = ButtonDefaults.buttonColors(
                         Color(0xFFF06292),
                         Color.White
-                    )
-                    ,
+                    ),
                     onClick = {
-                        setDialogStatus(
-                            false
-                        )
+                        setDialogStatus(false)
+
                     }) {
                     Text(
                         text = "close",
                         color = Color.White,
-                        fontSize =  MaterialTheme.typography.bodyLarge.fontSize,
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -113,7 +118,9 @@ fun MyHeartRateAlertDialogContent(
 }
 
 @Composable
-fun FilledIconToggleButtonSample(modifier: Modifier
+fun FilledIconToggleButtonSample(
+    modifier: Modifier,
+    requestRealTimeHeartRate: () -> Unit,
 ) {
     var checked by remember { mutableStateOf(false) }
 
@@ -126,6 +133,10 @@ fun FilledIconToggleButtonSample(modifier: Modifier
             checked = checked,
             onCheckedChange = {
                 checked = it
+                if(checked){
+                    requestRealTimeHeartRate()
+                }
+
             },
             colors = IconButtonDefaults.filledIconToggleButtonColors(
                 containerColor = Color.DarkGray,

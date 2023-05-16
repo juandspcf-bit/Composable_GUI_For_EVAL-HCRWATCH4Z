@@ -16,6 +16,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlin.random.Random
 
 class SWRepository(
     private val physicalActivityDao: PhysicalActivityDao,
@@ -46,6 +47,8 @@ class SWRepository(
     val sharedStepsFlow = _sharedStepsFlow.asSharedFlow()
 
 
+
+
     fun requestSmartWatchData(name: String = "", macAddress: String = "") {
         CoroutineScope(Dispatchers.Default).launch {
             delay(5000)
@@ -54,6 +57,9 @@ class SWRepository(
             _sharedStepsFlow.emit(MockData.valuesYesterday)
         }
     }
+
+
+
 
     fun getAnyDayPhysicalActivityData(queryDate: String, queryMacAddress: String) {
         getDayPhysicalActivityData(queryDate, queryMacAddress, dayPhysicalActivityResultsFromDB)
