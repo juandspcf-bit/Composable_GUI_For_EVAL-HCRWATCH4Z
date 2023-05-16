@@ -31,9 +31,18 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
+
+
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.FilledIconToggleButton
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,10 +53,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -88,7 +100,7 @@ fun TestingHealthScreen() {
                 }
             },
 
-        )
+            )
     )
 
     myAlertDialogs.add(
@@ -194,9 +206,9 @@ fun TestingHealthScreen() {
         )
 
 
-        if(selectedButton==0 && dialogOpen){
+        if (selectedButton == 0 && dialogOpen) {
             myAlertDialogs[0].dialog()
-        }else if(selectedButton==1 && dialogOpen){
+        } else if (selectedButton == 1 && dialogOpen) {
             myAlertDialogs[1].dialog()
         }
 
@@ -218,7 +230,9 @@ fun BoxImageCircle(
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize().padding(10.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp)
     ) {
         Button(
             modifier = modifier
@@ -231,7 +245,7 @@ fun BoxImageCircle(
                 setDialogStatus(true)
             },
             shape = CircleShape,
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color.DarkGray),
+            colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
             border = BorderStroke(2.dp, Color.Green)
         ) {
             if (withImage) {
@@ -265,7 +279,7 @@ fun MyHeartRateAlertDialog(
         },
         properties = DialogProperties(
             dismissOnClickOutside = true,
-                    dismissOnBackPress = true
+            dismissOnBackPress = true
         )
     ) {
         Surface(
@@ -274,27 +288,102 @@ fun MyHeartRateAlertDialog(
                 .wrapContentHeight(),
             shape = RoundedCornerShape(size = 10.dp)
         ) {
-            Column(modifier = Modifier.padding(all = 16.dp)) {
+            Column(
+                modifier = Modifier
+                    .background(Color(0xff0d1721))
+                    .padding(all = 16.dp),
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                Text(
+                    text = "Check your heart rate",
+                    modifier = Modifier.padding(top = 20.dp, bottom = 20.dp),
+                    style = MaterialTheme.typography.displayMedium,
+                    color = Color.White
+                )
 
                 Image(
                     modifier = Modifier
-                        .size(75.dp),
+                        .size(100.dp),
                     painter = painterResource(imageResource),
                     contentDescription = null,
                     contentScale = ContentScale.Inside
                 )
 
+                Text(
+                    text = "0 BPM",
+                    modifier = Modifier.padding(top = 20.dp, bottom = 20.dp),
+                    style = MaterialTheme.typography.displayMedium,
+                    color = Color.White
+                )
 
 
-                Text(text = "You cannot close me by clicking outside")
-                ElevatedButton(onClick = { setDialogStatus(
-                    false
-                ) }) {
-                    Text(text = "close")
+                FilledIconToggleButtonSample(Modifier.padding(top = 20.dp, bottom = 20.dp))
+
+                Button(
+                    modifier = Modifier.fillMaxWidth().padding(10.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        Color(0xFFF06292),
+                        Color.White
+                    )
+                    ,
+                    onClick = {
+                    setDialogStatus(
+                        false
+                    )
+                }) {
+                    Text(
+                        text = "close",
+                        color = Color.White,
+                        fontSize =  MaterialTheme.typography.bodyLarge.fontSize,
+                        fontWeight = FontWeight.Bold
+                        )
                 }
             }
         }
     }
+}
+
+@Composable
+fun FilledIconToggleButtonSample(modifier: Modifier
+) {
+    var checked by remember { mutableStateOf(false) }
+
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        FilledIconToggleButton(
+            modifier =Modifier.size(100.dp),
+            checked = checked,
+            onCheckedChange = {
+                checked = it
+            },
+            colors = IconButtonDefaults.filledIconToggleButtonColors(
+                containerColor = Color.DarkGray,
+                contentColor = Color.Red,
+                checkedContainerColor = Color.DarkGray,
+                checkedContentColor = Color(0xFF64B5F6),
+            )
+        ) {
+            if (checked) {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_stop_24),
+                    contentDescription = "Localized description",
+                    modifier = Modifier.fillMaxSize()
+
+                )
+            } else {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_play_arrow_24),
+                    contentDescription = "Localized description",
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
+    }
+
 }
 
 
