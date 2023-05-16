@@ -46,7 +46,7 @@ import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.ListDashBoardCardFields
 import com.icxcu.adsmartbandapp.screens.NavBarItems
 import com.icxcu.adsmartbandapp.screens.NavRoutes
-import com.icxcu.adsmartbandapp.screens.TestingHealthScreen
+import com.icxcu.adsmartbandapp.screens.testHealthsScreen.TestingHealthScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
