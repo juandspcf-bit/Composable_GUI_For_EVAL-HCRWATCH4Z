@@ -61,7 +61,7 @@ class SWRepository(
     }
 
 
-    var jobHeartRate: Job? = null
+    private var jobHeartRate: Job? = null
     private val _sharedFlowHeartRate = MutableSharedFlow<Int>(
         replay = 10,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
@@ -91,6 +91,54 @@ class SWRepository(
     fun stopRequestSmartWatchDataHeartRate(){
         jobHeartRate?.cancel()
     }
+
+
+    private var jobBloodPressure: Job? = null
+    private val _sharedFlowBloodPressure = MutableSharedFlow<Map<String, Int>>(
+        replay = 10,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    private val sharedFlowBloodPressure = _sharedFlowBloodPressure.asSharedFlow()
+
+    fun getSharedFlowBloodPressure(): SharedFlow<Map<String, Int>> {
+        return sharedFlowBloodPressure
+    }
+
+    fun requestSmartWatchDataBloodPressure(){
+
+        jobBloodPressure = CoroutineScope(Dispatchers.Default).launch {
+            delay(4000)
+            _sharedFlowBloodPressure.emit(
+                mapOf(
+                    "systolic" to (120..140).random(),
+                    "diastolic" to (75..85).random()
+                )
+            )
+
+        }
+
+        jobBloodPressure?.invokeOnCompletion {
+            CoroutineScope(Dispatchers.Default).launch {
+/*                _sharedFlowBloodPressure.emit(mapOf(
+                    "systolic" to 0,
+                    "diastolic" to 0
+                ))*/
+            }
+        }
+    }
+
+    fun stopRequestSmartWatchDataBloodPressure(){
+        jobBloodPressure?.cancel()
+    }
+
+
+
+
+
+
+
+
+
 
     fun getAnyDayPhysicalActivityData(queryDate: String, queryMacAddress: String) {
         getDayPhysicalActivityData(queryDate, queryMacAddress, dayPhysicalActivityResultsFromDB)

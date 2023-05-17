@@ -15,6 +15,8 @@ import com.icxcu.adsmartbandapp.database.SWRoomDatabase
 import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.ValidatorsPersonalField
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
@@ -237,7 +239,17 @@ class DataViewModel(var application: Application) : ViewModel() {
         swRepository.stopRequestSmartWatchDataHeartRate()
     }
 
+    fun getSharedFlowBloodPressure(): SharedFlow<Map<String, Int>> {
+        return swRepository.getSharedFlowBloodPressure()
+    }
 
+    fun requestSmartWatchDataBloodPressure(){
+        swRepository.requestSmartWatchDataBloodPressure()
+    }
+
+    fun stopRequestSmartWatchDataBloodPressure(){
+        swRepository.stopRequestSmartWatchDataBloodPressure()
+    }
 
 
 

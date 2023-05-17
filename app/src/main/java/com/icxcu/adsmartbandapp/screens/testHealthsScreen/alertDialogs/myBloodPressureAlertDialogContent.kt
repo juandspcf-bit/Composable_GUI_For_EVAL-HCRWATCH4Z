@@ -33,9 +33,10 @@ import com.icxcu.adsmartbandapp.R
 @Composable
 fun MyBloodPressureAlertDialogContent(
     imageResource: Int = R.drawable.ic_launcher_foreground,
-    requestRealTimeHeartRate: () -> Unit,
-    getRealTimeHeartRate: () -> Int,
     stopRequestRealTimeHeartRate: () -> Unit,
+    getRealTimeBloodPressure: () -> Map<String, Int>,
+    requestRealTimeBloodPressure: () -> Unit,
+    stopRequestRealTimeBloodPressure: () -> Unit,
     setDialogStatus: (Boolean) -> Unit
 ) {
     Dialog(
@@ -96,7 +97,7 @@ fun MyBloodPressureAlertDialogContent(
                         )
 
                         Text(
-                            text = "${getRealTimeHeartRate()} mmHg",
+                            text = "${getRealTimeBloodPressure()["systolic"]} mmHg",
                             modifier = Modifier.padding(bottom = 5.dp),
                             style = MaterialTheme.typography.titleLarge,
                             color = Color.White,
@@ -116,7 +117,7 @@ fun MyBloodPressureAlertDialogContent(
                             textAlign = TextAlign.Center
                         )
                         Text(
-                            text = "${getRealTimeHeartRate()} mmHg",
+                            text = "${getRealTimeBloodPressure()["diastolic"]} mmHg",
                             modifier = Modifier.padding(bottom = 5.dp),
                             style = MaterialTheme.typography.titleLarge,
                             color = Color.White,
@@ -140,8 +141,8 @@ fun MyBloodPressureAlertDialogContent(
                 FilledIconToggleButtonSample(
                     Modifier.padding(top = 20.dp, bottom = 20.dp),
                     70.dp,
-                    requestRealTimeHeartRate,
-                    stopRequestRealTimeHeartRate,
+                    requestRealTimeBloodPressure,
+                    stopRequestRealTimeBloodPressure,
                 )
 
                 Button(
@@ -154,7 +155,7 @@ fun MyBloodPressureAlertDialogContent(
                     ),
                     onClick = {
                         setDialogStatus(false)
-                        stopRequestRealTimeHeartRate()
+                        stopRequestRealTimeBloodPressure()
 
                     }) {
                     Text(
@@ -175,8 +176,15 @@ fun MyBloodPressureAlertDialogContent(
 fun MyBloodPressureAlertDialogContentPreview() {
     MyBloodPressureAlertDialogContent(
         imageResource = R.drawable.blood_pressure_gauge,
-        requestRealTimeHeartRate = {},
-        getRealTimeHeartRate = {20},
-        stopRequestRealTimeHeartRate = {}
+        stopRequestRealTimeHeartRate = {},
+        getRealTimeBloodPressure = {
+            mapOf(
+                "systolic" to 0,
+                "diastolic" to 0
+            )
+        },
+        requestRealTimeBloodPressure = {},
+        stopRequestRealTimeBloodPressure = {}
+
     ) {}
 }

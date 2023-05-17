@@ -59,6 +59,9 @@ fun DashBoardScaffold(
     requestRealTimeHeartRate: () -> Unit,
     getRealTimeHeartRate: () -> Int,
     stopRequestRealTimeHeartRate: () -> Unit,
+    getRealTimeBloodPressure: () -> Map<String, Int>,
+    requestRealTimeBloodPressure: () -> Unit,
+    stopRequestRealTimeBloodPressure: () -> Unit,
     navMainController: NavHostController = rememberNavController(),
     navLambda: () -> Unit = {}
 ) {
@@ -125,6 +128,9 @@ fun DashBoardScaffold(
                     requestRealTimeHeartRate,
                     getRealTimeHeartRate,
                     stopRequestRealTimeHeartRate,
+                    getRealTimeBloodPressure,
+                    requestRealTimeBloodPressure,
+                    stopRequestRealTimeBloodPressure,
                     navMainController
                 )
             }
@@ -142,6 +148,9 @@ fun NavigationHost(
     requestRealTimeHeartRate: () -> Unit,
     getRealTimeHeartRate: () -> Int,
     stopRequestRealTimeHeartRate: () -> Unit,
+    getRealTimeBloodPressure: () -> Map<String, Int>,
+    requestRealTimeBloodPressure: () -> Unit,
+    stopRequestRealTimeBloodPressure: () -> Unit,
     navMainController: NavHostController
 ) {
     NavHost(
@@ -159,6 +168,9 @@ fun NavigationHost(
                 requestRealTimeHeartRate,
                 getRealTimeHeartRate,
                 stopRequestRealTimeHeartRate,
+                getRealTimeBloodPressure,
+                requestRealTimeBloodPressure,
+                stopRequestRealTimeBloodPressure,
             )
         }
 
@@ -219,7 +231,15 @@ fun DashBoardPreview() {
         getVisibilityProgressbarForFetchingData = { true },
         requestRealTimeHeartRate = {},
         getRealTimeHeartRate = { 0 },
-        stopRequestRealTimeHeartRate = {}
+        stopRequestRealTimeHeartRate = {},
+        getRealTimeBloodPressure = {
+            mapOf(
+                "systolic" to 0,
+                "diastolic" to 0
+            )
+        },
+        requestRealTimeBloodPressure = {},
+        stopRequestRealTimeBloodPressure = {},
     ) {
 
     }

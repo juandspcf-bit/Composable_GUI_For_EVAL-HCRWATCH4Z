@@ -39,6 +39,9 @@ fun TestingHealthScreen(
     requestRealTimeHeartRate: () -> Unit,
     getRealTimeHeartRate: () -> Int,
     stopRequestRealTimeHeartRate: () -> Unit,
+    getRealTimeBloodPressure: () -> Map<String, Int>,
+    requestRealTimeBloodPressure: () -> Unit,
+    stopRequestRealTimeBloodPressure: () -> Unit,
 ) {
 
 
@@ -95,9 +98,10 @@ fun TestingHealthScreen(
             {
                 MyBloodPressureAlertDialogContent(
                     imageResource = R.drawable.blood_pressure_gauge,
-                    requestRealTimeHeartRate,
-                    getRealTimeHeartRate,
                     stopRequestRealTimeHeartRate,
+                    getRealTimeBloodPressure,
+                    requestRealTimeBloodPressure,
+                    stopRequestRealTimeBloodPressure,
                 ) { status: Boolean ->
                     dialogOpen = status
                 }
@@ -253,6 +257,15 @@ data class AlertDialogTestHealth(
 fun TestingHealthScreenPreview() {
     TestingHealthScreen(
         requestRealTimeHeartRate = {},
-        getRealTimeHeartRate = {20}
-    ) {}
+        getRealTimeHeartRate = { 20 },
+        stopRequestRealTimeHeartRate = {},
+        getRealTimeBloodPressure = {
+            mapOf(
+                "systolic" to 0,
+                "diastolic" to 0
+            )
+        },
+        requestRealTimeBloodPressure = {},
+        stopRequestRealTimeBloodPressure = {},
+    )
 }
