@@ -30,6 +30,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -70,14 +72,15 @@ fun MyHeartRateAlertDialogState(
 
                 Text(
                     text = "Check your heart rate",
-                    modifier = Modifier.padding(top = 20.dp, bottom = 20.dp),
-                    style = MaterialTheme.typography.displayMedium,
-                    color = Color.White
+                    modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
+                    style = MaterialTheme.typography.displaySmall,
+                    color = Color.White,
+                    textAlign = TextAlign.Center
                 )
 
                 Image(
                     modifier = Modifier
-                        .size(100.dp),
+                        .size(70.dp),
                     painter = painterResource(imageResource),
                     contentDescription = null,
                     contentScale = ContentScale.Inside
@@ -86,14 +89,15 @@ fun MyHeartRateAlertDialogState(
                 Text(
                     text = "${getRealTimeHeartRate()} BPM",
                     modifier = Modifier.padding(top = 20.dp, bottom = 20.dp),
-                    style = MaterialTheme.typography.displayMedium,
-                    color = Color.White
+                    style = MaterialTheme.typography.titleLarge,
+                    color = Color.White,
+                    textAlign = TextAlign.Center
                 )
 
 
                 FilledIconToggleButtonSample(
                     Modifier.padding(top = 20.dp, bottom = 20.dp),
-                    100.dp,
+                    70.dp,
                     requestRealTimeHeartRate,
                     stopRequestRealTimeHeartRate,
                 )
@@ -173,4 +177,15 @@ fun FilledIconToggleButtonSample(
         }
     }
 
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MyHeartRateAlertDialogStatePreview() {
+    MyHeartRateAlertDialogState(
+        imageResource = R.drawable.heart_rate,
+        requestRealTimeHeartRate = {},
+        getRealTimeHeartRate = { 20 },
+        stopRequestRealTimeHeartRate = {}
+    ) {}
 }
