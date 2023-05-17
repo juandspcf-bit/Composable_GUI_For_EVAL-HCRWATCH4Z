@@ -55,7 +55,7 @@ fun DashBoardScaffold(
     bluetoothName: String = "no name",
     bluetoothAddress: String = "no address",
     dayDateValuesReadFromSW: () -> Values = { MockData.valuesToday },
-    getVisibility: () -> Boolean = { false },
+    getVisibilityProgressbarForFetchingData: () -> Boolean = { false },
     requestRealTimeHeartRate: () -> Unit,
     getRealTimeHeartRate: () -> Int,
     stopRequestRealTimeHeartRate: () -> Unit,
@@ -103,7 +103,7 @@ fun DashBoardScaffold(
                 AnimatedVisibility(
                     modifier = Modifier
                         .background(Color(0xFFFFB74D)),
-                    visible = getVisibility(),
+                    visible = getVisibilityProgressbarForFetchingData(),
                     enter = expandVertically(animationSpec = tween(durationMillis = 1000)),
                     exit = shrinkVertically(animationSpec = tween(durationMillis = 1000)),
                 ) {
@@ -216,7 +216,7 @@ fun BottomNavigationBar(navController: NavHostController) {
 @Composable
 fun DashBoardPreview() {
     DashBoardScaffold(
-        getVisibility = { true },
+        getVisibilityProgressbarForFetchingData = { true },
         requestRealTimeHeartRate = {},
         getRealTimeHeartRate = { 0 },
         stopRequestRealTimeHeartRate = {}

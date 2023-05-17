@@ -27,7 +27,7 @@ fun DashBoard(
     val dayDateValuesReadFromSW = {
         dataViewModel.todayDateValuesReadFromSW
     }
-    val getVisibility = {
+    val getVisibilityProgressbarForFetchingData = {
         dataViewModel.progressbarForFetchingDataFromSW
     }
 
@@ -52,7 +52,7 @@ fun DashBoard(
         bluetoothName,
         bluetoothAddress,
         dayDateValuesReadFromSW,
-        getVisibility,
+        getVisibilityProgressbarForFetchingData,
         requestRealTimeHeartRate,
         getRealTimeHeartRate,
         stopRequestRealTimeHeartRate,

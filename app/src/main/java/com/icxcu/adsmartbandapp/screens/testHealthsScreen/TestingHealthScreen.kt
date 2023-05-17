@@ -31,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.icxcu.adsmartbandapp.R
+import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyBloodPressureAlertDialogContent
 import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyHeartRateAlertDialogState
 
 @Composable
@@ -92,11 +93,14 @@ fun TestingHealthScreen(
                 }
             },
             {
-/*                MyHeartRateAlertDialogState(
+                MyBloodPressureAlertDialogContent(
                     imageResource = R.drawable.blood_pressure_gauge,
+                    requestRealTimeHeartRate,
+                    getRealTimeHeartRate,
+                    stopRequestRealTimeHeartRate,
                 ) { status: Boolean ->
                     dialogOpen = status
-                }*/
+                }
             }
         )
     )
