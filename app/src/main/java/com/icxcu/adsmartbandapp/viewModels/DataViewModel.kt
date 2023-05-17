@@ -19,6 +19,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -213,8 +214,6 @@ class DataViewModel(var application: Application) : ViewModel() {
 
             }
         }
-
-
     }
 
 
@@ -229,33 +228,18 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     }
 
-    var jobHeartRate: Job? = null
-    private val _sharedFlowHeartRate = MutableSharedFlow<Int>(
-        replay = 10,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
-    )
-    val sharedFlow = _sharedFlowHeartRate.asSharedFlow()
 
 
+    fun getSharedFlowHeartRate(): SharedFlow<Int> {
+        return swRepository.getSharedFlowHeartRate()
+    }
 
     fun requestSmartWatchDataHeartRate(){
-
-        jobHeartRate = viewModelScope.launch {
-            while (true) {
-                _sharedFlowHeartRate.emit((90..100).random())
-                delay(1000)
-            }
-        }
-
-        jobHeartRate?.invokeOnCompletion {
-            viewModelScope.launch {
-                _sharedFlowHeartRate.emit(0)
-            }
-        }
+        swRepository.requestSmartWatchDataHeartRate()
     }
 
     fun stopRequestSmartWatchDataHeartRate(){
-        jobHeartRate?.cancel()
+        swRepository.stopRequestSmartWatchDataHeartRate()
     }
 
     fun getDayPhysicalActivityData(dateData: String, macAddress: String) {

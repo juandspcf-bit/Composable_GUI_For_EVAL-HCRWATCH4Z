@@ -32,7 +32,7 @@ fun DashBoard(
         dataViewModel.progressbarForFetchingDataFromSW
     }
 
-    val heartRate by dataViewModel.sharedFlow.collectAsState(initial = 0)
+    val heartRate by dataViewModel.getSharedFlowHeartRate().collectAsState(initial = 0)
 
     val getRealTimeHeartRate={
         heartRate

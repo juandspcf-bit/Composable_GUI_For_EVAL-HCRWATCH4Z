@@ -101,8 +101,8 @@ fun MyHeartRateAlertDialogContent(
                         .fillMaxWidth()
                         .padding(10.dp),
                     colors = ButtonDefaults.buttonColors(
-                        Color(0xFFF06292),
-                        Color.White
+                        Color(0xFFE997B3),
+                        Color.Black
                     ),
                     onClick = {
                         setDialogStatus(false)
@@ -111,7 +111,7 @@ fun MyHeartRateAlertDialogContent(
                     }) {
                     Text(
                         text = "close",
-                        color = Color.White,
+                        color = Color.Black,
                         fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                         fontWeight = FontWeight.Bold
                     )

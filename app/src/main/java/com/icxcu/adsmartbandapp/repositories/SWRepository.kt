@@ -2,6 +2,7 @@ package com.icxcu.adsmartbandapp.repositories
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.BloodPressure
@@ -15,6 +16,7 @@ import com.icxcu.adsmartbandapp.database.PhysicalActivityDao
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlin.random.Random
 
@@ -59,7 +61,36 @@ class SWRepository(
     }
 
 
+    var jobHeartRate: Job? = null
+    private val _sharedFlowHeartRate = MutableSharedFlow<Int>(
+        replay = 10,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    private val sharedFlow = _sharedFlowHeartRate.asSharedFlow()
 
+    fun getSharedFlowHeartRate(): SharedFlow<Int> {
+        return sharedFlow
+    }
+
+    fun requestSmartWatchDataHeartRate(){
+
+        jobHeartRate = CoroutineScope(Dispatchers.Default).launch {
+            while (true) {
+                _sharedFlowHeartRate.emit((90..100).random())
+                delay(1000)
+            }
+        }
+
+        jobHeartRate?.invokeOnCompletion {
+            CoroutineScope(Dispatchers.Default).launch {
+                _sharedFlowHeartRate.emit(0)
+            }
+        }
+    }
+
+    fun stopRequestSmartWatchDataHeartRate(){
+        jobHeartRate?.cancel()
+    }
 
     fun getAnyDayPhysicalActivityData(queryDate: String, queryMacAddress: String) {
         getDayPhysicalActivityData(queryDate, queryMacAddress, dayPhysicalActivityResultsFromDB)
