@@ -36,7 +36,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.icxcu.adsmartbandapp.R
 
 @Composable
-fun MyHeartRateAlertDialogContent(
+fun MyHeartRateAlertDialogState(
     imageResource: Int = R.drawable.ic_launcher_foreground,
     requestRealTimeHeartRate: () -> Unit,
     getRealTimeHeartRate: () -> Int,
