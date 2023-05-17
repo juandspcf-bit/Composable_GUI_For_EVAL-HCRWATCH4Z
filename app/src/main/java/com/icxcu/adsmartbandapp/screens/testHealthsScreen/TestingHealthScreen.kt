@@ -31,9 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.icxcu.adsmartbandapp.R
-import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyHeartRateAlertDialogContent
 import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyHeartRateAlertDialogState
-import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 
 @Composable
 fun TestingHealthScreen(
@@ -251,7 +249,6 @@ data class AlertDialogTestHealth(
 fun TestingHealthScreenPreview() {
     TestingHealthScreen(
         requestRealTimeHeartRate = {},
-        getRealTimeHeartRate = {20},
-        stopRequestRealTimeHeartRate = {}
-    )
+        getRealTimeHeartRate = {20}
+    ) {}
 }

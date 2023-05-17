@@ -121,6 +121,7 @@ fun MyHeartRateAlertDialogContent(
     }
 }
 
+
 @Composable
 fun FilledIconToggleButtonSample(
     modifier: Modifier,

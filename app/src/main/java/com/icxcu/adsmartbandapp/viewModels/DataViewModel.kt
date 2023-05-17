@@ -15,16 +15,11 @@ import com.icxcu.adsmartbandapp.database.SWRoomDatabase
 import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.ValidatorsPersonalField
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.random.Random
 
 class DataViewModel(var application: Application) : ViewModel() {
 
@@ -241,6 +236,11 @@ class DataViewModel(var application: Application) : ViewModel() {
     fun stopRequestSmartWatchDataHeartRate(){
         swRepository.stopRequestSmartWatchDataHeartRate()
     }
+
+
+
+
+
 
     fun getDayPhysicalActivityData(dateData: String, macAddress: String) {
         swRepository.getAnyDayPhysicalActivityData(dateData, macAddress)

@@ -54,14 +54,14 @@ import com.icxcu.adsmartbandapp.screens.testHealthsScreen.TestingHealthScreen
 fun DashBoardScaffold(
     bluetoothName: String = "no name",
     bluetoothAddress: String = "no address",
-    dayDateValuesReadFromSW: () -> Values = {MockData.valuesToday},
-    getVisibility:()->Boolean = { false },
+    dayDateValuesReadFromSW: () -> Values = { MockData.valuesToday },
+    getVisibility: () -> Boolean = { false },
     requestRealTimeHeartRate: () -> Unit,
     getRealTimeHeartRate: () -> Int,
     stopRequestRealTimeHeartRate: () -> Unit,
     navMainController: NavHostController = rememberNavController(),
     navLambda: () -> Unit = {}
-){
+) {
     val navController = rememberNavController()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -102,15 +102,17 @@ fun DashBoardScaffold(
 
                 AnimatedVisibility(
                     modifier = Modifier
-                        .background(Color(0xFFFFB74D))
-                        ,
+                        .background(Color(0xFFFFB74D)),
                     visible = getVisibility(),
                     enter = expandVertically(animationSpec = tween(durationMillis = 1000)),
                     exit = shrinkVertically(animationSpec = tween(durationMillis = 1000)),
                 ) {
-                    Box(contentAlignment = Alignment.Center,
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(top = 15.dp, bottom = 15.dp)){
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 15.dp, bottom = 15.dp)
+                    ) {
                         CircularProgressIndicator(
                             color = Color(0xFF443B2E)
                         )
@@ -161,7 +163,7 @@ fun NavigationHost(
         }
 
         composable(NavRoutes.Settings.route) {
-            Settings( navMainController)
+            Settings(navMainController)
         }
     }
 }
@@ -214,9 +216,9 @@ fun BottomNavigationBar(navController: NavHostController) {
 @Composable
 fun DashBoardPreview() {
     DashBoardScaffold(
-        getVisibility = {true},
-        getRealTimeHeartRate = {0},
+        getVisibility = { true },
         requestRealTimeHeartRate = {},
+        getRealTimeHeartRate = { 0 },
         stopRequestRealTimeHeartRate = {}
     ) {
 
