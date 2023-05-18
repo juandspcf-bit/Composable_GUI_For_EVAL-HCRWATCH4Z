@@ -116,9 +116,9 @@ fun MyBloodPressureAlertDialogContent(
                         )
 
                         val systolic = if(getCircularProgressBloodPressure()>0){
-                            getRealTimeBloodPressure()["systolic"]
-                        }else{
                             0
+                        }else{
+                            getRealTimeBloodPressure()["systolic"]
                         }
 
                         Text(
@@ -142,9 +142,9 @@ fun MyBloodPressureAlertDialogContent(
                             textAlign = TextAlign.Center
                         )
                         val diastolic = if(getCircularProgressBloodPressure()>0){
-                            getRealTimeBloodPressure()["diastolic"]
-                        }else{
                             0
+                        }else{
+                            getRealTimeBloodPressure()["diastolic"]
                         }
                         Text(
                             text = "$diastolic mmHg",
@@ -180,8 +180,8 @@ fun MyBloodPressureAlertDialogContent(
                         .fillMaxWidth()
                         .padding(10.dp),
                     colors = ButtonDefaults.buttonColors(
-                        Color(0xFFE997B3),
-                        Color.Black
+                        Color(0xFF673AB7),
+                        Color.White
                     ),
                     onClick = {
                         setDialogStatus(false)
@@ -190,7 +190,7 @@ fun MyBloodPressureAlertDialogContent(
                     }) {
                     Text(
                         text = "close",
-                        color = Color.Black,
+                        color = Color.White,
                         fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                         fontWeight = FontWeight.Bold
                     )
