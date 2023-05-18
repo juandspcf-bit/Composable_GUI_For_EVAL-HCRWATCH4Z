@@ -33,7 +33,6 @@ import com.icxcu.adsmartbandapp.R
 @Composable
 fun MyBloodPressureAlertDialogContent(
     imageResource: Int = R.drawable.ic_launcher_foreground,
-    stopRequestRealTimeHeartRate: () -> Unit,
     getRealTimeBloodPressure: () -> Map<String, Int>,
     requestRealTimeBloodPressure: () -> Unit,
     stopRequestRealTimeBloodPressure: () -> Unit,
@@ -42,7 +41,7 @@ fun MyBloodPressureAlertDialogContent(
     Dialog(
         onDismissRequest = {
             setDialogStatus(false)
-            stopRequestRealTimeHeartRate()
+            stopRequestRealTimeBloodPressure()
         },
         properties = DialogProperties(
             dismissOnClickOutside = true,
@@ -176,7 +175,6 @@ fun MyBloodPressureAlertDialogContent(
 fun MyBloodPressureAlertDialogContentPreview() {
     MyBloodPressureAlertDialogContent(
         imageResource = R.drawable.blood_pressure_gauge,
-        stopRequestRealTimeHeartRate = {},
         getRealTimeBloodPressure = {
             mapOf(
                 "systolic" to 0,

@@ -107,7 +107,10 @@ class SWRepository(
     fun requestSmartWatchDataBloodPressure(){
 
         jobBloodPressure = CoroutineScope(Dispatchers.Default).launch {
-            delay(4000)
+            repeat(10){
+                delay(400)
+            }
+
             _sharedFlowBloodPressure.emit(
                 mapOf(
                     "systolic" to (120..140).random(),
@@ -117,18 +120,17 @@ class SWRepository(
 
         }
 
-        jobBloodPressure?.invokeOnCompletion {
-            CoroutineScope(Dispatchers.Default).launch {
-/*                _sharedFlowBloodPressure.emit(mapOf(
-                    "systolic" to 0,
-                    "diastolic" to 0
-                ))*/
-            }
-        }
     }
 
     fun stopRequestSmartWatchDataBloodPressure(){
+        CoroutineScope(Dispatchers.Default).launch {
+            _sharedFlowBloodPressure.emit(mapOf(
+                "systolic" to 0,
+                "diastolic" to 0
+            ))
+        }
         jobBloodPressure?.cancel()
+
     }
 
 

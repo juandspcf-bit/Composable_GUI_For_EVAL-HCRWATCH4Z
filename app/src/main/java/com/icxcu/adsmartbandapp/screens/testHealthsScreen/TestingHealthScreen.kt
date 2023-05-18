@@ -98,7 +98,6 @@ fun TestingHealthScreen(
             {
                 MyBloodPressureAlertDialogContent(
                     imageResource = R.drawable.blood_pressure_gauge,
-                    stopRequestRealTimeHeartRate,
                     getRealTimeBloodPressure,
                     requestRealTimeBloodPressure,
                     stopRequestRealTimeBloodPressure,
