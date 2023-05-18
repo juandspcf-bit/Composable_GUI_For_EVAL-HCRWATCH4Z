@@ -1,10 +1,17 @@
 package com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs
 
+import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -13,10 +20,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilledIconToggleButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,6 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -36,8 +51,11 @@ fun MyBloodPressureAlertDialogContent(
     getRealTimeBloodPressure: () -> Map<String, Int>,
     requestRealTimeBloodPressure: () -> Unit,
     stopRequestRealTimeBloodPressure: () -> Unit,
+    getCircularProgressBloodPressure: () -> Int,
     setDialogStatus: (Boolean) -> Unit
 ) {
+    Log.d("MyProgress", "MyBloodPressureAlertDialogContent: ${getCircularProgressBloodPressure()}")
+
     Dialog(
         onDismissRequest = {
             setDialogStatus(false)
@@ -45,11 +63,13 @@ fun MyBloodPressureAlertDialogContent(
         },
         properties = DialogProperties(
             dismissOnClickOutside = true,
-            dismissOnBackPress = true
+            dismissOnBackPress = true,
+            usePlatformDefaultWidth = false
         )
     ) {
         Surface(
             modifier = Modifier
+                .padding(start = 40.dp, end = 40.dp)
                 .fillMaxWidth()
                 .wrapContentHeight(),
             shape = RoundedCornerShape(size = 10.dp)
@@ -95,8 +115,14 @@ fun MyBloodPressureAlertDialogContent(
                             textAlign = TextAlign.Center
                         )
 
+                        val systolic = if(getCircularProgressBloodPressure()>0){
+                            getRealTimeBloodPressure()["systolic"]
+                        }else{
+                            0
+                        }
+
                         Text(
-                            text = "${getRealTimeBloodPressure()["systolic"]} mmHg",
+                            text = "$systolic mmHg",
                             modifier = Modifier.padding(bottom = 5.dp),
                             style = MaterialTheme.typography.titleLarge,
                             color = Color.White,
@@ -115,8 +141,13 @@ fun MyBloodPressureAlertDialogContent(
                             color = Color.White,
                             textAlign = TextAlign.Center
                         )
+                        val diastolic = if(getCircularProgressBloodPressure()>0){
+                            getRealTimeBloodPressure()["diastolic"]
+                        }else{
+                            0
+                        }
                         Text(
-                            text = "${getRealTimeBloodPressure()["diastolic"]} mmHg",
+                            text = "$diastolic mmHg",
                             modifier = Modifier.padding(bottom = 5.dp),
                             style = MaterialTheme.typography.titleLarge,
                             color = Color.White,
@@ -125,23 +156,23 @@ fun MyBloodPressureAlertDialogContent(
                     }
                 }
 
+                if(getCircularProgressBloodPressure()>0){
+                    CircularProgressIndicator(
+                        progress = getCircularProgressBloodPressure()/10.0f,
+                        modifier = Modifier
+                            .padding(top = 15.dp, bottom = 15.dp)
+                            .size(size = 70.dp),
+                        color =  Color(0xFFFFD54F),
+                        strokeWidth = 8.dp
+                    )
+                }
 
-
-
-                CircularProgressIndicator(
-                    progress = 0.6f,
-                    modifier = Modifier
-                        .padding(top = 15.dp, bottom = 15.dp)
-                        .size(size = 70.dp),
-                    color =  Color(0xFFFFD54F),
-                    strokeWidth = 8.dp
-                )
-
-                FilledIconToggleButtonSample(
+                FilledIconToggleButtonSampleBloodPressure(
                     Modifier.padding(top = 20.dp, bottom = 20.dp),
                     70.dp,
                     requestRealTimeBloodPressure,
                     stopRequestRealTimeBloodPressure,
+                    getCircularProgressBloodPressure,
                 )
 
                 Button(
@@ -169,6 +200,62 @@ fun MyBloodPressureAlertDialogContent(
     }
 }
 
+@Composable
+fun FilledIconToggleButtonSampleBloodPressure(
+    modifier: Modifier,
+    size: Dp = 100.dp,
+    requestRealTimeHeartRate: () -> Unit,
+    stopRequestRealTimeHeartRate: () -> Unit,
+    progressValue:()->Int,
+) {
+    var checked by remember { mutableStateOf(false) }
+
+    if(checked && progressValue()==0){
+        checked=!checked
+    }
+
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        FilledIconToggleButton(
+            modifier = Modifier.size(size),
+            checked = checked,
+            onCheckedChange = {
+                checked = it
+                if (checked) {
+                    requestRealTimeHeartRate()
+                } else {
+                    stopRequestRealTimeHeartRate()
+                }
+
+            },
+            colors = IconButtonDefaults.filledIconToggleButtonColors(
+                containerColor = Color.DarkGray,
+                contentColor = Color.Red,
+                checkedContainerColor = Color.DarkGray,
+                checkedContentColor = Color(0xFF64B5F6),
+            )
+        ) {
+            if (checked) {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_stop_24),
+                    contentDescription = "Localized description",
+                    modifier = Modifier.fillMaxSize()
+
+                )
+            } else {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_play_arrow_24),
+                    contentDescription = "Localized description",
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
+    }
+
+}
+
 
 @Preview(showBackground = true)
 @Composable
@@ -182,7 +269,8 @@ fun MyBloodPressureAlertDialogContentPreview() {
             )
         },
         requestRealTimeBloodPressure = {},
-        stopRequestRealTimeBloodPressure = {}
+        stopRequestRealTimeBloodPressure = {},
+        getCircularProgressBloodPressure = {5}
 
     ) {}
 }

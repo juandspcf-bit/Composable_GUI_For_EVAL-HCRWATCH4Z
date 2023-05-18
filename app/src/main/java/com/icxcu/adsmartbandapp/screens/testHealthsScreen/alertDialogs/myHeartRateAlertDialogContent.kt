@@ -95,7 +95,7 @@ fun MyHeartRateAlertDialogState(
                 )
 
 
-                FilledIconToggleButtonSample(
+                FilledIconToggleButtonSampleHeartRate(
                     Modifier.padding(top = 20.dp, bottom = 20.dp),
                     70.dp,
                     requestRealTimeHeartRate,
@@ -129,7 +129,7 @@ fun MyHeartRateAlertDialogState(
 
 
 @Composable
-fun FilledIconToggleButtonSample(
+fun FilledIconToggleButtonSampleHeartRate(
     modifier: Modifier,
     size: Dp = 100.dp,
     requestRealTimeHeartRate: () -> Unit,
@@ -178,6 +178,8 @@ fun FilledIconToggleButtonSample(
     }
 
 }
+
+
 
 @Preview(showBackground = true)
 @Composable

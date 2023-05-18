@@ -1,6 +1,9 @@
 package com.icxcu.adsmartbandapp.repositories
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.icxcu.adsmartbandapp.data.MockData
@@ -16,8 +19,11 @@ import com.icxcu.adsmartbandapp.database.PhysicalActivityDao
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlin.random.Random
 
 class SWRepository(
@@ -92,6 +98,20 @@ class SWRepository(
         jobHeartRate?.cancel()
     }
 
+    private val _circularProgressBloodPressureStateFlow = MutableStateFlow(0)
+    private val circularProgressBloodPressureStateFlow = _circularProgressBloodPressureStateFlow.asStateFlow()
+
+    fun increaseValueCircularProgressBloodPressure() {
+        _circularProgressBloodPressureStateFlow.value += 1
+    }
+
+    fun clearValueCircularProgressBloodPressure() {
+        _circularProgressBloodPressureStateFlow.value = 0
+    }
+
+    fun getStateFlowCircularProgressBloodPressure(): StateFlow<Int> {
+        return circularProgressBloodPressureStateFlow
+    }
 
     private var jobBloodPressure: Job? = null
     private val _sharedFlowBloodPressure = MutableSharedFlow<Map<String, Int>>(
@@ -99,6 +119,8 @@ class SWRepository(
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
     private val sharedFlowBloodPressure = _sharedFlowBloodPressure.asSharedFlow()
+
+
 
     fun getSharedFlowBloodPressure(): SharedFlow<Map<String, Int>> {
         return sharedFlowBloodPressure
@@ -108,6 +130,7 @@ class SWRepository(
 
         jobBloodPressure = CoroutineScope(Dispatchers.Default).launch {
             repeat(10){
+                increaseValueCircularProgressBloodPressure()
                 delay(400)
             }
 
@@ -117,12 +140,16 @@ class SWRepository(
                     "diastolic" to (75..85).random()
                 )
             )
+        }
 
+        jobBloodPressure?.invokeOnCompletion {
+            clearValueCircularProgressBloodPressure()
         }
 
     }
 
     fun stopRequestSmartWatchDataBloodPressure(){
+        clearValueCircularProgressBloodPressure()
         CoroutineScope(Dispatchers.Default).launch {
             _sharedFlowBloodPressure.emit(mapOf(
                 "systolic" to 0,

@@ -52,6 +52,12 @@ fun DashBoard(
         "diastolic" to 0
     ))
 
+    val circularProgressBloodPressure by dataViewModel.getStateFlowCircularProgressBloodPressure().collectAsState()
+
+    val getCircularProgressBloodPressure={
+        circularProgressBloodPressure
+    }
+
     val getRealTimeBloodPressure={
         bloodPressure
     }
@@ -65,6 +71,7 @@ fun DashBoard(
     }
 
 
+
     DashBoardScaffold(
         bluetoothName,
         bluetoothAddress,
@@ -76,6 +83,7 @@ fun DashBoard(
         getRealTimeBloodPressure,
         requestRealTimeBloodPressure,
         stopRequestRealTimeBloodPressure,
+        getCircularProgressBloodPressure,
         navMainController,
         navLambda,
     )

@@ -19,6 +19,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -193,6 +194,8 @@ class DataViewModel(var application: Application) : ViewModel() {
         personalInfoFromDB = swRepository.personalInfoFromDB
         personalInfoAlertDialogUVLiveData = swRepository.personalInfoAlertDialogUVStateLiveData
 
+
+
         viewModelScope.launch {
             swRepository.sharedStepsFlow.collect {
 
@@ -237,6 +240,19 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     fun stopRequestSmartWatchDataHeartRate(){
         swRepository.stopRequestSmartWatchDataHeartRate()
+    }
+
+
+    fun getStateFlowCircularProgressBloodPressure(): StateFlow<Int> {
+        return swRepository.getStateFlowCircularProgressBloodPressure()
+    }
+
+    fun increaseValueCircularProgressBloodPressure() {
+        swRepository.increaseValueCircularProgressBloodPressure()
+    }
+
+    fun clearValueCircularProgressBloodPressure() {
+        swRepository.clearValueCircularProgressBloodPressure()
     }
 
     fun getSharedFlowBloodPressure(): SharedFlow<Map<String, Int>> {

@@ -42,6 +42,7 @@ fun TestingHealthScreen(
     getRealTimeBloodPressure: () -> Map<String, Int>,
     requestRealTimeBloodPressure: () -> Unit,
     stopRequestRealTimeBloodPressure: () -> Unit,
+    getCircularProgressBloodPressure: () -> Int,
 ) {
 
 
@@ -101,6 +102,7 @@ fun TestingHealthScreen(
                     getRealTimeBloodPressure,
                     requestRealTimeBloodPressure,
                     stopRequestRealTimeBloodPressure,
+                    getCircularProgressBloodPressure,
                 ) { status: Boolean ->
                     dialogOpen = status
                 }
@@ -266,5 +268,6 @@ fun TestingHealthScreenPreview() {
         },
         requestRealTimeBloodPressure = {},
         stopRequestRealTimeBloodPressure = {},
+        getCircularProgressBloodPressure = {5}
     )
 }
