@@ -1,6 +1,5 @@
 package com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -109,14 +108,14 @@ fun MyTemperatureAlertDialogContent(
                             textAlign = TextAlign.Center
                         )
 
-                        val systolic = if(getCircularProgressTemperature()>0){
+                        val body = if(getCircularProgressTemperature()>0){
                             0
                         }else{
                             getRealTimeTemperature()["body"]
                         }
 
                         Text(
-                            text = "$systolic °C",
+                            text = "$body °C",
                             modifier = Modifier.padding(bottom = 5.dp),
                             style = MaterialTheme.typography.titleLarge,
                             color = Color.White,
@@ -135,13 +134,13 @@ fun MyTemperatureAlertDialogContent(
                             color = Color.White,
                             textAlign = TextAlign.Center
                         )
-                        val diastolic = if(getCircularProgressTemperature()>0){
+                        val skin = if(getCircularProgressTemperature()>0){
                             0
                         }else{
                             getRealTimeTemperature()["skin"]
                         }
                         Text(
-                            text = "$diastolic °C",
+                            text = "$skin °C",
                             modifier = Modifier.padding(bottom = 5.dp),
                             style = MaterialTheme.typography.titleLarge,
                             color = Color.White,
