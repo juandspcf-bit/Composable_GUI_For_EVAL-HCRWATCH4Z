@@ -101,11 +101,11 @@ class SWRepository(
     private val _circularProgressBloodPressureStateFlow = MutableStateFlow(0)
     private val circularProgressBloodPressureStateFlow = _circularProgressBloodPressureStateFlow.asStateFlow()
 
-    fun increaseValueCircularProgressBloodPressure() {
+    private fun increaseValueCircularProgressBloodPressure() {
         _circularProgressBloodPressureStateFlow.value += 1
     }
 
-    fun clearValueCircularProgressBloodPressure() {
+    private fun clearValueCircularProgressBloodPressure() {
         _circularProgressBloodPressureStateFlow.value = 0
     }
 
@@ -164,11 +164,11 @@ class SWRepository(
     private val _circularProgressTemperatureStateFlow = MutableStateFlow(0)
     private val circularProgressTemperatureStateFlow = _circularProgressTemperatureStateFlow.asStateFlow()
 
-    fun increaseValueCircularProgressTemperature() {
+    private fun increaseValueCircularProgressTemperature() {
         _circularProgressTemperatureStateFlow.value += 1
     }
 
-    fun clearValueCircularProgressTemperature() {
+    private fun clearValueCircularProgressTemperature() {
         _circularProgressTemperatureStateFlow.value = 0
     }
 
