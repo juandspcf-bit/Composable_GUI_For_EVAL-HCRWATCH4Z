@@ -202,6 +202,8 @@ fun TestingHealthScreen(
             myAlertDialogs[0].dialog()
         } else if (selectedButton == 1 && dialogOpen) {
             myAlertDialogs[1].dialog()
+        } else if (selectedButton == 3 && dialogOpen) {
+            myAlertDialogs[3].dialog()
         }
 
     }
@@ -233,6 +235,7 @@ fun BoxImageCircle(
                 when (imageResource) {
                     R.drawable.heart_rate -> setNumberDialog(0)
                     R.drawable.blood_pressure_gauge -> setNumberDialog(1)
+                    R.drawable.thermometer -> setNumberDialog(3)
                 }
                 setDialogStatus(true)
             },
