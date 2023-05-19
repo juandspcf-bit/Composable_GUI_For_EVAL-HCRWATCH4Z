@@ -116,7 +116,7 @@ fun MyTemperatureAlertDialogContent(
                         }
 
                         Text(
-                            text = "$systolic mmHg",
+                            text = "$systolic °C",
                             modifier = Modifier.padding(bottom = 5.dp),
                             style = MaterialTheme.typography.titleLarge,
                             color = Color.White,
@@ -141,7 +141,7 @@ fun MyTemperatureAlertDialogContent(
                             getRealTimeTemperature()["skin"]
                         }
                         Text(
-                            text = "$diastolic mmHg",
+                            text = "$diastolic °C",
                             modifier = Modifier.padding(bottom = 5.dp),
                             style = MaterialTheme.typography.titleLarge,
                             color = Color.White,
