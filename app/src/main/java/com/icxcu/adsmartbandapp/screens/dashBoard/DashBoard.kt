@@ -71,6 +71,30 @@ fun DashBoard(
     }
 
 
+    val temperature by dataViewModel.getSharedFlowTemperature().collectAsState(initial = mapOf(
+        "body" to 0,
+        "skin" to 0
+    ))
+
+    val circularProgressTemperature by dataViewModel.getStateFlowCircularProgressTemperature().collectAsState()
+
+    val getCircularProgressTemperature={
+        circularProgressTemperature
+    }
+
+    val getRealTimeTemperature={
+        temperature
+    }
+
+    val requestRealTimeTemperature = {
+        dataViewModel.requestSmartWatchDataTemperature()
+    }
+
+    val stopRequestRealTimeTemperature = {
+        dataViewModel.stopRequestSmartWatchDataTemperature()
+    }
+
+
 
     DashBoardScaffold(
         bluetoothName,

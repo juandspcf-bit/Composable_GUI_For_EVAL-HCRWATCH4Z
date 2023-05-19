@@ -161,7 +161,67 @@ class SWRepository(
     }
 
 
+    private val _circularProgressTemperatureStateFlow = MutableStateFlow(0)
+    private val circularProgressTemperatureStateFlow = _circularProgressTemperatureStateFlow.asStateFlow()
 
+    fun increaseValueCircularProgressTemperature() {
+        _circularProgressTemperatureStateFlow.value += 1
+    }
+
+    fun clearValueCircularProgressTemperature() {
+        _circularProgressTemperatureStateFlow.value = 0
+    }
+
+    fun getStateFlowCircularProgressTemperature(): StateFlow<Int> {
+        return circularProgressTemperatureStateFlow
+    }
+
+    private var jobTemperature: Job? = null
+    private val _sharedFlowTemperature = MutableSharedFlow<Map<String, Double>>(
+        replay = 10,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    private val sharedFlowTemperature = _sharedFlowTemperature.asSharedFlow()
+
+
+
+    fun getSharedFlowTemperature(): SharedFlow<Map<String, Double>> {
+        return sharedFlowTemperature
+    }
+
+    fun requestSmartWatchDataTemperature(){
+
+        jobTemperature = CoroutineScope(Dispatchers.Default).launch {
+            repeat(10){
+                increaseValueCircularProgressTemperature()
+                delay(400)
+            }
+
+            _sharedFlowTemperature.emit(
+                mapOf(
+                    "body" to (35..36).random().toDouble(),
+                    "skin" to (35..36).random().toDouble()
+                )
+            )
+        }
+
+        jobTemperature?.invokeOnCompletion {
+            clearValueCircularProgressTemperature()
+        }
+
+    }
+
+    fun stopRequestSmartWatchDataTemperature(){
+        clearValueCircularProgressTemperature()
+        CoroutineScope(Dispatchers.Default).launch {
+            _sharedFlowTemperature.emit(mapOf(
+                "body" to 0.0,
+                "skin" to 0.0
+            ))
+        }
+        jobTemperature?.cancel()
+
+    }
 
 
 
