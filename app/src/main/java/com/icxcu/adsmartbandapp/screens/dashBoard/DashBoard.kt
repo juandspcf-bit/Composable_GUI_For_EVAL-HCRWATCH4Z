@@ -72,8 +72,8 @@ fun DashBoard(
 
 
     val temperature by dataViewModel.getSharedFlowTemperature().collectAsState(initial = mapOf(
-        "body" to 0,
-        "skin" to 0
+        "body" to 0.0,
+        "skin" to 0.0
     ))
 
     val circularProgressTemperature by dataViewModel.getStateFlowCircularProgressTemperature().collectAsState()
@@ -108,6 +108,10 @@ fun DashBoard(
         requestRealTimeBloodPressure,
         stopRequestRealTimeBloodPressure,
         getCircularProgressBloodPressure,
+        getRealTimeTemperature,
+        requestRealTimeTemperature,
+        stopRequestRealTimeTemperature,
+        getCircularProgressTemperature,
         navMainController,
         navLambda,
     )

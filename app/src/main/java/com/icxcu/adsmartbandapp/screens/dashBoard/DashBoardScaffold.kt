@@ -63,6 +63,10 @@ fun DashBoardScaffold(
     requestRealTimeBloodPressure: () -> Unit,
     stopRequestRealTimeBloodPressure: () -> Unit,
     getCircularProgressBloodPressure: () -> Int,
+    getRealTimeTemperature: () -> Map<String, Double>,
+    requestRealTimeTemperature: () -> Unit,
+    stopRequestRealTimeTemperature: () -> Unit,
+    getCircularProgressTemperature: () -> Int,
     navMainController: NavHostController = rememberNavController(),
     navLambda: () -> Unit = {}
 ) {
@@ -244,7 +248,17 @@ fun DashBoardPreview() {
         },
         requestRealTimeBloodPressure = {},
         stopRequestRealTimeBloodPressure = {},
-        getCircularProgressBloodPressure = {5}
+        getCircularProgressBloodPressure = {5},
+
+        getRealTimeTemperature = {
+            mapOf(
+                "body" to 0.0,
+                "skin" to 0.0
+            )
+        },
+        requestRealTimeTemperature = {},
+        stopRequestRealTimeTemperature = {},
+        getCircularProgressTemperature = {5}
     ) {
 
     }

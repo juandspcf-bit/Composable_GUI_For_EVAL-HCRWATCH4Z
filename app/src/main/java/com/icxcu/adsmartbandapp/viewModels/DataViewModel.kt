@@ -247,14 +247,6 @@ class DataViewModel(var application: Application) : ViewModel() {
         return swRepository.getStateFlowCircularProgressBloodPressure()
     }
 
-    fun increaseValueCircularProgressBloodPressure() {
-        swRepository.increaseValueCircularProgressBloodPressure()
-    }
-
-    fun clearValueCircularProgressBloodPressure() {
-        swRepository.clearValueCircularProgressBloodPressure()
-    }
-
     fun getSharedFlowBloodPressure(): SharedFlow<Map<String, Int>> {
         return swRepository.getSharedFlowBloodPressure()
     }
