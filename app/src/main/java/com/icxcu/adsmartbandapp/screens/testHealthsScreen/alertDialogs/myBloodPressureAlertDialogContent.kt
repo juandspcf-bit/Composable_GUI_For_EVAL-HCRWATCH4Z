@@ -176,7 +176,7 @@ fun MyBloodPressureAlertDialogContent(
                         .fillMaxWidth()
                         .padding(10.dp),
                     colors = ButtonDefaults.buttonColors(
-                        Color(0xFF673AB7),
+                        Color(0xFF49A9F5),
                         Color.White
                     ),
                     onClick = {
