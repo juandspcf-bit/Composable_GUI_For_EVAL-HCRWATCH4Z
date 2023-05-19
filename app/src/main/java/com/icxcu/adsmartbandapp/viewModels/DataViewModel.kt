@@ -264,14 +264,6 @@ class DataViewModel(var application: Application) : ViewModel() {
         return swRepository.getStateFlowCircularProgressTemperature()
     }
 
-    fun increaseValueCircularProgressTemperature() {
-        swRepository.increaseValueCircularProgressTemperature()
-    }
-
-    fun clearValueCircularProgressTemperature() {
-        swRepository.clearValueCircularProgressTemperature()
-    }
-
     fun getSharedFlowTemperature(): SharedFlow<Map<String, Double>> {
         return swRepository.getSharedFlowTemperature()
     }
