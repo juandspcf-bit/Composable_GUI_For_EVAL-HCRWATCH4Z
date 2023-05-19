@@ -12,6 +12,7 @@ import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.database.SWRoomDatabase
+import com.icxcu.adsmartbandapp.repositories.BloodPressureData
 import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.ValidatorsPersonalField
@@ -247,7 +248,7 @@ class DataViewModel(var application: Application) : ViewModel() {
         return swRepository.getStateFlowCircularProgressBloodPressure()
     }
 
-    fun getSharedFlowBloodPressure(): SharedFlow<Map<String, Int>> {
+    fun getSharedFlowBloodPressure(): SharedFlow<BloodPressureData> {
         return swRepository.getSharedFlowBloodPressure()
     }
 

@@ -40,11 +40,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.icxcu.adsmartbandapp.R
+import com.icxcu.adsmartbandapp.repositories.BloodPressureData
 
 @Composable
 fun MyBloodPressureAlertDialogContent(
     imageResource: Int = R.drawable.ic_launcher_foreground,
-    getRealTimeBloodPressure: () -> Map<String, Int>,
+    getRealTimeBloodPressure: () -> BloodPressureData,
     requestRealTimeBloodPressure: () -> Unit,
     stopRequestRealTimeBloodPressure: () -> Unit,
     getCircularProgressBloodPressure: () -> Int,
@@ -114,7 +115,7 @@ fun MyBloodPressureAlertDialogContent(
                         val systolic = if(getCircularProgressBloodPressure()>0){
                             0
                         }else{
-                            getRealTimeBloodPressure()["systolic"]
+                            getRealTimeBloodPressure().systolic
                         }
 
                         Text(
@@ -140,7 +141,7 @@ fun MyBloodPressureAlertDialogContent(
                         val diastolic = if(getCircularProgressBloodPressure()>0){
                             0
                         }else{
-                            getRealTimeBloodPressure()["diastolic"]
+                            getRealTimeBloodPressure().diastolic
                         }
                         Text(
                             text = "$diastolic mmHg",
@@ -259,10 +260,7 @@ fun MyBloodPressureAlertDialogContentPreview() {
     MyBloodPressureAlertDialogContent(
         imageResource = R.drawable.blood_pressure_gauge,
         getRealTimeBloodPressure = {
-            mapOf(
-                "systolic" to 0,
-                "diastolic" to 0
-            )
+            BloodPressureData(0, 0)
         },
         requestRealTimeBloodPressure = {},
         stopRequestRealTimeBloodPressure = {},

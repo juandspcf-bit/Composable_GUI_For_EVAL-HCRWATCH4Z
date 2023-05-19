@@ -114,7 +114,7 @@ class SWRepository(
     }
 
     private var jobBloodPressure: Job? = null
-    private val _sharedFlowBloodPressure = MutableSharedFlow<Map<String, Int>>(
+    private val _sharedFlowBloodPressure = MutableSharedFlow<BloodPressureData>(
         replay = 10,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
@@ -122,7 +122,7 @@ class SWRepository(
 
 
 
-    fun getSharedFlowBloodPressure(): SharedFlow<Map<String, Int>> {
+    fun getSharedFlowBloodPressure(): SharedFlow<BloodPressureData> {
         return sharedFlowBloodPressure
     }
 
@@ -135,10 +135,7 @@ class SWRepository(
             }
 
             _sharedFlowBloodPressure.emit(
-                mapOf(
-                    "systolic" to (120..140).random(),
-                    "diastolic" to (75..85).random()
-                )
+                BloodPressureData((120..140).random(), (75..85).random())
             )
         }
 
@@ -151,10 +148,9 @@ class SWRepository(
     fun stopRequestSmartWatchDataBloodPressure(){
         clearValueCircularProgressBloodPressure()
         CoroutineScope(Dispatchers.Default).launch {
-            _sharedFlowBloodPressure.emit(mapOf(
-                "systolic" to 0,
-                "diastolic" to 0
-            ))
+            _sharedFlowBloodPressure.emit(
+                BloodPressureData(0, 0)
+            )
         }
         jobBloodPressure?.cancel()
 

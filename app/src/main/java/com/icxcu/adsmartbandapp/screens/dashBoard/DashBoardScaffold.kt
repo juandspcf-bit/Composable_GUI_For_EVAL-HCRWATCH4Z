@@ -42,6 +42,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.icxcu.adsmartbandapp.screens.Settings
 import com.icxcu.adsmartbandapp.data.MockData
+import com.icxcu.adsmartbandapp.repositories.BloodPressureData
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.ListDashBoardCardFields
 import com.icxcu.adsmartbandapp.screens.NavBarItems
@@ -59,7 +60,7 @@ fun DashBoardScaffold(
     requestRealTimeHeartRate: () -> Unit,
     getRealTimeHeartRate: () -> Int,
     stopRequestRealTimeHeartRate: () -> Unit,
-    getRealTimeBloodPressure: () -> Map<String, Int>,
+    getRealTimeBloodPressure: () -> BloodPressureData,
     requestRealTimeBloodPressure: () -> Unit,
     stopRequestRealTimeBloodPressure: () -> Unit,
     getCircularProgressBloodPressure: () -> Int,
@@ -158,7 +159,7 @@ fun NavigationHost(
     requestRealTimeHeartRate: () -> Unit,
     getRealTimeHeartRate: () -> Int,
     stopRequestRealTimeHeartRate: () -> Unit,
-    getRealTimeBloodPressure: () -> Map<String, Int>,
+    getRealTimeBloodPressure: () -> BloodPressureData,
     requestRealTimeBloodPressure: () -> Unit,
     stopRequestRealTimeBloodPressure: () -> Unit,
     getCircularProgressBloodPressure: () -> Int,
@@ -253,10 +254,7 @@ fun DashBoardPreview() {
         getRealTimeHeartRate = { 0 },
         stopRequestRealTimeHeartRate = {},
         getRealTimeBloodPressure = {
-            mapOf(
-                "systolic" to 0,
-                "diastolic" to 0
-            )
+            BloodPressureData(0, 0)
         },
         requestRealTimeBloodPressure = {},
         stopRequestRealTimeBloodPressure = {},

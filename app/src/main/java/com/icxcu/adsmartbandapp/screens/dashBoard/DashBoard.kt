@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
+import com.icxcu.adsmartbandapp.repositories.BloodPressureData
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 
 
@@ -47,10 +48,7 @@ fun DashBoard(
     }
 
 
-    val bloodPressure by dataViewModel.getSharedFlowBloodPressure().collectAsState(initial = mapOf(
-        "systolic" to 0,
-        "diastolic" to 0
-    ))
+    val bloodPressure by dataViewModel.getSharedFlowBloodPressure().collectAsState(initial = BloodPressureData(0 ,0 ))
 
     val circularProgressBloodPressure by dataViewModel.getStateFlowCircularProgressBloodPressure().collectAsState()
 
