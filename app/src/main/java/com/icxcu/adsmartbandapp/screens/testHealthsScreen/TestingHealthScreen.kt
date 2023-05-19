@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyBloodPressureAlertDialogContent
 import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyHeartRateAlertDialogState
+import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyTemperatureAlertDialogContent
 
 @Composable
 fun TestingHealthScreen(
@@ -43,6 +44,10 @@ fun TestingHealthScreen(
     requestRealTimeBloodPressure: () -> Unit,
     stopRequestRealTimeBloodPressure: () -> Unit,
     getCircularProgressBloodPressure: () -> Int,
+    getRealTimeTemperature: () -> Map<String, Double>,
+    requestRealTimeTemperature: () -> Unit,
+    stopRequestRealTimeTemperature: () -> Unit,
+    getCircularProgressTemperature: () -> Int,
 ) {
 
 
@@ -149,11 +154,15 @@ fun TestingHealthScreen(
                 }
             },
             {
-/*                MyHeartRateAlertDialog(
-                    imageResource = R.drawable.blood_pressure_gauge,
+                MyTemperatureAlertDialogContent(
+                    imageResource = R.drawable.thermometer,
+                    getRealTimeTemperature,
+                    requestRealTimeTemperature,
+                    stopRequestRealTimeTemperature,
+                    getCircularProgressTemperature,
                 ) { status: Boolean ->
                     dialogOpen = status
-                }*/
+                }
             }
         )
     )
@@ -268,6 +277,15 @@ fun TestingHealthScreenPreview() {
         },
         requestRealTimeBloodPressure = {},
         stopRequestRealTimeBloodPressure = {},
-        getCircularProgressBloodPressure = {5}
+        getCircularProgressBloodPressure = {5},
+        getRealTimeTemperature = {
+            mapOf(
+                "body" to 0.0,
+                "skin" to 0.0
+            )
+        },
+        requestRealTimeTemperature = {},
+        stopRequestRealTimeTemperature = {},
+        getCircularProgressTemperature = {5}
     )
 }

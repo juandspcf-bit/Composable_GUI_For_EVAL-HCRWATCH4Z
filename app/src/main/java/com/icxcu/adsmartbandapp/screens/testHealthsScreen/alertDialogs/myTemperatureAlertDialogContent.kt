@@ -43,7 +43,7 @@ import com.icxcu.adsmartbandapp.R
 @Composable
 fun MyTemperatureAlertDialogContent(
     imageResource: Int = R.drawable.ic_launcher_foreground,
-    getRealTimeTemperature: () -> Map<String, Int>,
+    getRealTimeTemperature: () -> Map<String, Double>,
     requestRealTimeTemperature: () -> Unit,
     stopRequestRealTimeTemperature: () -> Unit,
     getCircularProgressTemperature: () -> Int,
