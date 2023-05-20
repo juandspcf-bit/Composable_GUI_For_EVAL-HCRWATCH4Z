@@ -43,6 +43,7 @@ import androidx.navigation.compose.rememberNavController
 import com.icxcu.adsmartbandapp.screens.Settings
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
+import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.ListDashBoardCardFields
 import com.icxcu.adsmartbandapp.screens.NavBarItems
@@ -64,7 +65,7 @@ fun DashBoardScaffold(
     requestRealTimeBloodPressure: () -> Unit,
     stopRequestRealTimeBloodPressure: () -> Unit,
     getCircularProgressBloodPressure: () -> Int,
-    getRealTimeTemperature: () -> Map<String, Double>,
+    getRealTimeTemperature: () -> TemperatureData,
     requestRealTimeTemperature: () -> Unit,
     stopRequestRealTimeTemperature: () -> Unit,
     getCircularProgressTemperature: () -> Int,
@@ -163,7 +164,7 @@ fun NavigationHost(
     requestRealTimeBloodPressure: () -> Unit,
     stopRequestRealTimeBloodPressure: () -> Unit,
     getCircularProgressBloodPressure: () -> Int,
-    getRealTimeTemperature: () -> Map<String, Double>,
+    getRealTimeTemperature: () -> TemperatureData,
     requestRealTimeTemperature: () -> Unit,
     stopRequestRealTimeTemperature: () -> Unit,
     getCircularProgressTemperature: () -> Int,
@@ -261,10 +262,7 @@ fun DashBoardPreview() {
         getCircularProgressBloodPressure = { 5 },
 
         getRealTimeTemperature = {
-            mapOf(
-                "body" to 0.0,
-                "skin" to 0.0
-            )
+            TemperatureData(0.0,0.0)
         },
         requestRealTimeTemperature = {},
         stopRequestRealTimeTemperature = {},

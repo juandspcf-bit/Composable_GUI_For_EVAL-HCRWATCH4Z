@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
+import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyBloodPressureAlertDialogContent
 import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyHeartRateAlertDialogState
 import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyTemperatureAlertDialogContent
@@ -45,7 +46,7 @@ fun TestingHealthScreen(
     requestRealTimeBloodPressure: () -> Unit,
     stopRequestRealTimeBloodPressure: () -> Unit,
     getCircularProgressBloodPressure: () -> Int,
-    getRealTimeTemperature: () -> Map<String, Double>,
+    getRealTimeTemperature: () -> TemperatureData,
     requestRealTimeTemperature: () -> Unit,
     stopRequestRealTimeTemperature: () -> Unit,
     getCircularProgressTemperature: () -> Int,
@@ -280,10 +281,7 @@ fun TestingHealthScreenPreview() {
         stopRequestRealTimeBloodPressure = {},
         getCircularProgressBloodPressure = {5},
         getRealTimeTemperature = {
-            mapOf(
-                "body" to 0.0,
-                "skin" to 0.0
-            )
+            TemperatureData(0.0, 0.0)
         },
         requestRealTimeTemperature = {},
         stopRequestRealTimeTemperature = {},

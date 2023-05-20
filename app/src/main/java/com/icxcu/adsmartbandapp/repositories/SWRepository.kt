@@ -173,7 +173,7 @@ class SWRepository(
     }
 
     private var jobTemperature: Job? = null
-    private val _sharedFlowTemperature = MutableSharedFlow<Map<String, Double>>(
+    private val _sharedFlowTemperature = MutableSharedFlow<TemperatureData>(
         replay = 10,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
@@ -181,7 +181,7 @@ class SWRepository(
 
 
 
-    fun getSharedFlowTemperature(): SharedFlow<Map<String, Double>> {
+    fun getSharedFlowTemperature(): SharedFlow<TemperatureData> {
         return sharedFlowTemperature
     }
 
@@ -194,10 +194,7 @@ class SWRepository(
             }
 
             _sharedFlowTemperature.emit(
-                mapOf(
-                    "body" to (35..36).random().toDouble(),
-                    "skin" to (35..36).random().toDouble()
-                )
+                TemperatureData((35..36).random().toDouble(), (35..36).random().toDouble())
             )
         }
 
@@ -210,10 +207,9 @@ class SWRepository(
     fun stopRequestSmartWatchDataTemperature(){
         clearValueCircularProgressTemperature()
         CoroutineScope(Dispatchers.Default).launch {
-            _sharedFlowTemperature.emit(mapOf(
-                "body" to 0.0,
-                "skin" to 0.0
-            ))
+            _sharedFlowTemperature.emit(
+                TemperatureData(0.0, 0.0)
+            )
         }
         jobTemperature?.cancel()
 

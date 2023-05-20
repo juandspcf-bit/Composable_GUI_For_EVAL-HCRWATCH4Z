@@ -14,6 +14,7 @@ import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.database.SWRoomDatabase
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
 import com.icxcu.adsmartbandapp.repositories.SWRepository
+import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.ValidatorsPersonalField
 import kotlinx.coroutines.CoroutineScope
@@ -265,7 +266,7 @@ class DataViewModel(var application: Application) : ViewModel() {
         return swRepository.getStateFlowCircularProgressTemperature()
     }
 
-    fun getSharedFlowTemperature(): SharedFlow<Map<String, Double>> {
+    fun getSharedFlowTemperature(): SharedFlow<TemperatureData> {
         return swRepository.getSharedFlowTemperature()
     }
 

@@ -38,11 +38,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.icxcu.adsmartbandapp.R
+import com.icxcu.adsmartbandapp.repositories.TemperatureData
 
 @Composable
 fun MyTemperatureAlertDialogContent(
     imageResource: Int = R.drawable.ic_launcher_foreground,
-    getRealTimeTemperature: () -> Map<String, Double>,
+    getRealTimeTemperature: () -> TemperatureData,
     requestRealTimeTemperature: () -> Unit,
     stopRequestRealTimeTemperature: () -> Unit,
     getCircularProgressTemperature: () -> Int,
@@ -111,7 +112,7 @@ fun MyTemperatureAlertDialogContent(
                         val body = if(getCircularProgressTemperature()>0){
                             0
                         }else{
-                            getRealTimeTemperature()["body"]
+                            getRealTimeTemperature().body
                         }
 
                         Text(
@@ -137,7 +138,7 @@ fun MyTemperatureAlertDialogContent(
                         val skin = if(getCircularProgressTemperature()>0){
                             0
                         }else{
-                            getRealTimeTemperature()["skin"]
+                            getRealTimeTemperature().skin
                         }
                         Text(
                             text = "$skin °C",

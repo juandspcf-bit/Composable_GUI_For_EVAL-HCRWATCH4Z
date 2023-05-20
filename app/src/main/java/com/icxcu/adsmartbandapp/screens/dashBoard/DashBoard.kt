@@ -6,6 +6,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
+import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 
 
@@ -69,10 +70,7 @@ fun DashBoard(
     }
 
 
-    val temperature by dataViewModel.getSharedFlowTemperature().collectAsState(initial = mapOf(
-        "body" to 0.0,
-        "skin" to 0.0
-    ))
+    val temperature by dataViewModel.getSharedFlowTemperature().collectAsState(initial = TemperatureData(0.0, 0.0))
 
     val circularProgressTemperature by dataViewModel.getStateFlowCircularProgressTemperature().collectAsState()
 
