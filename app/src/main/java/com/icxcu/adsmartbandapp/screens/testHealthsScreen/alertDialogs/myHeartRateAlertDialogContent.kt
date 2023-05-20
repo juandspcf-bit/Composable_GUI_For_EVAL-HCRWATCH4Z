@@ -49,8 +49,6 @@ fun MyHeartRateAlertDialogState(
     setDialogStatus: (Boolean) -> Unit
 ) {
 
-    //val heartRate by getMyHeartRateAlertDialogDataHandler().getSharedFlowHeartRate().collectAsState(initial = 0)
-
     Log.d("Executed", "MyHeartRateAlertDialogState: ")
 
     Dialog(
