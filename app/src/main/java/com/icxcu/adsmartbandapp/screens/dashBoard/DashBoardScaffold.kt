@@ -136,14 +136,14 @@ fun DashBoardScaffold(
                     navController = navController,
                     dayDateValuesReadFromSW = dayDateValuesReadFromSW,
                     getMyHeartRateAlertDialogDataHandler =  getMyHeartRateAlertDialogDataHandler,
-                    getMyHeartRate,
-                    getMyBloodPressureDialogDataHandler,
-                    getRealTimeBloodPressure,
-                    getCircularProgressBloodPressure,
-                    getMyTemperatureAlertDialogDataHandler,
-                    getRealTimeTemperature,
-                    getCircularProgressTemperature,
-                    navMainController
+                    getMyHeartRate = getMyHeartRate,
+                    getMyBloodPressureDialogDataHandler = getMyBloodPressureDialogDataHandler,
+                    getRealTimeBloodPressure = getRealTimeBloodPressure,
+                    getCircularProgressBloodPressure = getCircularProgressBloodPressure,
+                    getMyTemperatureAlertDialogDataHandler = getMyTemperatureAlertDialogDataHandler,
+                    getRealTimeTemperature = getRealTimeTemperature,
+                    getCircularProgressTemperature = getCircularProgressTemperature,
+                    navMainController = navMainController
                 )
             }
 
