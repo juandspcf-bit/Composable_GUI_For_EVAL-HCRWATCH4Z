@@ -45,7 +45,7 @@ fun PhysicalActivityLayoutScaffold(
     stepsList: () -> List<Int>,
     distanceList: () -> List<Double>,
     caloriesList: () -> List<Double>,
-    selectedDay: String,
+    getSelectedDay: () -> String,
     stateShowDialogDatePickerSetter: (Boolean) -> Unit,
     stateShowDialogDatePickerValue: () -> Boolean,
     stateMiliSecondsDateDialogDatePickerS: () -> Long,
@@ -65,7 +65,7 @@ fun PhysicalActivityLayoutScaffold(
             MediumTopAppBar(
                 title = {
                     Text(
-                        text = "Physical activity for $selectedDay",
+                        text = "Physical activity for ${getSelectedDay()}",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.White,
@@ -176,8 +176,10 @@ fun StepsPlotsPreview2() {
         val date = Date(value)
         val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         val dateData = formattedDate.format(date)
+    }
 
-
+    val getSelectedDay = {
+        "///"
     }
 
     val date = Date()
@@ -187,7 +189,7 @@ fun StepsPlotsPreview2() {
         stepsList,
         distanceList,
         caloriesList,
-        selectedDay = dateData,
+        getSelectedDay,
         stateShowDialogDatePickerSetter,
         stateShowDialogDatePickerValue,
         stateMiliSecondsDateDialogDatePickerVal,

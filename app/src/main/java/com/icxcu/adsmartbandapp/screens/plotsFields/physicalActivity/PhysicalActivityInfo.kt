@@ -66,6 +66,10 @@ fun PhysicalActivityInfo(
         dataViewModel.dayCaloriesListFromDB
     }
 
+    val getSelectedDay = {
+        dataViewModel.selectedDay
+    }
+
     //DialogDatePicker State
     val stateShowDialogDatePickerValue = {
         dataViewModel.stateShowDialogDatePicker
@@ -93,7 +97,7 @@ fun PhysicalActivityInfo(
         stepsListFromDB,
         distanceListFromDB,
         caloriesListFromDB,
-        dataViewModel.selectedDay,
+        getSelectedDay,
         stateShowDialogDatePickerSetter,
         stateShowDialogDatePickerValue,
         stateMiliSecondsDateDialogDatePicker,

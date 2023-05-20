@@ -18,6 +18,8 @@ import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.additionalWidgets.ArcCompose
+import com.icxcu.adsmartbandapp.screens.dashBoard.DashBoardCard
+import com.icxcu.adsmartbandapp.screens.dashBoard.DashBoardCardData
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

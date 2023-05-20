@@ -2,6 +2,7 @@ package com.icxcu.adsmartbandapp.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,6 +42,14 @@ fun Settings(navMainController: NavController) {
             Row (verticalAlignment = Alignment.CenterVertically){
 
                 Box(modifier = Modifier
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onPress = { navMainController.navigate(Routes.PersonalInfoForm.route) },
+                            onDoubleTap = { /* Double Tap Detected */ },
+                            onLongPress = { /* Long Press Detected */ },
+                            onTap = { navMainController.navigate(Routes.PersonalInfoForm.route) }
+                        )
+                    }
                     .fillMaxWidth(0.8f)
                     .padding(end = 20.dp,)
                     .clip(shape = RoundedCornerShape(size = 12.dp))
