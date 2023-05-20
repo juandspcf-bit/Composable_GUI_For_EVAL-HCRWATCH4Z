@@ -240,20 +240,6 @@ class DataViewModel(var application: Application) : ViewModel() {
         return swRepository.myBloodPressureAlertDialogDataHandler
     }
 
-/*
-    fun getSharedFlowHeartRate(): SharedFlow<Int> {
-        return swRepository.getSharedFlowHeartRate()
-    }
-
-    fun requestSmartWatchDataHeartRate(){
-        swRepository.requestSmartWatchDataHeartRate()
-    }
-
-    fun stopRequestSmartWatchDataHeartRate(){
-        swRepository.stopRequestSmartWatchDataHeartRate()
-    }
-*/
-
     fun getStateFlowCircularProgressTemperature(): StateFlow<Int> {
         return swRepository.getStateFlowCircularProgressTemperature()
     }
@@ -269,9 +255,6 @@ class DataViewModel(var application: Application) : ViewModel() {
     fun stopRequestSmartWatchDataTemperature(){
         swRepository.stopRequestSmartWatchDataTemperature()
     }
-
-
-
 
     fun getDayPhysicalActivityData(dateData: String, macAddress: String) {
         swRepository.getAnyDayPhysicalActivityData(dateData, macAddress)
@@ -375,19 +358,5 @@ class DataViewModel(var application: Application) : ViewModel() {
 
 
     }
-
-}
-
-fun randomData(): String {
-    var fakeData = MutableList(48) {
-        (1..10000).random()
-    }
-    var values = mutableMapOf<String, String>()
-
-    fakeData.forEachIndexed { index, i ->
-        values[index.toString()] = i.toString()
-    }
-
-    return values.toString()
 
 }
