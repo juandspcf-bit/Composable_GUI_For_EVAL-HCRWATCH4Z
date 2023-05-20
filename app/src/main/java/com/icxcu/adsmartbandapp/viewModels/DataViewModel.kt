@@ -13,6 +13,7 @@ import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.database.SWRoomDatabase
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
+import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
@@ -230,8 +231,11 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     }
 
+    fun getMyHeartRateAlertDialogDataHandler(): MyHeartRateAlertDialogDataHandler {
+        return swRepository.myHeartRateAlertDialogDataHandler
+    }
 
-
+/*
     fun getSharedFlowHeartRate(): SharedFlow<Int> {
         return swRepository.getSharedFlowHeartRate()
     }
@@ -243,6 +247,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     fun stopRequestSmartWatchDataHeartRate(){
         swRepository.stopRequestSmartWatchDataHeartRate()
     }
+*/
 
 
     fun getStateFlowCircularProgressBloodPressure(): StateFlow<Int> {

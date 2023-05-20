@@ -1,5 +1,6 @@
 package com.icxcu.adsmartbandapp.screens.dashBoard
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
@@ -43,6 +44,7 @@ import androidx.navigation.compose.rememberNavController
 import com.icxcu.adsmartbandapp.screens.Settings
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
+import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.ListDashBoardCardFields
@@ -58,9 +60,8 @@ fun DashBoardScaffold(
     bluetoothAddress: String = "no address",
     dayDateValuesReadFromSW: () -> Values = { MockData.valuesToday },
     getVisibilityProgressbarForFetchingData: () -> Boolean = { false },
-    requestRealTimeHeartRate: () -> Unit,
-    getRealTimeHeartRate: () -> Int,
-    stopRequestRealTimeHeartRate: () -> Unit,
+    getMyHeartRateAlertDialogDataHandler: () -> MyHeartRateAlertDialogDataHandler,
+    getMyHeartRate: () -> Int,
     getRealTimeBloodPressure: () -> BloodPressureData,
     requestRealTimeBloodPressure: () -> Unit,
     stopRequestRealTimeBloodPressure: () -> Unit,
@@ -74,6 +75,8 @@ fun DashBoardScaffold(
 ) {
     val navController = rememberNavController()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+
+    Log.d("Executed", "DashBoardScaffold: ")
 
     Scaffold(
         topBar = {
@@ -132,9 +135,8 @@ fun DashBoardScaffold(
                 NavigationHost(
                     navController = navController,
                     dayDateValuesReadFromSW = dayDateValuesReadFromSW,
-                    requestRealTimeHeartRate,
-                    getRealTimeHeartRate,
-                    stopRequestRealTimeHeartRate,
+                    getMyHeartRateAlertDialogDataHandler,
+                    getMyHeartRate,
                     getRealTimeBloodPressure,
                     requestRealTimeBloodPressure,
                     stopRequestRealTimeBloodPressure,
@@ -157,9 +159,8 @@ fun DashBoardScaffold(
 fun NavigationHost(
     navController: NavHostController,
     dayDateValuesReadFromSW: () -> Values,
-    requestRealTimeHeartRate: () -> Unit,
-    getRealTimeHeartRate: () -> Int,
-    stopRequestRealTimeHeartRate: () -> Unit,
+    getMyHeartRateAlertDialogDataHandler: () -> MyHeartRateAlertDialogDataHandler,
+    getMyHeartRate: () -> Int,
     getRealTimeBloodPressure: () -> BloodPressureData,
     requestRealTimeBloodPressure: () -> Unit,
     stopRequestRealTimeBloodPressure: () -> Unit,
@@ -182,9 +183,8 @@ fun NavigationHost(
         }
         composable(NavRoutes.CheckHealth.route) {
             TestingHealthScreen(
-                requestRealTimeHeartRate,
-                getRealTimeHeartRate,
-                stopRequestRealTimeHeartRate,
+                getMyHeartRateAlertDialogDataHandler,
+                getMyHeartRate,
                 getRealTimeBloodPressure,
                 requestRealTimeBloodPressure,
                 stopRequestRealTimeBloodPressure,
@@ -249,7 +249,7 @@ fun BottomNavigationBar(navController: NavHostController) {
 @Preview(showBackground = true)
 @Composable
 fun DashBoardPreview() {
-    DashBoardScaffold(
+/*    DashBoardScaffold(
         getVisibilityProgressbarForFetchingData = { true },
         requestRealTimeHeartRate = {},
         getRealTimeHeartRate = { 0 },
@@ -269,6 +269,6 @@ fun DashBoardPreview() {
         getCircularProgressTemperature = { 5 }
     ) {
 
-    }
+    }*/
 
 }

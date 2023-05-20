@@ -1,5 +1,6 @@
 package com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,19 +39,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.icxcu.adsmartbandapp.R
+import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
 
 @Composable
 fun MyHeartRateAlertDialogState(
     imageResource: Int = R.drawable.ic_launcher_foreground,
-    requestRealTimeHeartRate: () -> Unit,
-    getRealTimeHeartRate: () -> Int,
-    stopRequestRealTimeHeartRate: () -> Unit,
+    getMyHeartRateAlertDialogDataHandler: () -> MyHeartRateAlertDialogDataHandler,
+    getMyHeartRate: () -> Int,
     setDialogStatus: (Boolean) -> Unit
 ) {
+
+    //val heartRate by getMyHeartRateAlertDialogDataHandler().getSharedFlowHeartRate().collectAsState(initial = 0)
+
+    Log.d("Executed", "MyHeartRateAlertDialogState: ")
+
     Dialog(
         onDismissRequest = {
             setDialogStatus(false)
-            stopRequestRealTimeHeartRate()
+            getMyHeartRateAlertDialogDataHandler().stopRequestSmartWatchDataHeartRate()
         },
         properties = DialogProperties(
             dismissOnClickOutside = true,
@@ -87,7 +94,7 @@ fun MyHeartRateAlertDialogState(
                 )
 
                 Text(
-                    text = "${getRealTimeHeartRate()} BPM",
+                    text = "${getMyHeartRate()} BPM",
                     modifier = Modifier.padding(top = 20.dp, bottom = 20.dp),
                     style = MaterialTheme.typography.titleLarge,
                     color = Color.White,
@@ -98,8 +105,7 @@ fun MyHeartRateAlertDialogState(
                 FilledIconToggleButtonSampleHeartRate(
                     Modifier.padding(top = 20.dp, bottom = 20.dp),
                     70.dp,
-                    requestRealTimeHeartRate,
-                    stopRequestRealTimeHeartRate,
+                    getMyHeartRateAlertDialogDataHandler,
                 )
 
                 Button(
@@ -112,7 +118,7 @@ fun MyHeartRateAlertDialogState(
                     ),
                     onClick = {
                         setDialogStatus(false)
-                        stopRequestRealTimeHeartRate()
+                        getMyHeartRateAlertDialogDataHandler().stopRequestSmartWatchDataHeartRate()
 
                     }) {
                     Text(
@@ -132,8 +138,7 @@ fun MyHeartRateAlertDialogState(
 fun FilledIconToggleButtonSampleHeartRate(
     modifier: Modifier,
     size: Dp = 100.dp,
-    requestRealTimeHeartRate: () -> Unit,
-    stopRequestRealTimeHeartRate: () -> Unit,
+    getMyHeartRateAlertDialogDataHandler: () -> MyHeartRateAlertDialogDataHandler,
 ) {
     var checked by remember { mutableStateOf(false) }
 
@@ -147,9 +152,9 @@ fun FilledIconToggleButtonSampleHeartRate(
             onCheckedChange = {
                 checked = it
                 if (checked) {
-                    requestRealTimeHeartRate()
+                    getMyHeartRateAlertDialogDataHandler().requestSmartWatchDataHeartRate()
                 } else {
-                    stopRequestRealTimeHeartRate()
+                    getMyHeartRateAlertDialogDataHandler().stopRequestSmartWatchDataHeartRate()
                 }
 
             },
@@ -184,10 +189,10 @@ fun FilledIconToggleButtonSampleHeartRate(
 @Preview(showBackground = true)
 @Composable
 fun MyHeartRateAlertDialogStatePreview() {
-    MyHeartRateAlertDialogState(
+/*    MyHeartRateAlertDialogState(
         imageResource = R.drawable.heart_rate,
         requestRealTimeHeartRate = {},
         getRealTimeHeartRate = { 20 },
         stopRequestRealTimeHeartRate = {}
-    ) {}
+    ) {}*/
 }

@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
+import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyBloodPressureAlertDialogContent
 import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyHeartRateAlertDialogState
@@ -39,9 +40,8 @@ import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyTempera
 
 @Composable
 fun TestingHealthScreen(
-    requestRealTimeHeartRate: () -> Unit,
-    getRealTimeHeartRate: () -> Int,
-    stopRequestRealTimeHeartRate: () -> Unit,
+    getMyHeartRateAlertDialogDataHandler: () -> MyHeartRateAlertDialogDataHandler,
+    getMyHeartRate: () -> Int,
     getRealTimeBloodPressure: () -> BloodPressureData,
     requestRealTimeBloodPressure: () -> Unit,
     stopRequestRealTimeBloodPressure: () -> Unit,
@@ -78,9 +78,8 @@ fun TestingHealthScreen(
             {
                 MyHeartRateAlertDialogState(
                     imageResource = R.drawable.heart_rate,
-                    requestRealTimeHeartRate,
-                    getRealTimeHeartRate,
-                    stopRequestRealTimeHeartRate,
+                    getMyHeartRateAlertDialogDataHandler,
+                    getMyHeartRate,
                 ) { status: Boolean ->
                     dialogOpen = status
                 }
@@ -270,7 +269,7 @@ data class AlertDialogTestHealth(
 @Preview(showBackground = true)
 @Composable
 fun TestingHealthScreenPreview() {
-    TestingHealthScreen(
+    /*TestingHealthScreen(
         requestRealTimeHeartRate = {},
         getRealTimeHeartRate = { 20 },
         stopRequestRealTimeHeartRate = {},
@@ -286,5 +285,5 @@ fun TestingHealthScreenPreview() {
         requestRealTimeTemperature = {},
         stopRequestRealTimeTemperature = {},
         getCircularProgressTemperature = {5}
-    )
+    )*/
 }

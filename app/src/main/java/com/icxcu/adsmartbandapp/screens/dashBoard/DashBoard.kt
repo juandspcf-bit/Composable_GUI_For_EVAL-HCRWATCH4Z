@@ -34,19 +34,19 @@ fun DashBoard(
     }
 
 
-    val heartRate by dataViewModel.getSharedFlowHeartRate().collectAsState(initial = 0)
 
-    val getRealTimeHeartRate={
+
+
+    val getMyHeartRateAlertDialogDataHandler = {
+         dataViewModel.getMyHeartRateAlertDialogDataHandler()
+    }
+
+    val heartRate by getMyHeartRateAlertDialogDataHandler().getSharedFlowHeartRate().collectAsState(initial = 0)
+
+    val getMyHeartRate = {
         heartRate
     }
 
-    val requestRealTimeHeartRate = {
-        dataViewModel.requestSmartWatchDataHeartRate()
-    }
-
-    val stopRequestRealTimeHeartRate = {
-        dataViewModel.stopRequestSmartWatchDataHeartRate()
-    }
 
 
     val bloodPressure by dataViewModel.getSharedFlowBloodPressure().collectAsState(initial = BloodPressureData(0 ,0 ))
@@ -97,9 +97,8 @@ fun DashBoard(
         bluetoothAddress,
         dayDateValuesReadFromSW,
         getVisibilityProgressbarForFetchingData,
-        requestRealTimeHeartRate,
-        getRealTimeHeartRate,
-        stopRequestRealTimeHeartRate,
+        getMyHeartRateAlertDialogDataHandler,
+        getMyHeartRate,
         getRealTimeBloodPressure,
         requestRealTimeBloodPressure,
         stopRequestRealTimeBloodPressure,
