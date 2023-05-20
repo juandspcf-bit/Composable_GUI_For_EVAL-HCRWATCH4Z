@@ -69,7 +69,7 @@ class SWRepository(
 
 
     val myHeartRateAlertDialogDataHandler = MyHeartRateAlertDialogDataHandler()
-    val myBloodPressureAlertDialogDataHandler = MyBloodPressureAlertDialogDataHandler()
+    val myBloodPressureAlertDialogDataHandler = myBloodPressureAlertDialogDataHandler()
 
 
     private val _circularProgressTemperatureStateFlow = MutableStateFlow(0)

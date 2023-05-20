@@ -12,15 +12,12 @@ import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.database.SWRoomDatabase
-import com.icxcu.adsmartbandapp.repositories.BloodPressureData
-import com.icxcu.adsmartbandapp.repositories.MyBloodPressureAlertDialogDataHandler
+import com.icxcu.adsmartbandapp.repositories.myBloodPressureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.ValidatorsPersonalField
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -236,7 +233,7 @@ class DataViewModel(var application: Application) : ViewModel() {
         return swRepository.myHeartRateAlertDialogDataHandler
     }
 
-    fun getMyBloodPressureAlertDialogDataHandler(): MyBloodPressureAlertDialogDataHandler {
+    fun getMyBloodPressureAlertDialogDataHandler(): myBloodPressureAlertDialogDataHandler {
         return swRepository.myBloodPressureAlertDialogDataHandler
     }
 

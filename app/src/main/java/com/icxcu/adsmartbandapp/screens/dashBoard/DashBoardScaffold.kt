@@ -44,7 +44,7 @@ import androidx.navigation.compose.rememberNavController
 import com.icxcu.adsmartbandapp.screens.Settings
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
-import com.icxcu.adsmartbandapp.repositories.MyBloodPressureAlertDialogDataHandler
+import com.icxcu.adsmartbandapp.repositories.myBloodPressureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
@@ -63,7 +63,7 @@ fun DashBoardScaffold(
     getVisibilityProgressbarForFetchingData: () -> Boolean = { false },
     getMyHeartRateAlertDialogDataHandler: () -> MyHeartRateAlertDialogDataHandler,
     getMyHeartRate: () -> Int,
-    getMyBloodPressureDialogDataHandler: () -> MyBloodPressureAlertDialogDataHandler,
+    getMyBloodPressureDialogDataHandler: () -> myBloodPressureAlertDialogDataHandler,
     getRealTimeBloodPressure: () -> BloodPressureData,
     getCircularProgressBloodPressure: () -> Int,
     getRealTimeTemperature: () -> TemperatureData,
@@ -160,7 +160,7 @@ fun NavigationHost(
     dayDateValuesReadFromSW: () -> Values,
     getMyHeartRateAlertDialogDataHandler: () -> MyHeartRateAlertDialogDataHandler,
     getMyHeartRate: () -> Int,
-    getMyBloodPressureDialogDataHandler: () -> MyBloodPressureAlertDialogDataHandler,
+    getMyBloodPressureDialogDataHandler: () -> myBloodPressureAlertDialogDataHandler,
     getRealTimeBloodPressure: () -> BloodPressureData,
     getCircularProgressBloodPressure: () -> Int,
     getRealTimeTemperature: () -> TemperatureData,
