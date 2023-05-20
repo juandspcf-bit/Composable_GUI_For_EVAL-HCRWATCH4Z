@@ -14,13 +14,11 @@ import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.database.SWRoomDatabase
 import com.icxcu.adsmartbandapp.repositories.myBloodPressureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
+import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.SWRepository
-import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.ValidatorsPersonalField
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -237,21 +235,10 @@ class DataViewModel(var application: Application) : ViewModel() {
         return swRepository.myBloodPressureAlertDialogDataHandler
     }
 
-    fun getStateFlowCircularProgressTemperature(): StateFlow<Int> {
-        return swRepository.getStateFlowCircularProgressTemperature()
+    fun getMyTemperatureAlertDialogDataHandler(): MyTemperatureAlertDialogDataHandler {
+        return swRepository.myTemperatureAlertDialogDataHandler
     }
 
-    fun getSharedFlowTemperature(): SharedFlow<TemperatureData> {
-        return swRepository.getSharedFlowTemperature()
-    }
-
-    fun requestSmartWatchDataTemperature(){
-        swRepository.requestSmartWatchDataTemperature()
-    }
-
-    fun stopRequestSmartWatchDataTemperature(){
-        swRepository.stopRequestSmartWatchDataTemperature()
-    }
 
     fun getDayPhysicalActivityData(dateData: String, macAddress: String) {
         swRepository.getAnyDayPhysicalActivityData(dateData, macAddress)

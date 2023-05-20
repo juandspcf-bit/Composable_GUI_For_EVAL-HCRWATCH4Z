@@ -46,6 +46,7 @@ import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
 import com.icxcu.adsmartbandapp.repositories.myBloodPressureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
+import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.ListDashBoardCardFields
@@ -66,9 +67,8 @@ fun DashBoardScaffold(
     getMyBloodPressureDialogDataHandler: () -> myBloodPressureAlertDialogDataHandler,
     getRealTimeBloodPressure: () -> BloodPressureData,
     getCircularProgressBloodPressure: () -> Int,
+    getMyTemperatureAlertDialogDataHandler: () -> MyTemperatureAlertDialogDataHandler,
     getRealTimeTemperature: () -> TemperatureData,
-    requestRealTimeTemperature: () -> Unit,
-    stopRequestRealTimeTemperature: () -> Unit,
     getCircularProgressTemperature: () -> Int,
     navMainController: NavHostController = rememberNavController(),
     navLambda: () -> Unit = {}
@@ -135,14 +135,13 @@ fun DashBoardScaffold(
                 NavigationHost(
                     navController = navController,
                     dayDateValuesReadFromSW = dayDateValuesReadFromSW,
-                    getMyHeartRateAlertDialogDataHandler,
+                    getMyHeartRateAlertDialogDataHandler =  getMyHeartRateAlertDialogDataHandler,
                     getMyHeartRate,
                     getMyBloodPressureDialogDataHandler,
                     getRealTimeBloodPressure,
                     getCircularProgressBloodPressure,
+                    getMyTemperatureAlertDialogDataHandler,
                     getRealTimeTemperature,
-                    requestRealTimeTemperature,
-                    stopRequestRealTimeTemperature,
                     getCircularProgressTemperature,
                     navMainController
                 )
@@ -163,9 +162,8 @@ fun NavigationHost(
     getMyBloodPressureDialogDataHandler: () -> myBloodPressureAlertDialogDataHandler,
     getRealTimeBloodPressure: () -> BloodPressureData,
     getCircularProgressBloodPressure: () -> Int,
+    getMyTemperatureAlertDialogDataHandler: () -> MyTemperatureAlertDialogDataHandler,
     getRealTimeTemperature: () -> TemperatureData,
-    requestRealTimeTemperature: () -> Unit,
-    stopRequestRealTimeTemperature: () -> Unit,
     getCircularProgressTemperature: () -> Int,
     navMainController: NavHostController
 ) {
@@ -186,9 +184,8 @@ fun NavigationHost(
                 getMyBloodPressureDialogDataHandler,
                 getRealTimeBloodPressure,
                 getCircularProgressBloodPressure,
+                getMyTemperatureAlertDialogDataHandler,
                 getRealTimeTemperature,
-                requestRealTimeTemperature,
-                stopRequestRealTimeTemperature,
                 getCircularProgressTemperature,
             )
         }

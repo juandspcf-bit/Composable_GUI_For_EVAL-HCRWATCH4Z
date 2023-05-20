@@ -34,6 +34,7 @@ import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
 import com.icxcu.adsmartbandapp.repositories.myBloodPressureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
+import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyBloodPressureAlertDialogContent
 import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyHeartRateAlertDialogState
@@ -46,9 +47,8 @@ fun TestingHealthScreen(
     getMyBloodPressureDialogDataHandler: () -> myBloodPressureAlertDialogDataHandler,
     getRealTimeBloodPressure: () -> BloodPressureData,
     getCircularProgressBloodPressure: () -> Int,
+    getMyTemperatureAlertDialogDataHandler: () -> MyTemperatureAlertDialogDataHandler,
     getRealTimeTemperature: () -> TemperatureData,
-    requestRealTimeTemperature: () -> Unit,
-    stopRequestRealTimeTemperature: () -> Unit,
     getCircularProgressTemperature: () -> Int,
 ) {
 
@@ -156,9 +156,8 @@ fun TestingHealthScreen(
             {
                 MyTemperatureAlertDialogContent(
                     imageResource = R.drawable.thermometer,
+                    getMyTemperatureAlertDialogDataHandler,
                     getRealTimeTemperature,
-                    requestRealTimeTemperature,
-                    stopRequestRealTimeTemperature,
                     getCircularProgressTemperature,
                 ) { status: Boolean ->
                     dialogOpen = status

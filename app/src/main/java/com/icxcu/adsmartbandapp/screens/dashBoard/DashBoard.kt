@@ -63,9 +63,13 @@ fun DashBoard(
         bloodPressure
     }
 
-    val temperature by dataViewModel.getSharedFlowTemperature().collectAsState(initial = TemperatureData(0.0, 0.0))
+    val getMyTemperatureAlertDialogDataHandler = {
+        dataViewModel.getMyTemperatureAlertDialogDataHandler()
+    }
 
-    val circularProgressTemperature by dataViewModel.getStateFlowCircularProgressTemperature().collectAsState()
+    val temperature by getMyTemperatureAlertDialogDataHandler().getSharedFlowTemperature().collectAsState(initial = TemperatureData(0.0, 0.0))
+
+    val circularProgressTemperature by getMyTemperatureAlertDialogDataHandler().getStateFlowCircularProgressTemperature().collectAsState()
 
     val getCircularProgressTemperature={
         circularProgressTemperature
@@ -74,15 +78,6 @@ fun DashBoard(
     val getRealTimeTemperature={
         temperature
     }
-
-    val requestRealTimeTemperature = {
-        dataViewModel.requestSmartWatchDataTemperature()
-    }
-
-    val stopRequestRealTimeTemperature = {
-        dataViewModel.stopRequestSmartWatchDataTemperature()
-    }
-
 
 
     DashBoardScaffold(
@@ -95,9 +90,8 @@ fun DashBoard(
         getMyBloodPressureDialogDataHandler,
         getRealTimeBloodPressure,
         getCircularProgressBloodPressure,
+        getMyTemperatureAlertDialogDataHandler,
         getRealTimeTemperature,
-        requestRealTimeTemperature,
-        stopRequestRealTimeTemperature,
         getCircularProgressTemperature,
         navMainController,
         navLambda,

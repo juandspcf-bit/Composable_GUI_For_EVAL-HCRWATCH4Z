@@ -38,14 +38,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.icxcu.adsmartbandapp.R
+import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 
 @Composable
 fun MyTemperatureAlertDialogContent(
     imageResource: Int = R.drawable.ic_launcher_foreground,
+    getMyTemperatureAlertDialogDataHandler: () -> MyTemperatureAlertDialogDataHandler,
     getRealTimeTemperature: () -> TemperatureData,
-    requestRealTimeTemperature: () -> Unit,
-    stopRequestRealTimeTemperature: () -> Unit,
     getCircularProgressTemperature: () -> Int,
     setDialogStatus: (Boolean) -> Unit
 ) {
@@ -53,7 +53,7 @@ fun MyTemperatureAlertDialogContent(
     Dialog(
         onDismissRequest = {
             setDialogStatus(false)
-            stopRequestRealTimeTemperature()
+            getMyTemperatureAlertDialogDataHandler().stopRequestSmartWatchDataTemperature()
         },
         properties = DialogProperties(
             dismissOnClickOutside = true,
@@ -164,8 +164,7 @@ fun MyTemperatureAlertDialogContent(
                 FilledIconToggleButtonSampleTemperature(
                     Modifier.padding(top = 20.dp, bottom = 20.dp),
                     70.dp,
-                    requestRealTimeTemperature,
-                    stopRequestRealTimeTemperature,
+                    getMyTemperatureAlertDialogDataHandler,
                     getCircularProgressTemperature,
                 )
 
@@ -179,7 +178,7 @@ fun MyTemperatureAlertDialogContent(
                     ),
                     onClick = {
                         setDialogStatus(false)
-                        stopRequestRealTimeTemperature()
+                        getMyTemperatureAlertDialogDataHandler().stopRequestSmartWatchDataTemperature()
 
                     }) {
                     Text(
@@ -198,8 +197,7 @@ fun MyTemperatureAlertDialogContent(
 fun FilledIconToggleButtonSampleTemperature(
     modifier: Modifier,
     size: Dp = 100.dp,
-    requestRealTimeHeartRate: () -> Unit,
-    stopRequestRealTimeHeartRate: () -> Unit,
+    getMyTemperatureAlertDialogDataHandler: () -> MyTemperatureAlertDialogDataHandler,
     progressValue:()->Int,
 ) {
     var checked by remember { mutableStateOf(false) }
@@ -218,9 +216,9 @@ fun FilledIconToggleButtonSampleTemperature(
             onCheckedChange = {
                 checked = it
                 if (checked) {
-                    requestRealTimeHeartRate()
+                    getMyTemperatureAlertDialogDataHandler().requestSmartWatchDataTemperature()
                 } else {
-                    stopRequestRealTimeHeartRate()
+                    getMyTemperatureAlertDialogDataHandler().stopRequestSmartWatchDataTemperature()
                 }
 
             },
