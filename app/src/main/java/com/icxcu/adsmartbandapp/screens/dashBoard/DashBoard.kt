@@ -48,10 +48,12 @@ fun DashBoard(
     }
 
 
+    val getMyBloodPressureDialogDataHandler = {
+        dataViewModel.getMyBloodPressureAlertDialogDataHandler()
+    }
+    val bloodPressure by getMyBloodPressureDialogDataHandler().getSharedFlowBloodPressure().collectAsState(initial = BloodPressureData(0 ,0 ))
 
-    val bloodPressure by dataViewModel.getSharedFlowBloodPressure().collectAsState(initial = BloodPressureData(0 ,0 ))
-
-    val circularProgressBloodPressure by dataViewModel.getStateFlowCircularProgressBloodPressure().collectAsState()
+    val circularProgressBloodPressure by getMyBloodPressureDialogDataHandler().getStateFlowCircularProgressBloodPressure().collectAsState()
 
     val getCircularProgressBloodPressure={
         circularProgressBloodPressure
@@ -60,15 +62,6 @@ fun DashBoard(
     val getRealTimeBloodPressure={
         bloodPressure
     }
-
-    val requestRealTimeBloodPressure = {
-        dataViewModel.requestSmartWatchDataBloodPressure()
-    }
-
-    val stopRequestRealTimeBloodPressure = {
-        dataViewModel.stopRequestSmartWatchDataBloodPressure()
-    }
-
 
     val temperature by dataViewModel.getSharedFlowTemperature().collectAsState(initial = TemperatureData(0.0, 0.0))
 
@@ -99,9 +92,8 @@ fun DashBoard(
         getVisibilityProgressbarForFetchingData,
         getMyHeartRateAlertDialogDataHandler,
         getMyHeartRate,
+        getMyBloodPressureDialogDataHandler,
         getRealTimeBloodPressure,
-        requestRealTimeBloodPressure,
-        stopRequestRealTimeBloodPressure,
         getCircularProgressBloodPressure,
         getRealTimeTemperature,
         requestRealTimeTemperature,

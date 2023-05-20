@@ -44,6 +44,7 @@ import androidx.navigation.compose.rememberNavController
 import com.icxcu.adsmartbandapp.screens.Settings
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
+import com.icxcu.adsmartbandapp.repositories.MyBloodPressureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
@@ -62,9 +63,8 @@ fun DashBoardScaffold(
     getVisibilityProgressbarForFetchingData: () -> Boolean = { false },
     getMyHeartRateAlertDialogDataHandler: () -> MyHeartRateAlertDialogDataHandler,
     getMyHeartRate: () -> Int,
+    getMyBloodPressureDialogDataHandler: () -> MyBloodPressureAlertDialogDataHandler,
     getRealTimeBloodPressure: () -> BloodPressureData,
-    requestRealTimeBloodPressure: () -> Unit,
-    stopRequestRealTimeBloodPressure: () -> Unit,
     getCircularProgressBloodPressure: () -> Int,
     getRealTimeTemperature: () -> TemperatureData,
     requestRealTimeTemperature: () -> Unit,
@@ -137,9 +137,8 @@ fun DashBoardScaffold(
                     dayDateValuesReadFromSW = dayDateValuesReadFromSW,
                     getMyHeartRateAlertDialogDataHandler,
                     getMyHeartRate,
+                    getMyBloodPressureDialogDataHandler,
                     getRealTimeBloodPressure,
-                    requestRealTimeBloodPressure,
-                    stopRequestRealTimeBloodPressure,
                     getCircularProgressBloodPressure,
                     getRealTimeTemperature,
                     requestRealTimeTemperature,
@@ -161,9 +160,8 @@ fun NavigationHost(
     dayDateValuesReadFromSW: () -> Values,
     getMyHeartRateAlertDialogDataHandler: () -> MyHeartRateAlertDialogDataHandler,
     getMyHeartRate: () -> Int,
+    getMyBloodPressureDialogDataHandler: () -> MyBloodPressureAlertDialogDataHandler,
     getRealTimeBloodPressure: () -> BloodPressureData,
-    requestRealTimeBloodPressure: () -> Unit,
-    stopRequestRealTimeBloodPressure: () -> Unit,
     getCircularProgressBloodPressure: () -> Int,
     getRealTimeTemperature: () -> TemperatureData,
     requestRealTimeTemperature: () -> Unit,
@@ -185,9 +183,8 @@ fun NavigationHost(
             TestingHealthScreen(
                 getMyHeartRateAlertDialogDataHandler,
                 getMyHeartRate,
+                getMyBloodPressureDialogDataHandler,
                 getRealTimeBloodPressure,
-                requestRealTimeBloodPressure,
-                stopRequestRealTimeBloodPressure,
                 getCircularProgressBloodPressure,
                 getRealTimeTemperature,
                 requestRealTimeTemperature,

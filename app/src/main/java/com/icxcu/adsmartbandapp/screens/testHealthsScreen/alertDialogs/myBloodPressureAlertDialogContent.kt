@@ -41,13 +41,13 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
+import com.icxcu.adsmartbandapp.repositories.MyBloodPressureAlertDialogDataHandler
 
 @Composable
 fun MyBloodPressureAlertDialogContent(
     imageResource: Int = R.drawable.ic_launcher_foreground,
+    getMyBloodPressureDialogDataHandler: () -> MyBloodPressureAlertDialogDataHandler,
     getRealTimeBloodPressure: () -> BloodPressureData,
-    requestRealTimeBloodPressure: () -> Unit,
-    stopRequestRealTimeBloodPressure: () -> Unit,
     getCircularProgressBloodPressure: () -> Int,
     setDialogStatus: (Boolean) -> Unit
 ) {
@@ -56,7 +56,7 @@ fun MyBloodPressureAlertDialogContent(
     Dialog(
         onDismissRequest = {
             setDialogStatus(false)
-            stopRequestRealTimeBloodPressure()
+            getMyBloodPressureDialogDataHandler().stopRequestSmartWatchDataBloodPressure()
         },
         properties = DialogProperties(
             dismissOnClickOutside = true,
@@ -167,8 +167,7 @@ fun MyBloodPressureAlertDialogContent(
                 FilledIconToggleButtonSampleBloodPressure(
                     Modifier.padding(top = 20.dp, bottom = 20.dp),
                     70.dp,
-                    requestRealTimeBloodPressure,
-                    stopRequestRealTimeBloodPressure,
+                    getMyBloodPressureDialogDataHandler,
                     getCircularProgressBloodPressure,
                 )
 
@@ -182,7 +181,7 @@ fun MyBloodPressureAlertDialogContent(
                     ),
                     onClick = {
                         setDialogStatus(false)
-                        stopRequestRealTimeBloodPressure()
+                        getMyBloodPressureDialogDataHandler().stopRequestSmartWatchDataBloodPressure()
 
                     }) {
                     Text(
@@ -201,8 +200,7 @@ fun MyBloodPressureAlertDialogContent(
 fun FilledIconToggleButtonSampleBloodPressure(
     modifier: Modifier,
     size: Dp = 100.dp,
-    requestRealTimeHeartRate: () -> Unit,
-    stopRequestRealTimeHeartRate: () -> Unit,
+    getMyBloodPressureDialogDataHandler: () -> MyBloodPressureAlertDialogDataHandler,
     progressValue:()->Int,
 ) {
     var checked by remember { mutableStateOf(false) }
@@ -221,9 +219,9 @@ fun FilledIconToggleButtonSampleBloodPressure(
             onCheckedChange = {
                 checked = it
                 if (checked) {
-                    requestRealTimeHeartRate()
+                    getMyBloodPressureDialogDataHandler().requestSmartWatchDataBloodPressure()
                 } else {
-                    stopRequestRealTimeHeartRate()
+                    getMyBloodPressureDialogDataHandler().stopRequestSmartWatchDataBloodPressure()
                 }
 
             },
@@ -257,7 +255,7 @@ fun FilledIconToggleButtonSampleBloodPressure(
 @Preview(showBackground = true)
 @Composable
 fun MyBloodPressureAlertDialogContentPreview() {
-    MyBloodPressureAlertDialogContent(
+/*    MyBloodPressureAlertDialogContent(
         imageResource = R.drawable.blood_pressure_gauge,
         getRealTimeBloodPressure = {
             BloodPressureData(0, 0)
@@ -266,5 +264,5 @@ fun MyBloodPressureAlertDialogContentPreview() {
         stopRequestRealTimeBloodPressure = {},
         getCircularProgressBloodPressure = {5}
 
-    ) {}
+    ) {}*/
 }

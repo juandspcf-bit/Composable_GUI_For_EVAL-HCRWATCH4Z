@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
+import com.icxcu.adsmartbandapp.repositories.MyBloodPressureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyBloodPressureAlertDialogContent
@@ -42,9 +43,8 @@ import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyTempera
 fun TestingHealthScreen(
     getMyHeartRateAlertDialogDataHandler: () -> MyHeartRateAlertDialogDataHandler,
     getMyHeartRate: () -> Int,
+    getMyBloodPressureDialogDataHandler: () -> MyBloodPressureAlertDialogDataHandler,
     getRealTimeBloodPressure: () -> BloodPressureData,
-    requestRealTimeBloodPressure: () -> Unit,
-    stopRequestRealTimeBloodPressure: () -> Unit,
     getCircularProgressBloodPressure: () -> Int,
     getRealTimeTemperature: () -> TemperatureData,
     requestRealTimeTemperature: () -> Unit,
@@ -105,9 +105,8 @@ fun TestingHealthScreen(
             {
                 MyBloodPressureAlertDialogContent(
                     imageResource = R.drawable.blood_pressure_gauge,
+                    getMyBloodPressureDialogDataHandler,
                     getRealTimeBloodPressure,
-                    requestRealTimeBloodPressure,
-                    stopRequestRealTimeBloodPressure,
                     getCircularProgressBloodPressure,
                 ) { status: Boolean ->
                     dialogOpen = status

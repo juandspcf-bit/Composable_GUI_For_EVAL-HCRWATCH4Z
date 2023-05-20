@@ -13,6 +13,7 @@ import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.database.SWRoomDatabase
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
+import com.icxcu.adsmartbandapp.repositories.MyBloodPressureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
@@ -235,6 +236,10 @@ class DataViewModel(var application: Application) : ViewModel() {
         return swRepository.myHeartRateAlertDialogDataHandler
     }
 
+    fun getMyBloodPressureAlertDialogDataHandler(): MyBloodPressureAlertDialogDataHandler {
+        return swRepository.myBloodPressureAlertDialogDataHandler
+    }
+
 /*
     fun getSharedFlowHeartRate(): SharedFlow<Int> {
         return swRepository.getSharedFlowHeartRate()
@@ -248,24 +253,6 @@ class DataViewModel(var application: Application) : ViewModel() {
         swRepository.stopRequestSmartWatchDataHeartRate()
     }
 */
-
-
-    fun getStateFlowCircularProgressBloodPressure(): StateFlow<Int> {
-        return swRepository.getStateFlowCircularProgressBloodPressure()
-    }
-
-    fun getSharedFlowBloodPressure(): SharedFlow<BloodPressureData> {
-        return swRepository.getSharedFlowBloodPressure()
-    }
-
-    fun requestSmartWatchDataBloodPressure(){
-        swRepository.requestSmartWatchDataBloodPressure()
-    }
-
-    fun stopRequestSmartWatchDataBloodPressure(){
-        swRepository.stopRequestSmartWatchDataBloodPressure()
-    }
-
 
     fun getStateFlowCircularProgressTemperature(): StateFlow<Int> {
         return swRepository.getStateFlowCircularProgressTemperature()
