@@ -83,7 +83,7 @@ fun HeartRateInfo(
         val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         val dateData = formattedDate.format(date)
 
-        Log.d("date", "BloodPressureInfo: $dateData")
+
         dataViewModel.getDayHeartRateData(dateData,
             dataViewModel.macAddressDeviceBluetooth)
 

@@ -232,12 +232,15 @@ fun HeartRateInfoContent(heartRateListContent: () -> List<Double>,
 
 @Composable
 fun StatisticsHeartRate(heartRateListContent: () -> List<Double>, modifier: Modifier) {
-    val maxValueSystolic = heartRateListContent().max()
+    val filteredValueSystolic = heartRateListContent().filter { it >0.0 }
+    if(filteredValueSystolic.isEmpty()) return
+
+    val maxValueSystolic = filteredValueSystolic.max()
     val maxValueSystolicValue = String.format("%.1f bpm", maxValueSystolic)
     val hourMax = findIndex(maxValueSystolic, heartRateListContent())
 
 
-    val minValueSystolic = heartRateListContent().min()
+    val minValueSystolic = filteredValueSystolic.min()
     val minValueSystolicValue = String.format("%.1f bpm", minValueSystolic)
     val hourMin = findIndex(minValueSystolic, heartRateListContent())
 
