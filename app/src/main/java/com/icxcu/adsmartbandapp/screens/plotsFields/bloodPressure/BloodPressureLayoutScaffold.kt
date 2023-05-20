@@ -56,7 +56,7 @@ import java.time.Duration
 fun BloodPressureLayoutScaffold(
     systolicList: () -> List<Double>,
     diastolicList: () -> List<Double>,
-    selectedDay: String,
+    getSelectedDay: () -> String,
     stateShowDialogDatePickerSetter: (Boolean) -> Unit,
     stateShowDialogDatePickerValue: () -> Boolean,
     stateMiliSecondsDateDialogDatePickerS: () -> Long,
@@ -75,7 +75,7 @@ fun BloodPressureLayoutScaffold(
             MediumTopAppBar(
                 title = {
                     Text(
-                        text = "Blood Pressure for $selectedDay",
+                        text = "Blood Pressure for ${getSelectedDay()}",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.White,

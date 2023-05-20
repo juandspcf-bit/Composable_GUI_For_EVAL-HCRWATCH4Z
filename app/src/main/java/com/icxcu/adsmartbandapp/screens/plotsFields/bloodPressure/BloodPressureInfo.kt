@@ -16,13 +16,13 @@ import java.util.Locale
 fun BloodPressureInfo(
     dataViewModel: DataViewModel,
     navLambda: () -> Unit
-){
+) {
 
     val dayBloodPressureResultsFromDB by dataViewModel.dayBloodPressureResultsFromDB.observeAsState(
         MutableList(0) { BloodPressure() }.toList()
     )
 
-    if(dayBloodPressureResultsFromDB.isEmpty().not()){
+    if (dayBloodPressureResultsFromDB.isEmpty().not()) {
         Log.d("date", "BloodPressureInfo: $dayBloodPressureResultsFromDB")
         dataViewModel.selectedDay = dayBloodPressureResultsFromDB[0].dateData
     }
@@ -52,18 +52,22 @@ fun BloodPressureInfo(
         dataViewModel.dayDiastolicListFromDB
     }
 
+    val getSelectedDay = {
+        dataViewModel.selectedDay
+    }
+
     //DialogDatePicker State
     val stateShowDialogDatePickerValue = {
         dataViewModel.stateShowDialogDatePicker
     }
-    val stateShowDialogDatePickerSetter:(Boolean) -> Unit = { value ->
+    val stateShowDialogDatePickerSetter: (Boolean) -> Unit = { value ->
         dataViewModel.stateShowDialogDatePicker = value
     }
 
     val stateMiliSecondsDateDialogDatePicker = {
         dataViewModel.stateMiliSecondsDateDialogDatePicker
     }
-    val stateMiliSecondsDateDialogDatePickerSetter:(Long) -> Unit = { value ->
+    val stateMiliSecondsDateDialogDatePickerSetter: (Long) -> Unit = { value ->
         dataViewModel.stateMiliSecondsDateDialogDatePicker = value
 
         val date = Date(value)
@@ -71,20 +75,22 @@ fun BloodPressureInfo(
         val dateData = formattedDate.format(date)
 
         Log.d("date", "BloodPressureInfo: $dateData")
-        dataViewModel.getDayBloodPressureData(dateData,
-            dataViewModel.macAddressDeviceBluetooth)
+        dataViewModel.getDayBloodPressureData(
+            dateData,
+            dataViewModel.macAddressDeviceBluetooth
+        )
 
     }
 
     BloodPressureLayoutScaffold(
         systolicList = systolicListFromDB,
-    diastolicList= diastolicListFromDB,
-    selectedDay = dataViewModel.selectedDay,
-    stateShowDialogDatePickerSetter = stateShowDialogDatePickerSetter,
-    stateShowDialogDatePickerValue = stateShowDialogDatePickerValue,
-    stateMiliSecondsDateDialogDatePickerS = stateMiliSecondsDateDialogDatePicker,
-    stateMiliSecondsDateDialogDatePickerSetterS= stateMiliSecondsDateDialogDatePickerSetter,
-    navLambda= navLambda
+        diastolicList = diastolicListFromDB,
+        getSelectedDay = getSelectedDay,
+        stateShowDialogDatePickerSetter = stateShowDialogDatePickerSetter,
+        stateShowDialogDatePickerValue = stateShowDialogDatePickerValue,
+        stateMiliSecondsDateDialogDatePickerS = stateMiliSecondsDateDialogDatePicker,
+        stateMiliSecondsDateDialogDatePickerSetterS = stateMiliSecondsDateDialogDatePickerSetter,
+        navLambda = navLambda
     )
 
 }
