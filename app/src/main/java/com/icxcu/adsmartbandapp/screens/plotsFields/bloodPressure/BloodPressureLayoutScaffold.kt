@@ -235,12 +235,15 @@ fun StatisticsBloodPressure(
     systolicListContent: () -> List<Double>,
     modifier: Modifier = Modifier
 ) {
-    val maxValueSystolic = systolicListContent().max()
+    val filteredSystolicListContent = systolicListContent().filter { it>0.0 }
+    if(filteredSystolicListContent.isEmpty()) return
+
+    val maxValueSystolic = filteredSystolicListContent.max()
     val maxValueSystolicValue = String.format("%.1f mmHg", maxValueSystolic)
     val hourMax = findIndex(maxValueSystolic, systolicListContent())
 
 
-    val minValueSystolic = systolicListContent().min()
+    val minValueSystolic = filteredSystolicListContent.min()
     val minValueSystolicValue = String.format("%.1f mmHg", minValueSystolic)
     val hourMin = findIndex(minValueSystolic, systolicListContent())
 

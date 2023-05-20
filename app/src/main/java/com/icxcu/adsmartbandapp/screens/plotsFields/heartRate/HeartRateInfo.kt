@@ -64,6 +64,9 @@ fun HeartRateInfo(
         dataViewModel.dayHeartRateListFromDB
     }
 
+    val getSelectedDay = {
+        dataViewModel.selectedDay
+    }
 
     //DialogDatePicker State
     val stateShowDialogDatePickerValue = {
@@ -91,7 +94,7 @@ fun HeartRateInfo(
 
     HeartRateLayoutScaffold(
         heartRateList = heartRateListFromDB,
-        selectedDay = dataViewModel.selectedDay,
+        getSelectedDay = getSelectedDay,
         stateShowDialogDatePickerSetter = stateShowDialogDatePickerSetter,
         stateShowDialogDatePickerValue = stateShowDialogDatePickerValue,
         stateMiliSecondsDateDialogDatePickerS = stateMiliSecondsDateDialogDatePicker,

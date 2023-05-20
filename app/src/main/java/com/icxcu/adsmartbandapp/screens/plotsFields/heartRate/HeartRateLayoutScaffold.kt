@@ -64,7 +64,7 @@ import java.time.Duration
 @Composable
 fun HeartRateLayoutScaffold(
     heartRateList: () -> List<Double>,
-    selectedDay: String,
+    getSelectedDay: () -> String,
     stateShowDialogDatePickerSetter: (Boolean) -> Unit,
     stateShowDialogDatePickerValue: () -> Boolean,
     stateMiliSecondsDateDialogDatePickerS: () -> Long,
@@ -85,7 +85,7 @@ fun HeartRateLayoutScaffold(
             MediumTopAppBar(
                 title = {
                     Text(
-                        text = "Heart Rate for $selectedDay",
+                        text = "Heart Rate for ${getSelectedDay()}",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.White,
