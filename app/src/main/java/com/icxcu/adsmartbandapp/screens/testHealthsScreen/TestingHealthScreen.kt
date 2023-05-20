@@ -34,10 +34,12 @@ import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
 import com.icxcu.adsmartbandapp.repositories.myBloodPressureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
+import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyBloodPressureAlertDialogContent
 import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyHeartRateAlertDialogState
+import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MySpO2AlertDialogState
 import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyTemperatureAlertDialogContent
 
 @Composable
@@ -47,6 +49,8 @@ fun TestingHealthScreen(
     getMyBloodPressureDialogDataHandler: () -> myBloodPressureAlertDialogDataHandler,
     getRealTimeBloodPressure: () -> BloodPressureData,
     getCircularProgressBloodPressure: () -> Int,
+    getMySpO2AlertDialogDataHandler: () -> MySpO2AlertDialogDataHandler,
+    getMySpO2: () -> Double,
     getMyTemperatureAlertDialogDataHandler: () -> MyTemperatureAlertDialogDataHandler,
     getRealTimeTemperature: () -> TemperatureData,
     getCircularProgressTemperature: () -> Int,
@@ -130,11 +134,14 @@ fun TestingHealthScreen(
                 }
             },
             {
-/*                MyHeartRateAlertDialog(
-                    imageResource = R.drawable.blood_pressure_gauge,
-                ) { status: Boolean ->
+
+                MySpO2AlertDialogState(
+                    imageResource = R.drawable.oxygen_saturation,
+                    getMySpO2AlertDialogDataHandler = getMySpO2AlertDialogDataHandler,
+                    getMySpO2 = getMySpO2,
+                ){ status: Boolean ->
                     dialogOpen = status
-                }*/
+                }
             }
         )
     )
@@ -201,6 +208,8 @@ fun TestingHealthScreen(
             myAlertDialogs[0].dialog()
         } else if (selectedButton == 1 && dialogOpen) {
             myAlertDialogs[1].dialog()
+        } else if (selectedButton == 2 && dialogOpen) {
+            myAlertDialogs[2].dialog()
         } else if (selectedButton == 3 && dialogOpen) {
             myAlertDialogs[3].dialog()
         }
@@ -234,6 +243,7 @@ fun BoxImageCircle(
                 when (imageResource) {
                     R.drawable.heart_rate -> setNumberDialog(0)
                     R.drawable.blood_pressure_gauge -> setNumberDialog(1)
+                    R.drawable.oxygen_saturation -> setNumberDialog(2)
                     R.drawable.thermometer -> setNumberDialog(3)
                 }
                 setDialogStatus(true)

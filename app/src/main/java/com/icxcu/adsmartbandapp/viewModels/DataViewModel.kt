@@ -14,6 +14,7 @@ import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.database.SWRoomDatabase
 import com.icxcu.adsmartbandapp.repositories.myBloodPressureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
+import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.repositories.Values
@@ -237,6 +238,10 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     fun getMyTemperatureAlertDialogDataHandler(): MyTemperatureAlertDialogDataHandler {
         return swRepository.myTemperatureAlertDialogDataHandler
+    }
+
+    fun getMySpO2AlertDialogDataHandler(): MySpO2AlertDialogDataHandler {
+        return swRepository.mySpO2AlertDialogDataHandler
     }
 
 

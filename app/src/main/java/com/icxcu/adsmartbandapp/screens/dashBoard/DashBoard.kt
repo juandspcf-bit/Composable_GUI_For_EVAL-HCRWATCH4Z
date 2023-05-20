@@ -6,6 +6,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
+import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 
@@ -34,9 +35,6 @@ fun DashBoard(
     }
 
 
-
-
-
     val getMyHeartRateAlertDialogDataHandler = {
          dataViewModel.getMyHeartRateAlertDialogDataHandler()
     }
@@ -63,6 +61,18 @@ fun DashBoard(
         bloodPressure
     }
 
+
+
+    val getMySpO2AlertDialogDataHandler = {
+        dataViewModel.getMySpO2AlertDialogDataHandler()
+    }
+
+    val spO2 by getMySpO2AlertDialogDataHandler().getSharedFlowSpO2().collectAsState(initial = 0.0)
+
+    val getMySpO2 = {
+        spO2
+    }
+
     val getMyTemperatureAlertDialogDataHandler = {
         dataViewModel.getMyTemperatureAlertDialogDataHandler()
     }
@@ -80,6 +90,12 @@ fun DashBoard(
     }
 
 
+
+
+
+
+
+
     DashBoardScaffold(
         bluetoothName,
         bluetoothAddress,
@@ -90,6 +106,8 @@ fun DashBoard(
         getMyBloodPressureDialogDataHandler,
         getRealTimeBloodPressure,
         getCircularProgressBloodPressure,
+        getMySpO2AlertDialogDataHandler,
+        getMySpO2,
         getMyTemperatureAlertDialogDataHandler,
         getRealTimeTemperature,
         getCircularProgressTemperature,

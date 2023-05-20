@@ -71,7 +71,6 @@ class MyTemperatureAlertDialogDataHandler {
             )
         }
         jobTemperature?.cancel()
-
     }
 
 }

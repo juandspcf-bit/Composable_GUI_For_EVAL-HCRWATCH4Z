@@ -46,6 +46,7 @@ import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
 import com.icxcu.adsmartbandapp.repositories.myBloodPressureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
+import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
@@ -67,6 +68,8 @@ fun DashBoardScaffold(
     getMyBloodPressureDialogDataHandler: () -> myBloodPressureAlertDialogDataHandler,
     getRealTimeBloodPressure: () -> BloodPressureData,
     getCircularProgressBloodPressure: () -> Int,
+    getMySpO2AlertDialogDataHandler: () -> MySpO2AlertDialogDataHandler,
+    getMySpO2: () -> Double,
     getMyTemperatureAlertDialogDataHandler: () -> MyTemperatureAlertDialogDataHandler,
     getRealTimeTemperature: () -> TemperatureData,
     getCircularProgressTemperature: () -> Int,
@@ -135,11 +138,13 @@ fun DashBoardScaffold(
                 NavigationHost(
                     navController = navController,
                     dayDateValuesReadFromSW = dayDateValuesReadFromSW,
-                    getMyHeartRateAlertDialogDataHandler =  getMyHeartRateAlertDialogDataHandler,
+                    getMyHeartRateAlertDialogDataHandler = getMyHeartRateAlertDialogDataHandler,
                     getMyHeartRate = getMyHeartRate,
                     getMyBloodPressureDialogDataHandler = getMyBloodPressureDialogDataHandler,
                     getRealTimeBloodPressure = getRealTimeBloodPressure,
                     getCircularProgressBloodPressure = getCircularProgressBloodPressure,
+                    getMySpO2AlertDialogDataHandler = getMySpO2AlertDialogDataHandler,
+                    getMySpO2 = getMySpO2,
                     getMyTemperatureAlertDialogDataHandler = getMyTemperatureAlertDialogDataHandler,
                     getRealTimeTemperature = getRealTimeTemperature,
                     getCircularProgressTemperature = getCircularProgressTemperature,
@@ -162,6 +167,8 @@ fun NavigationHost(
     getMyBloodPressureDialogDataHandler: () -> myBloodPressureAlertDialogDataHandler,
     getRealTimeBloodPressure: () -> BloodPressureData,
     getCircularProgressBloodPressure: () -> Int,
+    getMySpO2AlertDialogDataHandler: () -> MySpO2AlertDialogDataHandler,
+    getMySpO2: () -> Double,
     getMyTemperatureAlertDialogDataHandler: () -> MyTemperatureAlertDialogDataHandler,
     getRealTimeTemperature: () -> TemperatureData,
     getCircularProgressTemperature: () -> Int,
@@ -184,6 +191,8 @@ fun NavigationHost(
                 getMyBloodPressureDialogDataHandler,
                 getRealTimeBloodPressure,
                 getCircularProgressBloodPressure,
+                getMySpO2AlertDialogDataHandler,
+                getMySpO2,
                 getMyTemperatureAlertDialogDataHandler,
                 getRealTimeTemperature,
                 getCircularProgressTemperature,
@@ -243,26 +252,26 @@ fun BottomNavigationBar(navController: NavHostController) {
 @Preview(showBackground = true)
 @Composable
 fun DashBoardPreview() {
-/*    DashBoardScaffold(
-        getVisibilityProgressbarForFetchingData = { true },
-        requestRealTimeHeartRate = {},
-        getRealTimeHeartRate = { 0 },
-        stopRequestRealTimeHeartRate = {},
-        getRealTimeBloodPressure = {
-            BloodPressureData(0, 0)
-        },
-        requestRealTimeBloodPressure = {},
-        stopRequestRealTimeBloodPressure = {},
-        getCircularProgressBloodPressure = { 5 },
+    /*    DashBoardScaffold(
+            getVisibilityProgressbarForFetchingData = { true },
+            requestRealTimeHeartRate = {},
+            getRealTimeHeartRate = { 0 },
+            stopRequestRealTimeHeartRate = {},
+            getRealTimeBloodPressure = {
+                BloodPressureData(0, 0)
+            },
+            requestRealTimeBloodPressure = {},
+            stopRequestRealTimeBloodPressure = {},
+            getCircularProgressBloodPressure = { 5 },
 
-        getRealTimeTemperature = {
-            TemperatureData(0.0,0.0)
-        },
-        requestRealTimeTemperature = {},
-        stopRequestRealTimeTemperature = {},
-        getCircularProgressTemperature = { 5 }
-    ) {
+            getRealTimeTemperature = {
+                TemperatureData(0.0,0.0)
+            },
+            requestRealTimeTemperature = {},
+            stopRequestRealTimeTemperature = {},
+            getCircularProgressTemperature = { 5 }
+        ) {
 
-    }*/
+        }*/
 
 }
