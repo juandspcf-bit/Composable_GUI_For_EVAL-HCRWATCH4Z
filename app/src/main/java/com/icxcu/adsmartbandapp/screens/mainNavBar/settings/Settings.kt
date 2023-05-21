@@ -48,7 +48,7 @@ fun Settings(navMainController: NavController) {
                             onPress = { navMainController.navigate(Routes.PersonalInfoForm.route) },
                             onDoubleTap = { /* Double Tap Detected */ },
                             onLongPress = { /* Long Press Detected */ },
-                            onTap = { navMainController.navigate(Routes.PersonalInfoForm.route) }
+                            onTap = {  }
                         )
                     }
                     .fillMaxWidth(0.8f)

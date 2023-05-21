@@ -52,10 +52,10 @@ fun NumericWeightTextFieldComposable(
             modifier = Modifier
                 .pointerInput(Unit) {
                     detectTapGestures(
-                        onPress = {  },
+                        onPress = { onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().weightTextFieldVisibility) },
                         onDoubleTap = { /* Double Tap Detected */ },
                         onLongPress = { /* Long Press Detected */ },
-                        onTap = { onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().weightTextFieldVisibility) }
+                        onTap = {  }
                     )
                 }
                 .fillMaxWidth(0.85f)

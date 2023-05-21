@@ -52,10 +52,10 @@ fun NumericHeightTextFieldComposable(
             modifier = Modifier
                 .pointerInput(Unit) {
                     detectTapGestures(
-                        onPress = {  },
+                        onPress = { onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().heightTextFieldVisibility) },
                         onDoubleTap = { /* Double Tap Detected */ },
                         onLongPress = { /* Long Press Detected */ },
-                        onTap = { onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().heightTextFieldVisibility) }
+                        onTap = {  }
                     )
                 }
                 .fillMaxWidth(0.85f)

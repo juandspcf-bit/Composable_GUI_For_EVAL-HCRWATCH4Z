@@ -58,10 +58,10 @@ fun DateTextFieldComposable(
             modifier = Modifier
                 .pointerInput(Unit) {
                     detectTapGestures(
-                        onPress = {  },
+                        onPress = { onDateTextFieldVisibilityChange(!getPersonalInfoDataStateState().dateTextFieldVisibility) },
                         onDoubleTap = { /* Double Tap Detected */ },
                         onLongPress = { /* Long Press Detected */ },
-                        onTap = { onDateTextFieldVisibilityChange(!getPersonalInfoDataStateState().dateTextFieldVisibility) }
+                        onTap = {  }
                     )
                 }
                 .fillMaxWidth(0.85f)

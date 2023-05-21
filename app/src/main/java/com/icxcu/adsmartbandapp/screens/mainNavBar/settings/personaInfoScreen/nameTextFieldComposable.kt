@@ -50,10 +50,10 @@ fun NameTextFieldComposable(
             modifier = Modifier
                 .pointerInput(Unit) {
                     detectTapGestures(
-                        onPress = {  },
+                        onPress = { onNameTextFieldVisibilityChange(!getPersonalInfoDataStateState().nameTextFieldVisibility) },
                         onDoubleTap = { /* Double Tap Detected */ },
                         onLongPress = { /* Long Press Detected */ },
-                        onTap = { onNameTextFieldVisibilityChange(!getPersonalInfoDataStateState().nameTextFieldVisibility) }
+                        onTap = {  }
                     )
                 }
                 .fillMaxWidth(0.85f)

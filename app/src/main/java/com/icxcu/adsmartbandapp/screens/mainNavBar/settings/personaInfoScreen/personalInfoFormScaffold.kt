@@ -1,5 +1,8 @@
 package com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -11,6 +14,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -67,15 +71,24 @@ fun PersonalInfoFormScaffold(
         },
         content = { padding ->
             padding
-            PersonalInfoContent(
-                getPersonalInfoDataStateState,
-                getPersonalInfoListReadFromDB,
-                validatePersonalInfo,
-                getInvalidAlertDialogState,
-                getUpdateAlertDialogState,
-                updatePersonalData,
-                insertPersonalData,
-            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0xff1d2a35)),
+                contentAlignment = Alignment.Center
+            ){
+                PersonalInfoContent(
+                    getPersonalInfoDataStateState,
+                    getPersonalInfoListReadFromDB,
+                    validatePersonalInfo,
+                    getInvalidAlertDialogState,
+                    getUpdateAlertDialogState,
+                    updatePersonalData,
+                    insertPersonalData,
+                )
+            }
+
 
         },
     )
