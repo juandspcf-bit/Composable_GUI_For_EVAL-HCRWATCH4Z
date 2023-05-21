@@ -142,9 +142,6 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     var personalInfoFromDB = MutableLiveData<List<PersonalInfo>>()
     var personalInfoListReadFromDB = listOf<PersonalInfo>()
-/*    var personalInfoAlertDialogUVLiveData = MutableLiveData(false)
-    var alertDialogUPersonalFieldVisibility by mutableStateOf(false)*/
-
 
     var personalInfoDataState = PersonalInfoDataState()
     var invalidAlertDialogState = InvalidAlertDialogState()
