@@ -1,4 +1,4 @@
-package com.icxcu.adsmartbandapp.screens.dashBoard
+package com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard
 
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
@@ -41,7 +41,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.icxcu.adsmartbandapp.screens.Settings
+import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.Settings
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
 import com.icxcu.adsmartbandapp.repositories.myBloodPressureAlertDialogDataHandler

@@ -1,4 +1,4 @@
-package com.icxcu.adsmartbandapp.screens.dashBoard
+package com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard
 
 import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.BloodPressure

@@ -25,7 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
-import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoContent
+import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoContent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

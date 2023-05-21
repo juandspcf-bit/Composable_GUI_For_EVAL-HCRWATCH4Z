@@ -1,4 +1,4 @@
-package com.icxcu.adsmartbandapp.screens
+package com.icxcu.adsmartbandapp.screens.mainNavBar.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.icxcu.adsmartbandapp.R
+import com.icxcu.adsmartbandapp.screens.Routes
 
 @Composable
 fun Settings(navMainController: NavController) {

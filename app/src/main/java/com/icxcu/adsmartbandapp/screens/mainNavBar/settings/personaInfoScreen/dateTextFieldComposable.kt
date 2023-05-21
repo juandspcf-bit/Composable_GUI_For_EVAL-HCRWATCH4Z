@@ -1,4 +1,4 @@
-package com.icxcu.adsmartbandapp.screens.personaInfoScreen
+package com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen
 
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility

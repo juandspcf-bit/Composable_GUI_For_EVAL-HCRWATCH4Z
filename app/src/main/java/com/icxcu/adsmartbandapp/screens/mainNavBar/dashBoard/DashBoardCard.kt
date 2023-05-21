@@ -1,4 +1,4 @@
-package com.icxcu.adsmartbandapp.screens.dashBoard
+package com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image

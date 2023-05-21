@@ -1,4 +1,4 @@
-package com.icxcu.adsmartbandapp.screens.personaInfoScreen
+package com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack

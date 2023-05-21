@@ -1,4 +1,4 @@
-package com.icxcu.adsmartbandapp.screens.personaInfoScreen
+package com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -15,14 +15,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -39,14 +35,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.icxcu.adsmartbandapp.R
-import com.icxcu.adsmartbandapp.screens.Routes
 
 @Composable
-fun NameTextFieldComposable(
-    currentName: () -> String,
-    currentNameTextFieldVisibility: () -> Boolean,
-    onTextChange: (String) -> Unit,
-    onNameTextFieldVisibilityChange: (Boolean) -> Unit,
+fun NumericUnitTextFieldComposable(
+    currentNumericUnit: () -> String,
+    currentNumericUnitTextFieldVisibility: () -> Boolean,
+    onNumericUnitTextChange: (String) -> Unit,
+    onNumericUnitTextFieldVisibilityChange: (Boolean) -> Unit,
+    unit:String,
+    contentDescription:String = "",
+    resourceIcon1:Int = R.drawable.ic_launcher_foreground,
+    validator: (String) -> String
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
 
@@ -57,7 +56,7 @@ fun NameTextFieldComposable(
                         onPress = {  },
                         onDoubleTap = { /* Double Tap Detected */ },
                         onLongPress = { /* Long Press Detected */ },
-                        onTap = { onNameTextFieldVisibilityChange(!currentNameTextFieldVisibility()) }
+                        onTap = { onNumericUnitTextFieldVisibilityChange(!currentNumericUnitTextFieldVisibility()) }
                     )
                 }
                 .fillMaxWidth(0.8f)
@@ -66,43 +65,51 @@ fun NameTextFieldComposable(
                 .background(color = Color(0xFFE91E63))
         ) {
 
-            val displayName = if (currentName() == "") {
-                "Your name"
+            val numberValidated = validator(currentNumericUnit())
+
+            val displayNumericUnit = if (numberValidated == "") {
+                "Your $contentDescription"
             } else {
-                currentName()
+                "$numberValidated $unit"
             }
 
             Text(
-                displayName,
+                displayNumericUnit,
                 textAlign = TextAlign.Start,
                 color = Color.White,
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(start = 10.dp, top = 10.dp, bottom = 10.dp)
+                modifier = Modifier.padding(
+                    start = 10.dp,
+                    top = 10.dp,
+                    bottom = 10.dp
+                )
             )
         }
 
         Icon(
-            painter = painterResource(R.drawable.baseline_person_24),
-            contentDescription = "Date Range",
+            painter = painterResource(resourceIcon1),
+            contentDescription = contentDescription,
             tint = Color(0xFFFFC107),
             modifier = Modifier
                 .size(50.dp)
                 .clickable {
-                    onNameTextFieldVisibilityChange(!currentNameTextFieldVisibility())
+                    onNumericUnitTextFieldVisibilityChange(!currentNumericUnitTextFieldVisibility())
                 }
         )
     }
 
     AnimatedVisibility(
-        visible = currentNameTextFieldVisibility(),
+        visible = currentNumericUnitTextFieldVisibility(),
         enter = expandVertically(animationSpec = tween(durationMillis = 1000)),
         exit = slideOutVertically()
     ) {
-        NameTexField(
-            value = currentName,
-            onTextChange = onTextChange,
-            currentNameTextFieldVisibility,
-            onNameTextFieldVisibilityChange,
+        NumericUnitTexField(
+            value = currentNumericUnit,
+            onNumericUnitTextChange = onNumericUnitTextChange,
+            currentNumericUnitTextFieldVisibility,
+            onNumericUnitTextFieldVisibilityChange,
+            contentDescription = contentDescription,
+            resourceIcon1 = resourceIcon1
         )
     }
 
@@ -110,42 +117,41 @@ fun NameTextFieldComposable(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NameTexField(
+fun NumericUnitTexField(
     value: () -> String,
-    onTextChange: (String) -> Unit,
-    currentNameTextFieldVisibility: () -> Boolean,
-    onNameTextFieldVisibilityChange: (Boolean) -> Unit,
+    onNumericUnitTextChange: (String) -> Unit,
+    currentNumericUnitTextFieldVisibility: () -> Boolean,
+    onNumericUnitTextFieldVisibilityChange: (Boolean) -> Unit,
+    contentDescription:String = "",
+    resourceIcon1:Int = R.drawable.ic_launcher_foreground,
+
 ) {
 
     OutlinedTextField(
-
         value = value(),
-        onValueChange = onTextChange,
+        onValueChange = onNumericUnitTextChange,
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
+            keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Done
         ),
         singleLine = true,
-        label = { Text("Your Name") },
-        modifier = Modifier
-            .padding(10.dp)
-            .background(Color(0xff1d2a35))
-            ,
+        label = { Text("Your $contentDescription") },
+        modifier = Modifier.padding(10.dp)
+            .background(Color(0xff1d2a35)),
         textStyle = TextStyle(
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp
         ),
         trailingIcon = {
             Icon(
-                imageVector = Icons.Default.Person,
-                contentDescription = "Person Icon"
+                painter = painterResource(resourceIcon1),
+                contentDescription = contentDescription,
             )
         },
         keyboardActions = KeyboardActions(
             onDone = {
-                onNameTextFieldVisibilityChange(!currentNameTextFieldVisibility())
+                onNumericUnitTextFieldVisibilityChange(!currentNumericUnitTextFieldVisibility())
             }
         ),
         colors = TextFieldDefaults.colors(
@@ -160,8 +166,6 @@ fun NameTexField(
             focusedTrailingIconColor = Color(0xFFFFC107),
             unfocusedTrailingIconColor = Color(0xFFFFC107),
         )
-
-
 
     )
 }
