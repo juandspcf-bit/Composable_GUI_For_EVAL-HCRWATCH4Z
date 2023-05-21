@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -51,6 +53,9 @@ fun PersonalInfoContent(
     updatePersonalData: (PersonalInfo) -> Unit = {},
     insertPersonalData: (PersonalInfo) -> Unit = {},
 ) {
+
+    val scrollState = rememberScrollState()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -58,7 +63,7 @@ fun PersonalInfoContent(
         contentAlignment = Alignment.Center
     ) {
         Column(
-            modifier = Modifier.padding(start = 10.dp, bottom = 10.dp),
+            modifier = Modifier.verticalScroll(scrollState).padding(start = 10.dp, bottom = 10.dp),
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
 
