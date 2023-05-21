@@ -19,24 +19,22 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ValidationAlertDialog(
-    setVisibilityAlertDialogStatusPersonalInfo: (Boolean) -> Unit,
-    getInvalidFields: () -> List<String>,
-    setInvalidFields: (List<String>) -> Unit,
+    getInvalidAlertDialogState: () -> InvalidAlertDialogState,
 ) {
     AlertDialog(
         onDismissRequest = {
             // Dismiss the dialog when the user clicks outside the dialog or on the back button.
             // If you want to disable that functionality, simply leave this block empty.
-            setVisibilityAlertDialogStatusPersonalInfo(false)
-            setInvalidFields(listOf())
+            getInvalidAlertDialogState().alertDialogPersonalFieldVisibility = false
+            getInvalidAlertDialogState().invalidFields = listOf()
         },
         confirmButton = {
             TextButton(
                 onClick = {
                     // perform the confirm action and
                     // close the dialog
-                    setVisibilityAlertDialogStatusPersonalInfo(false)
-                    setInvalidFields(listOf())
+                    getInvalidAlertDialogState().alertDialogPersonalFieldVisibility = false
+                    getInvalidAlertDialogState().invalidFields = listOf()
                 }
             ) {
                 Text(
@@ -49,8 +47,8 @@ fun ValidationAlertDialog(
             TextButton(
                 onClick = {
                     // close the dialog
-                    setVisibilityAlertDialogStatusPersonalInfo(false)
-                    setInvalidFields(listOf())
+                    getInvalidAlertDialogState().alertDialogPersonalFieldVisibility = false
+                    getInvalidAlertDialogState().invalidFields = listOf()
                 }
             ) {
                 Text(
@@ -64,7 +62,7 @@ fun ValidationAlertDialog(
         },
         text = {
             var initialMessage = "The following fields are invalid: "
-            getInvalidFields().forEach{
+            getInvalidAlertDialogState().invalidFields.forEach{
                 initialMessage = initialMessage.plus(it).plus(", ")
             }
 

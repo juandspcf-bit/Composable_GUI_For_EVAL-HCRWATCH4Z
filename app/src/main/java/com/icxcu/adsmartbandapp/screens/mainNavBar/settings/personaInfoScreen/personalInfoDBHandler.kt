@@ -1,6 +1,5 @@
 package com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -13,6 +12,9 @@ fun PersonalInfoDBHandler(
     dataViewModel: DataViewModel,
 ) {
 
+    val getPersonalInfoDataState = {
+        dataViewModel.personalInfoDataState
+    }
     //Data Sources
     val personalInfoResultsFromDB by dataViewModel.personalInfoFromDB.observeAsState(
         MutableList(0) { PersonalInfo(
@@ -27,10 +29,10 @@ fun PersonalInfoDBHandler(
 
     dataViewModel.personalInfoListReadFromDB = if (personalInfoResultsFromDB.isEmpty().not() && personalInfoResultsFromDB[0].id!=-1) {
         val filter = personalInfoResultsFromDB.filter { it.typesTable == TypesTable.PERSONAL_INFO }
-        dataViewModel.name = filter[0].name
-        dataViewModel.date = filter[0].birthdate
-        dataViewModel.weight = filter[0].weight.toString()
-        dataViewModel.height = filter[0].height.toString()
+        getPersonalInfoDataState().name = filter[0].name
+        getPersonalInfoDataState().date = filter[0].birthdate
+        getPersonalInfoDataState().weight = filter[0].weight.toString()
+        getPersonalInfoDataState().height = filter[0].height.toString()
         filter
     } else {
         mutableListOf()

@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -39,10 +37,14 @@ import androidx.compose.ui.unit.sp
 import com.icxcu.adsmartbandapp.R
 
 @Composable
-fun NameTextFieldComposable(
+fun NumericHeightTextFieldComposable(
     getPersonalInfoDataStateState: () -> PersonalInfoDataState,
-    onTextChange: (String) -> Unit,
-    onNameTextFieldVisibilityChange: (Boolean) -> Unit,
+    onNumericUnitTextChange: (String) -> Unit,
+    onNumericUnitTextFieldVisibilityChange: (Boolean) -> Unit,
+    unit:String,
+    contentDescription:String = "",
+    resourceIcon1:Int = R.drawable.ic_launcher_foreground,
+    validator: (String) -> String
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
 
@@ -53,7 +55,7 @@ fun NameTextFieldComposable(
                         onPress = {  },
                         onDoubleTap = { /* Double Tap Detected */ },
                         onLongPress = { /* Long Press Detected */ },
-                        onTap = { onNameTextFieldVisibilityChange(!getPersonalInfoDataStateState().nameTextFieldVisibility) }
+                        onTap = { onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().heightTextFieldVisibility) }
                     )
                 }
                 .fillMaxWidth(0.8f)
@@ -62,82 +64,91 @@ fun NameTextFieldComposable(
                 .background(color = Color(0xFFE91E63))
         ) {
 
-            val displayName = if (getPersonalInfoDataStateState().name == "") {
-                "Your name"
+            val numberValidated = validator(getPersonalInfoDataStateState().height)
+
+            val displayNumericUnit = if (numberValidated == "") {
+                "Your $contentDescription"
             } else {
-                getPersonalInfoDataStateState().name
+                "$numberValidated $unit"
             }
 
             Text(
-                displayName,
+                displayNumericUnit,
                 textAlign = TextAlign.Start,
                 color = Color.White,
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(start = 10.dp, top = 10.dp, bottom = 10.dp)
+                modifier = Modifier.padding(
+                    start = 10.dp,
+                    top = 10.dp,
+                    bottom = 10.dp
+                )
             )
         }
 
         Icon(
-            painter = painterResource(R.drawable.baseline_person_24),
-            contentDescription = "Date Range",
+            painter = painterResource(resourceIcon1),
+            contentDescription = contentDescription,
             tint = Color(0xFFFFC107),
             modifier = Modifier
                 .size(50.dp)
                 .clickable {
-                    onNameTextFieldVisibilityChange(!getPersonalInfoDataStateState().nameTextFieldVisibility)
+                    onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().heightTextFieldVisibility)
                 }
         )
     }
 
     AnimatedVisibility(
-        visible = getPersonalInfoDataStateState().nameTextFieldVisibility,
+        visible = getPersonalInfoDataStateState().heightTextFieldVisibility,
         enter = expandVertically(animationSpec = tween(durationMillis = 1000)),
         exit = slideOutVertically()
     ) {
-        NameTexField(
+        NumericHeightTexField(
             getPersonalInfoDataStateState,
-            onTextChange = onTextChange,
-            onNameTextFieldVisibilityChange,
+            onNumericUnitTextChange = onNumericUnitTextChange,
+            onNumericUnitTextFieldVisibilityChange,
+            contentDescription = contentDescription,
+            resourceIcon1 = resourceIcon1
         )
     }
 
 
 }
 
+
 @Composable
-fun NameTexField(
+fun NumericHeightTexField(
     getPersonalInfoDataStateState: () -> PersonalInfoDataState,
-    onTextChange: (String) -> Unit,
-    onNameTextFieldVisibilityChange: (Boolean) -> Unit,
-) {
+    onNumericUnitTextChange: (String) -> Unit,
+    onNumericUnitTextFieldVisibilityChange: (Boolean) -> Unit,
+    contentDescription:String = "",
+    resourceIcon1:Int = R.drawable.ic_launcher_foreground,
+
+    ) {
 
     OutlinedTextField(
-
-        value = getPersonalInfoDataStateState().name,
-        onValueChange = onTextChange,
+        value = getPersonalInfoDataStateState().height,
+        onValueChange = onNumericUnitTextChange,
         keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
+            keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Done
         ),
         singleLine = true,
-        label = { Text("Your Name") },
-        modifier = Modifier
-            .padding(10.dp)
-            .background(Color(0xff1d2a35))
-            ,
+        label = { Text("Your $contentDescription") },
+        modifier = Modifier.padding(10.dp)
+            .background(Color(0xff1d2a35)),
         textStyle = TextStyle(
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp
         ),
         trailingIcon = {
             Icon(
-                imageVector = Icons.Default.Person,
-                contentDescription = "Person Icon"
+                painter = painterResource(resourceIcon1),
+                contentDescription = contentDescription,
             )
         },
         keyboardActions = KeyboardActions(
             onDone = {
-                onNameTextFieldVisibilityChange(!getPersonalInfoDataStateState().nameTextFieldVisibility)
+                onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().heightTextFieldVisibility)
             }
         ),
         colors = TextFieldDefaults.colors(
@@ -152,8 +163,6 @@ fun NameTexField(
             focusedTrailingIconColor = Color(0xFFFFC107),
             unfocusedTrailingIconColor = Color(0xFFFFC107),
         )
-
-
 
     )
 }

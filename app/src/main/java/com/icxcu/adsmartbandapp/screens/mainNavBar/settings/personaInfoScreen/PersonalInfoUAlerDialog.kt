@@ -11,13 +11,17 @@ fun PersonalInfoInitDBHandlerAD(
     dataViewModel: DataViewModel,
 ) {
 
+    val getUpdateAlertDialogState = {
+        dataViewModel.updateAlertDialogState
+    }
+
     //Data Sources
-    val personalInfoAlertDialogUStateDB by dataViewModel
-        .personalInfoAlertDialogUVLiveData
+    val personalInfoAlertDialogUStateDB by
+    getUpdateAlertDialogState().personalInfoAlertDialogUVLiveData
         .observeAsState(initial = false)
 
 
-    dataViewModel.alertDialogUPersonalFieldVisibility = personalInfoAlertDialogUStateDB?:false
+    getUpdateAlertDialogState().alertDialogUPersonalFieldVisibility = personalInfoAlertDialogUStateDB?:false
     Log.d("Steps", "updatePersonalInfo: Second")
 
 

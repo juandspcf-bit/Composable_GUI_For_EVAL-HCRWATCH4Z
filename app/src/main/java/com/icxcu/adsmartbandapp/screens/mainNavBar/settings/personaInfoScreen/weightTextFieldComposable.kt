@@ -37,9 +37,8 @@ import androidx.compose.ui.unit.sp
 import com.icxcu.adsmartbandapp.R
 
 @Composable
-fun NumericUnitTextFieldComposable(
-    currentNumericUnit: () -> String,
-    currentNumericUnitTextFieldVisibility: () -> Boolean,
+fun NumericWeightTextFieldComposable(
+    getPersonalInfoDataStateState: () -> PersonalInfoDataState,
     onNumericUnitTextChange: (String) -> Unit,
     onNumericUnitTextFieldVisibilityChange: (Boolean) -> Unit,
     unit:String,
@@ -56,7 +55,7 @@ fun NumericUnitTextFieldComposable(
                         onPress = {  },
                         onDoubleTap = { /* Double Tap Detected */ },
                         onLongPress = { /* Long Press Detected */ },
-                        onTap = { onNumericUnitTextFieldVisibilityChange(!currentNumericUnitTextFieldVisibility()) }
+                        onTap = { onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().weightTextFieldVisibility) }
                     )
                 }
                 .fillMaxWidth(0.8f)
@@ -65,7 +64,7 @@ fun NumericUnitTextFieldComposable(
                 .background(color = Color(0xFFE91E63))
         ) {
 
-            val numberValidated = validator(currentNumericUnit())
+            val numberValidated = validator(getPersonalInfoDataStateState().weight)
 
             val displayNumericUnit = if (numberValidated == "") {
                 "Your $contentDescription"
@@ -93,20 +92,19 @@ fun NumericUnitTextFieldComposable(
             modifier = Modifier
                 .size(50.dp)
                 .clickable {
-                    onNumericUnitTextFieldVisibilityChange(!currentNumericUnitTextFieldVisibility())
+                    onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().weightTextFieldVisibility)
                 }
         )
     }
 
     AnimatedVisibility(
-        visible = currentNumericUnitTextFieldVisibility(),
+        visible = getPersonalInfoDataStateState().weightTextFieldVisibility,
         enter = expandVertically(animationSpec = tween(durationMillis = 1000)),
         exit = slideOutVertically()
     ) {
         NumericUnitTexField(
-            value = currentNumericUnit,
+            getPersonalInfoDataStateState,
             onNumericUnitTextChange = onNumericUnitTextChange,
-            currentNumericUnitTextFieldVisibility,
             onNumericUnitTextFieldVisibilityChange,
             contentDescription = contentDescription,
             resourceIcon1 = resourceIcon1
@@ -119,17 +117,16 @@ fun NumericUnitTextFieldComposable(
 
 @Composable
 fun NumericUnitTexField(
-    value: () -> String,
+    getPersonalInfoDataStateState: () -> PersonalInfoDataState,
     onNumericUnitTextChange: (String) -> Unit,
-    currentNumericUnitTextFieldVisibility: () -> Boolean,
     onNumericUnitTextFieldVisibilityChange: (Boolean) -> Unit,
     contentDescription:String = "",
     resourceIcon1:Int = R.drawable.ic_launcher_foreground,
 
-) {
+    ) {
 
     OutlinedTextField(
-        value = value(),
+        value = getPersonalInfoDataStateState().weight,
         onValueChange = onNumericUnitTextChange,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number,
@@ -151,7 +148,7 @@ fun NumericUnitTexField(
         },
         keyboardActions = KeyboardActions(
             onDone = {
-                onNumericUnitTextFieldVisibilityChange(!currentNumericUnitTextFieldVisibility())
+                onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().weightTextFieldVisibility)
             }
         ),
         colors = TextFieldDefaults.colors(

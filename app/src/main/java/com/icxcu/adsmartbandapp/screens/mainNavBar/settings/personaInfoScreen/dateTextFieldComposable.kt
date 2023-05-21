@@ -48,8 +48,7 @@ import java.time.format.DateTimeParseException
 
 @Composable
 fun DateTextFieldComposable(
-    currentDate: () -> String,
-    currentDateTextFieldVisibility: () -> Boolean,
+    getPersonalInfoDataStateState: () -> PersonalInfoDataState,
     onDateTextChange: (String) -> Unit,
     onDateTextFieldVisibilityChange: (Boolean) -> Unit,
 ) {
@@ -62,7 +61,7 @@ fun DateTextFieldComposable(
                         onPress = {  },
                         onDoubleTap = { /* Double Tap Detected */ },
                         onLongPress = { /* Long Press Detected */ },
-                        onTap = { onDateTextFieldVisibilityChange(!currentDateTextFieldVisibility()) }
+                        onTap = { onDateTextFieldVisibilityChange(!getPersonalInfoDataStateState().dateTextFieldVisibility) }
                     )
                 }
                 .fillMaxWidth(0.8f)
@@ -71,10 +70,10 @@ fun DateTextFieldComposable(
                 .background(color = Color(0xFFE91E63))
         ) {
 
-            val displayDate = if (currentDate() == "") {
+            val displayDate = if (getPersonalInfoDataStateState().date == "") {
                 "Your birthdate"
             } else {
-                val trimmed = if (currentDate().length >= 8) currentDate().substring(0..7) else currentDate()
+                val trimmed = if (getPersonalInfoDataStateState().date.length >= 8) getPersonalInfoDataStateState().date.substring(0..7) else getPersonalInfoDataStateState().date
                 var out = ""
                 for (i in trimmed.indices) {
                     out += trimmed[i]
@@ -108,20 +107,19 @@ fun DateTextFieldComposable(
             modifier = Modifier
                 .size(50.dp)
                 .clickable {
-                    onDateTextFieldVisibilityChange(!currentDateTextFieldVisibility())
+                    onDateTextFieldVisibilityChange(!getPersonalInfoDataStateState().dateTextFieldVisibility)
                 }
         )
     }
 
     AnimatedVisibility(
-        visible = currentDateTextFieldVisibility(),
+        visible = getPersonalInfoDataStateState().dateTextFieldVisibility,
         enter = expandVertically(animationSpec = tween(durationMillis = 1000)),
         exit = slideOutVertically()
     ) {
         DateTexField(
-            value = currentDate,
+            getPersonalInfoDataStateState,
             onDateTextChange = onDateTextChange,
-            currentDateTextFieldVisibility,
             onDateTextFieldVisibilityChange,
         )
     }
@@ -132,14 +130,13 @@ fun DateTextFieldComposable(
 
 @Composable
 fun DateTexField(
-    value: () -> String,
+    getPersonalInfoDataStateState: () -> PersonalInfoDataState,
     onDateTextChange: (String) -> Unit,
-    currentDateTextFieldVisibility: () -> Boolean,
     onDateTextFieldVisibilityChange: (Boolean) -> Unit,
 ) {
 
     OutlinedTextField(
-        value = value(),
+        value = getPersonalInfoDataStateState().date,
         onValueChange = onDateTextChange,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number,
@@ -161,7 +158,7 @@ fun DateTexField(
         },
         keyboardActions = KeyboardActions(
             onDone = {
-                onDateTextFieldVisibilityChange(!currentDateTextFieldVisibility())
+                onDateTextFieldVisibilityChange(!getPersonalInfoDataStateState().dateTextFieldVisibility)
             }
         ),
         visualTransformation = DateTransformation(),

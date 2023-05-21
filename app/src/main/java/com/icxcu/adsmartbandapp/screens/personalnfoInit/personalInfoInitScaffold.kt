@@ -108,34 +108,7 @@ fun PersonalInfoInitScaffold(
             ) {
 
                 if (isPersonalInfoInit().not()) {
-                    PersonalInfoContent(
-                        currentName,
-                        currentNameTextFieldVisibility,
-                        onTextChange,
-                        onNameTextFieldVisibilityChange,
-                        currentDate,
-                        currentDateTextFieldVisibility,
-                        onDateTextChange,
-                        onDateTextFieldVisibilityChange,
-                        currentWeight,
-                        currentWeightTextFieldVisibility,
-                        onWeightTextChange,
-                        onWeightTextFieldVisibilityChange,
-                        currentHeight,
-                        currentHeightTextFieldVisibility,
-                        onHeightTextChange,
-                        onHeightTextFieldVisibilityChange,
-                        getPersonalInfoListReadFromDB,
-                        validatePersonalInfo,
-                        visibilityAlertDialogStatusPersonalInfo,
-                        setVisibilityAlertDialogStatusPersonalInfo,
-                        getInvalidFields,
-                        setInvalidFields,
-                        visibilityAlertDialogStatusPersonalInfoU,
-                        setVisibilityAlertDialogStatusPersonalInfoU,
-                        updatePersonalData,
-                        insertPersonalData,
-                    )
+
                 } else {
                     CircularProgressIndicator(
                         color = Color(0xFFE57373)

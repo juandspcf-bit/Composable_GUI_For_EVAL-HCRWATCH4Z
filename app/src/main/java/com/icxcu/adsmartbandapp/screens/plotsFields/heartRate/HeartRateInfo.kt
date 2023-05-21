@@ -24,14 +24,18 @@ fun HeartRateInfo(
     navLambda: () -> Unit
 ){
 
+    val getPersonalInfoDataState = {
+        dataViewModel.personalInfoDataState
+    }
+
     val dayHeartRateResultsFromDB by dataViewModel.dayHeartRateResultsFromDB.observeAsState(
         MutableList(0) { HeartRate() }.toList()
     )
 
     val ageCalculated by remember(dayHeartRateResultsFromDB) {
         derivedStateOf {
-            val date = ValidatorsPersonalField.dateValidator(dataViewModel.date)
-            Log.d("VerifyingDate", "HeartRateInfo: date ${dataViewModel.date}")
+            val date = ValidatorsPersonalField.dateValidator(getPersonalInfoDataState().date)
+            Log.d("VerifyingDate", "HeartRateInfo: date ${getPersonalInfoDataState().date}")
             val age = try {
                 val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                 val myBirthsDate = LocalDate.parse(date, formatter)

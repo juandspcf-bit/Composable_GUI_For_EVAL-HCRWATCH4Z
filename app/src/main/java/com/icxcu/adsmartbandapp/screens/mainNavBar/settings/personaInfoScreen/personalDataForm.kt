@@ -11,102 +11,24 @@ fun PersonalDataForm(
     navLambda: () -> Unit
 ) {
 
-    val currentName = {
-        dataViewModel.name
+    val getPersonalInfoDataState = {
+        dataViewModel.personalInfoDataState
     }
 
-    val onTextChange = { valueFromTextField: String ->
-        dataViewModel.name = valueFromTextField
+    val getInvalidAlertDialogState = {
+        dataViewModel.invalidAlertDialogState
     }
 
-    val currentNameTextFieldVisibility = {
-        dataViewModel.nameTextFieldVisibility
+    val validatePersonalInfo={
+        dataViewModel.validatePersonalInfo( getPersonalInfoDataState )
     }
 
-    val onNameTextFieldVisibilityChange = { visibility: Boolean ->
-        dataViewModel.nameTextFieldVisibility = visibility
-    }
-
-    val currentDate = {
-        dataViewModel.date
-    }
-
-    val onDateTextChange = { valueFromDateTextField: String ->
-        dataViewModel.date = valueFromDateTextField
-    }
-
-
-    val currentDateTextFieldVisibility = {
-        dataViewModel.dateTextFieldVisibility
-    }
-
-    val onDateTextFieldVisibilityChange = { visibility: Boolean ->
-        dataViewModel.dateTextFieldVisibility = visibility
-    }
-
-    val currentWeight = {
-        dataViewModel.weight
-    }
-
-    val onWeightTextChange = { valueFromWeightTextField: String ->
-        dataViewModel.weight = valueFromWeightTextField
-    }
-
-    val currentWeightTextFieldVisibility = {
-        dataViewModel.weightTextFieldVisibility
-    }
-
-    val onWeightTextFieldVisibilityChange = { visibility: Boolean ->
-        dataViewModel.weightTextFieldVisibility = visibility
-    }
-
-    val currentHeight = {
-        dataViewModel.height
-    }
-
-    val onHeightTextChange = { valueFromHeightTextField: String ->
-        dataViewModel.height = valueFromHeightTextField
-    }
-
-    val currentHeightTextFieldVisibility = {
-        dataViewModel.heightTextFieldVisibility
-    }
-
-    val onHeightTextFieldVisibilityChange = { visibility: Boolean ->
-        dataViewModel.heightTextFieldVisibility = visibility
+    val getUpdateAlertDialogState = {
+        dataViewModel.updateAlertDialogState
     }
 
     val getPersonalInfoListReadFromDB = {
         dataViewModel.personalInfoListReadFromDB
-    }
-
-    val validatePersonalInfo={
-        dataViewModel.validatePersonalInfo( currentName,currentDate, currentWeight, currentHeight)
-    }
-
-    val visibilityAlertDialogStatusPersonalInfo = {
-        dataViewModel.alertDialogPersonalFieldVisibility
-    }
-
-    val setVisibilityAlertDialogStatusPersonalInfo = { visibility:Boolean->
-        dataViewModel.alertDialogPersonalFieldVisibility = visibility
-
-    }
-
-    val getInvalidFields = {
-        dataViewModel.invalidFields
-    }
-    val setInvalidFields = { invalidFields:List<String> ->
-        dataViewModel.invalidFields = invalidFields
-    }
-
-    val visibilityAlertDialogStatusPersonalInfoU = {
-        dataViewModel.alertDialogUPersonalFieldVisibility
-    }
-
-    val setVisibilityAlertDialogStatusPersonalInfoU = { visibility:Boolean->
-        dataViewModel.alertDialogUPersonalFieldVisibility = visibility
-        dataViewModel.personalInfoAlertDialogUVLiveData.value = visibility
     }
 
     val insertPersonalData= { personalInfo:PersonalInfo->
@@ -120,30 +42,11 @@ fun PersonalDataForm(
 
     PersonalInfoFormScaffold(
         navLambda,
-        currentName,
-        currentNameTextFieldVisibility,
-        onTextChange,
-        onNameTextFieldVisibilityChange,
-        currentDate,
-        currentDateTextFieldVisibility,
-        onDateTextChange,
-        onDateTextFieldVisibilityChange,
-        currentWeight,
-        currentWeightTextFieldVisibility,
-        onWeightTextChange,
-        onWeightTextFieldVisibilityChange,
-        currentHeight,
-        currentHeightTextFieldVisibility,
-        onHeightTextChange,
-        onHeightTextFieldVisibilityChange,
+        getPersonalInfoDataState,
         getPersonalInfoListReadFromDB,
         validatePersonalInfo,
-        visibilityAlertDialogStatusPersonalInfo,
-        setVisibilityAlertDialogStatusPersonalInfo,
-        getInvalidFields,
-        setInvalidFields,
-        visibilityAlertDialogStatusPersonalInfoU,
-        setVisibilityAlertDialogStatusPersonalInfoU,
+        getInvalidAlertDialogState,
+        getUpdateAlertDialogState,
         updatePersonalData,
         insertPersonalData
     )

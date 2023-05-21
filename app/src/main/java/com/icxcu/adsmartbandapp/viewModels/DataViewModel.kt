@@ -18,6 +18,9 @@ import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.repositories.Values
+import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.InvalidAlertDialogState
+import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoDataState
+import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.UpdateAlertDialogState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.ValidatorsPersonalField
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -139,11 +142,13 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     var personalInfoFromDB = MutableLiveData<List<PersonalInfo>>()
     var personalInfoListReadFromDB = listOf<PersonalInfo>()
-    var alertDialogPersonalFieldVisibility by mutableStateOf(false)
-    var personalInfoAlertDialogUVLiveData = MutableLiveData(false)
-    var alertDialogUPersonalFieldVisibility by mutableStateOf(false)
-    var invalidFields by mutableStateOf(listOf<String>())
+/*    var personalInfoAlertDialogUVLiveData = MutableLiveData(false)
+    var alertDialogUPersonalFieldVisibility by mutableStateOf(false)*/
 
+
+    var personalInfoDataState = PersonalInfoDataState()
+    var invalidAlertDialogState = InvalidAlertDialogState()
+    var updateAlertDialogState = UpdateAlertDialogState()
 
     var macAddressDeviceBluetooth: String = ""
     var nameDeviceBluetooth: String = ""
@@ -153,16 +158,6 @@ class DataViewModel(var application: Application) : ViewModel() {
     var stateMiliSecondsDateDialogDatePicker by mutableStateOf(0L)
 
 
-    var name by mutableStateOf("")
-    var nameTextFieldVisibility by mutableStateOf(false)
-    var date by mutableStateOf("")
-    var dateTextFieldVisibility by mutableStateOf(false)
-    var weight by mutableStateOf("")
-    var weightTextFieldVisibility by mutableStateOf(false)
-    var height by mutableStateOf("")
-    var heightTextFieldVisibility by mutableStateOf(false)
-
-    var isPersonalInfoInit by mutableStateOf(false)
 
 
     init {
@@ -192,7 +187,8 @@ class DataViewModel(var application: Application) : ViewModel() {
         yesterdayHeartRateResultsFromDB = swRepository.yesterdayHeartRateResultsFromDB
 
         personalInfoFromDB = swRepository.personalInfoFromDB
-        personalInfoAlertDialogUVLiveData = swRepository.personalInfoAlertDialogUVStateLiveData
+        updateAlertDialogState.personalInfoAlertDialogUVLiveData =
+            swRepository.personalInfoAlertDialogUVStateLiveData
 
 
 
@@ -324,16 +320,13 @@ class DataViewModel(var application: Application) : ViewModel() {
     }
 
     fun validatePersonalInfo(
-        currentName: () -> String,
-        currentDate: () -> String,
-        currentWeight: () -> String,
-        currentHeight: () -> String
+        getPersonalInfoDataStateState: () -> PersonalInfoDataState,
     ): List<String> {
         val validationFields = mapOf(
-            "Name" to currentName().isNotBlank(),
-            "Birthday" to ValidatorsPersonalField.dateValidator(currentDate()).isNotBlank(),
-            "Weight" to ValidatorsPersonalField.weightValidator(currentWeight()).isNotBlank(),
-            "Height" to ValidatorsPersonalField.heightValidator(currentHeight()).isNotBlank()
+            "Name" to getPersonalInfoDataStateState().name.isNotBlank(),
+            "Birthday" to ValidatorsPersonalField.dateValidator(getPersonalInfoDataStateState().date).isNotBlank(),
+            "Weight" to ValidatorsPersonalField.weightValidator(getPersonalInfoDataStateState().weight).isNotBlank(),
+            "Height" to ValidatorsPersonalField.heightValidator(getPersonalInfoDataStateState().height).isNotBlank()
         )
 
         val invalidFields = mutableListOf<String>()
