@@ -58,8 +58,8 @@ fun NumericHeightTextFieldComposable(
                         onTap = { onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().heightTextFieldVisibility) }
                     )
                 }
-                .fillMaxWidth(0.8f)
-                .padding(end = 20.dp)
+                .fillMaxWidth(0.85f)
+                //.padding(start = 20.dp, end = 20.dp)
                 .clip(shape = RoundedCornerShape(size = 12.dp))
                 .background(color = Color(0xFFE91E63))
         ) {
@@ -77,11 +77,7 @@ fun NumericHeightTextFieldComposable(
                 textAlign = TextAlign.Start,
                 color = Color.White,
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(
-                    start = 10.dp,
-                    top = 10.dp,
-                    bottom = 10.dp
-                )
+                modifier = Modifier.padding(start = 10.dp, top = 10.dp, bottom = 10.dp)
             )
         }
 
@@ -89,7 +85,7 @@ fun NumericHeightTextFieldComposable(
             painter = painterResource(resourceIcon1),
             contentDescription = contentDescription,
             tint = Color(0xFFFFC107),
-            modifier = Modifier
+            modifier = Modifier.fillMaxWidth(1f)
                 .size(50.dp)
                 .clickable {
                     onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().heightTextFieldVisibility)

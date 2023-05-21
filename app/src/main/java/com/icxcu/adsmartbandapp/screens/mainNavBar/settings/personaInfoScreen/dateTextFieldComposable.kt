@@ -64,8 +64,8 @@ fun DateTextFieldComposable(
                         onTap = { onDateTextFieldVisibilityChange(!getPersonalInfoDataStateState().dateTextFieldVisibility) }
                     )
                 }
-                .fillMaxWidth(0.8f)
-                .padding(end = 20.dp)
+                .fillMaxWidth(0.85f)
+                //.padding(start = 20.dp, end = 20.dp)
                 .clip(shape = RoundedCornerShape(size = 12.dp))
                 .background(color = Color(0xFFE91E63))
         ) {
@@ -104,7 +104,7 @@ fun DateTextFieldComposable(
             painter = painterResource(R.drawable.baseline_date_range_24),
             contentDescription = "Date Range",
             tint = Color(0xFFFFC107),
-            modifier = Modifier
+            modifier = Modifier.fillMaxWidth(1f)
                 .size(50.dp)
                 .clickable {
                     onDateTextFieldVisibilityChange(!getPersonalInfoDataStateState().dateTextFieldVisibility)

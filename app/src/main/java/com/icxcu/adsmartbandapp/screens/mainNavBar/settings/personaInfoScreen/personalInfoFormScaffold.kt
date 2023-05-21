@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,3 +78,19 @@ fun PersonalInfoFormScaffold(
 }
 
 
+@Preview(showBackground = true)
+@Composable
+fun PersonalInfoFormScaffoldPreview() {
+    PersonalInfoFormScaffold(
+        navLambda = {},
+        getPersonalInfoDataStateState = { PersonalInfoDataState() },
+        getPersonalInfoListReadFromDB = { listOf(PersonalInfo()) },
+        validatePersonalInfo = { listOf() },
+        getInvalidAlertDialogState = { InvalidAlertDialogState() },
+        getUpdateAlertDialogState = { UpdateAlertDialogState() },
+        updatePersonalData = {},
+        insertPersonalData = {},
+    )
+
+
+}

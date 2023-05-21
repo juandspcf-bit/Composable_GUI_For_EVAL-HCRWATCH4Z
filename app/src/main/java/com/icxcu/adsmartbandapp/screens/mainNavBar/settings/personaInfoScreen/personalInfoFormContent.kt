@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
@@ -41,7 +42,7 @@ fun PersonalInfoContent(
         contentAlignment = Alignment.Center
     ) {
         Column(
-            modifier = Modifier.verticalScroll(scrollState).padding(start = 10.dp, bottom = 10.dp),
+            modifier = Modifier.verticalScroll(scrollState).padding(start = 15.dp, end = 15.dp),
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
 
@@ -79,8 +80,8 @@ fun PersonalInfoContent(
 
             Button(
                 modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .padding(top = 50.dp, end = 20.dp),
+                    .fillMaxWidth()
+                    .padding(start = 20.dp, top = 50.dp, end = 20.dp),
                 onClick = {
 
                     if (validatePersonalInfo().isNotEmpty()) {
@@ -127,4 +128,19 @@ fun PersonalInfoContent(
         }
     }
 
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun PersonalInfoContentPreview() {
+    PersonalInfoContent(
+        getPersonalInfoDataStateState = { PersonalInfoDataState() },
+        getPersonalInfoListReadFromDB = { listOf(PersonalInfo()) },
+        validatePersonalInfo = { listOf() },
+        getInvalidAlertDialogState = { InvalidAlertDialogState() },
+        getUpdateAlertDialogState = { UpdateAlertDialogState() },
+        updatePersonalData = {},
+        insertPersonalData = {},
+    )
 }
