@@ -214,8 +214,8 @@ class DayPhysicalActivityInfoState {
 }
 
 class SmartWatchState(
-    private val todayFormattedDate: String,
-    private val yesterdayFormattedDate: String
+    todayFormattedDate: String,
+    yesterdayFormattedDate: String
 ) {
     var progressbarForFetchingDataFromSW by mutableStateOf(false)
     var isRequestForFetchingDataFromSWBeginning by mutableStateOf(false)

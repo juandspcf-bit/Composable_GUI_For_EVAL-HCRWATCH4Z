@@ -44,6 +44,7 @@ import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyTempera
 
 @Composable
 fun TestingHealthScreen(
+    getVisibilityProgressbarForFetchingData: () -> Boolean = { false },
     getMyHeartRateAlertDialogDataHandler: () -> MyHeartRateAlertDialogDataHandler,
     getMyHeartRate: () -> Int,
     getMyBloodPressureDialogDataHandler: () -> myBloodPressureAlertDialogDataHandler,
@@ -70,6 +71,7 @@ fun TestingHealthScreen(
             R.drawable.heart_rate,
             {
                 BoxImageCircle(
+                    enabled = getVisibilityProgressbarForFetchingData().not(),
                     withImage = true,
                     imageResource = R.drawable.heart_rate,
                     setNumberDialog = { indexButton: Int ->
@@ -97,6 +99,7 @@ fun TestingHealthScreen(
             R.drawable.blood_pressure_gauge,
             {
                 BoxImageCircle(
+                    enabled = getVisibilityProgressbarForFetchingData().not(),
                     withImage = true,
                     imageResource = R.drawable.blood_pressure_gauge,
                     setNumberDialog = { indexButton: Int ->
@@ -124,6 +127,7 @@ fun TestingHealthScreen(
             R.drawable.oxygen_saturation,
             {
                 BoxImageCircle(
+                    enabled = getVisibilityProgressbarForFetchingData().not(),
                     withImage = true,
                     imageResource = R.drawable.oxygen_saturation,
                     setNumberDialog = { indexButton: Int ->
@@ -151,6 +155,7 @@ fun TestingHealthScreen(
             R.drawable.thermometer,
             {
                 BoxImageCircle(
+                    enabled = getVisibilityProgressbarForFetchingData().not(),
                     withImage = true,
                     imageResource = R.drawable.thermometer,
                     setNumberDialog = { indexButton: Int ->
@@ -223,6 +228,7 @@ fun TestingHealthScreen(
 @Composable
 fun BoxImageCircle(
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     withImage: Boolean = false,
     imageResource: Int = R.drawable.ic_launcher_foreground,
     setNumberDialog: (Int) -> Unit,
@@ -250,7 +256,8 @@ fun BoxImageCircle(
             },
             shape = CircleShape,
             colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
-            border = BorderStroke(2.dp, Color.Green)
+            border = BorderStroke(2.dp, Color.Green),
+            enabled = enabled
         ) {
             if (withImage) {
 

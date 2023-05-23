@@ -137,6 +137,7 @@ fun MainNavigationBarScaffold(
 
                 NavigationHost(
                     navController = navController,
+                    getVisibilityProgressbarForFetchingData = getVisibilityProgressbarForFetchingData,
                     dayDateValuesReadFromSW = dayDateValuesReadFromSW,
                     getMyHeartRateAlertDialogDataHandler = getMyHeartRateAlertDialogDataHandler,
                     getMyHeartRate = getMyHeartRate,
@@ -162,6 +163,7 @@ fun MainNavigationBarScaffold(
 fun NavigationHost(
     navController: NavHostController,
     dayDateValuesReadFromSW: () -> Values,
+    getVisibilityProgressbarForFetchingData: () -> Boolean = { false },
     getMyHeartRateAlertDialogDataHandler: () -> MyHeartRateAlertDialogDataHandler,
     getMyHeartRate: () -> Int,
     getMyBloodPressureDialogDataHandler: () -> myBloodPressureAlertDialogDataHandler,
@@ -186,6 +188,7 @@ fun NavigationHost(
         }
         composable(NavRoutes.CheckHealth.route) {
             TestingHealthScreen(
+                getVisibilityProgressbarForFetchingData,
                 getMyHeartRateAlertDialogDataHandler,
                 getMyHeartRate,
                 getMyBloodPressureDialogDataHandler,
