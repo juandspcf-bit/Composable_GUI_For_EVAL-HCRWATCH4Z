@@ -30,7 +30,7 @@ import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.screens.Routes
 
 @Composable
-fun Settings(navMainController: NavController) {
+fun SettingsScreen(navMainController: NavController) {
 
     Box(
         modifier = Modifier
@@ -84,5 +84,5 @@ fun Settings(navMainController: NavController) {
 @Preview(showBackground = true)
 @Composable
 fun SettingsPreview() {
-    Settings(rememberNavController())
+    SettingsScreen(rememberNavController())
 }

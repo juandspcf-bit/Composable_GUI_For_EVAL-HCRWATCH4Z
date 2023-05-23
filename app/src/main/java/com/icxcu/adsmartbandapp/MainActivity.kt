@@ -30,7 +30,7 @@ import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.BluetoothScanScreen
 import com.icxcu.adsmartbandapp.screens.PermissionsScreen
 import com.icxcu.adsmartbandapp.screens.Routes
-import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.DashBoard
+import com.icxcu.adsmartbandapp.screens.mainNavBar.MainNavigationBar
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalDataForm
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoDBHandler
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoInitDBHandlerAD
@@ -257,7 +257,7 @@ class MainActivity : ComponentActivity() {
                     PersonalInfoDBHandler(
                         dataViewModel
                     )
-                    DashBoard(
+                    MainNavigationBar(
                         bluetoothName = bluetoothName ?: "no name",
                         bluetoothAddress = bluetoothAddress ?: "no address",
                         dataViewModel = dataViewModel,

@@ -41,7 +41,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.Settings
+import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.SettingsScreen
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
 import com.icxcu.adsmartbandapp.repositories.myBloodPressureAlertDialogDataHandler
@@ -50,7 +50,7 @@ import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
-import com.icxcu.adsmartbandapp.screens.ListDashBoardCardFields
+import com.icxcu.adsmartbandapp.screens.DashBoardScreen
 import com.icxcu.adsmartbandapp.screens.NavBarItems
 import com.icxcu.adsmartbandapp.screens.NavRoutes
 import com.icxcu.adsmartbandapp.screens.testHealthsScreen.TestingHealthScreen
@@ -58,7 +58,7 @@ import com.icxcu.adsmartbandapp.screens.testHealthsScreen.TestingHealthScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashBoardScaffold(
+fun MainNavigationBarScaffold(
     bluetoothName: String = "no name",
     bluetoothAddress: String = "no address",
     dayDateValuesReadFromSW: () -> Values = { MockData.valuesToday },
@@ -179,7 +179,7 @@ fun NavigationHost(
         startDestination = NavRoutes.Fields.route,
     ) {
         composable(NavRoutes.Fields.route) {
-            ListDashBoardCardFields(
+            DashBoardScreen(
                 dayDateValuesReadFromSW,
                 navMainController
             )
@@ -200,7 +200,7 @@ fun NavigationHost(
         }
 
         composable(NavRoutes.Settings.route) {
-            Settings(navMainController)
+            SettingsScreen(navMainController)
         }
     }
 }

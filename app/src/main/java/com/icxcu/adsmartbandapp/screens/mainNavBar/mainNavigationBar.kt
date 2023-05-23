@@ -1,4 +1,4 @@
-package com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard
+package com.icxcu.adsmartbandapp.screens.mainNavBar
 
 
 import androidx.compose.runtime.Composable
@@ -12,13 +12,19 @@ import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
-import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
+import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.MainNavigationBarScaffold
+import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.TodayBloodPressureDBHandler
+import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.TodayHeartRateDBHandler
+import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.TodayPhysicalActivityDBHandler
+import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.YesterdayBloodPressureDBHandler
+import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.YesterdayHeartRateDBHandler
+import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.YesterdayPhysicalActivityDBHandler
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 
 
 @Composable
-fun DashBoard(
+fun MainNavigationBar(
     bluetoothName: String,
     bluetoothAddress: String,
     dataViewModel: DataViewModel,
@@ -96,7 +102,7 @@ fun DashBoard(
     }
 
 
-    DashBoardScaffold(
+    MainNavigationBarScaffold(
         bluetoothName,
         bluetoothAddress,
         dayDateValuesReadFromSW,

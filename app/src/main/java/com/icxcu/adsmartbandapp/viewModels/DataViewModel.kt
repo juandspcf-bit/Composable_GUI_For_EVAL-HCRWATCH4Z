@@ -18,9 +18,9 @@ import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.repositories.Values
-import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.DayPhysicalActivityInfoState
-import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.TodayPhysicalActivityInfoState
-import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.YesterdayPhysicalActivityInfoState
+import com.icxcu.adsmartbandapp.screens.mainNavBar.DayPhysicalActivityInfoState
+import com.icxcu.adsmartbandapp.screens.mainNavBar.TodayPhysicalActivityInfoState
+import com.icxcu.adsmartbandapp.screens.mainNavBar.YesterdayPhysicalActivityInfoState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.InvalidAlertDialogState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.UpdateAlertDialogState

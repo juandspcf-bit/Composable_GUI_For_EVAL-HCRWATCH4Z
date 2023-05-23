@@ -23,7 +23,7 @@ import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.DashBoardCardData
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ListDashBoardCardFields(
+fun DashBoardScreen(
     dayDateValuesReadFromSW: () -> Values,
     navMainController: NavHostController
 ) {
@@ -192,7 +192,7 @@ fun ListDashBoardCardFields(
 @Preview(showBackground = true)
 @Composable
 fun ListDashBoardCardFieldsPreview() {
-    ListDashBoardCardFields(
+    DashBoardScreen(
         dayDateValuesReadFromSW = {
             MockData.valuesToday
         },
