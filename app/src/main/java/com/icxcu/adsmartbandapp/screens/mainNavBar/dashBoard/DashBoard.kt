@@ -96,12 +96,6 @@ fun DashBoard(
     }
 
 
-
-
-
-
-
-
     DashBoardScaffold(
         bluetoothName,
         bluetoothAddress,
@@ -183,4 +177,18 @@ class YesterdayPhysicalActivityInfoState{
     var yesterdayHeartRateListReadFromDB by mutableStateOf(listOf<Double>())
     var isYesterdayHeartRateListAlreadyInsertedInDB = false
     var isYesterdayHeartRateListInDBAlreadyUpdated = false
+}
+
+class DayPhysicalActivityInfoState{
+    var dayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
+    var dayStepListFromDB by mutableStateOf(listOf<Int>())
+    var dayDistanceListFromDB by mutableStateOf(listOf<Double>())
+    var dayCaloriesListFromDB by mutableStateOf(listOf<Double>())
+
+    var dayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
+    var daySystolicListFromDB by mutableStateOf(listOf<Double>())
+    var dayDiastolicListFromDB by mutableStateOf(listOf<Double>())
+
+    var dayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
+    var dayHeartRateListFromDB by mutableStateOf(listOf<Double>())
 }

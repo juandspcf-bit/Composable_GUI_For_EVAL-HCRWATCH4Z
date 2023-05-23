@@ -18,6 +18,7 @@ import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.repositories.Values
+import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.DayPhysicalActivityInfoState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.TodayPhysicalActivityInfoState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.YesterdayPhysicalActivityInfoState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.InvalidAlertDialogState
@@ -43,13 +44,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     var progressbarForFetchingDataFromSW by mutableStateOf(false)
     var isRequestForFetchingDataFromSWBeginning by mutableStateOf(false)
 
-    var selectedDay by mutableStateOf("")
-
-    var dayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
-    var dayStepListFromDB by mutableStateOf(listOf<Int>())
-    var dayDistanceListFromDB by mutableStateOf(listOf<Double>())
-    var dayCaloriesListFromDB by mutableStateOf(listOf<Double>())
-
+    private var swRepository: SWRepository
     var todayDateValuesReadFromSW by mutableStateOf(
         Values(
             MutableList(48) { 0 }.toList(),
@@ -61,19 +56,6 @@ class DataViewModel(var application: Application) : ViewModel() {
             todayFormattedDate
         )
     )
-
-    var dayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
-    var daySystolicListFromDB by mutableStateOf(listOf<Double>())
-    var dayDiastolicListFromDB by mutableStateOf(listOf<Double>())
-
-
-
-    var dayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
-    var dayHeartRateListFromDB by mutableStateOf(listOf<Double>())
-
-
-    val todayPhysicalActivityInfoState = TodayPhysicalActivityInfoState()
-
     var yesterdayDateValuesFromSW by mutableStateOf(
         Values(
             MutableList(48) { 0 }.toList(),
@@ -86,35 +68,11 @@ class DataViewModel(var application: Application) : ViewModel() {
         )
     )
 
+    var selectedDay by mutableStateOf("")
+
+    val dayPhysicalActivityInfoState = DayPhysicalActivityInfoState()
+    val todayPhysicalActivityInfoState = TodayPhysicalActivityInfoState()
     val yesterdayPhysicalActivityInfoState = YesterdayPhysicalActivityInfoState()
-/*    var yesterdayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
-    var yesterdayStepListReadFromDB by mutableStateOf(listOf<Int>())
-    var isYesterdayStepsListAlreadyInsertedInDB = false
-    var isYesterdayStepsListInDBAlreadyUpdated = false
-
-    var yesterdayDistanceListReadFromDB by mutableStateOf(listOf<Double>())
-    var isYesterdayDistanceListAlreadyInsertedInDB = false
-    var isYesterdayDistanceListInDBAlreadyUpdated = false
-
-    var yesterdayCaloriesListReadFromDB by mutableStateOf(listOf<Double>())
-    var isYesterdayCaloriesListAlreadyInsertedInDB = false
-    var isYesterdayCaloriesListInDBAlreadyUpdated = false
-
-    var yesterdayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
-    var yesterdaySystolicListReadFromDB by mutableStateOf(listOf<Double>())
-    var isYesterdaySystolicListAlreadyInsertedInDB = false
-    var isYesterdaySystolicListInDBAlreadyUpdated = false
-
-    var yesterdayDiastolicListReadFromDB by mutableStateOf(listOf<Double>())
-    var isYesterdayDiastolicListAlreadyInsertedInDB = false
-    var isYesterdayDiastolicListInDBAlreadyUpdated = false
-
-    var yesterdayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
-    var yesterdayHeartRateListReadFromDB by mutableStateOf(listOf<Double>())
-    var isYesterdayHeartRateListAlreadyInsertedInDB = false
-    var isYesterdayHeartRateListInDBAlreadyUpdated = false*/
-
-    private var swRepository: SWRepository
 
 
     var personalInfoFromDB = MutableLiveData<List<PersonalInfo>>()
@@ -148,15 +106,15 @@ class DataViewModel(var application: Application) : ViewModel() {
         )
 
 
-        dayPhysicalActivityResultsFromDB = swRepository.dayPhysicalActivityResultsFromDB
+        dayPhysicalActivityInfoState.dayPhysicalActivityResultsFromDB = swRepository.dayPhysicalActivityResultsFromDB
         todayPhysicalActivityInfoState.todayPhysicalActivityResultsFromDB = swRepository.todayPhysicalActivityResultsFromDB
         yesterdayPhysicalActivityInfoState.yesterdayPhysicalActivityResultsFromDB = swRepository.yesterdayPhysicalActivityResultsFromDB
 
-        dayBloodPressureResultsFromDB = swRepository.dayBloodPressureResultsFromDB
+        dayPhysicalActivityInfoState.dayBloodPressureResultsFromDB = swRepository.dayBloodPressureResultsFromDB
         todayPhysicalActivityInfoState.todayBloodPressureResultsFromDB = swRepository.todayBloodPressureResultsFromDB
         yesterdayPhysicalActivityInfoState.yesterdayBloodPressureResultsFromDB = swRepository.yesterdayBloodPressureResultsFromDB
 
-        dayHeartRateResultsFromDB = swRepository.dayHeartRateResultsFromDB
+        dayPhysicalActivityInfoState.dayHeartRateResultsFromDB = swRepository.dayHeartRateResultsFromDB
         todayPhysicalActivityInfoState.todayHeartRateResultsFromDB = swRepository.todayHeartRateResultsFromDB
         yesterdayPhysicalActivityInfoState.yesterdayHeartRateResultsFromDB = swRepository.yesterdayHeartRateResultsFromDB
 

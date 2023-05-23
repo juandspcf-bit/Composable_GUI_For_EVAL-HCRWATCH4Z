@@ -3,6 +3,7 @@ package com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
@@ -17,8 +18,14 @@ fun PhysicalActivityInfo(
     navLambda: () -> Unit
 ) {
 
+    val getDayPhysicalActivityData = remember(dataViewModel) {
+        {
+            dataViewModel.dayPhysicalActivityInfoState
+        }
+    }
+
     //Data state
-    val dayPhysicalActivityResultsFromDB by dataViewModel.dayPhysicalActivityResultsFromDB.observeAsState(
+    val dayPhysicalActivityResultsFromDB by getDayPhysicalActivityData().dayPhysicalActivityResultsFromDB.observeAsState(
         MutableList(0) { PhysicalActivity() }.toList()
     )
 
@@ -26,14 +33,14 @@ fun PhysicalActivityInfo(
         dataViewModel.selectedDay = dayPhysicalActivityResultsFromDB[0].dateData
     }
 
-    dataViewModel.dayStepListFromDB = if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
+    getDayPhysicalActivityData().dayStepListFromDB = if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
         val filter = dayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.STEPS }
         getIntegerListFromStringMap(filter[0].data)
     } else {
         MutableList(48) { 0 }.toList()
     }
 
-    dataViewModel.dayDistanceListFromDB = if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
+    getDayPhysicalActivityData().dayDistanceListFromDB = if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
         val filter = dayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.DISTANCE }
         if (filter.isEmpty()) {
             MutableList(48) { 0.0 }.toList()
@@ -44,7 +51,7 @@ fun PhysicalActivityInfo(
         MutableList(48) { 0.0 }.toList()
     }
 
-    dataViewModel.dayCaloriesListFromDB = if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
+    getDayPhysicalActivityData().dayCaloriesListFromDB = if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
         val filter = dayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.CALORIES }
         if (filter.isEmpty()) {
             MutableList(48) { 0.0 }.toList()
@@ -57,13 +64,13 @@ fun PhysicalActivityInfo(
 
 
     val stepsListFromDB = {
-        dataViewModel.dayStepListFromDB
+        getDayPhysicalActivityData().dayStepListFromDB
     }
     val distanceListFromDB = {
-        dataViewModel.dayDistanceListFromDB
+        getDayPhysicalActivityData().dayDistanceListFromDB
     }
     val caloriesListFromDB = {
-        dataViewModel.dayCaloriesListFromDB
+        getDayPhysicalActivityData().dayCaloriesListFromDB
     }
 
     val getSelectedDay = {

@@ -24,11 +24,17 @@ fun HeartRateInfo(
     navLambda: () -> Unit
 ){
 
+    val getDayPhysicalActivityData = remember(dataViewModel) {
+        {
+            dataViewModel.dayPhysicalActivityInfoState
+        }
+    }
+
     val getPersonalInfoDataState = {
         dataViewModel.personalInfoDataState
     }
 
-    val dayHeartRateResultsFromDB by dataViewModel.dayHeartRateResultsFromDB.observeAsState(
+    val dayHeartRateResultsFromDB by getDayPhysicalActivityData().dayHeartRateResultsFromDB.observeAsState(
         MutableList(0) { HeartRate() }.toList()
     )
 
@@ -57,7 +63,7 @@ fun HeartRateInfo(
        dataViewModel.selectedDay = dayHeartRateResultsFromDB[0].dateData
     }
 
-    dataViewModel.dayHeartRateListFromDB = if (dayHeartRateResultsFromDB.isEmpty().not()) {
+    getDayPhysicalActivityData().dayHeartRateListFromDB = if (dayHeartRateResultsFromDB.isEmpty().not()) {
         val filter = dayHeartRateResultsFromDB.filter { it.typesTable == TypesTable.HEART_RATE }
         getDoubleListFromStringMap(filter[0].data)
     } else {
@@ -65,7 +71,7 @@ fun HeartRateInfo(
     }
 
     val heartRateListFromDB = {
-        dataViewModel.dayHeartRateListFromDB
+        getDayPhysicalActivityData().dayHeartRateListFromDB
     }
 
     val getSelectedDay = {

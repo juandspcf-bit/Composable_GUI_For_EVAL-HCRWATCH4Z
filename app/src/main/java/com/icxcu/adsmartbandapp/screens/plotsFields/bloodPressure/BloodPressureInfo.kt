@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getDoubleListFromStringMap
@@ -18,7 +19,13 @@ fun BloodPressureInfo(
     navLambda: () -> Unit
 ) {
 
-    val dayBloodPressureResultsFromDB by dataViewModel.dayBloodPressureResultsFromDB.observeAsState(
+    val getDayPhysicalActivityData = remember(dataViewModel) {
+        {
+            dataViewModel.dayPhysicalActivityInfoState
+        }
+    }
+
+    val dayBloodPressureResultsFromDB by getDayPhysicalActivityData().dayBloodPressureResultsFromDB.observeAsState(
         MutableList(0) { BloodPressure() }.toList()
     )
 
@@ -27,14 +34,14 @@ fun BloodPressureInfo(
         dataViewModel.selectedDay = dayBloodPressureResultsFromDB[0].dateData
     }
 
-    dataViewModel.daySystolicListFromDB = if (dayBloodPressureResultsFromDB.isEmpty().not()) {
+    getDayPhysicalActivityData().daySystolicListFromDB = if (dayBloodPressureResultsFromDB.isEmpty().not()) {
         val filter = dayBloodPressureResultsFromDB.filter { it.typesTable == TypesTable.SYSTOLIC }
         getDoubleListFromStringMap(filter[0].data)
     } else {
         MutableList(48) { 0.0 }.toList()
     }
 
-    dataViewModel.dayDiastolicListFromDB = if (dayBloodPressureResultsFromDB.isEmpty().not()) {
+    getDayPhysicalActivityData().dayDiastolicListFromDB = if (dayBloodPressureResultsFromDB.isEmpty().not()) {
         val filter = dayBloodPressureResultsFromDB.filter { it.typesTable == TypesTable.DIASTOLIC }
         if (filter.isEmpty()) {
             MutableList(48) { 0.0 }.toList()
@@ -46,10 +53,10 @@ fun BloodPressureInfo(
     }
 
     val systolicListFromDB = {
-        dataViewModel.daySystolicListFromDB
+        getDayPhysicalActivityData().daySystolicListFromDB
     }
     val diastolicListFromDB = {
-        dataViewModel.dayDiastolicListFromDB
+        getDayPhysicalActivityData().dayDiastolicListFromDB
     }
 
     val getSelectedDay = {
