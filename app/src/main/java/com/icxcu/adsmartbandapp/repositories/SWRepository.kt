@@ -360,6 +360,10 @@ class SWRepository(
     fun insertPersonalInfo(personalInfo: PersonalInfo) {
         coroutineScope.launch(Dispatchers.IO) {
             personalInfoDao.insertPersonalInfoData(personalInfo = personalInfo)
+            withContext(Dispatchers.Main){
+                personalInfoAlertDialogUVStateLiveData.value = !(personalInfoAlertDialogUVStateLiveData.value?:true)
+                Log.d("Steps", "insertPersonalInfo: Firsts ${personalInfoAlertDialogUVStateLiveData.value}")
+            }
         }
     }
 
@@ -367,7 +371,7 @@ class SWRepository(
         coroutineScope.launch(Dispatchers.IO) {
             personalInfoDao.updatePersonalInfoData(personalInfo = personalInfo)
             withContext(Dispatchers.Main){
-                personalInfoAlertDialogUVStateLiveData.value = true
+                personalInfoAlertDialogUVStateLiveData.value = !(personalInfoAlertDialogUVStateLiveData.value?:true)
                 Log.d("Steps", "updatePersonalInfo: Firsts ${personalInfoAlertDialogUVStateLiveData.value}")
             }
         }

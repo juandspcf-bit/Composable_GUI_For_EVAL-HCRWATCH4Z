@@ -3,6 +3,7 @@ package com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -17,6 +18,10 @@ fun PersonalDataForm(
 ) {
 
 
+    //Data Sources
+
+
+
 
     val getPersonalInfoDataState = remember(dataViewModel) {{dataViewModel.personalInfoDataState}}
     val getInvalidAlertDialogState = remember(dataViewModel) {{dataViewModel.invalidAlertDialogState}}
@@ -24,7 +29,13 @@ fun PersonalDataForm(
     val getUpdateAlertDialogState = remember(dataViewModel) {{dataViewModel.updateAlertDialogState}}
     val getPersonalInfoListReadFromDB = remember(dataViewModel) {{dataViewModel.personalInfoListReadFromDB}}
 
+    val personalInfoAlertDialogUStateDB by
+    getUpdateAlertDialogState().personalInfoAlertDialogUVLiveData
+        .observeAsState(initial = false)
 
+    Log.d("State", "PersonalDataForm: $personalInfoAlertDialogUStateDB")
+
+    getUpdateAlertDialogState().alertDialogUPersonalFieldVisibility = personalInfoAlertDialogUStateDB?:false
 
     val insertPersonalData= { personalInfo:PersonalInfo->
         personalInfo.macAddress = dataViewModel.macAddressDeviceBluetooth
