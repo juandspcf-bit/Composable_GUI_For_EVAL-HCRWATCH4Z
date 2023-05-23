@@ -13,6 +13,13 @@ import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 fun YesterdayHeartRateDBHandler(
     dataViewModel: DataViewModel,
 ) {
+
+    val getSmartWatchState = remember(dataViewModel) {
+        {
+            dataViewModel.smartWatchState
+        }
+    }
+
     val getYesterdayPhysicalActivityData = remember(dataViewModel) {
         {
             dataViewModel.yesterdayPhysicalActivityInfoState
@@ -25,7 +32,7 @@ fun YesterdayHeartRateDBHandler(
 
     val yesterdayDateValuesReadFromSW = remember(dataViewModel) {
         {
-            dataViewModel.yesterdayDateValuesFromSW
+            getSmartWatchState().yesterdayDateValuesFromSW
         }
     }
 

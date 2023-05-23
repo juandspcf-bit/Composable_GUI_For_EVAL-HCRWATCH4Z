@@ -15,6 +15,12 @@ fun YesterdayPhysicalActivityDBHandler(
     dataViewModel: DataViewModel,
 ) {
 
+    val getSmartWatchState = remember(dataViewModel) {
+        {
+            dataViewModel.smartWatchState
+        }
+    }
+
     val getYesterdayPhysicalActivityData = remember(dataViewModel) {
         {
             dataViewModel.yesterdayPhysicalActivityInfoState
@@ -27,7 +33,7 @@ fun YesterdayPhysicalActivityDBHandler(
 
     val yesterdayDateValuesReadFromSW = remember(dataViewModel) {
         {
-            dataViewModel.yesterdayDateValuesFromSW
+            getSmartWatchState().yesterdayDateValuesFromSW
         }
     }
 

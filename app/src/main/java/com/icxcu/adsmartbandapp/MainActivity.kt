@@ -179,7 +179,7 @@ class MainActivity : ComponentActivity() {
                 navMainController.popBackStack()
                 mViewModel.liveBasicBluetoothAdapter.value = mutableListOf()
                 mViewModel.liveStatusResults = -2
-                dataViewModel.isRequestForFetchingDataFromSWBeginning = false
+                dataViewModel.smartWatchState.isRequestForFetchingDataFromSWBeginning = false
             }
 
             val navLambdaBackDataHome = {
@@ -205,7 +205,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 composable(Routes.BluetoothScanner.route) {
-                    dataViewModel.isRequestForFetchingDataFromSWBeginning = false
+                    dataViewModel.smartWatchState.isRequestForFetchingDataFromSWBeginning = false
                     BluetoothScanScreen(
                         basicBluetoothAdapters = basicBluetoothAdapters,
                         statusResultState = mViewModel.liveStatusResults,
@@ -229,8 +229,8 @@ class MainActivity : ComponentActivity() {
                     val bluetoothAddress =
                         backStackEntry.arguments?.getString("bluetoothAddress")
 
-                    if(dataViewModel.isRequestForFetchingDataFromSWBeginning.not()){
-                        dataViewModel.todayDateValuesReadFromSW=Values(MutableList(48){0}.toList(),
+                    if(dataViewModel.smartWatchState.isRequestForFetchingDataFromSWBeginning.not()){
+                        dataViewModel.smartWatchState.todayDateValuesReadFromSW=Values(MutableList(48){0}.toList(),
                             MutableList(48){0.0}.toList(),
                             MutableList(48){0.0}.toList(),
                             MutableList(48){ 0.0 }.toList(),

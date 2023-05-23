@@ -19,6 +19,7 @@ import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.mainNavBar.DayPhysicalActivityInfoState
+import com.icxcu.adsmartbandapp.screens.mainNavBar.SmartWatchState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.TodayPhysicalActivityInfoState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.YesterdayPhysicalActivityInfoState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.InvalidAlertDialogState
@@ -41,32 +42,9 @@ class DataViewModel(var application: Application) : ViewModel() {
     val pastYesterdayLocalDateTime = todayLocalDateTime.minusDays(2)
     val pastYesterdayFormattedDate = pastYesterdayLocalDateTime.format(myFormatObj)
 
-    var progressbarForFetchingDataFromSW by mutableStateOf(false)
-    var isRequestForFetchingDataFromSWBeginning by mutableStateOf(false)
-
     private var swRepository: SWRepository
-    var todayDateValuesReadFromSW by mutableStateOf(
-        Values(
-            MutableList(48) { 0 }.toList(),
-            MutableList(48) { 0.0 }.toList(),
-            MutableList(48) { 0.0 }.toList(),
-            MutableList(48) { 0.0 }.toList(),
-            MutableList(48) { 0.0 }.toList(),
-            MutableList(48) { 0.0 }.toList(),
-            todayFormattedDate
-        )
-    )
-    var yesterdayDateValuesFromSW by mutableStateOf(
-        Values(
-            MutableList(48) { 0 }.toList(),
-            MutableList(48) { 0.0 }.toList(),
-            MutableList(48) { 0.0 }.toList(),
-            MutableList(48) { 0.0 }.toList(),
-            MutableList(48) { 0.0 }.toList(),
-            MutableList(48) { 0.0 }.toList(),
-            yesterdayFormattedDate
-        )
-    )
+
+    val smartWatchState = SmartWatchState(todayFormattedDate, yesterdayFormattedDate)
 
     var selectedDay by mutableStateOf("")
 
@@ -129,13 +107,13 @@ class DataViewModel(var application: Application) : ViewModel() {
 
                 when (it.date) {
                     todayFormattedDate -> {
-                        todayDateValuesReadFromSW = it
+                        smartWatchState.todayDateValuesReadFromSW = it
                     }
 
                     yesterdayFormattedDate -> {
-                        yesterdayDateValuesFromSW = it
-                        progressbarForFetchingDataFromSW = false
-                        isRequestForFetchingDataFromSWBeginning = true
+                        smartWatchState.yesterdayDateValuesFromSW = it
+                        smartWatchState.progressbarForFetchingDataFromSW = false
+                        smartWatchState.isRequestForFetchingDataFromSWBeginning = true
                     }
                 }
 
@@ -151,7 +129,7 @@ class DataViewModel(var application: Application) : ViewModel() {
 
         viewModelScope.launch {
             delay(1000)
-            progressbarForFetchingDataFromSW = true
+            smartWatchState.progressbarForFetchingDataFromSW = true
         }
 
     }

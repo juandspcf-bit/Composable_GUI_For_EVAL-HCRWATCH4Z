@@ -14,6 +14,12 @@ fun TodayHeartRateDBHandler(
     dataViewModel: DataViewModel,
 ) {
 
+    val getSmartWatchState = remember(dataViewModel) {
+        {
+            dataViewModel.smartWatchState
+        }
+    }
+
     val getTodayPhysicalActivityData = remember(dataViewModel) {
         {
             dataViewModel.todayPhysicalActivityInfoState
@@ -27,7 +33,7 @@ fun TodayHeartRateDBHandler(
 
     val todayDateValuesReadFromSW = remember(dataViewModel) {
         {
-            dataViewModel.todayDateValuesReadFromSW
+            getSmartWatchState().todayDateValuesReadFromSW
         }
     }
 

@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
@@ -12,7 +13,9 @@ import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
+import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
+import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.MainNavigationBarScaffold
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.TodayBloodPressureDBHandler
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.TodayHeartRateDBHandler
@@ -39,19 +42,27 @@ fun MainNavigationBar(
     TodayHeartRateDBHandler(dataViewModel = dataViewModel)
     YesterdayHeartRateDBHandler(dataViewModel = dataViewModel)
 
+    val getSmartWatchState = remember(dataViewModel) {
+        {
+            dataViewModel.smartWatchState
+        }
+    }
+
+
     val dayDateValuesReadFromSW = {
-        dataViewModel.todayDateValuesReadFromSW
+        getSmartWatchState().todayDateValuesReadFromSW
     }
     val getVisibilityProgressbarForFetchingData = {
-        dataViewModel.progressbarForFetchingDataFromSW
+        getSmartWatchState().progressbarForFetchingDataFromSW
     }
 
 
     val getMyHeartRateAlertDialogDataHandler = {
-         dataViewModel.getMyHeartRateAlertDialogDataHandler()
+        dataViewModel.getMyHeartRateAlertDialogDataHandler()
     }
 
-    val heartRate by getMyHeartRateAlertDialogDataHandler().getSharedFlowHeartRate().collectAsState(initial = 0)
+    val heartRate by getMyHeartRateAlertDialogDataHandler().getSharedFlowHeartRate()
+        .collectAsState(initial = 0)
 
     val getMyHeartRate = {
         heartRate
@@ -61,18 +72,19 @@ fun MainNavigationBar(
     val getMyBloodPressureDialogDataHandler = {
         dataViewModel.getMyBloodPressureAlertDialogDataHandler()
     }
-    val bloodPressure by getMyBloodPressureDialogDataHandler().getSharedFlowBloodPressure().collectAsState(initial = BloodPressureData(0 ,0 ))
+    val bloodPressure by getMyBloodPressureDialogDataHandler().getSharedFlowBloodPressure()
+        .collectAsState(initial = BloodPressureData(0, 0))
 
-    val circularProgressBloodPressure by getMyBloodPressureDialogDataHandler().getStateFlowCircularProgressBloodPressure().collectAsState()
+    val circularProgressBloodPressure by getMyBloodPressureDialogDataHandler().getStateFlowCircularProgressBloodPressure()
+        .collectAsState()
 
-    val getCircularProgressBloodPressure={
+    val getCircularProgressBloodPressure = {
         circularProgressBloodPressure
     }
 
-    val getRealTimeBloodPressure={
+    val getRealTimeBloodPressure = {
         bloodPressure
     }
-
 
 
     val getMySpO2AlertDialogDataHandler = {
@@ -89,15 +101,17 @@ fun MainNavigationBar(
         dataViewModel.getMyTemperatureAlertDialogDataHandler()
     }
 
-    val temperature by getMyTemperatureAlertDialogDataHandler().getSharedFlowTemperature().collectAsState(initial = TemperatureData(0.0, 0.0))
+    val temperature by getMyTemperatureAlertDialogDataHandler().getSharedFlowTemperature()
+        .collectAsState(initial = TemperatureData(0.0, 0.0))
 
-    val circularProgressTemperature by getMyTemperatureAlertDialogDataHandler().getStateFlowCircularProgressTemperature().collectAsState()
+    val circularProgressTemperature by getMyTemperatureAlertDialogDataHandler().getStateFlowCircularProgressTemperature()
+        .collectAsState()
 
-    val getCircularProgressTemperature={
+    val getCircularProgressTemperature = {
         circularProgressTemperature
     }
 
-    val getRealTimeTemperature={
+    val getRealTimeTemperature = {
         temperature
     }
 
@@ -125,7 +139,7 @@ fun MainNavigationBar(
 }
 
 
-class TodayPhysicalActivityInfoState(){
+class TodayPhysicalActivityInfoState() {
 
     var todayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
     var todayStepListReadFromDB by mutableStateOf(listOf<Int>())
@@ -156,7 +170,7 @@ class TodayPhysicalActivityInfoState(){
     var isTodayHeartRateListInDBAlreadyUpdated by mutableStateOf(false)
 }
 
-class YesterdayPhysicalActivityInfoState{
+class YesterdayPhysicalActivityInfoState {
     var yesterdayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
     var yesterdayStepListReadFromDB by mutableStateOf(listOf<Int>())
     var isYesterdayStepsListAlreadyInsertedInDB = false
@@ -185,7 +199,7 @@ class YesterdayPhysicalActivityInfoState{
     var isYesterdayHeartRateListInDBAlreadyUpdated = false
 }
 
-class DayPhysicalActivityInfoState{
+class DayPhysicalActivityInfoState {
     var dayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
     var dayStepListFromDB by mutableStateOf(listOf<Int>())
     var dayDistanceListFromDB by mutableStateOf(listOf<Double>())
@@ -197,4 +211,35 @@ class DayPhysicalActivityInfoState{
 
     var dayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
     var dayHeartRateListFromDB by mutableStateOf(listOf<Double>())
+}
+
+class SmartWatchState(
+    private val todayFormattedDate: String,
+    private val yesterdayFormattedDate: String
+) {
+    var progressbarForFetchingDataFromSW by mutableStateOf(false)
+    var isRequestForFetchingDataFromSWBeginning by mutableStateOf(false)
+
+    var todayDateValuesReadFromSW by mutableStateOf(
+        Values(
+            MutableList(48) { 0 }.toList(),
+            MutableList(48) { 0.0 }.toList(),
+            MutableList(48) { 0.0 }.toList(),
+            MutableList(48) { 0.0 }.toList(),
+            MutableList(48) { 0.0 }.toList(),
+            MutableList(48) { 0.0 }.toList(),
+            todayFormattedDate
+        )
+    )
+    var yesterdayDateValuesFromSW by mutableStateOf(
+        Values(
+            MutableList(48) { 0 }.toList(),
+            MutableList(48) { 0.0 }.toList(),
+            MutableList(48) { 0.0 }.toList(),
+            MutableList(48) { 0.0 }.toList(),
+            MutableList(48) { 0.0 }.toList(),
+            MutableList(48) { 0.0 }.toList(),
+            yesterdayFormattedDate
+        )
+    )
 }

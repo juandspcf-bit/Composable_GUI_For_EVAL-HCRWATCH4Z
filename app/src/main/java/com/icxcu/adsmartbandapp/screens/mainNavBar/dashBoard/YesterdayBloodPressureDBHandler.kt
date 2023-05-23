@@ -13,6 +13,13 @@ import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 fun YesterdayBloodPressureDBHandler(
     dataViewModel: DataViewModel,
 ) {
+
+    val getSmartWatchState = remember(dataViewModel) {
+        {
+            dataViewModel.smartWatchState
+        }
+    }
+
     val getYesterdayPhysicalActivityData = remember(dataViewModel) {
         {
             dataViewModel.yesterdayPhysicalActivityInfoState
@@ -27,7 +34,7 @@ fun YesterdayBloodPressureDBHandler(
 
     val yesterdayDateValuesReadFromSW = remember(dataViewModel) {
         {
-            dataViewModel.yesterdayDateValuesFromSW
+            getSmartWatchState().yesterdayDateValuesFromSW
         }
     }
 
