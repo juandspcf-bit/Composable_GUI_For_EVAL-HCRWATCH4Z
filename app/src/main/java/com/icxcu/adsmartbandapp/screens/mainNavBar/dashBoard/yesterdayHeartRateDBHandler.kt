@@ -3,6 +3,7 @@ package com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getDoubleListFromStringMap
@@ -12,21 +13,29 @@ import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 fun YesterdayHeartRateDBHandler(
     dataViewModel: DataViewModel,
 ) {
+    val getYesterdayPhysicalActivityData = remember(dataViewModel) {
+        {
+            dataViewModel.yesterdayPhysicalActivityInfoState
+        }
+    }
     //Data Sources
-    val yesterdayHeartRateResultsFromDB by dataViewModel.yesterdayHeartRateResultsFromDB.observeAsState(
+    val yesterdayHeartRateResultsFromDB by getYesterdayPhysicalActivityData().yesterdayHeartRateResultsFromDB.observeAsState(
         MutableList(0) { HeartRate(heartRateId=-1,macAddress="", dateData="", data="") }.toList()
     )
 
-    val yesterdayDateValuesReadFromSW = {
-        dataViewModel.yesterdayDateValuesFromSW
+    val yesterdayDateValuesReadFromSW = remember(dataViewModel) {
+        {
+            dataViewModel.yesterdayDateValuesFromSW
+        }
     }
+
     //Data Sources**
 
     val setYesterdayHeartRateListReadFromDB: (List<Double>) -> Unit = {
-        dataViewModel.yesterdayHeartRateListReadFromDB = it
+        getYesterdayPhysicalActivityData().yesterdayHeartRateListReadFromDB = it
     }
 
-    dataViewModel.yesterdayHeartRateListReadFromDB = if (yesterdayHeartRateResultsFromDB.isEmpty().not()) {
+    getYesterdayPhysicalActivityData().yesterdayHeartRateListReadFromDB = if (yesterdayHeartRateResultsFromDB.isEmpty().not()) {
         val filter = yesterdayHeartRateResultsFromDB.filter { it.typesTable == TypesTable.HEART_RATE }
         getDoubleListFromStringMap(filter[0].data)
     } else {
@@ -34,22 +43,22 @@ fun YesterdayHeartRateDBHandler(
     }
 
     val setIsYesterdayHeartRateListAlreadyInsertedInDB: (Boolean) -> Unit = {
-        dataViewModel.isYesterdayHeartRateListAlreadyInsertedInDB = it
+        getYesterdayPhysicalActivityData().isYesterdayHeartRateListAlreadyInsertedInDB = it
     }
 
     val setIsYesterdayHeartRateListInDBAlreadyUpdated: (Boolean) -> Unit = {
-        dataViewModel.isYesterdayHeartRateListInDBAlreadyUpdated = it
+        getYesterdayPhysicalActivityData().isYesterdayHeartRateListInDBAlreadyUpdated = it
     }
 
 
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = yesterdayDateValuesReadFromSW().heartRateList,
         dataViewModel = dataViewModel,
-        fieldListReadFromDB = dataViewModel.yesterdayHeartRateListReadFromDB,
+        fieldListReadFromDB = getYesterdayPhysicalActivityData().yesterdayHeartRateListReadFromDB,
         setDayFieldListReadFromDB = setYesterdayHeartRateListReadFromDB,
         dayFromTableData = yesterdayHeartRateResultsFromDB,
-        isDayFieldListAlreadyInsertedInDB = dataViewModel.isYesterdayHeartRateListAlreadyInsertedInDB,
-        isDayFieldListInDBAlreadyUpdated = dataViewModel.isYesterdayHeartRateListInDBAlreadyUpdated,
+        isDayFieldListAlreadyInsertedInDB = getYesterdayPhysicalActivityData().isYesterdayHeartRateListAlreadyInsertedInDB,
+        isDayFieldListInDBAlreadyUpdated = getYesterdayPhysicalActivityData().isYesterdayHeartRateListInDBAlreadyUpdated,
         setIsDayFieldListAlreadyInsertedInDB = setIsYesterdayHeartRateListAlreadyInsertedInDB,
         setIsDayFieldListInDBAlreadyUpdated = setIsYesterdayHeartRateListInDBAlreadyUpdated,
         TypesTable.HEART_RATE,

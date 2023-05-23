@@ -18,6 +18,8 @@ import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.repositories.Values
+import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.TodayPhysicalActivityInfoState
+import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.YesterdayPhysicalActivityInfoState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.InvalidAlertDialogState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.UpdateAlertDialogState
@@ -60,43 +62,17 @@ class DataViewModel(var application: Application) : ViewModel() {
         )
     )
 
-    var todayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
-    var todayStepListReadFromDB = listOf<Int>()//by mutableStateOf(listOf<Int>())
-    var isTodayStepsListAlreadyInsertedInDB = false//by mutableStateOf(false)
-    var isTodayStepsListInDBAlreadyUpdated = false//by mutableStateOf(false)
-
-    var todayDistanceListReadFromDB = listOf<Double>()//by mutableStateOf(listOf<Double>())
-    var isTodayDistanceListAlreadyInsertedInDB = false// by mutableStateOf(false)
-    var isTodayDistanceListInDBAlreadyUpdated = false//by mutableStateOf(false)
-
-    var todayCaloriesListReadFromDB = listOf<Double>()//by mutableStateOf(listOf<Double>())
-    var isTodayCaloriesListAlreadyInsertedInDB = false//by mutableStateOf(false)
-    var isTodayCaloriesListInDBAlreadyUpdated = false//by mutableStateOf(false)
-
-
     var dayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
     var daySystolicListFromDB by mutableStateOf(listOf<Double>())
     var dayDiastolicListFromDB by mutableStateOf(listOf<Double>())
 
-    var todayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
-    var todaySystolicListReadFromDB = listOf<Double>()
-    var isTodaySystolicListAlreadyInsertedInDB = false
-    var isTodaySystolicListInDBAlreadyUpdated = false
-
-    var todayDiastolicListReadFromDB = listOf<Double>()
-    var isTodayDiastolicListAlreadyInsertedInDB = false
-    var isTodayDiastolicListInDBAlreadyUpdated = false
 
 
     var dayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
     var dayHeartRateListFromDB by mutableStateOf(listOf<Double>())
 
 
-    var todayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
-    var todayHeartRateListReadFromDB = listOf<Double>()
-    var isTodayHeartRateListAlreadyInsertedInDB = false
-    var isTodayHeartRateListInDBAlreadyUpdated = false
-
+    val todayPhysicalActivityInfoState = TodayPhysicalActivityInfoState()
 
     var yesterdayDateValuesFromSW by mutableStateOf(
         Values(
@@ -110,7 +86,8 @@ class DataViewModel(var application: Application) : ViewModel() {
         )
     )
 
-    var yesterdayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
+    val yesterdayPhysicalActivityInfoState = YesterdayPhysicalActivityInfoState()
+/*    var yesterdayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
     var yesterdayStepListReadFromDB by mutableStateOf(listOf<Int>())
     var isYesterdayStepsListAlreadyInsertedInDB = false
     var isYesterdayStepsListInDBAlreadyUpdated = false
@@ -135,7 +112,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     var yesterdayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
     var yesterdayHeartRateListReadFromDB by mutableStateOf(listOf<Double>())
     var isYesterdayHeartRateListAlreadyInsertedInDB = false
-    var isYesterdayHeartRateListInDBAlreadyUpdated = false
+    var isYesterdayHeartRateListInDBAlreadyUpdated = false*/
 
     private var swRepository: SWRepository
 
@@ -172,16 +149,16 @@ class DataViewModel(var application: Application) : ViewModel() {
 
 
         dayPhysicalActivityResultsFromDB = swRepository.dayPhysicalActivityResultsFromDB
-        todayPhysicalActivityResultsFromDB = swRepository.todayPhysicalActivityResultsFromDB
-        yesterdayPhysicalActivityResultsFromDB = swRepository.yesterdayPhysicalActivityResultsFromDB
+        todayPhysicalActivityInfoState.todayPhysicalActivityResultsFromDB = swRepository.todayPhysicalActivityResultsFromDB
+        yesterdayPhysicalActivityInfoState.yesterdayPhysicalActivityResultsFromDB = swRepository.yesterdayPhysicalActivityResultsFromDB
 
         dayBloodPressureResultsFromDB = swRepository.dayBloodPressureResultsFromDB
-        todayBloodPressureResultsFromDB = swRepository.todayBloodPressureResultsFromDB
-        yesterdayBloodPressureResultsFromDB = swRepository.yesterdayBloodPressureResultsFromDB
+        todayPhysicalActivityInfoState.todayBloodPressureResultsFromDB = swRepository.todayBloodPressureResultsFromDB
+        yesterdayPhysicalActivityInfoState.yesterdayBloodPressureResultsFromDB = swRepository.yesterdayBloodPressureResultsFromDB
 
         dayHeartRateResultsFromDB = swRepository.dayHeartRateResultsFromDB
-        todayHeartRateResultsFromDB = swRepository.todayHeartRateResultsFromDB
-        yesterdayHeartRateResultsFromDB = swRepository.yesterdayHeartRateResultsFromDB
+        todayPhysicalActivityInfoState.todayHeartRateResultsFromDB = swRepository.todayHeartRateResultsFromDB
+        yesterdayPhysicalActivityInfoState.yesterdayHeartRateResultsFromDB = swRepository.yesterdayHeartRateResultsFromDB
 
         personalInfoFromDB = swRepository.personalInfoFromDB
         updateAlertDialogState.personalInfoAlertDialogUVLiveData =

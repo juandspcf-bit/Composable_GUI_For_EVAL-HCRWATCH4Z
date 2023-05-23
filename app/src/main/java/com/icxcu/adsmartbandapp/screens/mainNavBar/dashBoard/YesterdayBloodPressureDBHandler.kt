@@ -3,6 +3,7 @@ package com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getDoubleListFromStringMap
@@ -12,21 +13,31 @@ import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 fun YesterdayBloodPressureDBHandler(
     dataViewModel: DataViewModel,
 ) {
+    val getYesterdayPhysicalActivityData = remember(dataViewModel) {
+        {
+            dataViewModel.yesterdayPhysicalActivityInfoState
+        }
+    }
+
+
     //Data Sources
-    val yesterdayBloodPressureResultsFromDB by dataViewModel.yesterdayBloodPressureResultsFromDB.observeAsState(
+    val yesterdayBloodPressureResultsFromDB by getYesterdayPhysicalActivityData().yesterdayBloodPressureResultsFromDB.observeAsState(
         MutableList(0) { BloodPressure(bloodPressureId=-1,macAddress="", dateData="", data="") }.toList()
     )
 
-    val yesterdayDateValuesReadFromSW = {
-        dataViewModel.yesterdayDateValuesFromSW
+    val yesterdayDateValuesReadFromSW = remember(dataViewModel) {
+        {
+            dataViewModel.yesterdayDateValuesFromSW
+        }
     }
+
     //Data Sources**
 
     val setYesterdaySystolicListReadFromDB: (List<Double>) -> Unit = {
-        dataViewModel.yesterdaySystolicListReadFromDB = it
+        getYesterdayPhysicalActivityData().yesterdaySystolicListReadFromDB = it
     }
 
-    dataViewModel.yesterdaySystolicListReadFromDB = if (yesterdayBloodPressureResultsFromDB.isEmpty().not()) {
+    getYesterdayPhysicalActivityData().yesterdaySystolicListReadFromDB = if (yesterdayBloodPressureResultsFromDB.isEmpty().not()) {
         val filter = yesterdayBloodPressureResultsFromDB.filter { it.typesTable == TypesTable.SYSTOLIC }
         getDoubleListFromStringMap(filter[0].data)
     } else {
@@ -34,21 +45,21 @@ fun YesterdayBloodPressureDBHandler(
     }
 
     val setIsYesterdaySystolicListAlreadyInsertedInDB: (Boolean) -> Unit = {
-        dataViewModel.isYesterdaySystolicListAlreadyInsertedInDB = it
+        getYesterdayPhysicalActivityData().isYesterdaySystolicListAlreadyInsertedInDB = it
     }
 
     val setIsYesterdaySystolicListInDBAlreadyUpdated: (Boolean) -> Unit = {
-        dataViewModel.isYesterdaySystolicListInDBAlreadyUpdated = it
+        getYesterdayPhysicalActivityData().isYesterdaySystolicListInDBAlreadyUpdated = it
     }
 
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = yesterdayDateValuesReadFromSW().systolicList,
         dataViewModel = dataViewModel,
-        fieldListReadFromDB = dataViewModel.yesterdaySystolicListReadFromDB,
+        fieldListReadFromDB = getYesterdayPhysicalActivityData().yesterdaySystolicListReadFromDB,
         setDayFieldListReadFromDB = setYesterdaySystolicListReadFromDB,
         dayFromTableData = yesterdayBloodPressureResultsFromDB,
-        isDayFieldListAlreadyInsertedInDB = dataViewModel.isYesterdaySystolicListAlreadyInsertedInDB,
-        isDayFieldListInDBAlreadyUpdated = dataViewModel.isYesterdaySystolicListInDBAlreadyUpdated,
+        isDayFieldListAlreadyInsertedInDB = getYesterdayPhysicalActivityData().isYesterdaySystolicListAlreadyInsertedInDB,
+        isDayFieldListInDBAlreadyUpdated = getYesterdayPhysicalActivityData().isYesterdaySystolicListInDBAlreadyUpdated,
         setIsDayFieldListAlreadyInsertedInDB = setIsYesterdaySystolicListAlreadyInsertedInDB,
         setIsDayFieldListInDBAlreadyUpdated = setIsYesterdaySystolicListInDBAlreadyUpdated,
         TypesTable.SYSTOLIC,
@@ -57,10 +68,10 @@ fun YesterdayBloodPressureDBHandler(
 
 
     val setYesterdayDiastolicListReadFromDB: (List<Double>) -> Unit = {
-        dataViewModel.yesterdayDiastolicListReadFromDB = it
+        getYesterdayPhysicalActivityData().yesterdayDiastolicListReadFromDB = it
     }
 
-    dataViewModel.yesterdayDiastolicListReadFromDB = if (yesterdayBloodPressureResultsFromDB.isEmpty().not()) {
+    getYesterdayPhysicalActivityData().yesterdayDiastolicListReadFromDB = if (yesterdayBloodPressureResultsFromDB.isEmpty().not()) {
         val filter = yesterdayBloodPressureResultsFromDB.filter { it.typesTable == TypesTable.DIASTOLIC }
         getDoubleListFromStringMap(filter[0].data)
     } else {
@@ -68,21 +79,21 @@ fun YesterdayBloodPressureDBHandler(
     }
 
     val setIsYesterdayDiastolicListAlreadyInsertedInDB: (Boolean) -> Unit = {
-        dataViewModel.isYesterdayDiastolicListAlreadyInsertedInDB = it
+        getYesterdayPhysicalActivityData().isYesterdayDiastolicListAlreadyInsertedInDB = it
     }
 
     val setIsYesterdayDiastolicListInDBAlreadyUpdated: (Boolean) -> Unit = {
-        dataViewModel.isYesterdayDiastolicListInDBAlreadyUpdated = it
+        getYesterdayPhysicalActivityData().isYesterdayDiastolicListInDBAlreadyUpdated = it
     }
 
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = yesterdayDateValuesReadFromSW().diastolicList,
         dataViewModel = dataViewModel,
-        fieldListReadFromDB = dataViewModel.yesterdayDiastolicListReadFromDB,
+        fieldListReadFromDB = getYesterdayPhysicalActivityData().yesterdayDiastolicListReadFromDB,
         setDayFieldListReadFromDB = setYesterdayDiastolicListReadFromDB,
         dayFromTableData = yesterdayBloodPressureResultsFromDB,
-        isDayFieldListAlreadyInsertedInDB = dataViewModel.isYesterdayDiastolicListAlreadyInsertedInDB,
-        isDayFieldListInDBAlreadyUpdated = dataViewModel.isYesterdayDiastolicListInDBAlreadyUpdated,
+        isDayFieldListAlreadyInsertedInDB = getYesterdayPhysicalActivityData().isYesterdayDiastolicListAlreadyInsertedInDB,
+        isDayFieldListInDBAlreadyUpdated = getYesterdayPhysicalActivityData().isYesterdayDiastolicListInDBAlreadyUpdated,
         setIsDayFieldListAlreadyInsertedInDB = setIsYesterdayDiastolicListAlreadyInsertedInDB,
         setIsDayFieldListInDBAlreadyUpdated = setIsYesterdayDiastolicListInDBAlreadyUpdated,
         TypesTable.DIASTOLIC,
