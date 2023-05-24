@@ -69,7 +69,8 @@ class DataViewModel(var application: Application) : ViewModel() {
     var stateMiliSecondsDateDialogDatePicker by mutableStateOf(0L)
 
 
-    var lastDeviceAccessed by mutableStateOf("not fetched")
+    var lastDeviceAccessedName by mutableStateOf("not fetched")
+    var lastDeviceAccessedAddress by mutableStateOf("not fetched")
 
     init {
         val swDb = SWRoomDatabase.getInstance(application)
@@ -124,12 +125,34 @@ class DataViewModel(var application: Application) : ViewModel() {
     }
 
 
-    fun readFromStorageLastDeviceAccessed(preferenceDataStoreHelper:PreferenceDataStoreHelper){
+    fun readFromStorageLastDeviceAccessedName(preferenceDataStoreHelper:PreferenceDataStoreHelper){
         viewModelScope.launch {
-            lastDeviceAccessed =  preferenceDataStoreHelper
-                .getFirstPreference(PreferenceDataStoreConstants.LAST_DEVICE_KEY,"fetched but without data")
+            lastDeviceAccessedName =  preferenceDataStoreHelper
+                .getFirstPreference(PreferenceDataStoreConstants.LAST_DEVICE_KEY_NAME,"fetched but without data")
         }
     }
+
+    fun readFromStorageLastDeviceAccessedAddress(preferenceDataStoreHelper:PreferenceDataStoreHelper){
+        viewModelScope.launch {
+            lastDeviceAccessedAddress =  preferenceDataStoreHelper
+                .getFirstPreference(PreferenceDataStoreConstants.LAST_DEVICE_KEY_ADDRESS,"fetched but without data")
+        }
+    }
+
+
+    fun writeInStorageLastDeviceAccessedName(preferenceDataStoreHelper: PreferenceDataStoreHelper, value:String) {
+        viewModelScope.launch {
+            preferenceDataStoreHelper.putPreference(PreferenceDataStoreConstants.LAST_DEVICE_KEY_NAME, value)
+        }
+    }
+
+    fun writeInStorageLastDeviceAccessedAddress(preferenceDataStoreHelper: PreferenceDataStoreHelper, value:String) {
+        viewModelScope.launch {
+            preferenceDataStoreHelper.putPreference(PreferenceDataStoreConstants.LAST_DEVICE_KEY_ADDRESS, value)
+        }
+    }
+
+
 
     fun requestSmartWatchData(name: String = "", macAddress: String = "") {
 
@@ -258,5 +281,7 @@ class DataViewModel(var application: Application) : ViewModel() {
 
 
     }
+
+
 
 }

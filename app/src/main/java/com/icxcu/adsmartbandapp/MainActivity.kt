@@ -59,6 +59,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var mViewModel: BluetoothScannerViewModel
     private lateinit var pViewModel: PermissionsViewModel
     private lateinit var startDestination:String
+    private lateinit var preferenceDataStoreHelper: PreferenceDataStoreHelper
 
     private val permissionsRequired = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         listOf(
@@ -118,18 +119,23 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                if(dataViewModel.lastDeviceAccessed == "not fetched"){
-                    val preferenceDataStoreHelper = PreferenceDataStoreHelper(LocalContext.current)
-                    dataViewModel.readFromStorageLastDeviceAccessed(preferenceDataStoreHelper)
+                if(dataViewModel.lastDeviceAccessedName == "not fetched" && dataViewModel.lastDeviceAccessedAddress == "not fetched"){
+                    preferenceDataStoreHelper = PreferenceDataStoreHelper(LocalContext.current)
+                    dataViewModel.readFromStorageLastDeviceAccessedName(preferenceDataStoreHelper)
+                    dataViewModel.readFromStorageLastDeviceAccessedAddress(preferenceDataStoreHelper)
                 }
 
-                Log.d("KEY_VALUE", "onCreate: ${dataViewModel.lastDeviceAccessed}")
+                Log.d("KEY_VALUE", "onCreate: ${dataViewModel.lastDeviceAccessedName}")
                 // if the list if empty, all permissions are granted
 
                 startDestination = if (askPermissions.isNotEmpty()) {
                     Routes.Permissions.route
-                } else {
+                } else if(dataViewModel.lastDeviceAccessedName == "fetched but without data" || dataViewModel.lastDeviceAccessedName == "not fetched") {
                     Routes.BluetoothScanner.route
+                }else{
+                    val name = dataViewModel.lastDeviceAccessedName
+                    val address = dataViewModel.lastDeviceAccessedAddress
+                    Routes.PersonalInfoForm.route
                 }
 
 
@@ -168,6 +174,10 @@ class MainActivity : ComponentActivity() {
 
             val navLambdaDataScreen = { name: String, address: String ->
                 if (mViewModel.liveStatusResults == 1 || mViewModel.liveStatusResults == -1) {
+
+                    dataViewModel.writeInStorageLastDeviceAccessedName(preferenceDataStoreHelper, name)
+                    dataViewModel.writeInStorageLastDeviceAccessedAddress(preferenceDataStoreHelper, address)
+
                     navMainController.navigate(
                         Routes.DataHome
                             .route + "/${name}/${address}"
@@ -233,9 +243,9 @@ class MainActivity : ComponentActivity() {
                     )
                 ) { backStackEntry ->
 
-                    val bluetoothName = backStackEntry.arguments?.getString("bluetoothName")
+                    val bluetoothName = backStackEntry.arguments?.getString("bluetoothName")?:dataViewModel.lastDeviceAccessedName
                     val bluetoothAddress =
-                        backStackEntry.arguments?.getString("bluetoothAddress")
+                        backStackEntry.arguments?.getString("bluetoothAddress")?:dataViewModel.lastDeviceAccessedAddress
 
                     if(dataViewModel.smartWatchState.isRequestForFetchingDataFromSWBeginning.not()){
                         dataViewModel.smartWatchState.todayDateValuesReadFromSW=Values(MutableList(48){0}.toList(),
