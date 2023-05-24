@@ -44,7 +44,7 @@ import androidx.navigation.compose.rememberNavController
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.SettingsScreen
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
-import com.icxcu.adsmartbandapp.repositories.myBloodPressureAlertDialogDataHandler
+import com.icxcu.adsmartbandapp.repositories.MyBloodPressureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
@@ -65,7 +65,7 @@ fun MainNavigationBarScaffold(
     getVisibilityProgressbarForFetchingData: () -> Boolean = { false },
     getMyHeartRateAlertDialogDataHandler: () -> MyHeartRateAlertDialogDataHandler,
     getMyHeartRate: () -> Int,
-    getMyBloodPressureDialogDataHandler: () -> myBloodPressureAlertDialogDataHandler,
+    getMyBloodPressureDialogDataHandler: () -> MyBloodPressureAlertDialogDataHandler,
     getRealTimeBloodPressure: () -> BloodPressureData,
     getCircularProgressBloodPressure: () -> Int,
     getMySpO2AlertDialogDataHandler: () -> MySpO2AlertDialogDataHandler,
@@ -166,7 +166,7 @@ fun NavigationHost(
     getVisibilityProgressbarForFetchingData: () -> Boolean = { false },
     getMyHeartRateAlertDialogDataHandler: () -> MyHeartRateAlertDialogDataHandler,
     getMyHeartRate: () -> Int,
-    getMyBloodPressureDialogDataHandler: () -> myBloodPressureAlertDialogDataHandler,
+    getMyBloodPressureDialogDataHandler: () -> MyBloodPressureAlertDialogDataHandler,
     getRealTimeBloodPressure: () -> BloodPressureData,
     getCircularProgressBloodPressure: () -> Int,
     getMySpO2AlertDialogDataHandler: () -> MySpO2AlertDialogDataHandler,

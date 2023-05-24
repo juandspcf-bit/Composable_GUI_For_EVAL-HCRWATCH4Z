@@ -32,7 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
-import com.icxcu.adsmartbandapp.repositories.myBloodPressureAlertDialogDataHandler
+import com.icxcu.adsmartbandapp.repositories.MyBloodPressureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
@@ -47,7 +47,7 @@ fun TestingHealthScreen(
     getVisibilityProgressbarForFetchingData: () -> Boolean = { false },
     getMyHeartRateAlertDialogDataHandler: () -> MyHeartRateAlertDialogDataHandler,
     getMyHeartRate: () -> Int,
-    getMyBloodPressureDialogDataHandler: () -> myBloodPressureAlertDialogDataHandler,
+    getMyBloodPressureDialogDataHandler: () -> MyBloodPressureAlertDialogDataHandler,
     getRealTimeBloodPressure: () -> BloodPressureData,
     getCircularProgressBloodPressure: () -> Int,
     getMySpO2AlertDialogDataHandler: () -> MySpO2AlertDialogDataHandler,
@@ -143,7 +143,7 @@ fun TestingHealthScreen(
                     imageResource = R.drawable.oxygen_saturation,
                     getMySpO2AlertDialogDataHandler = getMySpO2AlertDialogDataHandler,
                     getMySpO2 = getMySpO2,
-                ){ status: Boolean ->
+                ) { status: Boolean ->
                     dialogOpen = status
                 }
             }
@@ -266,7 +266,12 @@ fun BoxImageCircle(
                         .fillMaxSize(),
                     painter = painterResource(imageResource),
                     contentDescription = null,
-                    contentScale = ContentScale.Inside
+                    contentScale = ContentScale.Inside,
+                    alpha = if (enabled) {
+                        1f
+                    } else {
+                        0.5f
+                    }
                 )
 
             }
@@ -284,21 +289,17 @@ data class AlertDialogTestHealth(
 @Preview(showBackground = true)
 @Composable
 fun TestingHealthScreenPreview() {
-    /*TestingHealthScreen(
-        requestRealTimeHeartRate = {},
-        getRealTimeHeartRate = { 20 },
-        stopRequestRealTimeHeartRate = {},
-        getRealTimeBloodPressure = {
-            BloodPressureData(0, 0)
-        },
-        requestRealTimeBloodPressure = {},
-        stopRequestRealTimeBloodPressure = {},
-        getCircularProgressBloodPressure = {5},
-        getRealTimeTemperature = {
-            TemperatureData(0.0, 0.0)
-        },
-        requestRealTimeTemperature = {},
-        stopRequestRealTimeTemperature = {},
-        getCircularProgressTemperature = {5}
-    )*/
+    TestingHealthScreen(
+        getVisibilityProgressbarForFetchingData = { false },
+        getMyHeartRateAlertDialogDataHandler = { MyHeartRateAlertDialogDataHandler() },
+        getMyHeartRate = { 90 },
+        getMyBloodPressureDialogDataHandler = { MyBloodPressureAlertDialogDataHandler() },
+        getRealTimeBloodPressure = { BloodPressureData(110, 70) },
+        getCircularProgressBloodPressure = { 2 },
+        getMySpO2AlertDialogDataHandler = { MySpO2AlertDialogDataHandler() },
+        getMySpO2 = { 98.0 },
+        getMyTemperatureAlertDialogDataHandler = { MyTemperatureAlertDialogDataHandler() },
+        getRealTimeTemperature = { TemperatureData(35.0, 38.0) },
+        getCircularProgressTemperature = { 5 },
+    )
 }

@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class myBloodPressureAlertDialogDataHandler {
+class MyBloodPressureAlertDialogDataHandler {
 
     private val _circularProgressBloodPressureStateFlow = MutableStateFlow(0)
     private val circularProgressBloodPressureStateFlow = _circularProgressBloodPressureStateFlow.asStateFlow()

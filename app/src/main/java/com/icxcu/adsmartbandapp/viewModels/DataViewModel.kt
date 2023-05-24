@@ -12,12 +12,11 @@ import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.database.SWRoomDatabase
-import com.icxcu.adsmartbandapp.repositories.myBloodPressureAlertDialogDataHandler
+import com.icxcu.adsmartbandapp.repositories.MyBloodPressureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.SWRepository
-import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.mainNavBar.DayPhysicalActivityInfoState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SmartWatchState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.TodayPhysicalActivityInfoState
@@ -138,7 +137,7 @@ class DataViewModel(var application: Application) : ViewModel() {
         return swRepository.myHeartRateAlertDialogDataHandler
     }
 
-    fun getMyBloodPressureAlertDialogDataHandler(): myBloodPressureAlertDialogDataHandler {
+    fun getMyBloodPressureAlertDialogDataHandler(): MyBloodPressureAlertDialogDataHandler {
         return swRepository.myBloodPressureAlertDialogDataHandler
     }
 

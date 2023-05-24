@@ -64,7 +64,7 @@ class SWRepository(
 
 
     val myHeartRateAlertDialogDataHandler = MyHeartRateAlertDialogDataHandler()
-    val myBloodPressureAlertDialogDataHandler = myBloodPressureAlertDialogDataHandler()
+    val myBloodPressureAlertDialogDataHandler = MyBloodPressureAlertDialogDataHandler()
     val myTemperatureAlertDialogDataHandler = MyTemperatureAlertDialogDataHandler()
     val mySpO2AlertDialogDataHandler = MySpO2AlertDialogDataHandler()
 

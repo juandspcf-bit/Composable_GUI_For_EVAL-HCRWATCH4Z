@@ -41,12 +41,12 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
-import com.icxcu.adsmartbandapp.repositories.myBloodPressureAlertDialogDataHandler
+import com.icxcu.adsmartbandapp.repositories.MyBloodPressureAlertDialogDataHandler
 
 @Composable
 fun MyBloodPressureAlertDialogContent(
     imageResource: Int = R.drawable.ic_launcher_foreground,
-    getMyBloodPressureDialogDataHandler: () -> myBloodPressureAlertDialogDataHandler,
+    getMyBloodPressureDialogDataHandler: () -> MyBloodPressureAlertDialogDataHandler,
     getRealTimeBloodPressure: () -> BloodPressureData,
     getCircularProgressBloodPressure: () -> Int,
     setDialogStatus: (Boolean) -> Unit
@@ -200,7 +200,7 @@ fun MyBloodPressureAlertDialogContent(
 fun FilledIconToggleButtonSampleBloodPressure(
     modifier: Modifier,
     size: Dp = 100.dp,
-    getMyBloodPressureDialogDataHandler: () -> myBloodPressureAlertDialogDataHandler,
+    getMyBloodPressureDialogDataHandler: () -> MyBloodPressureAlertDialogDataHandler,
     progressValue:()->Int,
 ) {
     var checked by remember { mutableStateOf(false) }
