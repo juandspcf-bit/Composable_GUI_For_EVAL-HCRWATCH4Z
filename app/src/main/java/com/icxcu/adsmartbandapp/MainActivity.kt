@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothLEManagerImp
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
+import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreHelper
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.BluetoothScanScreen
 import com.icxcu.adsmartbandapp.screens.PermissionsScreen
@@ -116,12 +118,18 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
+                if(dataViewModel.lastDeviceAccessed == "not fetched"){
+                    val preferenceDataStoreHelper = PreferenceDataStoreHelper(LocalContext.current)
+                    dataViewModel.readFromStorageLastDeviceAccessed(preferenceDataStoreHelper)
+                }
+
+                Log.d("KEY_VALUE", "onCreate: ${dataViewModel.lastDeviceAccessed}")
                 // if the list if empty, all permissions are granted
 
-                startDestination = if (askPermissions.isEmpty()) {
-                    Routes.BluetoothScanner.route
-                } else {
+                startDestination = if (askPermissions.isNotEmpty()) {
                     Routes.Permissions.route
+                } else {
+                    Routes.BluetoothScanner.route
                 }
 
 

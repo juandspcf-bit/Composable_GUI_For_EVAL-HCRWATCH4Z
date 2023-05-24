@@ -11,6 +11,8 @@ import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
+import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreConstants
+import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreHelper
 import com.icxcu.adsmartbandapp.database.SWRoomDatabase
 import com.icxcu.adsmartbandapp.repositories.MyBloodPressureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
@@ -67,7 +69,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     var stateMiliSecondsDateDialogDatePicker by mutableStateOf(0L)
 
 
-
+    var lastDeviceAccessed by mutableStateOf("not fetched")
 
     init {
         val swDb = SWRoomDatabase.getInstance(application)
@@ -121,6 +123,13 @@ class DataViewModel(var application: Application) : ViewModel() {
         }
     }
 
+
+    fun readFromStorageLastDeviceAccessed(preferenceDataStoreHelper:PreferenceDataStoreHelper){
+        viewModelScope.launch {
+            lastDeviceAccessed =  preferenceDataStoreHelper
+                .getFirstPreference(PreferenceDataStoreConstants.LAST_DEVICE_KEY,"fetched but without data")
+        }
+    }
 
     fun requestSmartWatchData(name: String = "", macAddress: String = "") {
 
