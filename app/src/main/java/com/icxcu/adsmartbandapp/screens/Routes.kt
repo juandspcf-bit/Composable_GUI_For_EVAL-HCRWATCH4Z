@@ -4,7 +4,9 @@ sealed class Routes(val route: String) {
 
     object Permissions: Routes("permissions")
     object BluetoothScanner : Routes("home")
-    object DataHome : Routes("customers")
+    object DataHome : Routes("dataHome")
+    object DataHomeDataPreferences : Routes("dataHomeDataPreferences")
+    object LoadingScreen : Routes("loadingScreen")
     object StepsPlots : Routes("stepsPlot")
     object BloodPressurePlots : Routes("bloodPressurePlot")
 

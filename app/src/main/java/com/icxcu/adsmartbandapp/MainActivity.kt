@@ -32,6 +32,7 @@ import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.BluetoothScanScreen
 import com.icxcu.adsmartbandapp.screens.PermissionsScreen
 import com.icxcu.adsmartbandapp.screens.Routes
+import com.icxcu.adsmartbandapp.screens.loadingScreen.LoadingScreen
 import com.icxcu.adsmartbandapp.screens.mainNavBar.MainNavigationBar
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalDataForm
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoDBHandler
@@ -130,17 +131,11 @@ class MainActivity : ComponentActivity() {
 
                 startDestination = if (askPermissions.isNotEmpty()) {
                     Routes.Permissions.route
-                } else if(dataViewModel.lastDeviceAccessedName == "fetched but without data" || dataViewModel.lastDeviceAccessedName == "not fetched") {
+                }  else if(dataViewModel.lastDeviceAccessedName == "fetched but without data") {
                     Routes.BluetoothScanner.route
                 }else{
-                    val name = dataViewModel.lastDeviceAccessedName
-                    val address = dataViewModel.lastDeviceAccessedAddress
-                    Routes.PersonalInfoForm.route
+                    Routes.LoadingScreen.route
                 }
-
-
-
-
 
 
                 bluetoothLEManager = BluetoothLEManagerImp(this@MainActivity, mViewModel)
@@ -183,6 +178,12 @@ class MainActivity : ComponentActivity() {
                             .route + "/${name}/${address}"
                     )
                 }
+            }
+
+            val navLambdaDataScreenDataPreferences = {
+                navMainController.navigate(
+                    Routes.DataHomeDataPreferences.route
+                )
             }
 
             val navLambdaToBlueScanScreen = {
@@ -234,6 +235,12 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
+
+                composable(Routes.LoadingScreen.route) {
+                    LoadingScreen(dataViewModel.lastDeviceAccessedName, navLambdaDataScreenDataPreferences)
+                }
+
+
                 composable(
                     Routes.DataHome.route + "/{bluetoothName}/{bluetoothAddress}",                    // declaring placeholder in String route
                     arguments = listOf(
@@ -278,6 +285,53 @@ class MainActivity : ComponentActivity() {
                     MainNavigationBar(
                         bluetoothName = bluetoothName ?: "no name",
                         bluetoothAddress = bluetoothAddress ?: "no address",
+                        dataViewModel = dataViewModel,
+                        navMainController = navMainController
+                    ) { navLambdaBackBluetoothScanner() }
+                }
+
+                composable(
+                    Routes.DataHomeDataPreferences.route,                    // declaring placeholder in String route
+                ) {
+
+
+
+                    val bluetoothName = dataViewModel.lastDeviceAccessedName
+                    val bluetoothAddress = dataViewModel.lastDeviceAccessedAddress
+
+                    if(dataViewModel.smartWatchState.isRequestForFetchingDataFromSWBeginning.not()){
+                        dataViewModel.smartWatchState.todayDateValuesReadFromSW=Values(MutableList(48){0}.toList(),
+                            MutableList(48){0.0}.toList(),
+                            MutableList(48){0.0}.toList(),
+                            MutableList(48){ 0.0 }.toList(),
+                            MutableList(48){ 0.0 }.toList(),
+                            MutableList(48){ 0.0 }.toList(),
+                            dataViewModel.todayFormattedDate)
+                        dataViewModel.requestSmartWatchData(
+                            bluetoothName,
+                            bluetoothAddress
+                        )
+                    }
+
+
+                    dataViewModel.macAddressDeviceBluetooth= bluetoothAddress
+                    dataViewModel.nameDeviceBluetooth= bluetoothName
+
+                    dataViewModel.getTodayPhysicalActivityData(dataViewModel.macAddressDeviceBluetooth)
+                    dataViewModel.getYesterdayPhysicalActivityData(dataViewModel.macAddressDeviceBluetooth)
+                    dataViewModel.getTodayBloodPressureData(dataViewModel.macAddressDeviceBluetooth)
+                    dataViewModel.getYesterdayBloodPressureData(dataViewModel.macAddressDeviceBluetooth)
+                    dataViewModel.getTodayHeartRateData(dataViewModel.macAddressDeviceBluetooth)
+                    dataViewModel.getYesterdayHeartRateData(dataViewModel.macAddressDeviceBluetooth)
+                    dataViewModel.getPersonalInfoData(dataViewModel.macAddressDeviceBluetooth)
+
+
+                    PersonalInfoDBHandler(
+                        dataViewModel
+                    )
+                    MainNavigationBar(
+                        bluetoothName = bluetoothName,
+                        bluetoothAddress = bluetoothAddress,
                         dataViewModel = dataViewModel,
                         navMainController = navMainController
                     ) { navLambdaBackBluetoothScanner() }
