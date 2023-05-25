@@ -42,12 +42,14 @@ fun SettingsScreen(navMainController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally) {
             RowSettings(
                 modifier = Modifier.padding(top=10.dp, bottom = 10.dp),
+                text = "personal information",
                 navMainController = navMainController,
                 route = Routes.PersonalInfoForm.route,
                 resource = R.drawable.baseline_person_24
             )
             RowSettings(
                 modifier = Modifier.padding(top=10.dp, bottom = 10.dp),
+                text = "connect to a different device",
                 navMainController = navMainController,
                 route = Routes.BluetoothScanner.route,
                 resource = R.drawable.baseline_watch_24
@@ -59,6 +61,7 @@ fun SettingsScreen(navMainController: NavController) {
 @Composable
 fun RowSettings(
     modifier: Modifier,
+    text:String,
     navMainController: NavController,
     route: String,
     resource: Int = R.drawable.ic_launcher_foreground
@@ -83,7 +86,8 @@ fun RowSettings(
             .background(color = Color(0xFFE91E63))
         ) {
 
-            Text("Personal Information",
+            Text(
+                text =text,
                 textAlign = TextAlign.Start,
                 color = Color.White,
                 style = MaterialTheme.typography.bodyMedium,
