@@ -219,12 +219,30 @@ class MainActivity : ComponentActivity() {
 
                 }
 
+                val getLiveBasicBluetoothAdapter = {
+                    mViewModel.liveBasicBluetoothAdapter
+                }
+                val clearLiveBasicBluetoothAdapter = {
+                    mViewModel.liveBasicBluetoothAdapter = listOf()
+                }
+                val getLiveStatusResults = {
+                    mViewModel.liveStatusResults
+                }
+                val getLeScanCallback = {
+                    mViewModel.leScanCallback
+                }
+                val setIsRequestForFetchingDataFromSWBeginning = { value:Boolean ->
+                    dataViewModel.smartWatchState.isRequestForFetchingDataFromSWBeginning = value
+                }
+
+
                 composable(Routes.BluetoothScanner.route) {
-                    dataViewModel.smartWatchState.isRequestForFetchingDataFromSWBeginning = false
+
                     BluetoothScanScreen(
-                        basicBluetoothAdapters = mViewModel.liveBasicBluetoothAdapter,//basicBluetoothAdapters,
-                        statusResultState = mViewModel.liveStatusResults,
-                        mViewModel.leScanCallback,
+                        getLiveBasicBluetoothAdapter,
+                        getLiveStatusResults,
+                        getLeScanCallback,
+                        setIsRequestForFetchingDataFromSWBeginning,
                         bluetoothLEManager,
                         this@MainActivity,
                         navLambdaDataScreen
@@ -245,6 +263,8 @@ class MainActivity : ComponentActivity() {
                         navArgument("bluetoothAddress") { type = NavType.StringType },
                     )
                 ) { backStackEntry ->
+
+                    clearLiveBasicBluetoothAdapter()
 
                     val bluetoothName = backStackEntry.arguments?.getString("bluetoothName")?:dataViewModel.lastDeviceAccessedName
                     val bluetoothAddress =
@@ -290,7 +310,7 @@ class MainActivity : ComponentActivity() {
                     Routes.DataHomeDataPreferences.route,                    // declaring placeholder in String route
                 ) {
 
-
+                    clearLiveBasicBluetoothAdapter()
 
                     val bluetoothName = dataViewModel.lastDeviceAccessedName
                     val bluetoothAddress = dataViewModel.lastDeviceAccessedAddress

@@ -35,13 +35,16 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BluetoothScanScreen(
-    basicBluetoothAdapters: List<BasicBluetoothAdapter>,
-    statusResultState: Int,
-    leScanCallback: ScanCallback,
+    getLiveBasicBluetoothAdapter: () -> List<BasicBluetoothAdapter>,
+    getLiveStatusResults: () -> Int,
+    getLeScanCallback: () -> ScanCallback,
+    setIsRequestForFetchingDataFromSWBeginning: (Boolean) -> Unit,
     bluetoothLEManager: BluetoothManager,
     activity: Activity,
     navLambda: (String, String) -> Unit,
 ) {
+    //clearLiveBasicBluetoothAdapter()
+    setIsRequestForFetchingDataFromSWBeginning(false)
 
     var textState by remember {
         mutableStateOf("Swipe  down to scan devices")
@@ -55,7 +58,7 @@ fun BluetoothScanScreen(
         val scanLocalBluetooth = bluetoothLEManager.scanLocalBluetooth(activity)
         bluetoothLEManager.scanLeDevice(
             scanLocalBluetooth,
-            leScanCallback
+            getLeScanCallback()
         )
     }
 
@@ -108,12 +111,12 @@ fun BluetoothScanScreen(
                 .pullRefresh(state)) {
 
 
-            if (statusResultState == -2 || basicBluetoothAdapters.isEmpty()) {
+            if (getLiveStatusResults() == -2 || getLiveBasicBluetoothAdapter().isEmpty()) {
                 ListAlbumDataEmpty()
             } else {
                 ListAlbumDataEmpty()
                 ListAlbumData(
-                    basicBluetoothAdapter = basicBluetoothAdapters,
+                    basicBluetoothAdapter = getLiveBasicBluetoothAdapter(),
                     modifier = Modifier
                         .fillMaxSize(),
                     navLambda
@@ -129,7 +132,7 @@ fun BluetoothScanScreen(
                     .size(50.dp),
                 scale = true
             )
-            when (statusResultState) {
+            when (getLiveStatusResults()) {
                 0 -> {
                     textState = "scanning"
                 }
