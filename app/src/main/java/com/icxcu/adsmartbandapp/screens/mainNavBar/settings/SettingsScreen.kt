@@ -40,44 +40,68 @@ fun SettingsScreen(navMainController: NavController) {
     ) {
         Column(modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally) {
-            Row (verticalAlignment = Alignment.CenterVertically){
+            RowSettings(
+                modifier = Modifier.padding(top=10.dp, bottom = 10.dp),
+                navMainController = navMainController,
+                route = Routes.PersonalInfoForm.route,
+                resource = R.drawable.baseline_person_24
+            )
+            RowSettings(
+                modifier = Modifier.padding(top=10.dp, bottom = 10.dp),
+                navMainController = navMainController,
+                route = Routes.BluetoothScanner.route,
+                resource = R.drawable.baseline_watch_24
+            )
+        }
+    }
+}
 
-                Box(modifier = Modifier
-                    .pointerInput(Unit) {
-                        detectTapGestures(
-                            onPress = { navMainController.navigate(Routes.PersonalInfoForm.route) },
-                            onDoubleTap = { /* Double Tap Detected */ },
-                            onLongPress = { /* Long Press Detected */ },
-                            onTap = {  }
-                        )
-                    }
-                    .fillMaxWidth(0.8f)
-                    .padding(end = 20.dp,)
-                    .clip(shape = RoundedCornerShape(size = 12.dp))
-                    .background(color = Color(0xFFE91E63))
-                   ) {
+@Composable
+fun RowSettings(
+    modifier: Modifier,
+    navMainController: NavController,
+    route: String,
+    resource: Int = R.drawable.ic_launcher_foreground
+){
+    Row (
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ){
 
-                    Text("Personal Information",
-                        textAlign = TextAlign.Start,
-                        color = Color.White,
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(start = 10.dp, top=10.dp, bottom = 10.dp)
-                    )
-                }
-
-                Icon(
-                    painter = painterResource(R.drawable.baseline_person_24),
-                    contentDescription = "Date Range",
-                    tint = Color.White,
-                    modifier = Modifier
-                        .size(50.dp)
-                        .clickable {
-                            navMainController.navigate(Routes.PersonalInfoForm.route)
-                        }
-
+        Box(modifier = Modifier
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onPress = { navMainController.navigate(route) },
+                    onDoubleTap = { /* Double Tap Detected */ },
+                    onLongPress = { /* Long Press Detected */ },
+                    onTap = { }
                 )
             }
+            .fillMaxWidth(0.8f)
+            .padding(end = 20.dp,)
+            .clip(shape = RoundedCornerShape(size = 12.dp))
+            .background(color = Color(0xFFE91E63))
+        ) {
+
+            Text("Personal Information",
+                textAlign = TextAlign.Start,
+                color = Color.White,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(start = 10.dp, top=10.dp, bottom = 10.dp)
+            )
         }
+
+        Icon(
+            painter = painterResource(resource),
+            contentDescription = "Date Range",
+            tint = Color.White,
+            modifier = Modifier
+                .size(50.dp)
+                .clickable {
+                    navMainController.navigate(route)
+                }.fillMaxWidth(1f)
+
+        )
     }
 }
 

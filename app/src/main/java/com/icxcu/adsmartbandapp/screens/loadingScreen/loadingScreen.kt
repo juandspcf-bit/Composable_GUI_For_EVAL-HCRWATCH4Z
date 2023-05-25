@@ -36,7 +36,7 @@ fun LoadingScreen(
 
         Log.d("CircularProgress", "LoadingScreen: ")
         LaunchedEffect(key1 = data, ){
-            delay(2500)
+            delay(1000)
             navLambdaDataScreenDataPreferences()
         }
 
