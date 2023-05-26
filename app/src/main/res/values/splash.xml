@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.ADSmartBandApp.starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#202020</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/gradient_heart_with_ecg_heartbeat</item>
+
+        <item name="postSplashScreenTheme">@style/Theme.ADSmartBandApp</item>
+
+    </style>
+
+
+</resources>
