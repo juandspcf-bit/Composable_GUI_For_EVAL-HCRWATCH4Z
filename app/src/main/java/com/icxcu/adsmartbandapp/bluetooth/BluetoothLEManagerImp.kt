@@ -121,7 +121,7 @@ class BluetoothLEManagerImp(
             scanning = true
             statusResults = 0
             mViewModel.liveStatusResults = statusResults
-            mViewModel.liveBasicBluetoothAdapter.value = mutableListOf()
+            mViewModel.liveBasicBluetoothAdapter = mutableListOf()
             bluetoothLeScanner?.startScan(leScanCallback)
 
         } else {

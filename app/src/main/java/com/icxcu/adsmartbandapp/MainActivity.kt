@@ -5,6 +5,7 @@ import android.app.Application
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -180,7 +181,7 @@ class MainActivity : ComponentActivity() {
 
             val navLambdaBackBluetoothScanner = {
                 navMainController.popBackStack()
-                mViewModel.liveBasicBluetoothAdapter.value = mutableListOf()
+                mViewModel.liveBasicBluetoothAdapter = mutableListOf()
                 mViewModel.liveStatusResults = -2
                 dataViewModel.smartWatchState.isRequestForFetchingDataFromSWBeginning = false
             }
@@ -189,9 +190,9 @@ class MainActivity : ComponentActivity() {
                 navMainController.popBackStack()
             }
 
-            val basicBluetoothAdapters by mViewModel
+/*            val basicBluetoothAdapters by mViewModel
                 .liveBasicBluetoothAdapter
-                .observeAsState(listOf())
+                .observeAsState(listOf())*/
 
 
             NavHost(
@@ -210,7 +211,7 @@ class MainActivity : ComponentActivity() {
                 composable(Routes.BluetoothScanner.route) {
                     dataViewModel.smartWatchState.isRequestForFetchingDataFromSWBeginning = false
                     BluetoothScanScreen(
-                        basicBluetoothAdapters = basicBluetoothAdapters,
+                        basicBluetoothAdapters = mViewModel.liveBasicBluetoothAdapter,
                         statusResultState = mViewModel.liveStatusResults,
                         mViewModel.leScanCallback,
                         bluetoothLEManager,
@@ -227,6 +228,7 @@ class MainActivity : ComponentActivity() {
                         navArgument("bluetoothAddress") { type = NavType.StringType },
                     )
                 ) { backStackEntry ->
+
 
                     val bluetoothName = backStackEntry.arguments?.getString("bluetoothName")
                     val bluetoothAddress =
@@ -248,13 +250,18 @@ class MainActivity : ComponentActivity() {
                     dataViewModel.macAddressDeviceBluetooth=bluetoothAddress ?: "no address"
                     dataViewModel.nameDeviceBluetooth=bluetoothName ?: "no name"
 
-                    dataViewModel.getTodayPhysicalActivityData(dataViewModel.macAddressDeviceBluetooth)
-                    dataViewModel.getYesterdayPhysicalActivityData(dataViewModel.macAddressDeviceBluetooth)
-                    dataViewModel.getTodayBloodPressureData(dataViewModel.macAddressDeviceBluetooth)
-                    dataViewModel.getYesterdayBloodPressureData(dataViewModel.macAddressDeviceBluetooth)
-                    dataViewModel.getTodayHeartRateData(dataViewModel.macAddressDeviceBluetooth)
-                    dataViewModel.getYesterdayHeartRateData(dataViewModel.macAddressDeviceBluetooth)
-                    dataViewModel.getPersonalInfoData(dataViewModel.macAddressDeviceBluetooth)
+                    if(dataViewModel.smartWatchState.progressbarForFetchingDataFromSW){
+                        Log.d("dataHome", "MainContent: recompositions")
+                        dataViewModel.getTodayPhysicalActivityData(dataViewModel.macAddressDeviceBluetooth)
+                        dataViewModel.getYesterdayPhysicalActivityData(dataViewModel.macAddressDeviceBluetooth)
+                        dataViewModel.getTodayBloodPressureData(dataViewModel.macAddressDeviceBluetooth)
+                        dataViewModel.getYesterdayBloodPressureData(dataViewModel.macAddressDeviceBluetooth)
+                        dataViewModel.getTodayHeartRateData(dataViewModel.macAddressDeviceBluetooth)
+                        dataViewModel.getYesterdayHeartRateData(dataViewModel.macAddressDeviceBluetooth)
+                        dataViewModel.getPersonalInfoData(dataViewModel.macAddressDeviceBluetooth)
+                    }
+
+
 
 
                     PersonalInfoDBHandler(

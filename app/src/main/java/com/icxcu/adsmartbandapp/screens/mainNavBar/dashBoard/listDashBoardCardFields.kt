@@ -99,7 +99,7 @@ fun DashBoardScreen(
             title = "Heart Rate",
             text = stringAvgHeartRate,
             fieldPlural = "bpm",
-            resource = R.drawable.heart_rate,
+            resource = R.drawable.heart,
             iconPadding = 15.dp,
             heightCard = 143.dp,
             widthCard = 250.dp,

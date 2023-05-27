@@ -73,7 +73,7 @@ fun TestingHealthScreen(
                 BoxImageCircle(
                     enabled = getVisibilityProgressbarForFetchingData().not(),
                     withImage = true,
-                    imageResource = R.drawable.heart_rate,
+                    imageResource = R.drawable.heart,
                     setNumberDialog = { indexButton: Int ->
                         selectedButton = indexButton
                     },
@@ -83,7 +83,7 @@ fun TestingHealthScreen(
             },
             {
                 MyHeartRateAlertDialogState(
-                    imageResource = R.drawable.heart_rate,
+                    imageResource = R.drawable.heart,
                     getMyHeartRateAlertDialogDataHandler,
                     getMyHeartRate,
                 ) { status: Boolean ->

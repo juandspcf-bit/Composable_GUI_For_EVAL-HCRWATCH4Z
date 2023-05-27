@@ -21,9 +21,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class BluetoothScannerViewModel(var application: Application) : ViewModel() {
-    val liveBasicBluetoothAdapter = MutableLiveData<MutableList<BasicBluetoothAdapter>>(
+    var liveBasicBluetoothAdapter by mutableStateOf<List<BasicBluetoothAdapter>>(
         mutableListOf()
     )
+/*    val liveBasicBluetoothAdapter = MutableLiveData<MutableList<BasicBluetoothAdapter>>(
+        mutableListOf()
+    )*/
     var liveStatusResults by mutableStateOf(-2)
     private var partialList: MutableList<BasicBluetoothAdapter> = mutableListOf()
 
@@ -47,7 +50,7 @@ class BluetoothScannerViewModel(var application: Application) : ViewModel() {
                 val coroutineScope = CoroutineScope(Dispatchers.Main)
                 coroutineScope.launch {
                     partialList.add(basicBluetoothAdapter)
-                    liveBasicBluetoothAdapter.value=partialList.filter { it.name != "no name" }.toSet().toMutableList()
+                    liveBasicBluetoothAdapter = partialList.filter { it.name != "no name" }.toSet().toMutableList()
 
                 }
 
@@ -60,7 +63,7 @@ class BluetoothScannerViewModel(var application: Application) : ViewModel() {
                 val coroutineScope = CoroutineScope(Dispatchers.Main)
                 coroutineScope.launch {
                     partialList.add(basicBluetoothAdapter)
-                    liveBasicBluetoothAdapter.value=partialList.filter { it.name != "no name" }.toSet().toMutableList()
+                    liveBasicBluetoothAdapter = partialList.filter { it.name != "no name" }.toSet().toMutableList()
 
                 }
             }
