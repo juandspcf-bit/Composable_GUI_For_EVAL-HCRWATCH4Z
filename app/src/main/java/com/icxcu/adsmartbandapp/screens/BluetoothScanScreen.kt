@@ -40,7 +40,7 @@ fun BluetoothScanScreen(
     leScanCallback: ScanCallback,
     bluetoothLEManager: BluetoothManager,
     activity: Activity,
-    navLambda: (String, String) -> Unit,
+    navigateMainNavBar: (String, String) -> Unit,
 ) {
 
     var textState by remember {
@@ -116,7 +116,7 @@ fun BluetoothScanScreen(
                     basicBluetoothAdapter = basicBluetoothAdapters,
                     modifier = Modifier
                         .fillMaxSize(),
-                    navLambda
+                    navigateMainNavBar
                 )
 
             }
