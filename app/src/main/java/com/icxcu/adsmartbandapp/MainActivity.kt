@@ -78,8 +78,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
-
         super.onCreate(savedInstanceState)
+
+
         setContent {
             ADSmartBandAppTheme {
                 val owner = LocalViewModelStoreOwner.current
