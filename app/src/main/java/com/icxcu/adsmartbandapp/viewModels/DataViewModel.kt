@@ -18,6 +18,7 @@ import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.screens.mainNavBar.DayPhysicalActivityInfoState
+import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SmartWatchState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.TodayPhysicalActivityInfoState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.YesterdayPhysicalActivityInfoState
@@ -47,6 +48,7 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     var selectedDay by mutableStateOf("")
 
+    var statusStartedReadingDataLasThreeDaysData by mutableStateOf(false)
     val dayPhysicalActivityInfoState = DayPhysicalActivityInfoState()
     val todayPhysicalActivityInfoState = TodayPhysicalActivityInfoState()
     val yesterdayPhysicalActivityInfoState = YesterdayPhysicalActivityInfoState()
@@ -112,7 +114,7 @@ class DataViewModel(var application: Application) : ViewModel() {
                     yesterdayFormattedDate -> {
                         smartWatchState.yesterdayDateValuesFromSW = it
                         smartWatchState.progressbarForFetchingDataFromSW = false
-                        smartWatchState.isRequestForFetchingDataFromSWBeginning = true
+                        smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.READ
                     }
                 }
 

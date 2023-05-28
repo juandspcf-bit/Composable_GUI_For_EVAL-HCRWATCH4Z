@@ -13,7 +13,6 @@ import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
-import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.MainNavigationBarScaffold
@@ -217,8 +216,9 @@ class SmartWatchState(
     todayFormattedDate: String,
     yesterdayFormattedDate: String
 ) {
+
     var progressbarForFetchingDataFromSW by mutableStateOf(false)
-    var isRequestForFetchingDataFromSWBeginning by mutableStateOf(false)
+    var fetchingDataFromSWStatus by mutableStateOf(SWReadingStatus.STOPPED)
 
     var todayDateValuesReadFromSW by mutableStateOf(
         Values(
@@ -242,4 +242,10 @@ class SmartWatchState(
             yesterdayFormattedDate
         )
     )
+}
+
+enum class SWReadingStatus{
+    IN_PROGRESS,
+    READ,
+    STOPPED
 }
