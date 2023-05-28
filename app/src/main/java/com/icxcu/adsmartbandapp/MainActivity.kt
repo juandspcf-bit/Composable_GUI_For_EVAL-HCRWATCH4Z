@@ -6,8 +6,11 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.ViewTreeObserver
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -27,6 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothLEManagerImp
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
+import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreHelper
 import com.icxcu.adsmartbandapp.screens.BluetoothScanScreen
 import com.icxcu.adsmartbandapp.screens.PermissionsScreen
 import com.icxcu.adsmartbandapp.screens.Routes
@@ -47,6 +51,7 @@ import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 import com.icxcu.adsmartbandapp.viewModels.DataViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModel
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModelFactory
+import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -57,7 +62,9 @@ class MainActivity : ComponentActivity() {
     private lateinit var bluetoothLEManager: BluetoothManager
     private lateinit var mViewModel: BluetoothScannerViewModel
     private lateinit var pViewModel: PermissionsViewModel
+    private val splashViewModel:SplashViewModel by viewModels()
     private lateinit var startDestination:String
+
 
     private val permissionsRequired = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         listOf(
@@ -80,6 +87,11 @@ class MainActivity : ComponentActivity() {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
 
+        val content: View = findViewById(android.R.id.content)
+        content.viewTreeObserver.addOnPreDrawListener {
+            val preferenceDataStoreHelper = PreferenceDataStoreHelper(this)
+            splashViewModel.stateFlow.value
+        }
 
         setContent {
             ADSmartBandAppTheme {
@@ -211,6 +223,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 composable(Routes.BluetoothScanner.route) {
+                    Log.d("BluetoothScannerScreen", "MainContent: ")
                     dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.STOPPED
                     BluetoothScanScreen(
                         basicBluetoothAdapters = mViewModel.liveBasicBluetoothAdapter,
@@ -340,8 +353,8 @@ class MainActivity : ComponentActivity() {
 
     }
 
-}
 
+}
 
 
 

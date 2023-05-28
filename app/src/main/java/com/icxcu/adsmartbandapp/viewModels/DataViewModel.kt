@@ -124,6 +124,9 @@ class DataViewModel(var application: Application) : ViewModel() {
     }
 
 
+
+
+
     fun requestSmartWatchData(name: String = "", macAddress: String = "") {
 
         swRepository.requestSmartWatchData()
