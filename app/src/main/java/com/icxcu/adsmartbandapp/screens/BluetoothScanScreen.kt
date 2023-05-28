@@ -164,7 +164,7 @@ fun BluetoothScanScreen(
 fun ListAlbumData(
     basicBluetoothAdapter: List<BasicBluetoothAdapter>,
     modifier: Modifier = Modifier,
-    navigateRoute: (String, String) -> Unit
+    navigateMainNavBar: (String, String) -> Unit
 ) {
     LazyColumn(modifier = Modifier) {
         items(basicBluetoothAdapter) { item ->
@@ -179,7 +179,7 @@ fun ListAlbumData(
                             onLongPress = { /* Long Press Detected */ },
                             onTap = {
 
-                                navigateRoute(item.name, item.address)
+                                navigateMainNavBar(item.name, item.address)
 
                             }
                         )
