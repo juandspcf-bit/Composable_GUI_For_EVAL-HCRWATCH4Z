@@ -8,15 +8,17 @@ import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getDoubleListFromStringMap
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
+import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 
 @Composable
 fun TodayHeartRateDBHandler(
     dataViewModel: DataViewModel,
+    splashViewModel: SplashViewModel
 ) {
 
     val getSmartWatchState = remember(dataViewModel) {
         {
-            dataViewModel.smartWatchState
+            splashViewModel.smartWatchState
         }
     }
 

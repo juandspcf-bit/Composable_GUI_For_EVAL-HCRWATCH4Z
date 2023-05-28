@@ -224,7 +224,7 @@ class MainActivity : ComponentActivity() {
 
                 composable(Routes.BluetoothScanner.route) {
                     Log.d("BluetoothScannerScreen", "MainContent: ")
-                    dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.STOPPED
+                    splashViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.STOPPED
                     BluetoothScanScreen(
                         basicBluetoothAdapters = mViewModel.liveBasicBluetoothAdapter,
                         statusResultState = mViewModel.liveStatusResults,
@@ -249,10 +249,13 @@ class MainActivity : ComponentActivity() {
                     val bluetoothAddress =
                         backStackEntry.arguments?.getString("bluetoothAddress")
 
-                    when(dataViewModel.smartWatchState.fetchingDataFromSWStatus){
+
+
+
+                    when(splashViewModel.smartWatchState.fetchingDataFromSWStatus){
                         SWReadingStatus.STOPPED->{
-                            dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.IN_PROGRESS
-                            dataViewModel.requestSmartWatchData(bluetoothName ?: "no name",
+                            splashViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.IN_PROGRESS
+                            splashViewModel.requestSmartWatchData(bluetoothName ?: "no name",
                                 bluetoothAddress ?: "no address")
 
                             dataViewModel.macAddressDeviceBluetooth=bluetoothAddress ?: "no address"
@@ -288,7 +291,8 @@ class MainActivity : ComponentActivity() {
                         bluetoothName = bluetoothName ?: "no name",
                         bluetoothAddress = bluetoothAddress ?: "no address",
                         dataViewModel = dataViewModel,
-                        navMainController = navMainController
+                        navMainController = navMainController,
+                        splashViewModel = splashViewModel
                     ) { navLambdaBackBluetoothScanner() }
                 }
 

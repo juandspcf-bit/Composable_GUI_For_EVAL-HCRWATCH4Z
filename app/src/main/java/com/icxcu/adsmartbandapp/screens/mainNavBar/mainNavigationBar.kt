@@ -23,6 +23,7 @@ import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.YesterdayBloodPress
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.YesterdayHeartRateDBHandler
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.YesterdayPhysicalActivityDBHandler
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
+import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 
 
 @Composable
@@ -30,20 +31,21 @@ fun MainNavigationBar(
     bluetoothName: String,
     bluetoothAddress: String,
     dataViewModel: DataViewModel,
+    splashViewModel: SplashViewModel,
     navMainController: NavHostController,
     navLambda: () -> Unit
 ) {
 
-    TodayPhysicalActivityDBHandler(dataViewModel = dataViewModel)
-    YesterdayPhysicalActivityDBHandler(dataViewModel = dataViewModel)
-    TodayBloodPressureDBHandler(dataViewModel = dataViewModel)
-    YesterdayBloodPressureDBHandler(dataViewModel = dataViewModel)
-    TodayHeartRateDBHandler(dataViewModel = dataViewModel)
-    YesterdayHeartRateDBHandler(dataViewModel = dataViewModel)
+    TodayPhysicalActivityDBHandler(dataViewModel = dataViewModel, splashViewModel = splashViewModel)
+    YesterdayPhysicalActivityDBHandler(dataViewModel = dataViewModel, splashViewModel = splashViewModel)
+    TodayBloodPressureDBHandler(dataViewModel = dataViewModel, splashViewModel = splashViewModel)
+    YesterdayBloodPressureDBHandler(dataViewModel = dataViewModel, splashViewModel = splashViewModel)
+    TodayHeartRateDBHandler(dataViewModel = dataViewModel, splashViewModel = splashViewModel)
+    YesterdayHeartRateDBHandler(dataViewModel = dataViewModel, splashViewModel = splashViewModel)
 
     val getSmartWatchState = remember(dataViewModel) {
         {
-            dataViewModel.smartWatchState
+            splashViewModel.smartWatchState
         }
     }
 

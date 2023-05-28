@@ -16,6 +16,7 @@ import com.icxcu.adsmartbandapp.repositories.MyBloodPressureAlertDialogDataHandl
 import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
+import com.icxcu.adsmartbandapp.repositories.DBRepository
 import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.screens.mainNavBar.DayPhysicalActivityInfoState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
@@ -42,9 +43,10 @@ class DataViewModel(var application: Application) : ViewModel() {
     val pastYesterdayLocalDateTime = todayLocalDateTime.minusDays(2)
     val pastYesterdayFormattedDate = pastYesterdayLocalDateTime.format(myFormatObj)
 
-    private var swRepository: SWRepository
+    private var dbRepository: DBRepository
+    //private var swRepository: SWRepository
 
-    val smartWatchState = SmartWatchState(todayFormattedDate, yesterdayFormattedDate)
+    //val smartWatchState = SmartWatchState(todayFormattedDate, yesterdayFormattedDate)
 
     var selectedDay by mutableStateOf("")
 
@@ -77,33 +79,34 @@ class DataViewModel(var application: Application) : ViewModel() {
         val bloodPressureDao = swDb.bloodPressureDao()
         val heartRateDao = swDb.heartRateDao()
         val personalInfoDao = swDb.personalInfoDao()
-        swRepository = SWRepository(
+        dbRepository = DBRepository(
             physicalActivityDao,
             bloodPressureDao,
             heartRateDao,
             personalInfoDao
         )
+        //swRepository = SWRepository()
 
 
-        dayPhysicalActivityInfoState.dayPhysicalActivityResultsFromDB = swRepository.dayPhysicalActivityResultsFromDB
-        todayPhysicalActivityInfoState.todayPhysicalActivityResultsFromDB = swRepository.todayPhysicalActivityResultsFromDB
-        yesterdayPhysicalActivityInfoState.yesterdayPhysicalActivityResultsFromDB = swRepository.yesterdayPhysicalActivityResultsFromDB
+        dayPhysicalActivityInfoState.dayPhysicalActivityResultsFromDB = dbRepository.dayPhysicalActivityResultsFromDB
+        todayPhysicalActivityInfoState.todayPhysicalActivityResultsFromDB = dbRepository.todayPhysicalActivityResultsFromDB
+        yesterdayPhysicalActivityInfoState.yesterdayPhysicalActivityResultsFromDB = dbRepository.yesterdayPhysicalActivityResultsFromDB
 
-        dayPhysicalActivityInfoState.dayBloodPressureResultsFromDB = swRepository.dayBloodPressureResultsFromDB
-        todayPhysicalActivityInfoState.todayBloodPressureResultsFromDB = swRepository.todayBloodPressureResultsFromDB
-        yesterdayPhysicalActivityInfoState.yesterdayBloodPressureResultsFromDB = swRepository.yesterdayBloodPressureResultsFromDB
+        dayPhysicalActivityInfoState.dayBloodPressureResultsFromDB = dbRepository.dayBloodPressureResultsFromDB
+        todayPhysicalActivityInfoState.todayBloodPressureResultsFromDB = dbRepository.todayBloodPressureResultsFromDB
+        yesterdayPhysicalActivityInfoState.yesterdayBloodPressureResultsFromDB = dbRepository.yesterdayBloodPressureResultsFromDB
 
-        dayPhysicalActivityInfoState.dayHeartRateResultsFromDB = swRepository.dayHeartRateResultsFromDB
-        todayPhysicalActivityInfoState.todayHeartRateResultsFromDB = swRepository.todayHeartRateResultsFromDB
-        yesterdayPhysicalActivityInfoState.yesterdayHeartRateResultsFromDB = swRepository.yesterdayHeartRateResultsFromDB
+        dayPhysicalActivityInfoState.dayHeartRateResultsFromDB = dbRepository.dayHeartRateResultsFromDB
+        todayPhysicalActivityInfoState.todayHeartRateResultsFromDB = dbRepository.todayHeartRateResultsFromDB
+        yesterdayPhysicalActivityInfoState.yesterdayHeartRateResultsFromDB = dbRepository.yesterdayHeartRateResultsFromDB
 
-        personalInfoFromDB = swRepository.personalInfoFromDB
+        personalInfoFromDB = dbRepository.personalInfoFromDB
         updateAlertDialogState.personalInfoAlertDialogUVLiveData =
-            swRepository.personalInfoAlertDialogUVStateLiveData
+            dbRepository.personalInfoAlertDialogUVStateLiveData
 
 
 
-        viewModelScope.launch {
+/*        viewModelScope.launch {
             swRepository.sharedStepsFlow.collect {
 
                 when (it.date) {
@@ -120,14 +123,14 @@ class DataViewModel(var application: Application) : ViewModel() {
 
 
             }
-        }
+        }*/
     }
 
 
 
 
 
-    fun requestSmartWatchData(name: String = "", macAddress: String = "") {
+/*    fun requestSmartWatchData(name: String = "", macAddress: String = "") {
 
         swRepository.requestSmartWatchData()
 
@@ -136,101 +139,101 @@ class DataViewModel(var application: Application) : ViewModel() {
             smartWatchState.progressbarForFetchingDataFromSW = true
         }
 
-    }
+    }*/
 
     fun getMyHeartRateAlertDialogDataHandler(): MyHeartRateAlertDialogDataHandler {
-        return swRepository.myHeartRateAlertDialogDataHandler
+        return dbRepository.myHeartRateAlertDialogDataHandler
     }
 
     fun getMyBloodPressureAlertDialogDataHandler(): MyBloodPressureAlertDialogDataHandler {
-        return swRepository.myBloodPressureAlertDialogDataHandler
+        return dbRepository.myBloodPressureAlertDialogDataHandler
     }
 
     fun getMyTemperatureAlertDialogDataHandler(): MyTemperatureAlertDialogDataHandler {
-        return swRepository.myTemperatureAlertDialogDataHandler
+        return dbRepository.myTemperatureAlertDialogDataHandler
     }
 
     fun getMySpO2AlertDialogDataHandler(): MySpO2AlertDialogDataHandler {
-        return swRepository.mySpO2AlertDialogDataHandler
+        return dbRepository.mySpO2AlertDialogDataHandler
     }
 
 
     fun getDayPhysicalActivityData(dateData: String, macAddress: String) {
-        swRepository.getAnyDayPhysicalActivityData(dateData, macAddress)
+        dbRepository.getAnyDayPhysicalActivityData(dateData, macAddress)
     }
 
     fun getTodayPhysicalActivityData(macAddress: String) {
-        swRepository.getTodayPhysicalActivityData(todayFormattedDate, macAddress)
+        dbRepository.getTodayPhysicalActivityData(todayFormattedDate, macAddress)
     }
 
     fun getYesterdayPhysicalActivityData(macAddress: String) {
-        swRepository.getYesterdayPhysicalActivityData(yesterdayFormattedDate, macAddress)
+        dbRepository.getYesterdayPhysicalActivityData(yesterdayFormattedDate, macAddress)
     }
 
     fun insertPhysicalActivityData(physicalActivity: PhysicalActivity) {
-        swRepository.insertPhysicalActivityData(physicalActivity)
+        dbRepository.insertPhysicalActivityData(physicalActivity)
     }
 
     fun updatePhysicalActivityData(physicalActivity: PhysicalActivity) {
-        swRepository.updatePhysicalActivityData(physicalActivity)
+        dbRepository.updatePhysicalActivityData(physicalActivity)
     }
 
 //Blood Pressure
 
     fun getDayBloodPressureData(dateData: String, macAddress: String) {
-        swRepository.getAnyDayBloodPressureData(dateData, macAddress)
+        dbRepository.getAnyDayBloodPressureData(dateData, macAddress)
     }
 
     fun getTodayBloodPressureData(macAddress: String) {
-        swRepository.getTodayBloodPressureData(todayFormattedDate, macAddress)
+        dbRepository.getTodayBloodPressureData(todayFormattedDate, macAddress)
     }
 
     fun getYesterdayBloodPressureData(macAddress: String) {
-        swRepository.getYesterdayBloodPressureData(yesterdayFormattedDate, macAddress)
+        dbRepository.getYesterdayBloodPressureData(yesterdayFormattedDate, macAddress)
     }
 
     fun insertBloodPressureData(bloodPressure: BloodPressure) {
-        swRepository.insertBloodPressureData(bloodPressure)
+        dbRepository.insertBloodPressureData(bloodPressure)
     }
 
     fun updateBloodPressureData(bloodPressure: BloodPressure) {
-        swRepository.updateBloodPressureData(bloodPressure)
+        dbRepository.updateBloodPressureData(bloodPressure)
     }
 
 
     //Heart Rate
     fun getDayHeartRateData(dateData: String, macAddress: String) {
-        swRepository.getAnyDayHeartRateData(dateData, macAddress)
+        dbRepository.getAnyDayHeartRateData(dateData, macAddress)
     }
 
     fun getTodayHeartRateData(macAddress: String) {
-        swRepository.getTodayHeartRateData(todayFormattedDate, macAddress)
+        dbRepository.getTodayHeartRateData(todayFormattedDate, macAddress)
     }
 
     fun getYesterdayHeartRateData(macAddress: String) {
-        swRepository.getYesterdayHeartRateData(yesterdayFormattedDate, macAddress)
+        dbRepository.getYesterdayHeartRateData(yesterdayFormattedDate, macAddress)
     }
 
     fun insertHeartRateData(heartRate: HeartRate) {
-        swRepository.insertHeartRateData(heartRate)
+        dbRepository.insertHeartRateData(heartRate)
     }
 
     fun updateHeartRateData(heartRate: HeartRate) {
-        swRepository.updateHeartRateData(heartRate)
+        dbRepository.updateHeartRateData(heartRate)
     }
 
 
     //Personal data
     fun insertPersonalData(personalInfo: PersonalInfo) {
-        swRepository.insertPersonalInfo(personalInfo)
+        dbRepository.insertPersonalInfo(personalInfo)
     }
 
     fun updatePersonalData(personalInfo: PersonalInfo) {
-        swRepository.updatePersonalInfo(personalInfo)
+        dbRepository.updatePersonalInfo(personalInfo)
     }
 
     fun getPersonalInfoData(macAddress: String) {
-        swRepository.getPersonalInfoData(macAddress)
+        dbRepository.getPersonalInfoData(macAddress)
     }
 
     fun validatePersonalInfo(
