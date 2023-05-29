@@ -30,7 +30,10 @@ import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.screens.Routes
 
 @Composable
-fun SettingsScreen(navMainController: NavController) {
+fun SettingsScreen(
+    navMainController: NavController,
+    clearState: () -> Unit,
+) {
 
     Box(
         modifier = Modifier
@@ -38,59 +41,64 @@ fun SettingsScreen(navMainController: NavController) {
             .background(Color(0xff1d2a35)),
         contentAlignment = Alignment.Center
     ) {
-        Column(modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally) {
-            
-           RowSettings(
-               navMainController = navMainController,
-               modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
-               text ="Personal information",
-               iconResource = R.drawable.baseline_person_24
-           )
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
             RowSettings(
-                navMainController = navMainController,
+                navigation = {navMainController.navigate(Routes.PersonalInfoForm.route)},
                 modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
-                text ="Connect to other device",
-                iconResource = R.drawable.baseline_watch_24
+                text = "Personal information",
+                iconResource = R.drawable.baseline_person_24
             )
-            
+
+            RowSettings(
+                navigation = {navMainController.navigate(Routes.BluetoothScanner.route)},
+                modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
+                text = "Connect to other device",
+                iconResource = R.drawable.baseline_watch_24,
+                clearState,
+            )
+
         }
     }
 }
 
 @Composable
 fun RowSettings(
-    navMainController: NavController,
-    modifier:Modifier = Modifier,
+    navigation: ()->Unit,
+    modifier: Modifier = Modifier,
     text: String = "",
-    iconResource:Int = R.drawable.ic_launcher_foreground  
-){
-    Row (
+    iconResource: Int = R.drawable.ic_launcher_foreground,
+    optionalOperations:()->Unit = {},
+) {
+    Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
-    ){
+    ) {
 
         Box(modifier = Modifier
             .pointerInput(Unit) {
                 detectTapGestures(
-                    onPress = { navMainController.navigate(Routes.PersonalInfoForm.route) },
+                    onPress = { navigation() },
                     onDoubleTap = { /* Double Tap Detected */ },
                     onLongPress = { /* Long Press Detected */ },
                     onTap = { }
                 )
             }
             .fillMaxWidth(0.8f)
-            .padding(end = 20.dp,)
+            .padding(end = 20.dp)
             .clip(shape = RoundedCornerShape(size = 12.dp))
             .background(color = Color(0xFFE91E63))
         ) {
 
-            Text(text,
+            Text(
+                text,
                 textAlign = TextAlign.Start,
                 color = Color.White,
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(start = 10.dp, top=10.dp, bottom = 10.dp)
+                modifier = Modifier.padding(start = 10.dp, top = 10.dp, bottom = 10.dp)
             )
         }
 
@@ -101,7 +109,8 @@ fun RowSettings(
             modifier = Modifier
                 .size(50.dp)
                 .clickable {
-                    navMainController.navigate(Routes.BluetoothScanner.route)
+                    optionalOperations()
+                    navigation()
                 }
 
         )
@@ -111,5 +120,5 @@ fun RowSettings(
 @Preview(showBackground = true)
 @Composable
 fun SettingsPreview() {
-    SettingsScreen(rememberNavController())
+    SettingsScreen(rememberNavController()) {}
 }

@@ -45,7 +45,7 @@ fun MainNavigationBar(
 
     val getSmartWatchState = remember(dataViewModel) {
         {
-            splashViewModel.smartWatchState
+            dataViewModel.smartWatchState
         }
     }
 
@@ -53,6 +53,7 @@ fun MainNavigationBar(
     val dayDateValuesReadFromSW = {
         getSmartWatchState().todayDateValuesReadFromSW
     }
+
     val getVisibilityProgressbarForFetchingData = {
         getSmartWatchState().progressbarForFetchingDataFromSW
     }
@@ -116,6 +117,11 @@ fun MainNavigationBar(
         temperature
     }
 
+    val clearState = remember(dataViewModel) {
+        {
+            dataViewModel.clearState()
+        }
+    }
 
     MainNavigationBarScaffold(
         bluetoothName,
@@ -132,6 +138,7 @@ fun MainNavigationBar(
         getMyTemperatureAlertDialogDataHandler,
         getRealTimeTemperature,
         getCircularProgressTemperature,
+        clearState,
         navMainController,
         navLambda,
     )

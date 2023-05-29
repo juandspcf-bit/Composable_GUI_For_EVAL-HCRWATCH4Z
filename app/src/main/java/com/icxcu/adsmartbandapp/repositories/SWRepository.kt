@@ -1,5 +1,6 @@
 package com.icxcu.adsmartbandapp.repositories
 
+import android.util.Log
 import com.icxcu.adsmartbandapp.data.MockData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +21,7 @@ class SWRepository {
 
 
     fun requestSmartWatchData(name: String = "", macAddress: String = "") {
+        Log.d("Status", "Reading Data")
         CoroutineScope(Dispatchers.Default).launch {
             delay(5000)
             _sharedStepsFlow.emit(MockData.valuesToday)

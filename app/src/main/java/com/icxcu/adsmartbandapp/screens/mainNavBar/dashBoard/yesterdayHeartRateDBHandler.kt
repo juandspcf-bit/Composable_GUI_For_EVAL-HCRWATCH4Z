@@ -18,7 +18,7 @@ fun YesterdayHeartRateDBHandler(
 
     val getSmartWatchState = remember(dataViewModel) {
         {
-            splashViewModel.smartWatchState
+            dataViewModel.smartWatchState
         }
     }
 

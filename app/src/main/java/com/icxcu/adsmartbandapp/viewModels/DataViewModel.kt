@@ -7,16 +7,17 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.database.SWRoomDatabase
+import com.icxcu.adsmartbandapp.repositories.DBRepository
 import com.icxcu.adsmartbandapp.repositories.MyBloodPressureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
-import com.icxcu.adsmartbandapp.repositories.DBRepository
 import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.screens.mainNavBar.DayPhysicalActivityInfoState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
@@ -51,9 +52,9 @@ class DataViewModel(var application: Application) : ViewModel() {
     var selectedDay by mutableStateOf("")
 
     var statusStartedReadingDataLasThreeDaysData by mutableStateOf(false)
-    val dayPhysicalActivityInfoState = DayPhysicalActivityInfoState()
-    val todayPhysicalActivityInfoState = TodayPhysicalActivityInfoState()
-    val yesterdayPhysicalActivityInfoState = YesterdayPhysicalActivityInfoState()
+    var dayPhysicalActivityInfoState = DayPhysicalActivityInfoState()
+    var todayPhysicalActivityInfoState = TodayPhysicalActivityInfoState()
+    var yesterdayPhysicalActivityInfoState = YesterdayPhysicalActivityInfoState()
 
 
     var personalInfoFromDB = MutableLiveData<List<PersonalInfo>>()
@@ -70,7 +71,8 @@ class DataViewModel(var application: Application) : ViewModel() {
     var stateShowDialogDatePicker by mutableStateOf(false)
     var stateMiliSecondsDateDialogDatePicker by mutableStateOf(0L)
 
-
+    var smartWatchState = SmartWatchState(todayFormattedDate, yesterdayFormattedDate)
+    private var swRepository: SWRepository = SWRepository()
 
 
     init {
@@ -104,33 +106,12 @@ class DataViewModel(var application: Application) : ViewModel() {
         updateAlertDialogState.personalInfoAlertDialogUVLiveData =
             dbRepository.personalInfoAlertDialogUVStateLiveData
 
-
-
-/*        viewModelScope.launch {
-            swRepository.sharedStepsFlow.collect {
-
-                when (it.date) {
-                    todayFormattedDate -> {
-                        smartWatchState.todayDateValuesReadFromSW = it
-                    }
-
-                    yesterdayFormattedDate -> {
-                        smartWatchState.yesterdayDateValuesFromSW = it
-                        smartWatchState.progressbarForFetchingDataFromSW = false
-                        smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.READ
-                    }
-                }
-
-
-            }
-        }*/
     }
 
 
 
 
-
-/*    fun requestSmartWatchData(name: String = "", macAddress: String = "") {
+    fun requestSmartWatchData(name: String = "", macAddress: String = "") {
 
         swRepository.requestSmartWatchData()
 
@@ -139,7 +120,52 @@ class DataViewModel(var application: Application) : ViewModel() {
             smartWatchState.progressbarForFetchingDataFromSW = true
         }
 
-    }*/
+    }
+
+    fun listenDataFromSmartWatch(){
+        viewModelScope.launch {
+            swRepository.sharedStepsFlow.collect {
+                when (it.date) {
+                    todayFormattedDate -> {
+                        smartWatchState.todayDateValuesReadFromSW = it
+                    }
+                    yesterdayFormattedDate -> {
+                        smartWatchState.yesterdayDateValuesFromSW = it
+                        smartWatchState.progressbarForFetchingDataFromSW = false
+                        smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.READ
+                    }
+                }
+            }
+        }
+    }
+
+    fun clearState(){
+        selectedDay = ""
+
+        statusStartedReadingDataLasThreeDaysData = false
+        dayPhysicalActivityInfoState = DayPhysicalActivityInfoState()
+        todayPhysicalActivityInfoState = TodayPhysicalActivityInfoState()
+        yesterdayPhysicalActivityInfoState = YesterdayPhysicalActivityInfoState()
+
+
+        personalInfoFromDB.value = listOf()
+        personalInfoListReadFromDB = listOf()
+
+        personalInfoDataState = PersonalInfoDataState()
+        invalidAlertDialogState = InvalidAlertDialogState()
+        updateAlertDialogState = UpdateAlertDialogState()
+
+        macAddressDeviceBluetooth = ""
+        nameDeviceBluetooth = ""
+
+        //DatePicker for physical activity plots
+        stateShowDialogDatePicker = false
+        stateMiliSecondsDateDialogDatePicker = 0L
+
+        smartWatchState = SmartWatchState(todayFormattedDate, yesterdayFormattedDate)
+        swRepository = SWRepository()
+    }
+
 
     fun getMyHeartRateAlertDialogDataHandler(): MyHeartRateAlertDialogDataHandler {
         return dbRepository.myHeartRateAlertDialogDataHandler

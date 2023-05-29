@@ -19,7 +19,7 @@ fun YesterdayPhysicalActivityDBHandler(
 
     val getSmartWatchState = remember(dataViewModel) {
         {
-            splashViewModel.smartWatchState
+            dataViewModel.smartWatchState
         }
     }
 

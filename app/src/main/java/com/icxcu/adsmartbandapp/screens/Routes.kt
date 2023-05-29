@@ -3,8 +3,10 @@ package com.icxcu.adsmartbandapp.screens
 sealed class Routes(val route: String) {
 
     object Permissions: Routes("permissions")
+    object CircularProgressLoading : Routes("circularProgressLoading")
     object BluetoothScanner : Routes("home")
-    object DataHome : Routes("customers")
+    object DataHomeFromBluetoothScannerScreen : Routes("dataHomeFromBluetoothScannerScreen")
+    object DataHome : Routes("dataHome")
     object StepsPlots : Routes("stepsPlot")
     object BloodPressurePlots : Routes("bloodPressurePlot")
 

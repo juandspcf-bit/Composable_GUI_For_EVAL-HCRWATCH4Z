@@ -18,7 +18,7 @@ fun TodayBloodPressureDBHandler(
 
     val getSmartWatchState = remember(dataViewModel) {
         {
-            splashViewModel.smartWatchState
+            dataViewModel.smartWatchState
         }
     }
 

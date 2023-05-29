@@ -1,10 +1,18 @@
 package com.icxcu.adsmartbandapp.viewModels
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreConstants.LAST_DEVICE_ACCESSED_ADDRESS
+import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreConstants.LAST_DEVICE_ACCESSED_NAME
+import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreHelper
 import com.icxcu.adsmartbandapp.repositories.SWRepository
+import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SmartWatchState
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,8 +31,10 @@ class SplashViewModel: ViewModel() {
     val pastYesterdayLocalDateTime = todayLocalDateTime.minusDays(2)
     val pastYesterdayFormattedDate = pastYesterdayLocalDateTime.format(myFormatObj)
 
-    val smartWatchState = SmartWatchState(todayFormattedDate, yesterdayFormattedDate)
-    private var swRepository: SWRepository = SWRepository()
+
+
+    var route by mutableStateOf(listOf<String>())
+
 
     init {
 
@@ -34,42 +44,38 @@ class SplashViewModel: ViewModel() {
     private val _stateFlow = MutableStateFlow(false)
     val stateFlow = _stateFlow.asStateFlow()
 
-    init {
-        startDelay()
-        
+fun startDelay(preferenceDataStoreHelper: PreferenceDataStoreHelper){
+    val deferred = viewModelScope.async {
+        val prefRoute = mutableListOf<String>()
+        val name = preferenceDataStoreHelper.getFirstPreference(LAST_DEVICE_ACCESSED_NAME, "")
+        val address = preferenceDataStoreHelper.getFirstPreference(LAST_DEVICE_ACCESSED_ADDRESS, "")
+
+        val route = if(name==""){
+            prefRoute.add("")
+            prefRoute.add(Routes.BluetoothScanner.route)
+            prefRoute.toList()
+        }else{
+            prefRoute.add("")
+            prefRoute.add(Routes.DataHome.route)
+            prefRoute.add(name)
+            prefRoute.add(address)
+            prefRoute.toList()
+        }
+        route
     }
 
-private fun startDelay(){
     viewModelScope.launch {
-        delay(2000)
+        route = deferred.await()
+        delay(3000)
         _stateFlow.value = true
 
-        swRepository.sharedStepsFlow.collect {
-
-            when (it.date) {
-                todayFormattedDate -> {
-                    smartWatchState.todayDateValuesReadFromSW = it
-                }
-
-                yesterdayFormattedDate -> {
-                    smartWatchState.yesterdayDateValuesFromSW = it
-                    smartWatchState.progressbarForFetchingDataFromSW = false
-                    smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.READ
-                }
-            }
-
-
-        }
     }
 }
 
-    fun requestSmartWatchData(name: String = "", macAddress: String = "") {
-
-        swRepository.requestSmartWatchData()
-
+    fun writeDataPreferences(preferenceDataStoreHelper: PreferenceDataStoreHelper, name: String, address:String) {
         viewModelScope.launch {
-            delay(1000)
-            smartWatchState.progressbarForFetchingDataFromSW = true
+            preferenceDataStoreHelper.putPreference(LAST_DEVICE_ACCESSED_NAME, name)
+            preferenceDataStoreHelper.putPreference(LAST_DEVICE_ACCESSED_ADDRESS, address)
         }
 
     }

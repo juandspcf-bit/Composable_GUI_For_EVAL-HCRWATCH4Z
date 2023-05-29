@@ -73,6 +73,7 @@ fun MainNavigationBarScaffold(
     getMyTemperatureAlertDialogDataHandler: () -> MyTemperatureAlertDialogDataHandler,
     getRealTimeTemperature: () -> TemperatureData,
     getCircularProgressTemperature: () -> Int,
+    clearState: () -> Unit,
     navMainController: NavHostController = rememberNavController(),
     navLambda: () -> Unit = {}
 ) {
@@ -149,6 +150,7 @@ fun MainNavigationBarScaffold(
                     getMyTemperatureAlertDialogDataHandler = getMyTemperatureAlertDialogDataHandler,
                     getRealTimeTemperature = getRealTimeTemperature,
                     getCircularProgressTemperature = getCircularProgressTemperature,
+                    clearState = clearState,
                     navMainController = navMainController
                 )
             }
@@ -174,6 +176,7 @@ fun NavigationHost(
     getMyTemperatureAlertDialogDataHandler: () -> MyTemperatureAlertDialogDataHandler,
     getRealTimeTemperature: () -> TemperatureData,
     getCircularProgressTemperature: () -> Int,
+    clearState: () -> Unit,
     navMainController: NavHostController
 ) {
     NavHost(
@@ -203,7 +206,10 @@ fun NavigationHost(
         }
 
         composable(NavRoutes.Settings.route) {
-            SettingsScreen(navMainController)
+            SettingsScreen(
+                navMainController,
+                clearState,
+            )
         }
     }
 }
