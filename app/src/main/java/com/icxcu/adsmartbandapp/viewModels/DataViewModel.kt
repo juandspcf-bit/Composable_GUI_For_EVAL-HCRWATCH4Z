@@ -20,6 +20,7 @@ import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.SWRepository
+import com.icxcu.adsmartbandapp.screens.BNavStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.DayPhysicalActivityInfoState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SmartWatchState
@@ -74,9 +75,13 @@ class DataViewModel(var application: Application) : ViewModel() {
     var stateMiliSecondsDateDialogDatePicker by mutableStateOf(0L)
 
     var smartWatchState by mutableStateOf(SmartWatchState(todayFormattedDate, yesterdayFormattedDate))
-    private var swRepository: SWRepository = SWRepository()
+    var swRepository: SWRepository = SWRepository()
 
-    private lateinit var collecDataScope: Job
+    lateinit var collecDataScope: Job
+
+
+    var stateBNavStatus by mutableStateOf(BNavStatus.NO_PROGRESS)
+
 
     init {
         val swDb = SWRoomDatabase.getInstance(application)
@@ -116,9 +121,9 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     fun requestSmartWatchData(name: String = "", macAddress: String = "") {
         Log.d("DATAX", "requestSmartWatchDataModel: ")
-        swRepository.requestSmartWatchData()
+         swRepository.requestSmartWatchData()
 
-        viewModelScope.launch {
+       viewModelScope.launch {
             delay(1000)
             smartWatchState.progressbarForFetchingDataFromSW = true
         }
@@ -128,7 +133,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     fun listenDataFromSmartWatch(){
         collecDataScope = viewModelScope.launch {
             swRepository.sharedStepsFlow.collect {
-                Log.d("DATAX", "MainContent0Shared: ${smartWatchState.todayDateValuesReadFromSW.stepList.sum()}")
+                Log.d("DATAX", "SWReadingStatus.STOPPED listenDataFromSmartWatch: ${smartWatchState.todayDateValuesReadFromSW.stepList.sum()}")
 
                 when (it.date) {
                     todayFormattedDate -> {
@@ -144,38 +149,7 @@ class DataViewModel(var application: Application) : ViewModel() {
         }
     }
 
-    fun clearState(){
 
-        collecDataScope.cancel()
-        Log.d("DATAX", "clearState: ")
-        selectedDay = ""
-
-        statusStartedReadingDataLasThreeDaysData = false
-        dayPhysicalActivityInfoState = DayPhysicalActivityInfoState()
-        todayPhysicalActivityInfoState = TodayPhysicalActivityInfoState()
-        yesterdayPhysicalActivityInfoState = YesterdayPhysicalActivityInfoState()
-
-
-        personalInfoFromDB.value = listOf()
-        personalInfoListReadFromDB = listOf()
-
-        personalInfoDataState = PersonalInfoDataState()
-        invalidAlertDialogState = InvalidAlertDialogState()
-        updateAlertDialogState = UpdateAlertDialogState()
-
-        macAddressDeviceBluetooth = ""
-        nameDeviceBluetooth = ""
-
-        //DatePicker for physical activity plots
-        stateShowDialogDatePicker = false
-        stateMiliSecondsDateDialogDatePicker = 0L
-
-        smartWatchState = SmartWatchState(todayFormattedDate, yesterdayFormattedDate)
-        swRepository = SWRepository()
-
-
-        Log.d("DATAX", "clearState: ${smartWatchState.todayDateValuesReadFromSW.stepList.sum()}")
-    }
 
 
     fun getMyHeartRateAlertDialogDataHandler(): MyHeartRateAlertDialogDataHandler {

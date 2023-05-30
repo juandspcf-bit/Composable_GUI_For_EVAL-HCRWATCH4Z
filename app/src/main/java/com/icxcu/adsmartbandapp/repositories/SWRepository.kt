@@ -4,6 +4,7 @@ import android.util.Log
 import com.icxcu.adsmartbandapp.data.MockData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.currentCoroutineContext
@@ -15,22 +16,29 @@ import kotlinx.coroutines.launch
 
 class SWRepository {
     private val _sharedStepsFlow = MutableSharedFlow<Values>(
-        replay = 30,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
+        replay = 2,
+        onBufferOverflow = BufferOverflow.SUSPEND
     )
     val sharedStepsFlow = _sharedStepsFlow.asSharedFlow()
+
+    lateinit var jobSW:Job
 
 
 
 
     fun requestSmartWatchData(name: String = "", macAddress: String = "") {
         Log.d("DATAX", "requestSmartWatchDataRep: ")
-        Log.d("Status", "Reading Data")
-        CoroutineScope(Dispatchers.Default).launch {
+        jobSW = CoroutineScope(Dispatchers.Default).launch {
             delay(5000)
             _sharedStepsFlow.emit(MockData.valuesToday)
             delay(5000)
             _sharedStepsFlow.emit(MockData.valuesYesterday)
+            Log.d("DATAX", "requestSmartWatchDataRep:  CoroutineScope(Dispatchers.Default) END")
+            jobSW.cancel()
+        }
+
+        jobSW.invokeOnCompletion {
+            Log.d("DATAX", "requestSmartWatchData: cancelled")
         }
     }
 }

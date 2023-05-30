@@ -3,6 +3,7 @@ package com.icxcu.adsmartbandapp.screens
 
 import android.app.Activity
 import android.bluetooth.le.ScanCallback
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -40,9 +41,10 @@ fun BluetoothScanScreen(
     leScanCallback: ScanCallback,
     bluetoothLEManager: BluetoothManager,
     activity: Activity,
+    setFetchingDataFromSWStatusSTOPPED: () -> Unit,
     navigateMainNavBar: (String, String) -> Unit,
 ) {
-
+    Log.d("DATAX", "BluetoothScanScreen: ENTER")
     var textState by remember {
         mutableStateOf("Swipe  down to scan devices")
     }
@@ -116,6 +118,7 @@ fun BluetoothScanScreen(
                     basicBluetoothAdapter = basicBluetoothAdapters,
                     modifier = Modifier
                         .fillMaxSize(),
+                    setFetchingDataFromSWStatusSTOPPED,
                     navigateMainNavBar
                 )
 
@@ -154,7 +157,7 @@ fun BluetoothScanScreen(
 
             }
         }
-
+        Log.d("DATAX", "BluetoothScanScreen: OUT")
 
     }
 
@@ -164,6 +167,7 @@ fun BluetoothScanScreen(
 fun ListAlbumData(
     basicBluetoothAdapter: List<BasicBluetoothAdapter>,
     modifier: Modifier = Modifier,
+    setFetchingDataFromSWStatusSTOPPED: () -> Unit,
     navigateMainNavBar: (String, String) -> Unit
 ) {
     LazyColumn(modifier = Modifier) {
@@ -178,7 +182,7 @@ fun ListAlbumData(
                             onDoubleTap = { /* Double Tap Detected */ },
                             onLongPress = { /* Long Press Detected */ },
                             onTap = {
-
+                                setFetchingDataFromSWStatusSTOPPED()
                                 navigateMainNavBar(item.name, item.address)
 
                             }
@@ -234,4 +238,9 @@ fun ListAlbumDataEmpty(
         }
     }
 
+}
+
+enum class BNavStatus{
+    IN_PROGRESS,
+    NO_PROGRESS,
 }

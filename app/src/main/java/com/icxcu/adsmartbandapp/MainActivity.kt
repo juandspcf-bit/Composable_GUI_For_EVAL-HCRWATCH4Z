@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -21,6 +22,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -29,14 +31,23 @@ import androidx.navigation.navArgument
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothLEManagerImp
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
 import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreHelper
+import com.icxcu.adsmartbandapp.repositories.Values
+import com.icxcu.adsmartbandapp.screens.BNavStatus
 import com.icxcu.adsmartbandapp.screens.BluetoothScanScreen
 import com.icxcu.adsmartbandapp.screens.PermissionsScreen
 import com.icxcu.adsmartbandapp.screens.Routes
+import com.icxcu.adsmartbandapp.screens.mainNavBar.DayPhysicalActivityInfoState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.MainNavigationBar
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
+import com.icxcu.adsmartbandapp.screens.mainNavBar.SmartWatchState
+import com.icxcu.adsmartbandapp.screens.mainNavBar.TodayPhysicalActivityInfoState
+import com.icxcu.adsmartbandapp.screens.mainNavBar.YesterdayPhysicalActivityInfoState
+import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.InvalidAlertDialogState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalDataForm
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoDBHandler
+import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoInitDBHandlerAD
+import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.UpdateAlertDialogState
 import com.icxcu.adsmartbandapp.screens.personalnfoInit.PersonalInfoInit
 import com.icxcu.adsmartbandapp.screens.personalnfoInit.PersonalInfoInitDBHandler
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureInfo
@@ -51,6 +62,8 @@ import com.icxcu.adsmartbandapp.viewModels.DataViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModel
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
+import kotlinx.coroutines.cancel
+import java.sql.Wrapper
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -157,6 +170,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onRestart() {
         super.onRestart()
+        Log.d("DATAX", "onRestart: ")
         setContent {
             ADSmartBandAppTheme {
                 MainContent()
@@ -185,11 +199,7 @@ class MainActivity : ComponentActivity() {
                         navMainController.navigate(
                             Routes.DataHomeFromBluetoothScannerScreen
                                 .route + "/${name}/${address}"
-                        ){
-                            popUpTo(Routes.BluetoothScanner.route) {
-                                inclusive = true
-                            }
-                        }
+                        )
                     }
                 }
             }
@@ -220,6 +230,17 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
+            val getFetchingDataFromSWStatus = {
+                dataViewModel.smartWatchState.fetchingDataFromSWStatus
+            }
+
+            val setFetchingDataFromSWStatusSTOPPED = {
+                Log.d("DATAX", "MainContent setFetchingDataFromSWStatusSTOPPED STOPPED")
+
+                dataViewModel.stateBNavStatus = BNavStatus.IN_PROGRESS
+                dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.STOPPED
+            }
+
             NavHost(
                 navController = navMainController,
                 startDestination = startDestination
@@ -237,9 +258,14 @@ class MainActivity : ComponentActivity() {
                 }
 
                 composable(Routes.BluetoothScanner.route) {
-                    Log.d("BluetoothScannerScreen", "MainContent: ")
-                    dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.STOPPED
-                    Log.d("DATAX", "MainContent0: ${dataViewModel.smartWatchState.todayDateValuesReadFromSW.stepList.sum()}")
+                    Log.d("DATAX", "Routes.BluetoothScanner.route: ENTER")
+
+                    if(dataViewModel.stateBNavStatus != BNavStatus.IN_PROGRESS) clearStateSW(dataViewModel)
+
+
+
+                    Log.d("DATAX", "Routes.BluetoothScanner.route: CLEARED")
+
 
                     BluetoothScanScreen(
                         basicBluetoothAdapters = mViewModel.liveBasicBluetoothAdapter,
@@ -247,6 +273,7 @@ class MainActivity : ComponentActivity() {
                         mViewModel.leScanCallback,
                         bluetoothLEManager,
                         this@MainActivity,
+                        setFetchingDataFromSWStatusSTOPPED,
                         navLambdaDataScreen
                     )
 
@@ -263,9 +290,11 @@ class MainActivity : ComponentActivity() {
                     )
                 ) { backStackEntry ->
 
-                    val bluetoothName = backStackEntry.arguments?.getString("bluetoothName")
+                    Log.d("DATAX", "Routes.DataHomeFromBluetoothScannerScreen.route ENTERED")
+
+                    val bluetoothName = backStackEntry.arguments?.getString("bluetoothName")?:"no name"
                     val bluetoothAddress =
-                        backStackEntry.arguments?.getString("bluetoothAddress")
+                        backStackEntry.arguments?.getString("bluetoothAddress")?:"no address"
 
                     splashViewModel.writeDataPreferences(preferenceDataStoreHelper,
                         name = bluetoothName ?: "no name",
@@ -273,122 +302,40 @@ class MainActivity : ComponentActivity() {
                     )
 
 
-                    Log.d("Status", "MainContent: ${dataViewModel.smartWatchState.fetchingDataFromSWStatus}")
-                    when(dataViewModel.smartWatchState.fetchingDataFromSWStatus){
-                        SWReadingStatus.STOPPED->{
-                            dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.IN_PROGRESS
-                            Log.d("DATAX", "MainContent1: ${dataViewModel.smartWatchState.todayDateValuesReadFromSW.stepList.sum()}")
-
-                            dataViewModel.listenDataFromSmartWatch()
-                            dataViewModel.requestSmartWatchData(
-                                bluetoothName ?: "no name",
-                                bluetoothAddress ?: "no address"
-                            )
-
-                            dataViewModel.macAddressDeviceBluetooth=bluetoothAddress ?: "no address"
-                            dataViewModel.nameDeviceBluetooth=bluetoothName ?: "no name"
-
-                            dataViewModel.getTodayPhysicalActivityData(dataViewModel.macAddressDeviceBluetooth)
-                            dataViewModel.getYesterdayPhysicalActivityData(dataViewModel.macAddressDeviceBluetooth)
-                            dataViewModel.getTodayBloodPressureData(dataViewModel.macAddressDeviceBluetooth)
-                            dataViewModel.getYesterdayBloodPressureData(dataViewModel.macAddressDeviceBluetooth)
-                            dataViewModel.getTodayHeartRateData(dataViewModel.macAddressDeviceBluetooth)
-                            dataViewModel.getYesterdayHeartRateData(dataViewModel.macAddressDeviceBluetooth)
-                            dataViewModel.getPersonalInfoData(dataViewModel.macAddressDeviceBluetooth)
-                            dataViewModel.statusStartedReadingDataLasThreeDaysData = true
-
-
-                        }
-                         SWReadingStatus.IN_PROGRESS->{
-                             dataViewModel.macAddressDeviceBluetooth=bluetoothAddress ?: "no address"
-                             dataViewModel.nameDeviceBluetooth=bluetoothName ?: "no name"
-                        }
-                        SWReadingStatus.READ->{
-                            dataViewModel.macAddressDeviceBluetooth=bluetoothAddress ?: "no address"
-                            dataViewModel.nameDeviceBluetooth=bluetoothName ?: "no name"
-                        }
-                    }
-
-                    PersonalInfoDBHandler(
-                        dataViewModel
+                    Wrapper(dataViewModel,
+                        getFetchingDataFromSWStatus,
+                        bluetoothAddress,
+                        bluetoothName,
+                        navLambdaBackBluetoothScanner,
+                        navMainController,
+                        splashViewModel
                     )
-                    Log.d("DATAX", "MainContent2: ${dataViewModel.smartWatchState.todayDateValuesReadFromSW.stepList.sum()}")
-                    MainNavigationBar(
-                        bluetoothName = bluetoothName ?: "no name",
-                        bluetoothAddress = bluetoothAddress ?: "no address",
-                        dataViewModel = dataViewModel,
-                        navMainController = navMainController,
-                        splashViewModel = splashViewModel
-                    ) { navLambdaBackBluetoothScanner() }
                 }
 
                 composable(
                     Routes.DataHome.route,                    // declaring placeholder in String route
                 ) {
-
-                    Log.d("DATAX", "Routes.DataHome.route: ")
+                    Log.d("DATAX", "Routes.DataHome.route: ENTER")
 
 
                     val bluetoothName = splashViewModel.route[2]
                     val bluetoothAddress = splashViewModel.route[3]
 
-
-                    when (dataViewModel.smartWatchState.fetchingDataFromSWStatus) {
-                        SWReadingStatus.STOPPED -> {
-                            dataViewModel.smartWatchState.fetchingDataFromSWStatus =
-                                SWReadingStatus.IN_PROGRESS
-
-                            dataViewModel.listenDataFromSmartWatch()
-                            dataViewModel.requestSmartWatchData(
-                                bluetoothName,
-                                bluetoothAddress
-                            )
-
-                            dataViewModel.macAddressDeviceBluetooth =
-                                bluetoothAddress
-                            dataViewModel.nameDeviceBluetooth = bluetoothName
-
-                            dataViewModel.getTodayPhysicalActivityData(dataViewModel.macAddressDeviceBluetooth)
-                            dataViewModel.getYesterdayPhysicalActivityData(dataViewModel.macAddressDeviceBluetooth)
-                            dataViewModel.getTodayBloodPressureData(dataViewModel.macAddressDeviceBluetooth)
-                            dataViewModel.getYesterdayBloodPressureData(dataViewModel.macAddressDeviceBluetooth)
-                            dataViewModel.getTodayHeartRateData(dataViewModel.macAddressDeviceBluetooth)
-                            dataViewModel.getYesterdayHeartRateData(dataViewModel.macAddressDeviceBluetooth)
-                            dataViewModel.getPersonalInfoData(dataViewModel.macAddressDeviceBluetooth)
-                            dataViewModel.statusStartedReadingDataLasThreeDaysData = true
-
-
-                        }
-
-                        SWReadingStatus.IN_PROGRESS -> {
-                            dataViewModel.macAddressDeviceBluetooth =
-                                bluetoothAddress
-                            dataViewModel.nameDeviceBluetooth = bluetoothName
-                        }
-
-                        SWReadingStatus.READ -> {
-                            dataViewModel.macAddressDeviceBluetooth =
-                                bluetoothAddress
-                            dataViewModel.nameDeviceBluetooth = bluetoothName
-                        }
-                    }
-
-                    PersonalInfoDBHandler(
-                        dataViewModel
+                    Wrapper(dataViewModel,
+                        getFetchingDataFromSWStatus,
+                    bluetoothAddress,
+                    bluetoothName,
+                    navLambdaBackBluetoothScanner,
+                        navMainController,
+                        splashViewModel
                     )
-                    MainNavigationBar(
-                        bluetoothName = bluetoothName,
-                        bluetoothAddress = bluetoothAddress,
-                        dataViewModel = dataViewModel,
-                        navMainController = navMainController,
-                        splashViewModel = splashViewModel
-                    ) { navLambdaBackBluetoothScanner() }
 
                 }
 
 
 
                 composable(Routes.StepsPlots.route){
+                    Log.d("DATAX", "MainContentStepsPlots:")
                     val myDateObj = LocalDateTime.now()
                     val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                     val formattedDate = myDateObj.format(myFormatObj)
@@ -450,7 +397,145 @@ class MainActivity : ComponentActivity() {
     }
 
 
+    private fun clearStateSW(dataViewModel: DataViewModel) {
+        dataViewModel.smartWatchState.progressbarForFetchingDataFromSW = false
+        dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.CLEARED
+
+
+        dataViewModel.smartWatchState.todayDateValuesReadFromSW =
+            Values(
+                MutableList(48) { 0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                dataViewModel.todayFormattedDate
+            )
+
+        dataViewModel.smartWatchState.yesterdayDateValuesFromSW =
+            Values(
+                MutableList(48) { 0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                dataViewModel.todayFormattedDate
+            )
+
+        dataViewModel.swRepository.jobSW.cancel()
+
+        dataViewModel.collecDataScope.cancel()
+        dataViewModel.selectedDay = ""
+
+        dataViewModel.statusStartedReadingDataLasThreeDaysData = false
+        dataViewModel.dayPhysicalActivityInfoState = DayPhysicalActivityInfoState()
+        dataViewModel.todayPhysicalActivityInfoState = TodayPhysicalActivityInfoState()
+        dataViewModel.yesterdayPhysicalActivityInfoState = YesterdayPhysicalActivityInfoState()
+
+
+        dataViewModel.personalInfoFromDB.value = listOf()
+        dataViewModel.personalInfoListReadFromDB = listOf()
+
+        dataViewModel.personalInfoDataState = PersonalInfoDataState()
+        dataViewModel.invalidAlertDialogState = InvalidAlertDialogState()
+        dataViewModel.updateAlertDialogState = UpdateAlertDialogState()
+
+        dataViewModel.macAddressDeviceBluetooth = ""
+        dataViewModel.nameDeviceBluetooth = ""
+
+    }
+
+
+
 }
+
+
+
+
+
+
+
+@Composable
+fun Wrapper(dataViewModel: DataViewModel,
+            getFetchingDataFromSWStatus: () -> SWReadingStatus,
+            bluetoothAddress:String,
+            bluetoothName:String,
+            navLambdaBackBluetoothScanner: () -> Unit,
+            navMainController: NavHostController,
+            splashViewModel:SplashViewModel
+){
+    when (getFetchingDataFromSWStatus()) {
+        SWReadingStatus.CLEARED -> {
+
+        }
+        SWReadingStatus.STOPPED -> {
+
+            Log.d("DATAX", "Routes.DataHome.route: STOPPED")
+
+            dataViewModel.smartWatchState.fetchingDataFromSWStatus =
+                SWReadingStatus.IN_PROGRESS
+
+            dataViewModel.listenDataFromSmartWatch()
+            dataViewModel.requestSmartWatchData(
+                bluetoothName,
+                bluetoothAddress
+            )
+
+            dataViewModel.macAddressDeviceBluetooth =
+                bluetoothAddress
+            dataViewModel.nameDeviceBluetooth = bluetoothName
+
+            dataViewModel.getTodayPhysicalActivityData(dataViewModel.macAddressDeviceBluetooth)
+            dataViewModel.getYesterdayPhysicalActivityData(dataViewModel.macAddressDeviceBluetooth)
+            dataViewModel.getTodayBloodPressureData(dataViewModel.macAddressDeviceBluetooth)
+            dataViewModel.getYesterdayBloodPressureData(dataViewModel.macAddressDeviceBluetooth)
+            dataViewModel.getTodayHeartRateData(dataViewModel.macAddressDeviceBluetooth)
+            dataViewModel.getYesterdayHeartRateData(dataViewModel.macAddressDeviceBluetooth)
+            dataViewModel.getPersonalInfoData(dataViewModel.macAddressDeviceBluetooth)
+            dataViewModel.statusStartedReadingDataLasThreeDaysData = true
+
+
+        }
+
+        SWReadingStatus.IN_PROGRESS -> {
+
+            Log.d("DATAX", "Routes.DataHome.route: IN_PROGRESS")
+
+
+            dataViewModel.macAddressDeviceBluetooth =
+                bluetoothAddress
+            dataViewModel.nameDeviceBluetooth = bluetoothName
+        }
+
+        SWReadingStatus.READ -> {
+
+            Log.d("DATAX", "Routes.DataHome.route: READ")
+
+
+            dataViewModel.macAddressDeviceBluetooth =
+                bluetoothAddress
+            dataViewModel.nameDeviceBluetooth = bluetoothName
+        }
+    }
+
+    PersonalInfoDBHandler(
+        dataViewModel
+    )
+    MainNavigationBar(
+        bluetoothName = bluetoothName,
+        bluetoothAddress = bluetoothAddress,
+        dataViewModel = dataViewModel,
+        navMainController = navMainController,
+        splashViewModel = splashViewModel
+    ) { navLambdaBackBluetoothScanner() }
+
+}
+
+
+
+
 
 
 

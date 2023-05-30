@@ -15,6 +15,7 @@ import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
+import com.icxcu.adsmartbandapp.screens.BNavStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.MainNavigationBarScaffold
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.TodayBloodPressureDBHandler
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.TodayHeartRateDBHandler
@@ -119,7 +120,8 @@ fun MainNavigationBar(
 
     val clearState = remember(dataViewModel) {
         {
-            dataViewModel.clearState()
+            dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.CLEARED
+            dataViewModel.stateBNavStatus = BNavStatus.NO_PROGRESS
         }
     }
 
@@ -256,5 +258,6 @@ class SmartWatchState(
 enum class SWReadingStatus{
     IN_PROGRESS,
     READ,
-    STOPPED
+    STOPPED,
+    CLEARED,
 }

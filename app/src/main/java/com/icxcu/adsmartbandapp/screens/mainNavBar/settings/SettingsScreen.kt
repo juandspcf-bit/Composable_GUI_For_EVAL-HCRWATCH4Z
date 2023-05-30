@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.screens.Routes
@@ -57,9 +58,10 @@ fun SettingsScreen(
             )
 
             RowSettings(
-                navigation = {navMainController.navigate(Routes.BluetoothScanner.route){
+                navigation = {
+                    navMainController.navigate(Routes.BluetoothScanner.route){
+                        popUpTo(0)
 
-                    popUpTo(Routes.DataHome.route)
                 } },
                 modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
                 text = "Connect to other device",
