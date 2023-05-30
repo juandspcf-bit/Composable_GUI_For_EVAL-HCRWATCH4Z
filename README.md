@@ -17,3 +17,8 @@ commits.
 
 ### Home Data
 ![Home Data](https://raw.githubusercontent.com/juandspcf-bit/Composable_GUI_For_EVAL-HCRWATCH4Z/pull-refresh-feature/GitHubAssets/Screenshot_20230322_212456.png)
+
+
+### App Preview
+https://github.com/juandspcf-bit/Composable_GUI_For_EVAL-HCRWATCH4Z/assets/58935589/f6a185f0-136b-4ab1-9512-d2c07b247c34
+
