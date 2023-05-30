@@ -47,14 +47,20 @@ fun SettingsScreen(
         ) {
 
             RowSettings(
-                navigation = {navMainController.navigate(Routes.PersonalInfoForm.route)},
+                navigation = {navMainController.navigate(Routes.PersonalInfoForm.route){
+
+                    popUpTo(Routes.DataHome.route)
+                }},
                 modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
                 text = "Personal information",
                 iconResource = R.drawable.baseline_person_24
             )
 
             RowSettings(
-                navigation = {navMainController.navigate(Routes.BluetoothScanner.route)},
+                navigation = {navMainController.navigate(Routes.BluetoothScanner.route){
+
+                    popUpTo(Routes.DataHome.route)
+                } },
                 modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
                 text = "Connect to other device",
                 iconResource = R.drawable.baseline_watch_24,
@@ -81,7 +87,10 @@ fun RowSettings(
         Box(modifier = Modifier
             .pointerInput(Unit) {
                 detectTapGestures(
-                    onPress = { navigation() },
+                    onPress = {
+                        optionalOperations()
+                        navigation()
+                              },
                     onDoubleTap = { /* Double Tap Detected */ },
                     onLongPress = { /* Long Press Detected */ },
                     onTap = { }

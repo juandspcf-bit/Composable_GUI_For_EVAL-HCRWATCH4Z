@@ -4,10 +4,13 @@ import android.util.Log
 import com.icxcu.adsmartbandapp.data.MockData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.cancel
 import kotlinx.coroutines.launch
 
 class SWRepository {
@@ -21,6 +24,7 @@ class SWRepository {
 
 
     fun requestSmartWatchData(name: String = "", macAddress: String = "") {
+        Log.d("DATAX", "requestSmartWatchDataRep: ")
         Log.d("Status", "Reading Data")
         CoroutineScope(Dispatchers.Default).launch {
             delay(5000)

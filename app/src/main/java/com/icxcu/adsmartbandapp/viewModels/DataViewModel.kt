@@ -1,6 +1,7 @@
 package com.icxcu.adsmartbandapp.viewModels
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -28,6 +29,7 @@ import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.In
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.UpdateAlertDialogState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.ValidatorsPersonalField
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -60,9 +62,9 @@ class DataViewModel(var application: Application) : ViewModel() {
     var personalInfoFromDB = MutableLiveData<List<PersonalInfo>>()
     var personalInfoListReadFromDB = listOf<PersonalInfo>()
 
-    var personalInfoDataState = PersonalInfoDataState()
-    var invalidAlertDialogState = InvalidAlertDialogState()
-    var updateAlertDialogState = UpdateAlertDialogState()
+    var personalInfoDataState by mutableStateOf(PersonalInfoDataState())
+    var invalidAlertDialogState by mutableStateOf(InvalidAlertDialogState())
+    var updateAlertDialogState by mutableStateOf(UpdateAlertDialogState())
 
     var macAddressDeviceBluetooth: String = ""
     var nameDeviceBluetooth: String = ""
@@ -71,9 +73,10 @@ class DataViewModel(var application: Application) : ViewModel() {
     var stateShowDialogDatePicker by mutableStateOf(false)
     var stateMiliSecondsDateDialogDatePicker by mutableStateOf(0L)
 
-    var smartWatchState = SmartWatchState(todayFormattedDate, yesterdayFormattedDate)
+    var smartWatchState by mutableStateOf(SmartWatchState(todayFormattedDate, yesterdayFormattedDate))
     private var swRepository: SWRepository = SWRepository()
 
+    private lateinit var collecDataScope: Job
 
     init {
         val swDb = SWRoomDatabase.getInstance(application)
@@ -112,7 +115,7 @@ class DataViewModel(var application: Application) : ViewModel() {
 
 
     fun requestSmartWatchData(name: String = "", macAddress: String = "") {
-
+        Log.d("DATAX", "requestSmartWatchDataModel: ")
         swRepository.requestSmartWatchData()
 
         viewModelScope.launch {
@@ -123,8 +126,10 @@ class DataViewModel(var application: Application) : ViewModel() {
     }
 
     fun listenDataFromSmartWatch(){
-        viewModelScope.launch {
+        collecDataScope = viewModelScope.launch {
             swRepository.sharedStepsFlow.collect {
+                Log.d("DATAX", "MainContent0Shared: ${smartWatchState.todayDateValuesReadFromSW.stepList.sum()}")
+
                 when (it.date) {
                     todayFormattedDate -> {
                         smartWatchState.todayDateValuesReadFromSW = it
@@ -140,6 +145,9 @@ class DataViewModel(var application: Application) : ViewModel() {
     }
 
     fun clearState(){
+
+        collecDataScope.cancel()
+        Log.d("DATAX", "clearState: ")
         selectedDay = ""
 
         statusStartedReadingDataLasThreeDaysData = false
@@ -164,6 +172,9 @@ class DataViewModel(var application: Application) : ViewModel() {
 
         smartWatchState = SmartWatchState(todayFormattedDate, yesterdayFormattedDate)
         swRepository = SWRepository()
+
+
+        Log.d("DATAX", "clearState: ${smartWatchState.todayDateValuesReadFromSW.stepList.sum()}")
     }
 
 

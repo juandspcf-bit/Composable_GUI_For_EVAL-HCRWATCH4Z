@@ -180,10 +180,16 @@ class MainActivity : ComponentActivity() {
             val navLambdaDataScreen = remember(mViewModel, navMainController) {
                 {   name: String, address: String ->
                     if (mViewModel.liveStatusResults == 1 || mViewModel.liveStatusResults == -1) {
+                        Log.d("DATAX", "MainContent-1: ${dataViewModel.smartWatchState.todayDateValuesReadFromSW.stepList.sum()}")
+
                         navMainController.navigate(
                             Routes.DataHomeFromBluetoothScannerScreen
                                 .route + "/${name}/${address}"
-                        )
+                        ){
+                            popUpTo(Routes.BluetoothScanner.route) {
+                                inclusive = true
+                            }
+                        }
                     }
                 }
             }
@@ -233,6 +239,8 @@ class MainActivity : ComponentActivity() {
                 composable(Routes.BluetoothScanner.route) {
                     Log.d("BluetoothScannerScreen", "MainContent: ")
                     dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.STOPPED
+                    Log.d("DATAX", "MainContent0: ${dataViewModel.smartWatchState.todayDateValuesReadFromSW.stepList.sum()}")
+
                     BluetoothScanScreen(
                         basicBluetoothAdapters = mViewModel.liveBasicBluetoothAdapter,
                         statusResultState = mViewModel.liveStatusResults,
@@ -241,6 +249,8 @@ class MainActivity : ComponentActivity() {
                         this@MainActivity,
                         navLambdaDataScreen
                     )
+
+
 
                 }
 
@@ -267,6 +277,7 @@ class MainActivity : ComponentActivity() {
                     when(dataViewModel.smartWatchState.fetchingDataFromSWStatus){
                         SWReadingStatus.STOPPED->{
                             dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.IN_PROGRESS
+                            Log.d("DATAX", "MainContent1: ${dataViewModel.smartWatchState.todayDateValuesReadFromSW.stepList.sum()}")
 
                             dataViewModel.listenDataFromSmartWatch()
                             dataViewModel.requestSmartWatchData(
@@ -301,6 +312,7 @@ class MainActivity : ComponentActivity() {
                     PersonalInfoDBHandler(
                         dataViewModel
                     )
+                    Log.d("DATAX", "MainContent2: ${dataViewModel.smartWatchState.todayDateValuesReadFromSW.stepList.sum()}")
                     MainNavigationBar(
                         bluetoothName = bluetoothName ?: "no name",
                         bluetoothAddress = bluetoothAddress ?: "no address",
@@ -313,6 +325,10 @@ class MainActivity : ComponentActivity() {
                 composable(
                     Routes.DataHome.route,                    // declaring placeholder in String route
                 ) {
+
+                    Log.d("DATAX", "Routes.DataHome.route: ")
+
+
                     val bluetoothName = splashViewModel.route[2]
                     val bluetoothAddress = splashViewModel.route[3]
 
