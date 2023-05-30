@@ -1,6 +1,7 @@
 package com.icxcu.adsmartbandapp.screens.testHealthsScreen
 
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -75,6 +76,7 @@ fun TestingHealthScreen(
                     withImage = true,
                     imageResource = R.drawable.heart,
                     setNumberDialog = { indexButton: Int ->
+                        Log.d("BUTTON", "TestingHealthScreen: ")
                         selectedButton = indexButton
                     },
                 ) { status: Boolean ->
@@ -247,7 +249,7 @@ fun BoxImageCircle(
                 .size(90.dp),
             onClick = {
                 when (imageResource) {
-                    R.drawable.heart_rate -> setNumberDialog(0)
+                    R.drawable.heart -> setNumberDialog(0)
                     R.drawable.blood_pressure_gauge -> setNumberDialog(1)
                     R.drawable.oxygen_saturation -> setNumberDialog(2)
                     R.drawable.thermometer -> setNumberDialog(3)

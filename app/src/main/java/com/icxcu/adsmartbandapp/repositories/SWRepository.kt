@@ -29,6 +29,25 @@ class SWRepository {
     fun requestSmartWatchData(name: String = "", macAddress: String = "") {
         Log.d("DATAX", "requestSmartWatchDataRep: ")
         jobSW = CoroutineScope(Dispatchers.Default).launch {
+            _sharedStepsFlow.emit(Values(
+                MutableList(48) { 0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                MockData.valuesToday.date
+            ))
+
+            _sharedStepsFlow.emit(Values(
+                MutableList(48) { 0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                MockData.valuesYesterday.date
+            ))
             delay(5000)
             _sharedStepsFlow.emit(MockData.valuesToday)
             delay(5000)

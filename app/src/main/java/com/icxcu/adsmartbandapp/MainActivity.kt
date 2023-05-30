@@ -200,6 +200,9 @@ class MainActivity : ComponentActivity() {
                             Routes.DataHomeFromBluetoothScannerScreen
                                 .route + "/${name}/${address}"
                         )
+
+                        mViewModel.liveBasicBluetoothAdapter = mutableListOf()
+                        mViewModel.liveStatusResults = -2
                     }
                 }
             }
@@ -207,11 +210,13 @@ class MainActivity : ComponentActivity() {
 
             val navLambdaToBlueScanScreen = remember(navMainController) {
                 {
+
                     navMainController.navigate(Routes.BluetoothScanner.route){
                         popUpTo(navMainController.graph.id){
                             inclusive=true
                         }
                     }
+
                 }
             }
 
@@ -260,7 +265,7 @@ class MainActivity : ComponentActivity() {
                 composable(Routes.BluetoothScanner.route) {
                     Log.d("DATAX", "Routes.BluetoothScanner.route: ENTER")
 
-                    if(dataViewModel.stateBNavStatus != BNavStatus.IN_PROGRESS) clearStateSW(dataViewModel)
+                    if(dataViewModel.stateBNavStatus != BNavStatus.IN_PROGRESS) clearStateSW(dataViewModel, mViewModel)
 
 
 
@@ -397,10 +402,10 @@ class MainActivity : ComponentActivity() {
     }
 
 
-    private fun clearStateSW(dataViewModel: DataViewModel) {
+    private fun clearStateSW(dataViewModel: DataViewModel, mViewModel: BluetoothScannerViewModel) {
         dataViewModel.smartWatchState.progressbarForFetchingDataFromSW = false
         dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.CLEARED
-
+        //mViewModel.liveBasicBluetoothAdapter = mutableListOf()
 
         dataViewModel.smartWatchState.todayDateValuesReadFromSW =
             Values(
@@ -430,9 +435,7 @@ class MainActivity : ComponentActivity() {
         dataViewModel.selectedDay = ""
 
         dataViewModel.statusStartedReadingDataLasThreeDaysData = false
-        dataViewModel.dayPhysicalActivityInfoState = DayPhysicalActivityInfoState()
-        dataViewModel.todayPhysicalActivityInfoState = TodayPhysicalActivityInfoState()
-        dataViewModel.yesterdayPhysicalActivityInfoState = YesterdayPhysicalActivityInfoState()
+
 
 
         dataViewModel.personalInfoFromDB.value = listOf()
@@ -468,7 +471,7 @@ fun Wrapper(dataViewModel: DataViewModel,
 ){
     when (getFetchingDataFromSWStatus()) {
         SWReadingStatus.CLEARED -> {
-
+            Log.d("DATAX", "Routes.DataHome.route: CLEARED")
         }
         SWReadingStatus.STOPPED -> {
 
