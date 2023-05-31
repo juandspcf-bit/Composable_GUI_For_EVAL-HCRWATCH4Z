@@ -258,11 +258,11 @@ class MainActivity : ComponentActivity() {
                     Log.d("DATAX", "Routes.BluetoothScanner.route: ENTER")
 
                     when(dataViewModel.stateBluetoothListScreenNavigationStatus){
-                        BluetoothListScreenNavigationStatus.IN_PROGRESS ->{
+                        BluetoothListScreenNavigationStatus.NO_IN_PROGRESS ->{
                             clearStateSW(dataViewModel)
                         }
-                        BluetoothListScreenNavigationStatus.NO_IN_PROGRESS ->{
-
+                        BluetoothListScreenNavigationStatus.IN_PROGRESS ->{
+                            Log.d("DATAX", "Routes.BluetoothScanner.route: CLEARED")
                         }
                     }
 /*                    if(dataViewModel.stateBluetoothListScreenNavigationStatus != BluetoothListScreenNavigationStatus.IN_PROGRESS) clearStateSW(
@@ -271,7 +271,7 @@ class MainActivity : ComponentActivity() {
 
 
 
-                    Log.d("DATAX", "Routes.BluetoothScanner.route: CLEARED")
+
 
 
                     BluetoothScanScreen(
