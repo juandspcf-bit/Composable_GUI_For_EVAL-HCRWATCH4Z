@@ -257,9 +257,17 @@ class MainActivity : ComponentActivity() {
                 composable(Routes.BluetoothScanner.route) {
                     Log.d("DATAX", "Routes.BluetoothScanner.route: ENTER")
 
-                    if(dataViewModel.stateBluetoothListScreenNavigationStatus != BluetoothListScreenNavigationStatus.IN_PROGRESS) clearStateSW(
+                    when(dataViewModel.stateBluetoothListScreenNavigationStatus){
+                        BluetoothListScreenNavigationStatus.IN_PROGRESS ->{
+                            clearStateSW(dataViewModel)
+                        }
+                        BluetoothListScreenNavigationStatus.NO_IN_PROGRESS ->{
+
+                        }
+                    }
+/*                    if(dataViewModel.stateBluetoothListScreenNavigationStatus != BluetoothListScreenNavigationStatus.IN_PROGRESS) clearStateSW(
                         dataViewModel
-                    )
+                    )*/
 
 
 
