@@ -168,7 +168,7 @@ class MainActivity : ComponentActivity() {
 
             val navLambdaToMainNavigationBar = remember(bluetoothScannerViewModel, navMainController) {
                 { name: String, address: String ->
-                    if (bluetoothScannerViewModel.pullRefreshStatusResults == 1 || bluetoothScannerViewModel.pullRefreshStatusResults == -1) {
+                    if (bluetoothScannerViewModel.scanningBluetoothAdaptersStatus == 1 || bluetoothScannerViewModel.scanningBluetoothAdaptersStatus == -1) {
                         Log.d(
                             "DATAX",
                             "MainContent-1: ${dataViewModel.smartWatchState.todayDateValuesReadFromSW.stepList.sum()}"
@@ -179,8 +179,12 @@ class MainActivity : ComponentActivity() {
                                 .route + "/${name}/${address}"
                         )
 
-                        bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
-                        bluetoothScannerViewModel.pullRefreshStatusResults = -2
+                        if(bluetoothScannerViewModel.bluetoothAdaptersList.isEmpty()){
+                            bluetoothScannerViewModel.scanningBluetoothAdaptersStatus = -2
+                        }else{
+                            bluetoothScannerViewModel.scanningBluetoothAdaptersStatus = -3
+                        }
+
                     }
                 }
             }
@@ -201,8 +205,8 @@ class MainActivity : ComponentActivity() {
                 remember(bluetoothScannerViewModel, navMainController) {
                     {
                         navMainController.popBackStack()
-                        bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
-                        bluetoothScannerViewModel.pullRefreshStatusResults = -2
+                        //bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
+                        bluetoothScannerViewModel.scanningBluetoothAdaptersStatus = -2
                     }
                 }
 
@@ -230,9 +234,9 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            val getLiveStatusResults = remember(bluetoothScannerViewModel) {
+            val getScanningBluetoothAdaptersStatus = remember(bluetoothScannerViewModel) {
                 {
-                    bluetoothScannerViewModel.pullRefreshStatusResults
+                    bluetoothScannerViewModel.scanningBluetoothAdaptersStatus
                 }
             }
 
@@ -267,7 +271,7 @@ class MainActivity : ComponentActivity() {
 
                     BluetoothScanScreen(
                         getLiveBasicBluetoothAdapterList,
-                        getLiveStatusResults,
+                        getScanningBluetoothAdaptersStatus,
                         bluetoothScannerViewModel.leScanCallback,
                         bluetoothLEManager,
                         this@MainActivity,
@@ -298,7 +302,8 @@ class MainActivity : ComponentActivity() {
                         address = bluetoothAddress,
                     )
 
-
+                    bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
+                    bluetoothScannerViewModel.scanningBluetoothAdaptersStatus = -2
                     RootMainNavigationBar(
                         dataViewModel,
                         getFetchingDataFromSWStatus,
@@ -318,6 +323,8 @@ class MainActivity : ComponentActivity() {
                     val bluetoothName = splashViewModel.route[2]
                     val bluetoothAddress = splashViewModel.route[3]
 
+                    bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
+                    bluetoothScannerViewModel.scanningBluetoothAdaptersStatus = -2
                     RootMainNavigationBar(
                         dataViewModel,
                         getFetchingDataFromSWStatus,

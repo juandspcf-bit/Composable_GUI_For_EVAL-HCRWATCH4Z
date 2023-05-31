@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun BluetoothScanScreen(
     getLiveBasicBluetoothAdapterList: () -> List<BasicBluetoothAdapter>,
-    getLiveStatusResults: () -> Int,
+    getScanningBluetoothAdaptersStatus: () -> Int,
     leScanCallback: ScanCallback,
     bluetoothLEManager: BluetoothManager,
     activity: Activity,
@@ -85,15 +85,16 @@ fun BluetoothScanScreen(
 
         }
 
-        Divider(modifier = Modifier
-            .fillMaxWidth()
-            .constrainAs(divider) {
-                top.linkTo(rowBar.bottom)
-                linkTo(parent.start, parent.end)
-                height = Dimension.fillToConstraints
-            },
-        thickness = 2.dp,
-        color = Color.Black
+        Divider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(divider) {
+                    top.linkTo(rowBar.bottom)
+                    linkTo(parent.start, parent.end)
+                    height = Dimension.fillToConstraints
+                },
+            thickness = 2.dp,
+            color = Color.Black
         )
 
 
@@ -109,9 +110,17 @@ fun BluetoothScanScreen(
                 .background(Color(0xff1d2a35))
                 .pullRefresh(state)) {
 
-
-            if (getLiveStatusResults() == -2 || getLiveBasicBluetoothAdapterList().isEmpty()) {
+            if (getScanningBluetoothAdaptersStatus() == -2 && getLiveBasicBluetoothAdapterList().isEmpty()) {
                 ListAlbumDataEmpty()
+            } else if (getScanningBluetoothAdaptersStatus() == -3 && getLiveBasicBluetoothAdapterList().isNotEmpty()) {
+                ListAlbumDataEmpty()
+                ListAlbumData(
+                    basicBluetoothAdapter = getLiveBasicBluetoothAdapterList(),
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    setFetchingDataFromSWStatusSTOPPED,
+                    navigateMainNavBar
+                )
             } else {
                 ListAlbumDataEmpty()
                 ListAlbumData(
@@ -121,7 +130,6 @@ fun BluetoothScanScreen(
                     setFetchingDataFromSWStatusSTOPPED,
                     navigateMainNavBar
                 )
-
             }
 
             PullRefreshIndicator(
@@ -132,18 +140,26 @@ fun BluetoothScanScreen(
                     .size(50.dp),
                 scale = true
             )
-            when (getLiveStatusResults()) {
+
+            when (getScanningBluetoothAdaptersStatus()) {
                 0 -> {
                     textState = "scanning"
+                    //accessed when there is a bluetooth scanning
                 }
+
                 1 -> {
+                    //accessed when there are results from the bluetooth scan
                     refreshing = false
                     textState = "Swipe  down to scan devices"
                 }
+
                 -1 -> {
+                    //accessed when the bluetooth scanning is running and should be stopped
                     textState = "Swipe  down to scan devices"
                 }
+
                 -2 -> {
+                    //accessed when the bluetooth screen is accessed
                     textState = "Swipe  down to scan devices"
                     Icon(
                         painter = painterResource(R.drawable.baseline_bluetooth_24),
@@ -154,6 +170,7 @@ fun BluetoothScanScreen(
                         tint = Color.White
                     )
                 }
+
 
             }
         }
@@ -240,7 +257,7 @@ fun ListAlbumDataEmpty(
 
 }
 
-enum class BluetoothListScreenNavigationStatus{
+enum class BluetoothListScreenNavigationStatus {
     IN_PROGRESS,
     NO_IN_PROGRESS,
 }

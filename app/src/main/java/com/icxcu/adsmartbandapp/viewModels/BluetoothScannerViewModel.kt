@@ -21,7 +21,7 @@ class BluetoothScannerViewModel(var application: Application) : ViewModel() {
     var bluetoothAdaptersList by mutableStateOf<List<BasicBluetoothAdapter>>(
         mutableListOf()
     )
-    var pullRefreshStatusResults by mutableStateOf(-2)
+    var scanningBluetoothAdaptersStatus by mutableStateOf(-2)
     private var partialList: MutableList<BasicBluetoothAdapter> = mutableListOf()
 
     val leScanCallback: ScanCallback = object : ScanCallback() {
@@ -63,8 +63,5 @@ class BluetoothScannerViewModel(var application: Application) : ViewModel() {
             }
         }
     }
-
-
-
 
 }

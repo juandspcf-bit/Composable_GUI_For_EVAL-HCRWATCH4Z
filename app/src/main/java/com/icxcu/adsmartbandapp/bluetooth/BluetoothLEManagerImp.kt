@@ -95,7 +95,7 @@ class BluetoothLEManagerImp(
                 if (isActive) {
                     scanning = false
                     statusResults = 1
-                    mViewModel.pullRefreshStatusResults = statusResults
+                    mViewModel.scanningBluetoothAdaptersStatus = statusResults
 
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -119,14 +119,14 @@ class BluetoothLEManagerImp(
 
             scanning = true
             statusResults = 0
-            mViewModel.pullRefreshStatusResults = statusResults
+            mViewModel.scanningBluetoothAdaptersStatus = statusResults
             mViewModel.bluetoothAdaptersList = mutableListOf()
             bluetoothLeScanner?.startScan(leScanCallback)
 
         } else {
             scanning = false
             statusResults = -1
-            mViewModel.pullRefreshStatusResults = statusResults
+            mViewModel.scanningBluetoothAdaptersStatus = statusResults
             jobs?.cancel()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 if (ContextCompat.checkSelfPermission(
