@@ -2,7 +2,6 @@ package com.icxcu.adsmartbandapp.viewModels
 
 import android.Manifest
 import android.app.Application
-import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.pm.PackageManager
@@ -12,22 +11,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.icxcu.adsmartbandapp.data.BasicBluetoothAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class BluetoothScannerViewModel(var application: Application) : ViewModel() {
-    var liveBasicBluetoothAdapter by mutableStateOf<List<BasicBluetoothAdapter>>(
+    var bluetoothAdaptersList by mutableStateOf<List<BasicBluetoothAdapter>>(
         mutableListOf()
     )
-/*    val liveBasicBluetoothAdapter = MutableLiveData<MutableList<BasicBluetoothAdapter>>(
-        mutableListOf()
-    )*/
-    var liveStatusResults by mutableStateOf(-2)
+    var pullRefreshStatusResults by mutableStateOf(-2)
     private var partialList: MutableList<BasicBluetoothAdapter> = mutableListOf()
 
     val leScanCallback: ScanCallback = object : ScanCallback() {
@@ -50,7 +44,7 @@ class BluetoothScannerViewModel(var application: Application) : ViewModel() {
                 val coroutineScope = CoroutineScope(Dispatchers.Main)
                 coroutineScope.launch {
                     partialList.add(basicBluetoothAdapter)
-                    liveBasicBluetoothAdapter = partialList.filter { it.name != "no name" }.toSet().toMutableList()
+                    bluetoothAdaptersList = partialList.filter { it.name != "no name" }.toSet().toMutableList()
 
                 }
 
@@ -63,7 +57,7 @@ class BluetoothScannerViewModel(var application: Application) : ViewModel() {
                 val coroutineScope = CoroutineScope(Dispatchers.Main)
                 coroutineScope.launch {
                     partialList.add(basicBluetoothAdapter)
-                    liveBasicBluetoothAdapter = partialList.filter { it.name != "no name" }.toSet().toMutableList()
+                    bluetoothAdaptersList = partialList.filter { it.name != "no name" }.toSet().toMutableList()
 
                 }
             }

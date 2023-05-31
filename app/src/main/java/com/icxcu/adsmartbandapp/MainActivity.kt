@@ -19,7 +19,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -33,12 +32,10 @@ import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
 import com.icxcu.adsmartbandapp.screens.BluetoothScanScreen
 import com.icxcu.adsmartbandapp.screens.PermissionsScreen
 import com.icxcu.adsmartbandapp.screens.Routes
-import com.icxcu.adsmartbandapp.screens.mainNavBar.MainNavigationBar
 import com.icxcu.adsmartbandapp.screens.mainNavBar.RootMainNavigationBar
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.InvalidAlertDialogState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalDataForm
-import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoDBHandler
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoInitDBHandlerAD
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.UpdateAlertDialogState
@@ -171,7 +168,7 @@ class MainActivity : ComponentActivity() {
 
             val navLambdaDataScreen = remember(bluetoothScannerViewModel, navMainController) {
                 { name: String, address: String ->
-                    if (bluetoothScannerViewModel.liveStatusResults == 1 || bluetoothScannerViewModel.liveStatusResults == -1) {
+                    if (bluetoothScannerViewModel.pullRefreshStatusResults == 1 || bluetoothScannerViewModel.pullRefreshStatusResults == -1) {
                         Log.d(
                             "DATAX",
                             "MainContent-1: ${dataViewModel.smartWatchState.todayDateValuesReadFromSW.stepList.sum()}"
@@ -182,8 +179,8 @@ class MainActivity : ComponentActivity() {
                                 .route + "/${name}/${address}"
                         )
 
-                        bluetoothScannerViewModel.liveBasicBluetoothAdapter = mutableListOf()
-                        bluetoothScannerViewModel.liveStatusResults = -2
+                        bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
+                        bluetoothScannerViewModel.pullRefreshStatusResults = -2
                     }
                 }
             }
@@ -204,8 +201,8 @@ class MainActivity : ComponentActivity() {
                 remember(bluetoothScannerViewModel, navMainController) {
                     {
                         navMainController.popBackStack()
-                        bluetoothScannerViewModel.liveBasicBluetoothAdapter = mutableListOf()
-                        bluetoothScannerViewModel.liveStatusResults = -2
+                        bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
+                        bluetoothScannerViewModel.pullRefreshStatusResults = -2
                     }
                 }
 
@@ -229,13 +226,13 @@ class MainActivity : ComponentActivity() {
 
             val getLiveBasicBluetoothAdapterList = remember(bluetoothScannerViewModel) {
                 {
-                    bluetoothScannerViewModel.liveBasicBluetoothAdapter
+                    bluetoothScannerViewModel.bluetoothAdaptersList
                 }
             }
 
             val getLiveStatusResults = remember(bluetoothScannerViewModel) {
                 {
-                    bluetoothScannerViewModel.liveStatusResults
+                    bluetoothScannerViewModel.pullRefreshStatusResults
                 }
             }
 

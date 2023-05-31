@@ -9,7 +9,6 @@ import android.bluetooth.le.ScanCallback
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.icxcu.adsmartbandapp.REQUEST_ENABLE_BT
@@ -96,7 +95,7 @@ class BluetoothLEManagerImp(
                 if (isActive) {
                     scanning = false
                     statusResults = 1
-                    mViewModel.liveStatusResults = statusResults
+                    mViewModel.pullRefreshStatusResults = statusResults
 
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -120,14 +119,14 @@ class BluetoothLEManagerImp(
 
             scanning = true
             statusResults = 0
-            mViewModel.liveStatusResults = statusResults
-            mViewModel.liveBasicBluetoothAdapter = mutableListOf()
+            mViewModel.pullRefreshStatusResults = statusResults
+            mViewModel.bluetoothAdaptersList = mutableListOf()
             bluetoothLeScanner?.startScan(leScanCallback)
 
         } else {
             scanning = false
             statusResults = -1
-            mViewModel.liveStatusResults = statusResults
+            mViewModel.pullRefreshStatusResults = statusResults
             jobs?.cancel()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 if (ContextCompat.checkSelfPermission(
