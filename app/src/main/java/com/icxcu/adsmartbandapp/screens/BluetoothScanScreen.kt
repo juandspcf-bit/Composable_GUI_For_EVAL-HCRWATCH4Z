@@ -31,6 +31,7 @@ import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
 import com.icxcu.adsmartbandapp.data.BasicBluetoothAdapter
+import com.icxcu.adsmartbandapp.viewModels.ScanningBluetoothAdapterStatus
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -38,7 +39,7 @@ import kotlinx.coroutines.launch
 fun BluetoothScanScreen(
     getLiveBasicBluetoothAdapterList: () -> List<BasicBluetoothAdapter>,
     setLiveBasicBluetoothAdapterList: () -> Unit,
-    getScanningBluetoothAdaptersStatus: () -> Int,
+    getScanningBluetoothAdaptersStatus: () -> ScanningBluetoothAdapterStatus,
     leScanCallback: ScanCallback,
     bluetoothLEManager: BluetoothManager,
     activity: Activity,
@@ -112,9 +113,13 @@ fun BluetoothScanScreen(
                 .background(Color(0xff1d2a35))
                 .pullRefresh(state)) {
 
-            if (getScanningBluetoothAdaptersStatus() == -2 && getLiveBasicBluetoothAdapterList().isEmpty()) {
+            if (getScanningBluetoothAdaptersStatus() ==
+                ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
+                && getLiveBasicBluetoothAdapterList().isEmpty()) {
                 ListAlbumDataEmpty()
-            } else if (getScanningBluetoothAdaptersStatus() == -3 && getLiveBasicBluetoothAdapterList().isNotEmpty()) {
+            } else if (getScanningBluetoothAdaptersStatus() ==
+                ScanningBluetoothAdapterStatus.NO_SCANNING_WITH_RESULTS
+                && getLiveBasicBluetoothAdapterList().isNotEmpty()) {
                 ListAlbumDataEmpty()
                 ListAlbumData(
                     basicBluetoothAdapter = getLiveBasicBluetoothAdapterList(),
@@ -144,23 +149,23 @@ fun BluetoothScanScreen(
             )
 
             when (getScanningBluetoothAdaptersStatus()) {
-                0 -> {
+                ScanningBluetoothAdapterStatus.SCANNING -> {
                     textState = "scanning"
                     //accessed when there is a bluetooth scanning
                 }
 
-                1 -> {
+                ScanningBluetoothAdapterStatus.SCANNING_FINISHED_WITH_RESULTS -> {
                     //accessed when there are results from the bluetooth scan
                     refreshing = false
                     textState = "Swipe  down to scan devices"
                 }
 
-                -1 -> {
+                ScanningBluetoothAdapterStatus.SCANNING_FORCIBLY_STOPPED -> {
                     //accessed when the bluetooth scanning is running and should be stopped
                     textState = "Swipe  down to scan devices"
                 }
 
-                -2 -> {
+                ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN -> {
                     //accessed when the bluetooth screen is accessed
                     textState = "Swipe  down to scan devices"
                     Icon(
@@ -171,6 +176,9 @@ fun BluetoothScanScreen(
                             .size(80.dp),
                         tint = Color.White
                     )
+                }
+                ScanningBluetoothAdapterStatus.NO_SCANNING_WITH_RESULTS->{
+
                 }
 
 

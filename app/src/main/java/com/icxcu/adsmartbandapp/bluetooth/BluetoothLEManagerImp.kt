@@ -13,6 +13,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.icxcu.adsmartbandapp.REQUEST_ENABLE_BT
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
+import com.icxcu.adsmartbandapp.viewModels.ScanningBluetoothAdapterStatus
 import kotlinx.coroutines.*
 
 class BluetoothLEManagerImp(
@@ -20,7 +21,7 @@ class BluetoothLEManagerImp(
     private var mViewModel: BluetoothScannerViewModel
 ) : com.icxcu.adsmartbandapp.bluetooth.BluetoothManager {
     private var scanning = false
-    private var statusResults = -1
+    private var statusResults = ScanningBluetoothAdapterStatus.SCANNING_FORCIBLY_STOPPED
     private var jobs: Job? = null
 
 
@@ -93,7 +94,7 @@ class BluetoothLEManagerImp(
                 delay(SCAN_PERIOD)
                 if (isActive) {
                     scanning = false
-                    statusResults = 1
+                    statusResults = ScanningBluetoothAdapterStatus.SCANNING_FINISHED_WITH_RESULTS
                     mViewModel.scanningBluetoothAdaptersStatus = statusResults
 
 
@@ -117,14 +118,14 @@ class BluetoothLEManagerImp(
             }
 
             scanning = true
-            statusResults = 0
+            statusResults = ScanningBluetoothAdapterStatus.SCANNING
             mViewModel.scanningBluetoothAdaptersStatus = statusResults
             mViewModel.bluetoothAdaptersList = mutableListOf()
             bluetoothLeScanner?.startScan(leScanCallback)
 
         } else {
             scanning = false
-            statusResults = -1
+            statusResults = ScanningBluetoothAdapterStatus.SCANNING_FORCIBLY_STOPPED
             mViewModel.scanningBluetoothAdaptersStatus = statusResults
             jobs?.cancel()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
