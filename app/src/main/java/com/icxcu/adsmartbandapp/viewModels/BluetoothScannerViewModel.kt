@@ -22,12 +22,12 @@ class BluetoothScannerViewModel(var application: Application) : ViewModel() {
         mutableListOf()
     )
     var scanningBluetoothAdaptersStatus by mutableStateOf(-2)
-    private var partialList: MutableList<BasicBluetoothAdapter> = mutableListOf()
+    var partialList: MutableList<BasicBluetoothAdapter> = mutableListOf()
 
     val leScanCallback: ScanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult) {
             super.onScanResult(callbackType, result)
-            Log.d("Result", "onScanResult: $callbackType")
+
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 if (ActivityCompat.checkSelfPermission(
@@ -41,6 +41,8 @@ class BluetoothScannerViewModel(var application: Application) : ViewModel() {
                     result.device?.name ?: "no name",
                     result.device?.address ?: "no address"
                 )
+
+                Log.d("Result", "onScanResult: $basicBluetoothAdapter")
                 val coroutineScope = CoroutineScope(Dispatchers.Main)
                 coroutineScope.launch {
                     partialList.add(basicBluetoothAdapter)
@@ -54,6 +56,7 @@ class BluetoothScannerViewModel(var application: Application) : ViewModel() {
                     result.device?.name ?: "no name",
                     result.device?.address ?: "no address"
                 )
+                Log.d("Result", "onScanResult: $basicBluetoothAdapter")
                 val coroutineScope = CoroutineScope(Dispatchers.Main)
                 coroutineScope.launch {
                     partialList.add(basicBluetoothAdapter)

@@ -205,7 +205,7 @@ class MainActivity : ComponentActivity() {
                 remember(bluetoothScannerViewModel, navMainController) {
                     {
                         navMainController.popBackStack()
-                        //bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
+                        bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
                         bluetoothScannerViewModel.scanningBluetoothAdaptersStatus = -2
                     }
                 }
@@ -231,6 +231,13 @@ class MainActivity : ComponentActivity() {
             val getLiveBasicBluetoothAdapterList = remember(bluetoothScannerViewModel) {
                 {
                     bluetoothScannerViewModel.bluetoothAdaptersList
+                }
+            }
+
+            val setLiveBasicBluetoothAdapterList = remember(bluetoothScannerViewModel) {
+                {
+                    bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
+                    bluetoothScannerViewModel.partialList = mutableListOf()
                 }
             }
 
@@ -271,6 +278,7 @@ class MainActivity : ComponentActivity() {
 
                     BluetoothScanScreen(
                         getLiveBasicBluetoothAdapterList,
+                        setLiveBasicBluetoothAdapterList,
                         getScanningBluetoothAdaptersStatus,
                         bluetoothScannerViewModel.leScanCallback,
                         bluetoothLEManager,

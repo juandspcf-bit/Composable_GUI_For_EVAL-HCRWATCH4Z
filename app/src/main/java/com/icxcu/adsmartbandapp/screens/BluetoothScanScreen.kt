@@ -37,6 +37,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun BluetoothScanScreen(
     getLiveBasicBluetoothAdapterList: () -> List<BasicBluetoothAdapter>,
+    setLiveBasicBluetoothAdapterList: () -> Unit,
     getScanningBluetoothAdaptersStatus: () -> Int,
     leScanCallback: ScanCallback,
     bluetoothLEManager: BluetoothManager,
@@ -54,6 +55,7 @@ fun BluetoothScanScreen(
 
     fun refresh2() = refreshScope.launch {
         refreshing = true
+        setLiveBasicBluetoothAdapterList()
         val scanLocalBluetooth = bluetoothLEManager.scanLocalBluetooth(activity)
         bluetoothLEManager.scanLeDevice(
             scanLocalBluetooth,

@@ -84,7 +84,6 @@ class BluetoothLEManagerImp(
         leScanCallback: ScanCallback
     ) {
         if (!scanning) {
-
             val coroutineScope = CoroutineScope(Dispatchers.Main)
 
             if (jobs?.isActive == true)
