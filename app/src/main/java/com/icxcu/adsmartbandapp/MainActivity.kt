@@ -65,8 +65,8 @@ const val REQUEST_ENABLE_BT: Int = 500
 class MainActivity : ComponentActivity() {
     private lateinit var dataViewModel: DataViewModel
     private lateinit var bluetoothLEManager: BluetoothManager
-    private lateinit var mViewModel: BluetoothScannerViewModel
-    private lateinit var pViewModel: PermissionsViewModel
+    private lateinit var bluetoothScannerViewModel: BluetoothScannerViewModel
+    private lateinit var permissionsViewModel: PermissionsViewModel
     private val splashViewModel:SplashViewModel by viewModels()
     private lateinit var startDestination:String
     private lateinit var preferenceDataStoreHelper : PreferenceDataStoreHelper
@@ -104,16 +104,16 @@ class MainActivity : ComponentActivity() {
                 val owner = LocalViewModelStoreOwner.current
 
                 owner?.let {
-                    mViewModel = viewModel(
+                    bluetoothScannerViewModel = viewModel(
                         it,
-                        "MainViewModel",
+                        "BluetoothScannerViewModel",
                         BluetoothScannerViewModelFactory(
                             LocalContext.current.applicationContext
                                     as Application
                         )
                     )
 
-                    pViewModel = viewModel(
+                    permissionsViewModel = viewModel(
                         it,
                         "PermissionsViewModel",
                         PermissionsViewModelFactory()
@@ -151,7 +151,7 @@ class MainActivity : ComponentActivity() {
                 }
 
 
-                bluetoothLEManager = BluetoothLEManagerImp(this@MainActivity, mViewModel)
+                bluetoothLEManager = BluetoothLEManagerImp(this@MainActivity, bluetoothScannerViewModel)
                 MainContent()
             }
         }
@@ -180,9 +180,9 @@ class MainActivity : ComponentActivity() {
 
             val navMainController = rememberNavController()
 
-            val navLambdaDataScreen = remember(mViewModel, navMainController) {
+            val navLambdaDataScreen = remember(bluetoothScannerViewModel, navMainController) {
                 {   name: String, address: String ->
-                    if (mViewModel.liveStatusResults == 1 || mViewModel.liveStatusResults == -1) {
+                    if (bluetoothScannerViewModel.liveStatusResults == 1 || bluetoothScannerViewModel.liveStatusResults == -1) {
                         Log.d("DATAX", "MainContent-1: ${dataViewModel.smartWatchState.todayDateValuesReadFromSW.stepList.sum()}")
 
                         navMainController.navigate(
@@ -190,8 +190,8 @@ class MainActivity : ComponentActivity() {
                                 .route + "/${name}/${address}"
                         )
 
-                        mViewModel.liveBasicBluetoothAdapter = mutableListOf()
-                        mViewModel.liveStatusResults = -2
+                        bluetoothScannerViewModel.liveBasicBluetoothAdapter = mutableListOf()
+                        bluetoothScannerViewModel.liveStatusResults = -2
                     }
                 }
             }
@@ -210,11 +210,11 @@ class MainActivity : ComponentActivity() {
             }
 
 
-            val navLambdaBackBluetoothScanner = remember(mViewModel, navMainController) {
+            val navLambdaBackBluetoothScanner = remember(bluetoothScannerViewModel, navMainController) {
                 {
                     navMainController.popBackStack()
-                    mViewModel.liveBasicBluetoothAdapter = mutableListOf()
-                    mViewModel.liveStatusResults = -2
+                    bluetoothScannerViewModel.liveBasicBluetoothAdapter = mutableListOf()
+                    bluetoothScannerViewModel.liveStatusResults = -2
                 }
             }
 
@@ -247,7 +247,7 @@ class MainActivity : ComponentActivity() {
                 composable(Routes.Permissions.route) {
                     PermissionsScreen(
                         activity = this@MainActivity,
-                        viewModel = pViewModel, navLambda = navLambdaToBlueScanScreen
+                        viewModel = permissionsViewModel, navLambda = navLambdaToBlueScanScreen
                     )
                 }
 
@@ -264,9 +264,9 @@ class MainActivity : ComponentActivity() {
                     }
 
                     BluetoothScanScreen(
-                        basicBluetoothAdapters = mViewModel.liveBasicBluetoothAdapter,
-                        statusResultState = mViewModel.liveStatusResults,
-                        mViewModel.leScanCallback,
+                        basicBluetoothAdapters = bluetoothScannerViewModel.liveBasicBluetoothAdapter,
+                        statusResultState = bluetoothScannerViewModel.liveStatusResults,
+                        bluetoothScannerViewModel.leScanCallback,
                         bluetoothLEManager,
                         this@MainActivity,
                         setFetchingDataFromSWStatusSTOPPED,
