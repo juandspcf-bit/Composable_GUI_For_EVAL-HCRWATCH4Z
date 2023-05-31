@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -36,12 +35,8 @@ import com.icxcu.adsmartbandapp.screens.BNavStatus
 import com.icxcu.adsmartbandapp.screens.BluetoothScanScreen
 import com.icxcu.adsmartbandapp.screens.PermissionsScreen
 import com.icxcu.adsmartbandapp.screens.Routes
-import com.icxcu.adsmartbandapp.screens.mainNavBar.DayPhysicalActivityInfoState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.MainNavigationBar
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
-import com.icxcu.adsmartbandapp.screens.mainNavBar.SmartWatchState
-import com.icxcu.adsmartbandapp.screens.mainNavBar.TodayPhysicalActivityInfoState
-import com.icxcu.adsmartbandapp.screens.mainNavBar.YesterdayPhysicalActivityInfoState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.InvalidAlertDialogState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalDataForm
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoDBHandler
@@ -62,8 +57,6 @@ import com.icxcu.adsmartbandapp.viewModels.DataViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModel
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
-import kotlinx.coroutines.cancel
-import java.sql.Wrapper
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -170,7 +163,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onRestart() {
         super.onRestart()
-        Log.d("DATAX", "onRestart: ")
         setContent {
             ADSmartBandAppTheme {
                 MainContent()
@@ -229,7 +221,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            val navLambdaBackDataHome = remember() {
+            val navLambdaBackDataHome = remember {
                 {
                     navMainController.popBackStack()
                 }
@@ -265,7 +257,9 @@ class MainActivity : ComponentActivity() {
                 composable(Routes.BluetoothScanner.route) {
                     Log.d("DATAX", "Routes.BluetoothScanner.route: ENTER")
 
-                    if(dataViewModel.stateBNavStatus != BNavStatus.IN_PROGRESS) clearStateSW(dataViewModel, mViewModel)
+                    if(dataViewModel.stateBNavStatus != BNavStatus.IN_PROGRESS) clearStateSW(
+                        dataViewModel
+                    )
 
 
 
@@ -302,8 +296,8 @@ class MainActivity : ComponentActivity() {
                         backStackEntry.arguments?.getString("bluetoothAddress")?:"no address"
 
                     splashViewModel.writeDataPreferences(preferenceDataStoreHelper,
-                        name = bluetoothName ?: "no name",
-                        address = bluetoothAddress ?: "no address",
+                        name = bluetoothName,
+                        address = bluetoothAddress,
                     )
 
 
@@ -402,10 +396,10 @@ class MainActivity : ComponentActivity() {
     }
 
 
-    private fun clearStateSW(dataViewModel: DataViewModel, mViewModel: BluetoothScannerViewModel) {
+    private fun clearStateSW(dataViewModel: DataViewModel) {
         dataViewModel.smartWatchState.progressbarForFetchingDataFromSW = false
         dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.CLEARED
-        //mViewModel.liveBasicBluetoothAdapter = mutableListOf()
+
 
         dataViewModel.smartWatchState.todayDateValuesReadFromSW =
             Values(
