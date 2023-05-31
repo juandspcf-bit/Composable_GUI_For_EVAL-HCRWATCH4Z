@@ -8,7 +8,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
@@ -20,7 +19,7 @@ import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.SWRepository
-import com.icxcu.adsmartbandapp.screens.BNavStatus
+import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.DayPhysicalActivityInfoState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SmartWatchState
@@ -80,7 +79,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     lateinit var collecDataScope: Job
 
 
-    var stateBNavStatus by mutableStateOf(BNavStatus.NO_PROGRESS)
+    var stateBluetoothListScreenNavigationStatus by mutableStateOf(BluetoothListScreenNavigationStatus.NO_IN_PROGRESS)
 
 
     init {

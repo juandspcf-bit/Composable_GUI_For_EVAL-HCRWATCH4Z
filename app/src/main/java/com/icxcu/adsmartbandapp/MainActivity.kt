@@ -31,7 +31,7 @@ import com.icxcu.adsmartbandapp.bluetooth.BluetoothLEManagerImp
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
 import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreHelper
 import com.icxcu.adsmartbandapp.repositories.Values
-import com.icxcu.adsmartbandapp.screens.BNavStatus
+import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
 import com.icxcu.adsmartbandapp.screens.BluetoothScanScreen
 import com.icxcu.adsmartbandapp.screens.PermissionsScreen
 import com.icxcu.adsmartbandapp.screens.Routes
@@ -234,7 +234,7 @@ class MainActivity : ComponentActivity() {
             val setFetchingDataFromSWStatusSTOPPED = {
                 Log.d("DATAX", "MainContent setFetchingDataFromSWStatusSTOPPED STOPPED")
 
-                dataViewModel.stateBNavStatus = BNavStatus.IN_PROGRESS
+                dataViewModel.stateBluetoothListScreenNavigationStatus = BluetoothListScreenNavigationStatus.IN_PROGRESS
                 dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.STOPPED
             }
 
@@ -257,7 +257,7 @@ class MainActivity : ComponentActivity() {
                 composable(Routes.BluetoothScanner.route) {
                     Log.d("DATAX", "Routes.BluetoothScanner.route: ENTER")
 
-                    if(dataViewModel.stateBNavStatus != BNavStatus.IN_PROGRESS) clearStateSW(
+                    if(dataViewModel.stateBluetoothListScreenNavigationStatus != BluetoothListScreenNavigationStatus.IN_PROGRESS) clearStateSW(
                         dataViewModel
                     )
 
