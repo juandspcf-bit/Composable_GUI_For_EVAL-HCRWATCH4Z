@@ -160,8 +160,6 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun MainContent( ){
 
-
-
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
@@ -188,13 +186,11 @@ class MainActivity : ComponentActivity() {
 
             val navLambdaToBlueScanScreen = remember(navMainController) {
                 {
-
                     navMainController.navigate(Routes.BluetoothScanner.route){
                         popUpTo(navMainController.graph.id){
                             inclusive=true
                         }
                     }
-
                 }
             }
 
@@ -261,9 +257,6 @@ class MainActivity : ComponentActivity() {
                         setFetchingDataFromSWStatusSTOPPED,
                         navLambdaDataScreen
                     )
-
-
-
                 }
 
                 composable(
