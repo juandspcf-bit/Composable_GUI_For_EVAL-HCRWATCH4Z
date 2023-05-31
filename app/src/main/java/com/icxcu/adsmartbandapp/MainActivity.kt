@@ -220,6 +220,18 @@ class MainActivity : ComponentActivity() {
                 dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.STOPPED
             }
 
+            val getLiveBasicBluetoothAdapterList = remember(bluetoothScannerViewModel) {
+                {
+                    bluetoothScannerViewModel.liveBasicBluetoothAdapter
+                }
+            }
+
+            val getLiveStatusResults = remember(bluetoothScannerViewModel) {
+                {
+                    bluetoothScannerViewModel.liveStatusResults
+                }
+            }
+
             NavHost(
                 navController = navMainController,
                 startDestination = startDestination
@@ -249,8 +261,8 @@ class MainActivity : ComponentActivity() {
                     }
 
                     BluetoothScanScreen(
-                        basicBluetoothAdapters = bluetoothScannerViewModel.liveBasicBluetoothAdapter,
-                        statusResultState = bluetoothScannerViewModel.liveStatusResults,
+                        getLiveBasicBluetoothAdapterList,
+                        getLiveStatusResults,
                         bluetoothScannerViewModel.leScanCallback,
                         bluetoothLEManager,
                         this@MainActivity,

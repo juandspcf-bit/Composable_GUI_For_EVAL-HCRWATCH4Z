@@ -36,8 +36,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BluetoothScanScreen(
-    basicBluetoothAdapters: List<BasicBluetoothAdapter>,
-    statusResultState: Int,
+    getLiveBasicBluetoothAdapterList: () -> List<BasicBluetoothAdapter>,
+    getLiveStatusResults: () -> Int,
     leScanCallback: ScanCallback,
     bluetoothLEManager: BluetoothManager,
     activity: Activity,
@@ -110,12 +110,12 @@ fun BluetoothScanScreen(
                 .pullRefresh(state)) {
 
 
-            if (statusResultState == -2 || basicBluetoothAdapters.isEmpty()) {
+            if (getLiveStatusResults() == -2 || getLiveBasicBluetoothAdapterList().isEmpty()) {
                 ListAlbumDataEmpty()
             } else {
                 ListAlbumDataEmpty()
                 ListAlbumData(
-                    basicBluetoothAdapter = basicBluetoothAdapters,
+                    basicBluetoothAdapter = getLiveBasicBluetoothAdapterList(),
                     modifier = Modifier
                         .fillMaxSize(),
                     setFetchingDataFromSWStatusSTOPPED,
@@ -132,7 +132,7 @@ fun BluetoothScanScreen(
                     .size(50.dp),
                 scale = true
             )
-            when (statusResultState) {
+            when (getLiveStatusResults()) {
                 0 -> {
                     textState = "scanning"
                 }
