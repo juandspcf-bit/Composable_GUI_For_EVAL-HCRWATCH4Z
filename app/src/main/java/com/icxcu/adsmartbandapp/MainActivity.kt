@@ -166,7 +166,7 @@ class MainActivity : ComponentActivity() {
 
             val navMainController = rememberNavController()
 
-            val navLambdaDataScreen = remember(bluetoothScannerViewModel, navMainController) {
+            val navLambdaToMainNavigationBar = remember(bluetoothScannerViewModel, navMainController) {
                 { name: String, address: String ->
                     if (bluetoothScannerViewModel.pullRefreshStatusResults == 1 || bluetoothScannerViewModel.pullRefreshStatusResults == -1) {
                         Log.d(
@@ -186,7 +186,7 @@ class MainActivity : ComponentActivity() {
             }
 
 
-            val navLambdaToBlueScanScreen = remember(navMainController) {
+            val navLambdaToBlueScannerScreen = remember(navMainController) {
                 {
                     navMainController.navigate(Routes.BluetoothScanner.route) {
                         popUpTo(navMainController.graph.id) {
@@ -197,7 +197,7 @@ class MainActivity : ComponentActivity() {
             }
 
 
-            val navLambdaBackBluetoothScanner =
+            val navLambdaBackToBluetoothScanner =
                 remember(bluetoothScannerViewModel, navMainController) {
                     {
                         navMainController.popBackStack()
@@ -206,7 +206,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-            val navLambdaBackDataHome = remember {
+            val navLambdaBackToMainNavigationBar = remember {
                 {
                     navMainController.popBackStack()
                 }
@@ -248,7 +248,7 @@ class MainActivity : ComponentActivity() {
                 composable(Routes.Permissions.route) {
                     PermissionsScreen(
                         activity = this@MainActivity,
-                        viewModel = permissionsViewModel, navLambda = navLambdaToBlueScanScreen
+                        viewModel = permissionsViewModel, navLambda = navLambdaToBlueScannerScreen
                     )
                 }
 
@@ -272,7 +272,7 @@ class MainActivity : ComponentActivity() {
                         bluetoothLEManager,
                         this@MainActivity,
                         setFetchingDataFromSWStatusSTOPPED,
-                        navLambdaDataScreen
+                        navLambdaToMainNavigationBar
                     )
                 }
 
@@ -304,7 +304,7 @@ class MainActivity : ComponentActivity() {
                         getFetchingDataFromSWStatus,
                         bluetoothAddress,
                         bluetoothName,
-                        navLambdaBackBluetoothScanner,
+                        navLambdaBackToBluetoothScanner,
                         navMainController,
                         splashViewModel
                     )
@@ -323,7 +323,7 @@ class MainActivity : ComponentActivity() {
                         getFetchingDataFromSWStatus,
                         bluetoothAddress,
                         bluetoothName,
-                        navLambdaBackBluetoothScanner,
+                        navLambdaBackToBluetoothScanner,
                         navMainController,
                         splashViewModel
                     )
@@ -341,7 +341,7 @@ class MainActivity : ComponentActivity() {
                     )
                     PhysicalActivityInfo(
                         dataViewModel = dataViewModel
-                    ) { navLambdaBackDataHome() }
+                    ) { navLambdaBackToMainNavigationBar() }
                 }
 
                 composable(Routes.BloodPressurePlots.route) {
@@ -353,7 +353,7 @@ class MainActivity : ComponentActivity() {
                         dataViewModel.macAddressDeviceBluetooth
                     )
                     BloodPressureInfo(dataViewModel = dataViewModel) {
-                        navLambdaBackDataHome()
+                        navLambdaBackToMainNavigationBar()
                     }
                 }
 
@@ -366,7 +366,7 @@ class MainActivity : ComponentActivity() {
                         dataViewModel.macAddressDeviceBluetooth
                     )
                     HeartRateInfo(dataViewModel = dataViewModel) {
-                        navLambdaBackDataHome()
+                        navLambdaBackToMainNavigationBar()
                     }
                 }
 
@@ -375,7 +375,7 @@ class MainActivity : ComponentActivity() {
                         dataViewModel
                     )
                     PersonalDataForm(dataViewModel = dataViewModel) {
-                        navLambdaBackDataHome()
+                        navLambdaBackToMainNavigationBar()
                     }
                 }
 
@@ -385,7 +385,7 @@ class MainActivity : ComponentActivity() {
                         dataViewModel
                     )
                     PersonalInfoInit(dataViewModel = dataViewModel) {
-                        navLambdaToBlueScanScreen()
+                        navLambdaToBlueScannerScreen()
                     }
                 }
 
