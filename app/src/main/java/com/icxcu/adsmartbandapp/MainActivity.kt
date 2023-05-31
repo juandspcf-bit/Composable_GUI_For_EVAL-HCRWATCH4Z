@@ -57,6 +57,7 @@ import com.icxcu.adsmartbandapp.viewModels.DataViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModel
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
+import com.icxcu.adsmartbandapp.viewModels.permissionsRequired
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -72,19 +73,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var preferenceDataStoreHelper : PreferenceDataStoreHelper
 
 
-    private val permissionsRequired = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        listOf(
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.BLUETOOTH_SCAN,
-            Manifest.permission.BLUETOOTH_CONNECT,
-        )
-    } else {
-        listOf(
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-        )
-    }
+
 
     private var askPermissions = arrayListOf<String>()
 
