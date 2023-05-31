@@ -318,7 +318,6 @@ class MainActivity : ComponentActivity() {
                 ) {
                     Log.d("DATAX", "Routes.DataHome.route: ENTER")
 
-
                     val bluetoothName = splashViewModel.route[2]
                     val bluetoothAddress = splashViewModel.route[3]
 
@@ -333,8 +332,6 @@ class MainActivity : ComponentActivity() {
                     )
 
                 }
-
-
 
                 composable(Routes.StepsPlots.route) {
                     Log.d("DATAX", "MainContentStepsPlots:")
