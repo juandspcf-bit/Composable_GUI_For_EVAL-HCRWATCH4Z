@@ -127,7 +127,6 @@ class MainActivity : ComponentActivity() {
 
                 }
 
-                //SetPermissions(this@MainActivity, permissionsRequired)
                 for (permission in permissionsRequired) {
                     if (ContextCompat.checkSelfPermission(
                             this@MainActivity,
@@ -137,8 +136,6 @@ class MainActivity : ComponentActivity() {
                         askPermissions.add(permission)
                     }
                 }
-
-                // if the list if empty, all permissions are granted
 
                 startDestination = if (askPermissions.isNotEmpty()) {
                     Routes.Permissions.route
@@ -265,14 +262,6 @@ class MainActivity : ComponentActivity() {
                             Log.d("DATAX", "Routes.BluetoothScanner.route: CLEARED")
                         }
                     }
-/*                    if(dataViewModel.stateBluetoothListScreenNavigationStatus != BluetoothListScreenNavigationStatus.IN_PROGRESS) clearStateSW(
-                        dataViewModel
-                    )*/
-
-
-
-
-
 
                     BluetoothScanScreen(
                         basicBluetoothAdapters = mViewModel.liveBasicBluetoothAdapter,
@@ -398,9 +387,6 @@ class MainActivity : ComponentActivity() {
 
 
         }
-
-
-
     }
 
 
@@ -449,18 +435,8 @@ class MainActivity : ComponentActivity() {
 
         dataViewModel.macAddressDeviceBluetooth = ""
         dataViewModel.nameDeviceBluetooth = ""
-
     }
-
-
-
 }
-
-
-
-
-
-
 
 @Composable
 fun Wrapper(dataViewModel: DataViewModel,
