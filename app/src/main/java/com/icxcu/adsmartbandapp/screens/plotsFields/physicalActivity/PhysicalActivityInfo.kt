@@ -1,5 +1,6 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -18,6 +19,7 @@ fun PhysicalActivityInfo(
     navLambda: () -> Unit
 ) {
 
+    Log.d("PhysicalActivityInfo", "PhysicalActivityInfo: ")
     val getDayPhysicalActivityData = remember(dataViewModel) {
         {
             dataViewModel.dayPhysicalActivityInfoState
@@ -99,6 +101,8 @@ fun PhysicalActivityInfo(
             dataViewModel.macAddressDeviceBluetooth)
 
     }
+
+    Log.d("PhysicalActivityInfo", "PhysicalActivityInfo: 2")
 
     PhysicalActivityLayoutScaffold(
         stepsListFromDB,
