@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -142,7 +143,59 @@ fun BloodPressureInfoContent(
     diastolicListContent: () -> List<Double>,
 ) {
 
-    ConstraintLayout(
+    Column(
+        modifier = Modifier
+            .background(Color(0xff1d2a35))
+            .fillMaxSize()
+    ) {
+
+        val mapSystolic = systolicListContent().mapIndexed { index, y ->
+            val entry = EntryHour(
+                Duration.ofHours(24).minusMinutes(30L * index.toLong()),
+                index.toFloat(), y.toFloat()
+            )
+            entry
+        }
+        val mapDiastolic = diastolicListContent().mapIndexed { index, y ->
+            val entry = EntryHour(
+                Duration.ofHours(24).minusMinutes(30L * index.toLong()),
+                index.toFloat(), y.toFloat()
+            )
+            entry
+        }
+
+        Box(modifier = Modifier.fillMaxWidth().fillMaxHeight(0.4f)) {
+
+            val chartEntryModel = ChartEntryModelProducer(mapSystolic, mapDiastolic)
+            MyComposePlotChart(
+                chartEntryModel,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black)
+                    .padding(bottom = 15.dp),
+                rememberLegendBloodPressure()
+            )
+
+        }
+
+        Divider(modifier = Modifier
+            .height(2.dp))
+
+        StatisticsBloodPressure(systolicListContent = systolicListContent,
+            modifier = Modifier
+                .background(Color(0x7FFF5722))
+                .fillMaxWidth().fillMaxHeight(0.3f))
+
+
+        BloodPressureSList(
+            systolicListContent,
+            diastolicListContent,
+            modifier = Modifier
+                .fillMaxSize().fillMaxHeight(1f))
+
+    }
+
+    /*ConstraintLayout(
         modifier = Modifier
             .background(Color(0xff1d2a35))
             .fillMaxSize()
@@ -220,7 +273,7 @@ fun BloodPressureInfoContent(
                 }
                 .fillMaxSize())
 
-    }
+    }*/
 }
 
 
