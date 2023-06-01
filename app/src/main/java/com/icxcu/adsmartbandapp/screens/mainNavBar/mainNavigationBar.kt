@@ -162,6 +162,16 @@ fun MainNavigationBar(
                 dataViewModel.macAddressDeviceBluetooth
             )
 
+            dataViewModel.getDayBloodPressureData(
+                dateData,
+                dataViewModel.macAddressDeviceBluetooth
+            )
+
+            dataViewModel.getDayHeartRateData(
+                dateData,
+                dataViewModel.macAddressDeviceBluetooth
+            )
+
             navMainController.navigate(Routes.CircularProgressLoading.route){
                 popUpTo(Routes.DataHome.route)
             }
