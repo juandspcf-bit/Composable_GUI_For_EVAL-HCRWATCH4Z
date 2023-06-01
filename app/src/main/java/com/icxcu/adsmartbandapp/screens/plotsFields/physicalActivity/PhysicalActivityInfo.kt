@@ -7,6 +7,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
+import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -80,24 +81,33 @@ fun PhysicalActivityInfo(
     }
 
     //DialogDatePicker State
-    val stateShowDialogDatePickerValue = {
-        dataViewModel.stateShowDialogDatePicker
+    val stateShowDialogDatePickerValue = remember(dataViewModel) {
+        {
+            dataViewModel.stateShowDialogDatePicker
+        }
     }
-    val stateShowDialogDatePickerSetter:(Boolean) -> Unit = { value ->
-        dataViewModel.stateShowDialogDatePicker = value
+
+    val stateShowDialogDatePickerSetter = remember(dataViewModel) {
+        { value: Boolean ->
+            dataViewModel.stateShowDialogDatePicker = value
+        }
     }
 
-    val stateMiliSecondsDateDialogDatePickerSetter:(Long) -> Unit = { value ->
-        dataViewModel.stateMiliSecondsDateDialogDatePicker = value
+    val stateMiliSecondsDateDialogDatePickerSetter = remember(dataViewModel) {
+        { value: Long ->
+            dataViewModel.stateMiliSecondsDateDialogDatePicker = value
 
-        val date = Date(value)
-        val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        val dateData = formattedDate.format(date)
+            val date = Date(value)
+            val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val dateData = formattedDate.format(date)
 
-        dataViewModel.getDayPhysicalActivityData(dateData,
-            dataViewModel.macAddressDeviceBluetooth)
-
+            dataViewModel.getDayPhysicalActivityData(
+                dateData,
+                dataViewModel.macAddressDeviceBluetooth
+            )
+        }
     }
+
 
     PhysicalActivityLayoutScaffold(
         stepsListFromDB,
