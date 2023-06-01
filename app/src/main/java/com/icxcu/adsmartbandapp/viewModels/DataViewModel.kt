@@ -38,13 +38,13 @@ import java.time.format.DateTimeFormatter
 class DataViewModel(var application: Application) : ViewModel() {
 
 
-    val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-    val todayLocalDateTime = LocalDateTime.now()
-    val todayFormattedDate = todayLocalDateTime.format(myFormatObj)
-    val yesterdayLocalDateTime = todayLocalDateTime.minusDays(1)
-    val yesterdayFormattedDate = yesterdayLocalDateTime.format(myFormatObj)
-    val pastYesterdayLocalDateTime = todayLocalDateTime.minusDays(2)
-    val pastYesterdayFormattedDate = pastYesterdayLocalDateTime.format(myFormatObj)
+    private val myFormatObj:DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    private val todayLocalDateTime:LocalDateTime = LocalDateTime.now()
+    val todayFormattedDate:String = todayLocalDateTime.format(myFormatObj)
+    private val yesterdayLocalDateTime:LocalDateTime = todayLocalDateTime.minusDays(1)
+    val yesterdayFormattedDate:String = yesterdayLocalDateTime.format(myFormatObj)
+    private val pastYesterdayLocalDateTime:LocalDateTime = todayLocalDateTime.minusDays(2)
+    val pastYesterdayFormattedDate:String = pastYesterdayLocalDateTime.format(myFormatObj)
 
     private var dbRepository: DBRepository
     //private var swRepository: SWRepository
@@ -79,7 +79,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     lateinit var collecDataScope: Job
 
 
-    var stateBluetoothListScreenNavigationStatus by mutableStateOf(BluetoothListScreenNavigationStatus.NO_IN_PROGRESS)
+    var stateBluetoothListScreenNavigationStatus by mutableStateOf(BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_BLUETOOTH_SCREEN)
 
 
     init {

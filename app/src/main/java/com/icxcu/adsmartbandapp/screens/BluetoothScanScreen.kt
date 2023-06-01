@@ -268,6 +268,6 @@ fun ListAlbumDataEmpty(
 }
 
 enum class BluetoothListScreenNavigationStatus {
-    IN_PROGRESS,
-    NO_IN_PROGRESS,
+    IN_PROGRESS_TO_MAIN_NAV_SCREEN,
+    IN_PROGRESS_TO_BLUETOOTH_SCREEN,
 }

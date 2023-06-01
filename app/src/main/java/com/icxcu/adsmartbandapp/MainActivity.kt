@@ -227,7 +227,7 @@ class MainActivity : ComponentActivity() {
                 Log.d("DATAX", "MainContent setFetchingDataFromSWStatusSTOPPED STOPPED")
 
                 dataViewModel.stateBluetoothListScreenNavigationStatus =
-                    BluetoothListScreenNavigationStatus.IN_PROGRESS
+                    BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_MAIN_NAV_SCREEN
                 dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.STOPPED
             }
 
@@ -270,11 +270,11 @@ class MainActivity : ComponentActivity() {
                     Log.d("DATAX", "Routes.BluetoothScanner.route: ENTER")
 
                     when (dataViewModel.stateBluetoothListScreenNavigationStatus) {
-                        BluetoothListScreenNavigationStatus.NO_IN_PROGRESS -> {
+                        BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_BLUETOOTH_SCREEN -> {
                             clearStateSW(dataViewModel)
                         }
 
-                        BluetoothListScreenNavigationStatus.IN_PROGRESS -> {
+                        BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_MAIN_NAV_SCREEN -> {
                             Log.d("DATAX", "Routes.BluetoothScanner.route: CLEARED")
                         }
                     }

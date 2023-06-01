@@ -131,7 +131,7 @@ fun MainNavigationBar(
         {
             dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.CLEARED
             dataViewModel.stateBluetoothListScreenNavigationStatus =
-                BluetoothListScreenNavigationStatus.NO_IN_PROGRESS
+                BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_BLUETOOTH_SCREEN
         }
     }
 
