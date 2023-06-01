@@ -40,11 +40,11 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     private val myFormatObj:DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
     private val todayLocalDateTime:LocalDateTime = LocalDateTime.now()
-    val todayFormattedDate:String = todayLocalDateTime.format(myFormatObj)
+    var todayFormattedDate:String = todayLocalDateTime.format(myFormatObj)
     private val yesterdayLocalDateTime:LocalDateTime = todayLocalDateTime.minusDays(1)
-    val yesterdayFormattedDate:String = yesterdayLocalDateTime.format(myFormatObj)
+    var yesterdayFormattedDate:String = yesterdayLocalDateTime.format(myFormatObj)
     private val pastYesterdayLocalDateTime:LocalDateTime = todayLocalDateTime.minusDays(2)
-    val pastYesterdayFormattedDate:String = pastYesterdayLocalDateTime.format(myFormatObj)
+    var pastYesterdayFormattedDate:String = pastYesterdayLocalDateTime.format(myFormatObj)
 
     private var dbRepository: DBRepository
     //private var swRepository: SWRepository

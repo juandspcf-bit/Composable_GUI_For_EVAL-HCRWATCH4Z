@@ -417,6 +417,20 @@ class MainActivity : ComponentActivity() {
 
 
     private fun clearStateSW(dataViewModel: DataViewModel) {
+
+        val myFormatObj:DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+        val todayLocalDateTime:LocalDateTime = LocalDateTime.now()
+        val todayFormattedDate:String = todayLocalDateTime.format(myFormatObj)
+        dataViewModel.todayFormattedDate = todayFormattedDate
+
+        val yesterdayLocalDateTime:LocalDateTime = todayLocalDateTime.minusDays(1)
+        val yesterdayFormattedDate:String = yesterdayLocalDateTime.format(myFormatObj)
+        dataViewModel.yesterdayFormattedDate = yesterdayFormattedDate
+
+        val pastYesterdayLocalDateTime:LocalDateTime = todayLocalDateTime.minusDays(2)
+        val pastYesterdayFormattedDate:String = pastYesterdayLocalDateTime.format(myFormatObj)
+        dataViewModel.pastYesterdayFormattedDate = pastYesterdayFormattedDate
+
         dataViewModel.smartWatchState.progressbarForFetchingDataFromSW = false
         dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.CLEARED
 
