@@ -87,9 +87,6 @@ fun PhysicalActivityInfo(
         dataViewModel.stateShowDialogDatePicker = value
     }
 
-    val stateMiliSecondsDateDialogDatePicker = {
-        dataViewModel.stateMiliSecondsDateDialogDatePicker
-    }
     val stateMiliSecondsDateDialogDatePickerSetter:(Long) -> Unit = { value ->
         dataViewModel.stateMiliSecondsDateDialogDatePicker = value
 
@@ -102,8 +99,6 @@ fun PhysicalActivityInfo(
 
     }
 
-    Log.d("PhysicalActivityInfo", "PhysicalActivityInfo: 2")
-
     PhysicalActivityLayoutScaffold(
         stepsListFromDB,
         distanceListFromDB,
@@ -111,7 +106,6 @@ fun PhysicalActivityInfo(
         getSelectedDay,
         stateShowDialogDatePickerSetter,
         stateShowDialogDatePickerValue,
-        stateMiliSecondsDateDialogDatePicker,
         stateMiliSecondsDateDialogDatePickerSetter,
         navLambda
     )

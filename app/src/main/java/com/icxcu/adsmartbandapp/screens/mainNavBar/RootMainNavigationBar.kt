@@ -77,8 +77,8 @@ fun RootMainNavigationBar(dataViewModel: DataViewModel,
         bluetoothName = bluetoothName,
         bluetoothAddress = bluetoothAddress,
         dataViewModel = dataViewModel,
-        navMainController = navMainController,
-        splashViewModel = splashViewModel
-    ) { navLambdaBackBluetoothScanner() }
+        splashViewModel = splashViewModel,
+        navMainController = navMainController
+    )
 
 }

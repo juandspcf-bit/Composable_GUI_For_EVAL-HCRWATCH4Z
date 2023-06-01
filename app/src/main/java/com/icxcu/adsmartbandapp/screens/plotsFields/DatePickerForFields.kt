@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 @Composable
 fun DatePickerDialogSample(
     modifyShowDialog: (Boolean) -> Unit,
-    stateMiliSecondsDateDialogDatePicker: () -> Long,
     stateMiliSecondsDateDialogDatePickerSetter: (Long) -> Unit,
 ) {
     // Decoupled snackbar host state from scaffold state for demo purposes.

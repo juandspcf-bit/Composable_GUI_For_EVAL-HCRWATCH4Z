@@ -11,10 +11,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -38,6 +42,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.SettingsScreen
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
@@ -50,6 +55,7 @@ import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.DashBoardScreen
 import com.icxcu.adsmartbandapp.screens.NavBarItems
 import com.icxcu.adsmartbandapp.screens.NavRoutes
+import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
 import com.icxcu.adsmartbandapp.screens.testHealthsScreen.TestingHealthScreen
 
 
@@ -71,6 +77,9 @@ fun MainNavigationBarScaffold(
     getRealTimeTemperature: () -> TemperatureData,
     getCircularProgressTemperature: () -> Int,
     clearState: () -> Unit,
+    stateShowDialogDatePickerSetter: (Boolean) -> Unit,
+    stateShowDialogDatePickerValue: () -> Boolean,
+    stateMiliSecondsDateDialogDatePickerSetter: (Long) -> Unit,
     navMainController: NavHostController = rememberNavController()
 ) {
     val navController = rememberNavController()
@@ -92,7 +101,31 @@ fun MainNavigationBarScaffold(
                     containerColor = Color(0xff0d1721),
                 ),
                 modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                actions = {
+                    IconButton(
+                        onClick = {stateShowDialogDatePickerSetter(!stateShowDialogDatePickerValue())},
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.baseline_date_range_24),
+                            contentDescription = "Date Range",
+                            tint = Color.White,
+                            modifier = Modifier.padding(start = 2.dp, end = 2.dp)
+                        )
+                    }
+
+                    IconButton(
+                        onClick = {},
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.baseline_query_stats_24),
+                            contentDescription = "Health Statistics",
+                            tint = Color.White,
+                            modifier = Modifier.padding(start = 2.dp, end = 2.dp)
+                        )
+                    }
+
+                }
             )
         },
         content = { padding ->
@@ -144,6 +177,13 @@ fun MainNavigationBarScaffold(
         },
         bottomBar = { BottomNavigationBar(navController = navController) }
     )
+
+    if (stateShowDialogDatePickerValue()) {
+        DatePickerDialogSample(
+            stateShowDialogDatePickerSetter,
+            stateMiliSecondsDateDialogDatePickerSetter
+        )
+    }
 
 }
 

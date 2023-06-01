@@ -49,7 +49,6 @@ fun SettingsScreen(
 
             RowSettings(
                 navigation = {navMainController.navigate(Routes.PersonalInfoForm.route){
-
                     popUpTo(Routes.DataHome.route)
                 }},
                 modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
@@ -61,7 +60,6 @@ fun SettingsScreen(
                 navigation = {
                     navMainController.navigate(Routes.BluetoothScanner.route){
                         popUpTo(0)
-
                 } },
                 modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
                 text = "Connect to other device",

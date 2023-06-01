@@ -16,6 +16,7 @@ import com.icxcu.adsmartbandapp.repositories.BloodPressureData
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
+import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.MainNavigationBarScaffold
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.TodayBloodPressureDBHandler
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.TodayHeartRateDBHandler
@@ -25,6 +26,9 @@ import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.YesterdayHeartRateD
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.YesterdayPhysicalActivityDBHandler
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 @Composable
@@ -33,14 +37,19 @@ fun MainNavigationBar(
     bluetoothAddress: String,
     dataViewModel: DataViewModel,
     splashViewModel: SplashViewModel,
-    navMainController: NavHostController,
-    navLambda: () -> Unit
+    navMainController: NavHostController
 ) {
 
     TodayPhysicalActivityDBHandler(dataViewModel = dataViewModel)
-    YesterdayPhysicalActivityDBHandler(dataViewModel = dataViewModel, splashViewModel = splashViewModel)
+    YesterdayPhysicalActivityDBHandler(
+        dataViewModel = dataViewModel,
+        splashViewModel = splashViewModel
+    )
     TodayBloodPressureDBHandler(dataViewModel = dataViewModel, splashViewModel = splashViewModel)
-    YesterdayBloodPressureDBHandler(dataViewModel = dataViewModel, splashViewModel = splashViewModel)
+    YesterdayBloodPressureDBHandler(
+        dataViewModel = dataViewModel,
+        splashViewModel = splashViewModel
+    )
     TodayHeartRateDBHandler(dataViewModel = dataViewModel, splashViewModel = splashViewModel)
     YesterdayHeartRateDBHandler(dataViewModel = dataViewModel, splashViewModel = splashViewModel)
 
@@ -121,7 +130,42 @@ fun MainNavigationBar(
     val clearState = remember(dataViewModel) {
         {
             dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.CLEARED
-            dataViewModel.stateBluetoothListScreenNavigationStatus = BluetoothListScreenNavigationStatus.NO_IN_PROGRESS
+            dataViewModel.stateBluetoothListScreenNavigationStatus =
+                BluetoothListScreenNavigationStatus.NO_IN_PROGRESS
+        }
+    }
+
+
+    //DialogDatePicker State
+    val stateShowDialogDatePickerValue = remember(dataViewModel) {
+        {
+            dataViewModel.stateShowDialogDatePicker
+        }
+    }
+
+    val stateShowDialogDatePickerSetter = remember(dataViewModel) {
+        { value: Boolean ->
+            dataViewModel.stateShowDialogDatePicker = value
+        }
+    }
+
+    val stateMiliSecondsDateDialogDatePickerSetter = remember(dataViewModel) {
+        { value: Long ->
+            dataViewModel.stateMiliSecondsDateDialogDatePicker = value
+
+            val date = Date(value)
+            val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val dateData = formattedDate.format(date)
+
+            dataViewModel.getDayPhysicalActivityData(
+                dateData,
+                dataViewModel.macAddressDeviceBluetooth
+            )
+
+            navMainController.navigate(Routes.CircularProgressLoading.route){
+                popUpTo(Routes.DataHome.route)
+            }
+
         }
     }
 
@@ -141,14 +185,15 @@ fun MainNavigationBar(
         getRealTimeTemperature,
         getCircularProgressTemperature,
         clearState,
+        stateShowDialogDatePickerSetter,
+        stateShowDialogDatePickerValue,
+        stateMiliSecondsDateDialogDatePickerSetter,
         navMainController,
     )
-
-
 }
 
 
-class TodayPhysicalActivityInfoState() {
+class TodayPhysicalActivityInfoState {
 
     var todayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
     var todayStepListReadFromDB by mutableStateOf(listOf<Int>())
@@ -254,7 +299,7 @@ class SmartWatchState(
     )
 }
 
-enum class SWReadingStatus{
+enum class SWReadingStatus {
     IN_PROGRESS,
     READ,
     STOPPED,

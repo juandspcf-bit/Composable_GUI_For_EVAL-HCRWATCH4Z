@@ -132,7 +132,6 @@ fun BloodPressureLayoutScaffold(
                 if (stateShowDialogDatePickerValue()) {
                     DatePickerDialogSample(
                         stateShowDialogDatePickerSetter,
-                        stateMiliSecondsDateDialogDatePicker,
                         stateMiliSecondsDateDialogDatePickerSetter
                     )
                 }

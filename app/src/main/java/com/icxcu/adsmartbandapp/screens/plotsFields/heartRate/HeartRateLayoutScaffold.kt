@@ -140,7 +140,6 @@ fun HeartRateLayoutScaffold(
                 if (stateShowDialogDatePickerValue()) {
                     DatePickerDialogSample(
                         stateShowDialogDatePickerSetter,
-                        stateMiliSecondsDateDialogDatePicker,
                         stateMiliSecondsDateDialogDatePickerSetter
                     )
                 }
