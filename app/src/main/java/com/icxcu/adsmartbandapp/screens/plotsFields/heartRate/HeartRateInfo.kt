@@ -79,36 +79,40 @@ fun HeartRateInfo(
     }
 
     //DialogDatePicker State
-    val stateShowDialogDatePickerValue = {
-        dataViewModel.stateShowDialogDatePicker
+    val stateShowDialogDatePickerValue = remember(dataViewModel) {
+        {
+            dataViewModel.stateShowDialogDatePicker
+        }
     }
-    val stateShowDialogDatePickerSetter:(Boolean) -> Unit = { value ->
-        dataViewModel.stateShowDialogDatePicker = value
+
+    val stateShowDialogDatePickerSetter = remember(dataViewModel) {
+        { value: Boolean ->
+            dataViewModel.stateShowDialogDatePicker = value
+        }
     }
 
-    val stateMiliSecondsDateDialogDatePicker = {
-        dataViewModel.stateMiliSecondsDateDialogDatePicker
+    val stateMiliSecondsDateDialogDatePickerSetter = remember(dataViewModel) {
+        { value: Long ->
+            dataViewModel.stateMiliSecondsDateDialogDatePicker = value
+
+            val date = Date(value)
+            val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val dateData = formattedDate.format(date)
+
+            dataViewModel.getDayHeartRateData(
+                dateData,
+                dataViewModel.macAddressDeviceBluetooth
+            )
+        }
     }
-    val stateMiliSecondsDateDialogDatePickerSetter:(Long) -> Unit = { value ->
-        dataViewModel.stateMiliSecondsDateDialogDatePicker = value
 
-        val date = Date(value)
-        val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        val dateData = formattedDate.format(date)
-
-
-        dataViewModel.getDayHeartRateData(dateData,
-            dataViewModel.macAddressDeviceBluetooth)
-
-    }
 
     HeartRateLayoutScaffold(
         heartRateList = heartRateListFromDB,
         getSelectedDay = getSelectedDay,
         stateShowDialogDatePickerSetter = stateShowDialogDatePickerSetter,
         stateShowDialogDatePickerValue = stateShowDialogDatePickerValue,
-        stateMiliSecondsDateDialogDatePickerS = stateMiliSecondsDateDialogDatePicker,
-        stateMiliSecondsDateDialogDatePickerSetterS= stateMiliSecondsDateDialogDatePickerSetter,
+        stateMiliSecondsDateDialogDatePickerSetter= stateMiliSecondsDateDialogDatePickerSetter,
         getAgeCalculated = getAgeCalculated,
         navLambda= navLambda
     )

@@ -67,19 +67,13 @@ fun HeartRateLayoutScaffold(
     getSelectedDay: () -> String,
     stateShowDialogDatePickerSetter: (Boolean) -> Unit,
     stateShowDialogDatePickerValue: () -> Boolean,
-    stateMiliSecondsDateDialogDatePickerS: () -> Long,
-    stateMiliSecondsDateDialogDatePickerSetterS: (Long) -> Unit,
-    getAgeCalculated:()->Int,
+    stateMiliSecondsDateDialogDatePickerSetter: (Long) -> Unit,
+    getAgeCalculated: () -> Int,
     navLambda: () -> Unit
 ) {
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val stateMiliSecondsDateDialogDatePicker = {
-        stateMiliSecondsDateDialogDatePickerS()
-    }
-    val stateMiliSecondsDateDialogDatePickerSetter: (Long) -> Unit = { value ->
-        stateMiliSecondsDateDialogDatePickerSetterS(value)
-    }
+
     Scaffold(
         topBar = {
             MediumTopAppBar(

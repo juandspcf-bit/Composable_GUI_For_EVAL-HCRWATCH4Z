@@ -59,17 +59,12 @@ fun BloodPressureLayoutScaffold(
     getSelectedDay: () -> String,
     stateShowDialogDatePickerSetter: (Boolean) -> Unit,
     stateShowDialogDatePickerValue: () -> Boolean,
-    stateMiliSecondsDateDialogDatePickerS: () -> Long,
-    stateMiliSecondsDateDialogDatePickerSetterS: (Long) -> Unit,
+    stateMiliSecondsDateDialogDatePickerSetter: (Long) -> Unit,
     navLambda: () -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val stateMiliSecondsDateDialogDatePicker = {
-        stateMiliSecondsDateDialogDatePickerS()
-    }
-    val stateMiliSecondsDateDialogDatePickerSetter: (Long) -> Unit = { value ->
-        stateMiliSecondsDateDialogDatePickerSetterS(value)
-    }
+
+
     Scaffold(
         topBar = {
             MediumTopAppBar(
