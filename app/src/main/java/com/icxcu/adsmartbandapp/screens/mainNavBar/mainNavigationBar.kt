@@ -37,7 +37,7 @@ fun MainNavigationBar(
     navLambda: () -> Unit
 ) {
 
-    TodayPhysicalActivityDBHandler(dataViewModel = dataViewModel, splashViewModel = splashViewModel)
+    TodayPhysicalActivityDBHandler(dataViewModel = dataViewModel)
     YesterdayPhysicalActivityDBHandler(dataViewModel = dataViewModel, splashViewModel = splashViewModel)
     TodayBloodPressureDBHandler(dataViewModel = dataViewModel, splashViewModel = splashViewModel)
     YesterdayBloodPressureDBHandler(dataViewModel = dataViewModel, splashViewModel = splashViewModel)
@@ -142,7 +142,6 @@ fun MainNavigationBar(
         getCircularProgressTemperature,
         clearState,
         navMainController,
-        navLambda,
     )
 
 
