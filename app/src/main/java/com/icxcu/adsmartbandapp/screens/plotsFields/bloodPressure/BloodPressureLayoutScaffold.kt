@@ -3,7 +3,6 @@ package com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure
 import android.graphics.Typeface
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -14,8 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -160,9 +157,11 @@ fun BloodPressureInfoContent(
             entry
         }
 
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.4f)) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.4f)
+        ) {
 
             val chartEntryModel = ChartEntryModelProducer(mapSystolic, mapDiastolic)
             MyComposePlotChart(
@@ -194,7 +193,7 @@ fun BloodPressureInfoContent(
                 .height(2.dp)
         )
 
-        BloodPressureSList(
+        BloodPressureLazyList(
             systolicListContent,
             diastolicListContent,
             modifier = Modifier
@@ -203,116 +202,6 @@ fun BloodPressureInfoContent(
         )
 
     }
-}
-
-
-@Composable
-fun StatisticsBloodPressure(
-    systolicListContent: () -> List<Double>,
-    modifier: Modifier = Modifier
-) {
-    val filteredSystolicListContent = systolicListContent().filter { it > 0.0 }
-    if (filteredSystolicListContent.isEmpty()) return
-
-    val maxValueSystolic = filteredSystolicListContent.max()
-    val maxValueSystolicValue = String.format("%.1f mmHg", maxValueSystolic)
-    val hourMax = findIndex(maxValueSystolic, systolicListContent())
-
-
-    val minValueSystolic = filteredSystolicListContent.min()
-    val minValueSystolicValue = String.format("%.1f mmHg", minValueSystolic)
-    val hourMin = findIndex(minValueSystolic, systolicListContent())
-
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        modifier = modifier.padding(top = 10.dp, bottom = 10.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        item {
-            Column(
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxWidth(0.5f)
-                    .padding(bottom = 10.dp)
-            ) {
-                Text(
-                    text = "Max Value",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.White
-                )
-                Text(
-                    text = maxValueSystolicValue,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White
-                )
-            }
-        }
-
-        item {
-            Column(
-                verticalArrangement = Arrangement.SpaceAround,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxWidth(0.5f)
-                    .padding(bottom = 10.dp)
-            ) {
-                Text(
-                    text = "Min Value",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.White
-                )
-                Text(
-                    text = minValueSystolicValue,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White
-                )
-            }
-        }
-
-        item {
-            Column(
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(top = 10.dp)
-            ) {
-
-                Text(
-                    text = "Time",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.White
-                )
-                Text(
-                    hourMax,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White
-                )
-            }
-        }
-
-        item {
-            Column(
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(top = 10.dp)
-            ) {
-                Text(
-                    text = "Time",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.White
-                )
-                Text(
-                    hourMin,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White
-                )
-            }
-
-        }
-    }
-
-
 }
 
 fun findIndex(value: Double, data: List<Double>): String {
@@ -336,20 +225,12 @@ fun findIndex(value: Double, data: List<Double>): String {
 }
 
 
-@Composable
+/*@Composable
 fun BloodPressureSList(
-    systolicListContent: () -> List<Double>,
-    diastolicListContent: () -> List<Double>,
+    systolicList: () -> List<Double>,
+    diastolicList: () -> List<Double>,
     modifier: Modifier
 ) {
-
-    val systolicList = {
-        systolicListContent()
-    }
-
-    val diastolicList = {
-        diastolicListContent()
-    }
 
 
     Box(
@@ -364,50 +245,46 @@ fun BloodPressureSList(
         )
 
     }
-}
+}*/
 
 
 @Composable
-fun BloodPressureList(
-    systolicListContent: () -> List<Double>,
-    diastolicListContent: () -> List<Double>,
+fun BloodPressureLazyList(
+    systolicList: () -> List<Double>,
+    diastolicList: () -> List<Double>,
     modifier: Modifier = Modifier
 ) {
-    val systolicList = {
-        systolicListContent()
-    }
-
-    val diastolicList = {
-        diastolicListContent()
-    }
-
     val bloodPressureFullList = systolicList().zip(diastolicList()).toList()
 
-    LazyColumn(modifier = modifier) {
-        itemsIndexed(
-            bloodPressureFullList,
-            key = { index, _ ->
-                PlotsConstants.HOUR_INTERVALS[index]
+    Box(
+        modifier = modifier
+    ) {
+        LazyColumn(modifier = modifier.fillMaxSize()) {
+            itemsIndexed(
+                bloodPressureFullList,
+                key = { index, _ ->
+                    PlotsConstants.HOUR_INTERVALS[index]
+                }
+            ) { index, pair ->
+                val systolicValue = pair.first
+                val diastolicValue = pair.second
+
+                val stringSystolicValue = String.format("%.1f", systolicValue)
+                val stringDiastolicValue = String.format("%.1f", diastolicValue)
+
+                val getCategory = getBloodPressureCategory(systolicValue, diastolicValue)
+                val category = mapCategories[getCategory]
+                val readableCategory = mapToReadableCategories[getCategory]
+
+
+                RowBloodPressure(
+                    valueBloodPressure = "$stringSystolicValue/$stringDiastolicValue mmHg",
+                    resource = category ?: R.drawable.blood_pressure_gauge,
+                    readableCategory = readableCategory ?: "No Category",
+                    hourTime = PlotsConstants.HOUR_INTERVALS[index]
+                )
+
             }
-        ) { index, pair ->
-            val systolicValue = pair.first
-            val diastolicValue = pair.second
-
-            val stringSystolicValue = String.format("%.1f", systolicValue)
-            val stringDiastolicValue = String.format("%.1f", diastolicValue)
-
-            val getCategory = getBloodPressureCategory(systolicValue, diastolicValue)
-            val category = mapCategories[getCategory]
-            val readableCategory = mapToReadableCategories[getCategory]
-
-
-            RowBloodPressure(
-                valueBloodPressure = "$stringSystolicValue/$stringDiastolicValue mmHg",
-                resource = category ?: R.drawable.blood_pressure_gauge,
-                readableCategory = readableCategory ?: "No Category",
-                hourTime = PlotsConstants.HOUR_INTERVALS[index]
-            )
-
         }
     }
 }
