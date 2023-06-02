@@ -1,10 +1,11 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity
 
 import android.graphics.Typeface
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
+
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -44,14 +46,19 @@ import com.patrykandpatrick.vico.core.component.shape.Shapes
 
 
 @Composable
-fun MyPhysicalActivityTab(title: String, onClick: () -> Unit, selected: Boolean) {
+fun MyPhysicalActivityTab(
+    title: String,
+    tabHeightRow: Dp,
+    onClick: () -> Unit,
+    selected: Boolean
+) {
     Tab(
         selected,
         onClick,
         selectedContentColor = Color(0xFFFFF176),
         modifier = Modifier
-            .fillMaxHeight()
-            .height(52.dp)
+            .height(tabHeightRow)
+
     ) {
         Text(
             text = title,
@@ -89,65 +96,72 @@ fun PhysicalActivityLazyListSelector(
     stepsList: () -> List<Int>,
     distanceList: () -> List<Double>,
     caloriesList: () -> List<Double>,
-    modifierTabs: Modifier,
-    modifierList: Modifier
 ) {
-
-    var state by remember { mutableStateOf(0) }
+    Log.d("PhysicalActivityContent", "PhysicalActivityLazyListSelector: ")
+    var selectedTab by remember { mutableStateOf(0) }
     val titles = listOf("Steps", "Distance", "Calories")
 
 // Reuse the default offset animation modifier, but use our own indicator
     val indicator = @Composable { tabPositions: List<TabPosition> ->
         MyPhysicalActivityIndicator(
-            Modifier.tabIndicatorOffset(tabPositions[state])
+            Modifier.tabIndicatorOffset(tabPositions[selectedTab])
         )
     }
 
-    TabRow(
-        selectedTabIndex = state,
-        modifier = modifierTabs,//.height(52.dp),
-        containerColor = Color.DarkGray,
-        indicator = indicator,
-        divider = {
-            Divider(modifier = Modifier.fillMaxWidth(), color = Color(0xFF7986CB))
-        },
-    ) {
-        titles.forEachIndexed { index, title ->
-            MyPhysicalActivityTab(title = title, onClick = { state = index }, selected = (index == state))
-        }
-    }
-
-    Box(
-        modifier = modifierList
-    ) {
-
-        when (state) {
-            0 -> {
-                StepsList(
-                    stepsList,
-                    modifier = Modifier
-                        .fillMaxSize()
+    Column(modifier = Modifier.fillMaxSize()) {
+        val tabHeightRow = 75.dp
+        TabRow(
+            selectedTabIndex = selectedTab,
+            modifier = Modifier.height(tabHeightRow),
+            containerColor = Color.DarkGray,
+            indicator = indicator,
+            divider = {
+                Divider(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = Color(0xFF7986CB)
                 )
-            }
-
-            1 -> {
-                DistanceList(
-                    distanceList,
-                    modifier = Modifier
-                        .fillMaxSize()
-                )
-            }
-
-            2 -> {
-                CaloriesList(
-                    caloriesList,
-                    modifier = Modifier
-                        .fillMaxSize()
+            },
+        ) {
+            titles.forEachIndexed { index, title ->
+                MyPhysicalActivityTab(
+                    title = title,
+                    tabHeightRow = tabHeightRow,
+                    onClick = { selectedTab = index },
+                    selected = (index == selectedTab)
                 )
             }
         }
 
+        Box(modifier = Modifier.fillMaxSize()) {
+            when (selectedTab) {
+                0 -> {
+                    StepsList(
+                        stepsList,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                1 -> {
+                    DistanceList(
+                        distanceList,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                2 -> {
+                    CaloriesList(
+                        caloriesList,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
+
+        }
+
     }
+
+
+
 }
 
 

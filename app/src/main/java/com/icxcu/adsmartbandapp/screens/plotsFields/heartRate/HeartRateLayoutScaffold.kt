@@ -67,7 +67,7 @@ fun HeartRateLayoutScaffold(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Heart Rate for \n${getSelectedDay()}",
+                        text = "Heart Rate for\n${getSelectedDay()}",
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.White,
