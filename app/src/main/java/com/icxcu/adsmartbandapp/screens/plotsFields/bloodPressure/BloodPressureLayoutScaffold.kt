@@ -113,16 +113,11 @@ fun BloodPressureLayoutScaffold(
                     .padding(padding)
                     .fillMaxSize(), contentAlignment = Alignment.TopCenter
             ) {
-                val systolicListScaffold = {
-                    systolicList()
-                }
-                val diastolicListScaffold = {
-                    diastolicList()
-                }
+
 
                 BloodPressureInfoContent(
-                    systolicListScaffold,
-                    diastolicListScaffold,
+                    systolicList,
+                    diastolicList,
                 )
 
                 if (stateShowDialogDatePickerValue()) {
