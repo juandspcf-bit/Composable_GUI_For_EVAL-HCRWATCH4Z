@@ -1,7 +1,6 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure
 
 import android.graphics.Typeface
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,10 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
@@ -23,20 +19,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
-import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
-import com.icxcu.adsmartbandapp.screens.plotsFields.PlotsConstants
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.EntryHour
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getHours
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemIconPaddingValue
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemIconSize
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemLabelTextSize
@@ -113,7 +101,7 @@ fun BloodPressureLayoutScaffold(
             ) {
 
 
-                BloodPressureInfoContent(
+                BloodPressureContent(
                     systolicList,
                     diastolicList,
                 )
@@ -131,7 +119,7 @@ fun BloodPressureLayoutScaffold(
 }
 
 @Composable
-fun BloodPressureInfoContent(
+fun BloodPressureContent(
     systolicListContent: () -> List<Double>,
     diastolicListContent: () -> List<Double>,
 ) {
@@ -231,7 +219,7 @@ fun rememberLegendBloodPressure() = verticalLegend(
 @Preview(showBackground = true)
 @Composable
 fun BloodPressureLayoutScaffoldPreview() {
-    BloodPressureInfoContent(
+    BloodPressureContent(
         { MockData.valuesToday.systolicList },
         { MockData.valuesToday.diastolicList },
     )
