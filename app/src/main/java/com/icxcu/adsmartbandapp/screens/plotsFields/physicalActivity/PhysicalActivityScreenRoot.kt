@@ -14,7 +14,7 @@ import java.util.Locale
 
 
 @Composable
-fun PhysicalActivityRoot(
+fun PhysicalActivityScreenRoot(
     dataViewModel: DataViewModel,
     navLambda: () -> Unit
 ) {
