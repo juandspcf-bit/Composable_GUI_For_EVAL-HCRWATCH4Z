@@ -22,7 +22,7 @@ import java.util.Locale
 fun HeartRateScreenRoot(
     dataViewModel: DataViewModel,
     navLambda: () -> Unit
-){
+) {
 
     val getDayPhysicalActivityData = remember(dataViewModel) {
         {
@@ -30,52 +30,53 @@ fun HeartRateScreenRoot(
         }
     }
 
-    val getPersonalInfoDataState = {
-        dataViewModel.personalInfoDataState
-    }
-
     val dayHeartRateResultsFromDB by getDayPhysicalActivityData().dayHeartRateResultsFromDB.observeAsState(
         MutableList(0) { HeartRate() }.toList()
     )
 
-    val ageCalculated by remember(dayHeartRateResultsFromDB) {
+    val ageCalculated by remember(dataViewModel) {
         derivedStateOf {
-            val date = ValidatorsPersonalField.dateValidator(getPersonalInfoDataState().date)
-            Log.d("VerifyingDate", "HeartRateInfo: date ${getPersonalInfoDataState().date}")
+            val date =
+                ValidatorsPersonalField.dateValidator(dataViewModel.personalInfoDataState.date)
+            Log.d(
+                "VerifyingDate",
+                "HeartRateInfo: date ${dataViewModel.personalInfoDataState.date}"
+            )
             val age = try {
                 val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                 val myBirthsDate = LocalDate.parse(date, formatter)
                 Log.d("VerifyingDate", "HeartRateInfo: Error $myBirthsDate")
-                LocalDate.now().year -myBirthsDate.year
-            }catch (e: DateTimeParseException){
+                LocalDate.now().year - myBirthsDate.year
+            } catch (e: DateTimeParseException) {
                 Log.d("VerifyingDate", "HeartRateInfo: Error")
                 0
             }
-        age
+            age
         }
     }
 
-    val getAgeCalculated = {
-        ageCalculated
+    val getAgeCalculated = remember {
+        { ageCalculated }
     }
 
-    if(dayHeartRateResultsFromDB.isEmpty().not()){
-       dataViewModel.selectedDay = dayHeartRateResultsFromDB[0].dateData
+    if (dayHeartRateResultsFromDB.isEmpty().not()) {
+        dataViewModel.selectedDay = dayHeartRateResultsFromDB[0].dateData
     }
 
-    getDayPhysicalActivityData().dayHeartRateListFromDB = if (dayHeartRateResultsFromDB.isEmpty().not()) {
-        val filter = dayHeartRateResultsFromDB.filter { it.typesTable == TypesTable.HEART_RATE }
-        getDoubleListFromStringMap(filter[0].data)
-    } else {
-        MutableList(48) { 0.0 }.toList()
+    getDayPhysicalActivityData().dayHeartRateListFromDB =
+        if (dayHeartRateResultsFromDB.isEmpty().not()) {
+            val filter = dayHeartRateResultsFromDB.filter { it.typesTable == TypesTable.HEART_RATE }
+            getDoubleListFromStringMap(filter[0].data)
+        } else {
+            MutableList(48) { 0.0 }.toList()
+        }
+
+    val heartRateListFromDB = remember(dataViewModel) {
+        { dataViewModel.dayPhysicalActivityInfoState.dayHeartRateListFromDB }
     }
 
-    val heartRateListFromDB = {
-        getDayPhysicalActivityData().dayHeartRateListFromDB
-    }
-
-    val getSelectedDay = {
-        dataViewModel.selectedDay
+    val getSelectedDay = remember(dataViewModel) {
+        { dataViewModel.selectedDay }
     }
 
     //DialogDatePicker State
@@ -112,9 +113,9 @@ fun HeartRateScreenRoot(
         getSelectedDay = getSelectedDay,
         stateShowDialogDatePickerSetter = stateShowDialogDatePickerSetter,
         stateShowDialogDatePickerValue = stateShowDialogDatePickerValue,
-        stateMiliSecondsDateDialogDatePickerSetter= stateMiliSecondsDateDialogDatePickerSetter,
+        stateMiliSecondsDateDialogDatePickerSetter = stateMiliSecondsDateDialogDatePickerSetter,
         getAgeCalculated = getAgeCalculated,
-        navLambda= navLambda
+        navLambda = navLambda
     )
 
 }
