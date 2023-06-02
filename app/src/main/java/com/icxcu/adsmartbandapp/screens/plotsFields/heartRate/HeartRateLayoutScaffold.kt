@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -62,11 +63,11 @@ fun HeartRateLayoutScaffold(
 
     Scaffold(
         topBar = {
-            MediumTopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Heart Rate for ${getSelectedDay()}",
-                        maxLines = 1,
+                        text = "Heart Rate for \n${getSelectedDay()}",
+                        maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.White,
                         style = MaterialTheme.typography.bodyLarge
@@ -182,13 +183,6 @@ fun HeartRateContent(
 
     }
 }
-
-
-
-
-
-
-
 
 @Composable
 fun rememberLegendHeartRate() = verticalLegend(
