@@ -34,33 +34,43 @@ fun BloodPressureScreenRoot(
         dataViewModel.selectedDay = dayBloodPressureResultsFromDB[0].dateData
     }
 
-    getDayPhysicalActivityData().daySystolicListFromDB = if (dayBloodPressureResultsFromDB.isEmpty().not()) {
-        val filter = dayBloodPressureResultsFromDB.filter { it.typesTable == TypesTable.SYSTOLIC }
-        getDoubleListFromStringMap(filter[0].data)
-    } else {
-        MutableList(48) { 0.0 }.toList()
-    }
-
-    getDayPhysicalActivityData().dayDiastolicListFromDB = if (dayBloodPressureResultsFromDB.isEmpty().not()) {
-        val filter = dayBloodPressureResultsFromDB.filter { it.typesTable == TypesTable.DIASTOLIC }
-        if (filter.isEmpty()) {
-            MutableList(48) { 0.0 }.toList()
-        } else {
+    getDayPhysicalActivityData().daySystolicListFromDB =
+        if (dayBloodPressureResultsFromDB.isEmpty().not()) {
+            val filter =
+                dayBloodPressureResultsFromDB.filter { it.typesTable == TypesTable.SYSTOLIC }
             getDoubleListFromStringMap(filter[0].data)
+        } else {
+            MutableList(48) { 0.0 }.toList()
         }
-    } else {
-        MutableList(48) { 0.0 }.toList()
+
+    getDayPhysicalActivityData().dayDiastolicListFromDB =
+        if (dayBloodPressureResultsFromDB.isEmpty().not()) {
+            val filter =
+                dayBloodPressureResultsFromDB.filter { it.typesTable == TypesTable.DIASTOLIC }
+            if (filter.isEmpty()) {
+                MutableList(48) { 0.0 }.toList()
+            } else {
+                getDoubleListFromStringMap(filter[0].data)
+            }
+        } else {
+            MutableList(48) { 0.0 }.toList()
+        }
+
+    val systolicListFromDB = remember(dataViewModel) {
+        {
+            dataViewModel.dayPhysicalActivityInfoState.daySystolicListFromDB
+        }
+    }
+    val diastolicListFromDB = remember(dataViewModel) {
+        {
+            dataViewModel.dayPhysicalActivityInfoState.dayDiastolicListFromDB
+        }
     }
 
-    val systolicListFromDB = {
-        getDayPhysicalActivityData().daySystolicListFromDB
-    }
-    val diastolicListFromDB = {
-        getDayPhysicalActivityData().dayDiastolicListFromDB
-    }
-
-    val getSelectedDay = {
-        dataViewModel.selectedDay
+    val getSelectedDay = remember(dataViewModel) {
+        {
+            dataViewModel.selectedDay
+        }
     }
 
     //DialogDatePicker State
