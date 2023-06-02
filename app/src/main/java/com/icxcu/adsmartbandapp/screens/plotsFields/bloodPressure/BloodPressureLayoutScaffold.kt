@@ -159,7 +159,7 @@ fun BloodPressureContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black)
-                    .padding(bottom = 15.dp),
+                    .padding(start= 10.dp, end = 10.dp, bottom = 15.dp),
                 rememberLegendBloodPressure()
             )
 

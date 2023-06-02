@@ -63,7 +63,7 @@ fun MyComposeBarChart(
                         LineComponent(defaultColumn.color, COLUMN_WIDTH_DP, defaultColumn.shape)
                     }
                 },
-                decorations = remember(thresholdLine) { listOf(thresholdLine) },
+                //decorations = remember(thresholdLine) { listOf(thresholdLine) },
             ),
             chartModelProducer = chartEntryModel,
             modifier = modifier,
@@ -96,9 +96,9 @@ fun MyComposeBarChart(
             marker = rememberMarker(),
             legend = legend,
             diffAnimationSpec = tween(
-                durationMillis = 0,
-            )
-
+                durationMillis = 6000,
+        ),
+            runInitialAnimation= false,
 
         )
     }
