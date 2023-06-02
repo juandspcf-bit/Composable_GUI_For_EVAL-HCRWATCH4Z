@@ -42,7 +42,7 @@ import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.Up
 import com.icxcu.adsmartbandapp.screens.personalnfoInit.PersonalInfoInit
 import com.icxcu.adsmartbandapp.screens.personalnfoInit.PersonalInfoInitDBHandler
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureScreenRoot
-import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateInfo
+import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenRoot
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityScreenRoot
 import com.icxcu.adsmartbandapp.screens.progressLoading.CircularProgressLoading
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
@@ -385,7 +385,7 @@ class MainActivity : ComponentActivity() {
                         formattedDate,
                         dataViewModel.macAddressDeviceBluetooth
                     )
-                    HeartRateInfo(dataViewModel = dataViewModel) {
+                    HeartRateScreenRoot(dataViewModel = dataViewModel) {
                         navLambdaBackToMainNavigationBar()
                     }
                 }

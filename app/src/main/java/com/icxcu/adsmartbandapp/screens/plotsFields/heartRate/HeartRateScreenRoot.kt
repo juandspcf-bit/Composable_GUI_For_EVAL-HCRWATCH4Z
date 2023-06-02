@@ -19,7 +19,7 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun HeartRateInfo(
+fun HeartRateScreenRoot(
     dataViewModel: DataViewModel,
     navLambda: () -> Unit
 ){
