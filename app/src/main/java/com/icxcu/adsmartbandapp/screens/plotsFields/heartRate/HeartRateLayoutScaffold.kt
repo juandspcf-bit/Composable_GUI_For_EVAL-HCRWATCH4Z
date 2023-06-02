@@ -7,11 +7,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -121,13 +123,9 @@ fun HeartRateLayoutScaffold(
                     .padding(padding)
                     .fillMaxSize(), contentAlignment = Alignment.TopCenter
             ) {
-                val heartRateListScaffold = {
-                    heartRateList()
-                }
-
 
                 HeartRateInfoContent(
-                    heartRateListScaffold,
+                    heartRateList,
                     getAgeCalculated
                 )
 
@@ -146,20 +144,17 @@ fun HeartRateLayoutScaffold(
 }
 
 @Composable
-fun HeartRateInfoContent(heartRateListContent: () -> List<Double>,
-                         getAgeCalculated:()->Int,
+fun HeartRateInfoContent(
+    heartRateList: () -> List<Double>,
+    getAgeCalculated: () -> Int,
 ) {
-    ConstraintLayout(
+    Column(
         modifier = Modifier
             .background(Color(0xff1d2a35))
             .fillMaxSize()
     ) {
-        val (plot, divider, statistics, list) = createRefs()
-        val guide4f = createGuidelineFromTop(fraction = 0.4f)
-        createGuidelineFromTop(fraction = 0.6f)
 
-
-        val mapHeartRate = heartRateListContent().mapIndexed { index, y ->
+        val mapHeartRate = heartRateList().mapIndexed { index, y ->
             val entry = EntryHour(
                 Duration.ofHours(24).minusMinutes(30L * index.toLong()),
                 index.toFloat(), y.toFloat()
@@ -167,13 +162,10 @@ fun HeartRateInfoContent(heartRateListContent: () -> List<Double>,
             entry
         }
 
-        Box(modifier = Modifier
-            .constrainAs(plot) {
-                top.linkTo(parent.top)
-                bottom.linkTo(guide4f)
-                linkTo(start = parent.start, end = parent.end)
-                height = Dimension.fillToConstraints
-            }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.4f)
         ) {
 
             val chartEntryModel = ChartEntryModelProducer(mapHeartRate)
@@ -187,37 +179,22 @@ fun HeartRateInfoContent(heartRateListContent: () -> List<Double>,
 
         }
 
-        Divider(modifier = Modifier
-            .constrainAs(divider) {
-                top.linkTo(guide4f)
+        Divider(modifier = Modifier.height(2.dp))
 
-                linkTo(start = parent.start, end = parent.end)
-                height = Dimension.wrapContent
-            }
-            .height(2.dp))
-
-        StatisticsHeartRate(heartRateListContent = heartRateListContent,
+        StatisticsHeartRate(
+            heartRateListContent = heartRateList,
             modifier = Modifier
-                .constrainAs(statistics) {
-                    top.linkTo(divider.bottom)
-                    linkTo(start = parent.start, end = parent.end)
-                    height = Dimension.fillToConstraints
-                }
                 .background(Color(0x7FFF5722))
-                .fillMaxWidth())
+                .fillMaxWidth()
+                .width(50.dp)
+        )
 
+        Divider(modifier = Modifier.height(2.dp))
 
-        HeartRateListS(
-            heartRateListContent,
+        HeartRateList(
+            heartRateList,
             getAgeCalculated,
-            modifier = Modifier
-                .constrainAs(list) {
-                    top.linkTo(statistics.bottom)
-                    bottom.linkTo(parent.bottom)
-                    linkTo(start = parent.start, end = parent.end)
-                    height = Dimension.fillToConstraints
-                }
-                .fillMaxSize())
+        )
 
     }
 }
@@ -225,8 +202,8 @@ fun HeartRateInfoContent(heartRateListContent: () -> List<Double>,
 
 @Composable
 fun StatisticsHeartRate(heartRateListContent: () -> List<Double>, modifier: Modifier) {
-    val filteredValueSystolic = heartRateListContent().filter { it >0.0 }
-    if(filteredValueSystolic.isEmpty()) return
+    val filteredValueSystolic = heartRateListContent().filter { it > 0.0 }
+    if (filteredValueSystolic.isEmpty()) return
 
     val maxValueSystolic = filteredValueSystolic.max()
     val maxValueSystolicValue = String.format("%.1f bpm", maxValueSystolic)
@@ -327,50 +304,22 @@ fun StatisticsHeartRate(heartRateListContent: () -> List<Double>, modifier: Modi
     }
 }
 
-
-@Composable
-fun HeartRateListS(heartRateListContent: () -> List<Double>,
-                   getAgeCalculated:()->Int,
-                   modifier: Modifier) {
-
-
-    val heartRateList = {
-        heartRateListContent()
-    }
-
-
-    Box(
-        modifier = modifier
-    ) {
-        getHours()
-        HeartRateList(
-            heartRateList,
-            getAgeCalculated,
-            modifier = Modifier
-                .fillMaxSize()
-        )
-
-    }
-
-}
-
 @Composable
 fun HeartRateList(
-    heartRateListContent: () -> List<Double>,
+    heartRateList: () -> List<Double>,
     getAgeCalculated: () -> Int,
-    modifier: Modifier
 ) {
-
-
-    LazyColumn(modifier = modifier) {
-        itemsIndexed(items = heartRateListContent(),
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        itemsIndexed(items = heartRateList(),
             key = { index, value ->
                 PlotsConstants.HOUR_INTERVALS[index]
             }) { index, heartRateValue ->
             val stringHeartRateValue = String.format("%.1f", heartRateValue)
 
             Log.d("MyCalculatedAge", "HeartRateList: ${getAgeCalculated()}")
-            val myAge = if(getAgeCalculated()>0)(getAgeCalculated())else{41}
+            val myAge = if (getAgeCalculated() > 0) (getAgeCalculated()) else {
+                41
+            }
             val zoneResource = getHeartRateZones(heartRateValue, myAge)
             val zoneReadable = getReadableHeartRateZones(heartRateValue, myAge)
 
@@ -378,19 +327,19 @@ fun HeartRateList(
                 valueHeartRate = "$stringHeartRateValue bpm",
                 resource = zoneResource,
                 readableCategory = zoneReadable,
-                hourTime =  PlotsConstants.HOUR_INTERVALS[index]
+                hourTime = PlotsConstants.HOUR_INTERVALS[index]
             )
         }
     }
-
 }
 
-fun getHeartRateZones(heartRateValue: Double,
-                      age: Int
+fun getHeartRateZones(
+    heartRateValue: Double,
+    age: Int
 ): Int {
     val maxHeartRate = 220 - age
     val percentageOfMax = 100 * heartRateValue / maxHeartRate
-    val resource:Int
+    val resource: Int
     when {
         (percentageOfMax < 60.0 && 50.0 >= percentageOfMax) -> {
             resource = R.drawable.heart_rate_zone_1
@@ -412,7 +361,7 @@ fun getHeartRateZones(heartRateValue: Double,
             resource = R.drawable.heart_rate_zone_5
         }
 
-        else->{
+        else -> {
             resource = R.drawable.heart_rate
         }
     }
@@ -423,7 +372,7 @@ fun getHeartRateZones(heartRateValue: Double,
 fun getReadableHeartRateZones(heartRateValue: Double, age: Int): String {
     val maxHeartRate = 220 - age
     val percentageOfMax = 100 * heartRateValue / maxHeartRate
-    val resource:String
+    val resource: String
     when {
         (percentageOfMax < 60.0 && 50.0 >= percentageOfMax) -> {
             resource = "Very light"
@@ -445,7 +394,7 @@ fun getReadableHeartRateZones(heartRateValue: Double, age: Int): String {
             resource = "Maximum"
         }
 
-        else->{
+        else -> {
             resource = "No zone"
         }
     }
