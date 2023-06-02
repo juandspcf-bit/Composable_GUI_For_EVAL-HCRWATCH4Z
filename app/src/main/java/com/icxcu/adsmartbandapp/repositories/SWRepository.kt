@@ -52,7 +52,7 @@ class SWRepository {
                 MutableList(48) { 0.0 }.toList(),
                 MutableList(48) { 0.0 }.toList(),
                 MutableList(48) { 0.0 }.toList(),
-                MockData.valuesToday.date
+                todayFormattedDate
             ))
 
             _sharedStepsFlow.emit(Values(
@@ -62,7 +62,7 @@ class SWRepository {
                 MutableList(48) { 0.0 }.toList(),
                 MutableList(48) { 0.0 }.toList(),
                 MutableList(48) { 0.0 }.toList(),
-                MockData.valuesYesterday.date
+                yesterdayFormattedDate
             ))
             delay(5000)
 
