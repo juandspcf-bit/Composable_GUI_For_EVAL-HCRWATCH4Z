@@ -1,11 +1,14 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,9 +28,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
+import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import java.text.SimpleDateFormat
+import java.time.Duration
 import java.util.Date
 import java.util.Locale
 
@@ -93,19 +101,11 @@ fun PhysicalActivityLayoutScaffold(
                     .fillMaxSize(), contentAlignment = Alignment.TopCenter
             ) {
 
-                val stepsListScaffold = {
-                    stepsList()
-                }
-                val distanceListScaffold = {
-                    distanceList()
-                }
-                val caloriesListScaffold = {
-                    caloriesList()
-                }
+
                 PhysicalActivityContent(
-                    stepsListScaffold,
-                    distanceListScaffold,
-                    caloriesListScaffold
+                    stepsList,
+                    distanceList,
+                    caloriesList
                 )
             }
 
@@ -122,8 +122,94 @@ fun PhysicalActivityLayoutScaffold(
 }
 
 
+@Composable
+fun PhysicalActivityContent(
+    stepsListContent: () -> List<Int>,
+    distanceListContent: () -> List<Double>,
+    caloriesListContent: () -> List<Double>,
+) {
+    ConstraintLayout(
+        modifier = Modifier
+            .background(Color(0xff1d2a35))
+            .fillMaxSize()
+    ) {
+        val (plot, divider, tabRow, list) = createRefs()
+        val guideH3 = createGuidelineFromTop(fraction = 0.4f)
 
 
+        val stepList = {
+            stepsListContent()
+        }
+
+        val distanceList = {
+            distanceListContent()
+        }
+
+        val caloriesList = {
+            caloriesListContent()
+        }
+
+        Box(modifier = Modifier
+            .background(
+                Color(0xfff5f5f7)
+            )
+            .constrainAs(plot) {
+                top.linkTo(parent.top)
+                bottom.linkTo(guideH3)
+                linkTo(start = parent.start, end = parent.end)
+                height = Dimension.fillToConstraints
+            }
+        ) {
+
+            val stepsEntries = stepsListContent().mapIndexed { index, y ->
+                val entry = EntryHour(
+                    Duration.ofHours(24).minusMinutes(30L * index.toLong()),
+                    index.toFloat(), y.toFloat()
+                )
+                entry
+            }
+            val chartEntryModel = ChartEntryModelProducer(stepsEntries)
+
+            MyComposeBarChart(
+                chartEntryModel = chartEntryModel,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black)
+                    .padding(bottom = 15.dp),
+                legend = rememberLegendPhysicalActivity()
+            )
+
+        }
+
+        Divider(modifier = Modifier
+            .constrainAs(divider) {
+                top.linkTo(guideH3)
+                //bottom.linkTo(list.top)
+                linkTo(start = parent.start, end = parent.end)
+                height = Dimension.wrapContent
+            }
+            .height(2.dp))
+
+        ListSelector(
+            stepList,
+            distanceList,
+            caloriesList,
+            modifierTabs = Modifier
+                .constrainAs(tabRow) {
+                    top.linkTo(divider.bottom)
+                    linkTo(start = parent.start, end = parent.end)
+                    height = Dimension.fillToConstraints
+                }//.padding(top = 20.dp, bottom = 20.dp, start = 50.dp, end = 50.dp),
+            , modifierList = Modifier
+                .constrainAs(list) {
+                    top.linkTo(tabRow.bottom)
+                    bottom.linkTo(parent.bottom)
+                    linkTo(start = parent.start, end = parent.end)
+                    height = Dimension.fillToConstraints
+                }
+                .fillMaxSize())
+    }
+}
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
@@ -148,14 +234,14 @@ fun StepsPlotsPreview2() {
     val stateShowDialogDatePickerValue = {
         stateShowDialogDatePicker
     }
-    val stateShowDialogDatePickerSetter:(Boolean) -> Unit = { value ->
+    val stateShowDialogDatePickerSetter: (Boolean) -> Unit = { value ->
         stateShowDialogDatePicker = value
     }
 
     val stateMiliSecondsDateDialogDatePickerVal = {
         stateMiliSecondsDateDialogDatePicker
     }
-    val stateMiliSecondsDateDialogDatePickerSetter:(Long) -> Unit = { value ->
+    val stateMiliSecondsDateDialogDatePickerSetter: (Long) -> Unit = { value ->
         stateMiliSecondsDateDialogDatePicker = value
 
         val date = Date(value)
