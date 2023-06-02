@@ -31,52 +31,66 @@ fun PhysicalActivityRoot(
         MutableList(0) { PhysicalActivity() }.toList()
     )
 
-    if(dayPhysicalActivityResultsFromDB.isEmpty().not()){
+    if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
         dataViewModel.selectedDay = dayPhysicalActivityResultsFromDB[0].dateData
     }
 
-    getDayPhysicalActivityData().dayStepListFromDB = if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
-        val filter = dayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.STEPS }
-        getIntegerListFromStringMap(filter[0].data)
-    } else {
-        MutableList(48) { 0 }.toList()
-    }
-
-    getDayPhysicalActivityData().dayDistanceListFromDB = if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
-        val filter = dayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.DISTANCE }
-        if (filter.isEmpty()) {
-            MutableList(48) { 0.0 }.toList()
+    getDayPhysicalActivityData().dayStepListFromDB =
+        if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
+            val filter =
+                dayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.STEPS }
+            getIntegerListFromStringMap(filter[0].data)
         } else {
-            getDoubleListFromStringMap(filter[0].data)
+            MutableList(48) { 0 }.toList()
         }
-    } else {
-        MutableList(48) { 0.0 }.toList()
-    }
 
-    getDayPhysicalActivityData().dayCaloriesListFromDB = if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
-        val filter = dayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.CALORIES }
-        if (filter.isEmpty()) {
-            MutableList(48) { 0.0 }.toList()
+    getDayPhysicalActivityData().dayDistanceListFromDB =
+        if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
+            val filter =
+                dayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.DISTANCE }
+            if (filter.isEmpty()) {
+                MutableList(48) { 0.0 }.toList()
+            } else {
+                getDoubleListFromStringMap(filter[0].data)
+            }
         } else {
-            getDoubleListFromStringMap(filter[0].data)
+            MutableList(48) { 0.0 }.toList()
         }
-    } else {
-        MutableList(48) { 0.0 }.toList()
-    }
+
+    getDayPhysicalActivityData().dayCaloriesListFromDB =
+        if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
+            val filter =
+                dayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.CALORIES }
+            if (filter.isEmpty()) {
+                MutableList(48) { 0.0 }.toList()
+            } else {
+                getDoubleListFromStringMap(filter[0].data)
+            }
+        } else {
+            MutableList(48) { 0.0 }.toList()
+        }
 
 
-    val stepsListFromDB = {
-        getDayPhysicalActivityData().dayStepListFromDB
+    val stepsListFromDB = remember(dataViewModel) {
+        {
+            dataViewModel.dayPhysicalActivityInfoState.dayStepListFromDB
+        }
     }
-    val distanceListFromDB = {
-        getDayPhysicalActivityData().dayDistanceListFromDB
+    val distanceListFromDB = remember(dataViewModel) {
+        {
+            dataViewModel.dayPhysicalActivityInfoState.dayDistanceListFromDB
+        }
     }
-    val caloriesListFromDB = {
-        getDayPhysicalActivityData().dayCaloriesListFromDB
+    val caloriesListFromDB = remember(dataViewModel) {
+        {
+            dataViewModel.dayPhysicalActivityInfoState.dayCaloriesListFromDB
+        }
     }
 
-    val getSelectedDay = {
-        dataViewModel.selectedDay
+    val getSelectedDay = remember(dataViewModel) {
+        {
+            dataViewModel.selectedDay
+        }
     }
 
     //DialogDatePicker State
