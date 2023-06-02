@@ -195,34 +195,7 @@ fun HeartRateInfoContent(
 }
 
 
-@Composable
-fun HeartRateLazyList(
-    heartRateList: () -> List<Double>,
-    getAgeCalculated: () -> Int,
-) {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        itemsIndexed(items = heartRateList(),
-            key = { index, value ->
-                PlotsConstants.HOUR_INTERVALS[index]
-            }) { index, heartRateValue ->
-            val stringHeartRateValue = String.format("%.1f", heartRateValue)
 
-            Log.d("MyCalculatedAge", "HeartRateList: ${getAgeCalculated()}")
-            val myAge = if (getAgeCalculated() > 0) (getAgeCalculated()) else {
-                41
-            }
-            val zoneResource = getHeartRateZones(heartRateValue, myAge)
-            val zoneReadable = getReadableHeartRateZones(heartRateValue, myAge)
-
-            RowHeartRate(
-                valueHeartRate = "$stringHeartRateValue bpm",
-                resource = zoneResource,
-                readableCategory = zoneReadable,
-                hourTime = PlotsConstants.HOUR_INTERVALS[index]
-            )
-        }
-    }
-}
 
 fun getHeartRateZones(
     heartRateValue: Double,
@@ -293,71 +266,7 @@ fun getReadableHeartRateZones(heartRateValue: Double, age: Int): String {
     return resource
 }
 
-@Composable
-fun RowHeartRate(
-    valueHeartRate: String,
-    resource: Int,
-    readableCategory: String,
-    hourTime: String
-) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        ConstraintLayout(
-            modifier = Modifier
-                .padding(top = 5.dp, bottom = 5.dp)
-                .fillMaxSize()
 
-        ) {
-            val (hour, icon, value) = createRefs()
-            val guideHourIcon = createGuidelineFromStart(fraction = 0.35f)
-            val gideIconValue = createGuidelineFromStart(fraction = 0.65f)
-
-            Text(text = hourTime, color = Color.White, modifier = Modifier.constrainAs(hour) {
-                linkTo(start = parent.start, end = guideHourIcon)
-                top.linkTo(parent.top)
-                bottom.linkTo(parent.bottom)
-                height = Dimension.wrapContent
-            })
-
-
-
-            Image(
-                painter = painterResource(resource),
-                contentScale = ContentScale.Fit,
-                contentDescription = null,
-                modifier = Modifier
-                    .constrainAs(icon) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(guideHourIcon)
-                        end.linkTo(gideIconValue)
-                        width = Dimension.fillToConstraints
-                    }
-                    .size(50.dp)
-                    .fillMaxWidth()
-            )
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .constrainAs(value) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(gideIconValue)
-                        end.linkTo(parent.end)
-                        width = Dimension.fillToConstraints
-                    }) {
-
-                Text(text = valueHeartRate, color = Color.White)
-                Text(readableCategory, color = Color(0x9fffffff), textAlign = TextAlign.Center)
-            }
-
-        }
-
-        Divider(modifier = Modifier.height(1.dp))
-
-
-    }
-}
 
 
 @Composable
