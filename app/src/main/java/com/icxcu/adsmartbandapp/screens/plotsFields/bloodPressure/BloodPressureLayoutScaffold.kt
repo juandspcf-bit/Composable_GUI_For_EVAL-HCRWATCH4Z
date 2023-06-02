@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -54,14 +55,15 @@ fun BloodPressureLayoutScaffold(
 
     Scaffold(
         topBar = {
-            MediumTopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Blood Pressure for ${getSelectedDay()}",
-                        maxLines = 1,
+                        text = "Blood Pressure for\n${getSelectedDay()}",
+                        maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.White,
-                        style = MaterialTheme.typography.bodyLarge
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center
                     )
                 },
                 navigationIcon = {
@@ -219,9 +221,14 @@ fun rememberLegendBloodPressure() = verticalLegend(
 @Preview(showBackground = true)
 @Composable
 fun BloodPressureLayoutScaffoldPreview() {
-    BloodPressureContent(
+    BloodPressureLayoutScaffold(
         { MockData.valuesToday.systolicList },
         { MockData.valuesToday.diastolicList },
+        getSelectedDay = {"24/10/1981"},
+    stateShowDialogDatePickerSetter={},
+    stateShowDialogDatePickerValue = { false },
+    stateMiliSecondsDateDialogDatePickerSetter= {},
+    navLambda ={},
     )
 
 
