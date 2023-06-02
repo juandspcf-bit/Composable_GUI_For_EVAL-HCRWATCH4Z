@@ -124,9 +124,9 @@ fun PhysicalActivityLayoutScaffold(
 
 @Composable
 fun PhysicalActivityContent(
-    stepsListContent: () -> List<Int>,
-    distanceListContent: () -> List<Double>,
-    caloriesListContent: () -> List<Double>,
+    stepsList: () -> List<Int>,
+    distanceList: () -> List<Double>,
+    caloriesList: () -> List<Double>,
 ) {
     ConstraintLayout(
         modifier = Modifier
@@ -136,18 +136,6 @@ fun PhysicalActivityContent(
         val (plot, divider, tabRow, list) = createRefs()
         val guideH3 = createGuidelineFromTop(fraction = 0.4f)
 
-
-        val stepList = {
-            stepsListContent()
-        }
-
-        val distanceList = {
-            distanceListContent()
-        }
-
-        val caloriesList = {
-            caloriesListContent()
-        }
 
         Box(modifier = Modifier
             .background(
@@ -161,7 +149,7 @@ fun PhysicalActivityContent(
             }
         ) {
 
-            val stepsEntries = stepsListContent().mapIndexed { index, y ->
+            val stepsEntries = stepsList().mapIndexed { index, y ->
                 val entry = EntryHour(
                     Duration.ofHours(24).minusMinutes(30L * index.toLong()),
                     index.toFloat(), y.toFloat()
@@ -190,8 +178,8 @@ fun PhysicalActivityContent(
             }
             .height(2.dp))
 
-        ListSelector(
-            stepList,
+        PhysicalActivityLazyListSelector(
+            stepsList,
             distanceList,
             caloriesList,
             modifierTabs = Modifier
@@ -199,7 +187,7 @@ fun PhysicalActivityContent(
                     top.linkTo(divider.bottom)
                     linkTo(start = parent.start, end = parent.end)
                     height = Dimension.fillToConstraints
-                }//.padding(top = 20.dp, bottom = 20.dp, start = 50.dp, end = 50.dp),
+                }
             , modifierList = Modifier
                 .constrainAs(list) {
                     top.linkTo(tabRow.bottom)

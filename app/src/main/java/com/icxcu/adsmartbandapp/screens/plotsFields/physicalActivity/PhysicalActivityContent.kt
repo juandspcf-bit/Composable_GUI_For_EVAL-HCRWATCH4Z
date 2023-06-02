@@ -2,7 +2,6 @@ package com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity
 
 import android.graphics.Typeface
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -42,9 +41,6 @@ import com.patrykandpatrick.vico.compose.dimensions.dimensionsOf
 import com.patrykandpatrick.vico.compose.legend.verticalLegend
 import com.patrykandpatrick.vico.compose.legend.verticalLegendItem
 import com.patrykandpatrick.vico.core.component.shape.Shapes
-import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
-import java.time.Duration
-
 
 
 @Composable
@@ -89,26 +85,13 @@ fun MyPhysicalActivityIndicator(modifier: Modifier){
 
 
 @Composable
-fun ListSelector(
-    stepsListContent: () -> List<Int>,
-    distanceListContent: () -> List<Double>,
-    caloriesListContent: () -> List<Double>,
+fun PhysicalActivityLazyListSelector(
+    stepsList: () -> List<Int>,
+    distanceList: () -> List<Double>,
+    caloriesList: () -> List<Double>,
     modifierTabs: Modifier,
     modifierList: Modifier
 ) {
-
-
-    val stepList = {
-        stepsListContent()
-    }
-
-    val distanceList = {
-        distanceListContent()
-    }
-
-    val caloriesList = {
-        caloriesListContent()
-    }
 
     var state by remember { mutableStateOf(0) }
     val titles = listOf("Steps", "Distance", "Calories")
@@ -137,11 +120,11 @@ fun ListSelector(
     Box(
         modifier = modifierList
     ) {
-        getHours()
+
         when (state) {
             0 -> {
                 StepsList(
-                    stepsListContent = stepList,
+                    stepsList,
                     modifier = Modifier
                         .fillMaxSize()
                 )
@@ -149,7 +132,7 @@ fun ListSelector(
 
             1 -> {
                 DistanceList(
-                    distanceListContent = distanceList,
+                    distanceList,
                     modifier = Modifier
                         .fillMaxSize()
                 )
@@ -157,7 +140,7 @@ fun ListSelector(
 
             2 -> {
                 CaloriesList(
-                    caloriesListContent = caloriesList,
+                    caloriesList,
                     modifier = Modifier
                         .fillMaxSize()
                 )
@@ -170,18 +153,16 @@ fun ListSelector(
 
 @Composable
 fun StepsList(
-    stepsListContent: () -> List<Int>,
+    stepsList: () -> List<Int>,
     modifier: Modifier = Modifier
 ) {
-    val stepList = {
-        stepsListContent()
-    }
+
     LazyColumn(modifier = modifier) {
         itemsIndexed(
-            stepList(),
+            stepsList(),
             key = { index, _ ->
                 PlotsConstants.HOUR_INTERVALS[index]
-            //getIntervals(index, hourList)
+
             }
         ) { index, item ->
             RowSteps(
@@ -195,12 +176,10 @@ fun StepsList(
 
 @Composable
 fun DistanceList(
-    distanceListContent: () -> List<Double>,
+    distanceList: () -> List<Double>,
     modifier: Modifier = Modifier
 ) {
-    val distanceList={
-        distanceListContent()
-    }
+
     LazyColumn(modifier = modifier) {
         itemsIndexed(
             distanceList(),
@@ -219,12 +198,10 @@ fun DistanceList(
 
 @Composable
 fun CaloriesList(
-    caloriesListContent: () -> List<Double>,
+    caloriesList: () -> List<Double>,
     modifier: Modifier = Modifier
 ) {
-    val caloriesList={
-        caloriesListContent()
-    }
+
 
     LazyColumn(modifier = modifier) {
         itemsIndexed(
