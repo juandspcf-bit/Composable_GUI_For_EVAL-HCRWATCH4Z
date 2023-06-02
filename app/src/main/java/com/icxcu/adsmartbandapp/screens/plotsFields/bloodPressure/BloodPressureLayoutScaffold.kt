@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -159,7 +160,9 @@ fun BloodPressureInfoContent(
             entry
         }
 
-        Box(modifier = Modifier.fillMaxWidth().fillMaxHeight(0.4f)) {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(0.4f)) {
 
             val chartEntryModel = ChartEntryModelProducer(mapSystolic, mapDiastolic)
             MyComposePlotChart(
@@ -173,102 +176,29 @@ fun BloodPressureInfoContent(
 
         }
 
-        Divider(modifier = Modifier
-            .height(2.dp))
+        Divider(
+            modifier = Modifier
+                .height(2.dp)
+        )
 
-        StatisticsBloodPressure(systolicListContent = systolicListContent,
+        StatisticsBloodPressure(
+            systolicListContent = systolicListContent,
             modifier = Modifier
                 .background(Color(0x7FFF5722))
-                .fillMaxWidth().fillMaxHeight(0.3f))
+                .fillMaxWidth()
+                .width(50.dp)
+        )
 
 
         BloodPressureSList(
             systolicListContent,
             diastolicListContent,
             modifier = Modifier
-                .fillMaxSize().fillMaxHeight(1f))
+                .fillMaxSize()
+                .fillMaxHeight()
+        )
 
     }
-
-    /*ConstraintLayout(
-        modifier = Modifier
-            .background(Color(0xff1d2a35))
-            .fillMaxSize()
-    ) {
-        val (plot, divider, statistics, list) = createRefs()
-        val guide4f = createGuidelineFromTop(fraction = 0.4f)
-        createGuidelineFromTop(fraction = 0.6f)
-
-
-        val mapSystolic = systolicListContent().mapIndexed { index, y ->
-            val entry = EntryHour(
-                Duration.ofHours(24).minusMinutes(30L * index.toLong()),
-                index.toFloat(), y.toFloat()
-            )
-            entry
-        }
-        val mapDiastolic = diastolicListContent().mapIndexed { index, y ->
-            val entry = EntryHour(
-                Duration.ofHours(24).minusMinutes(30L * index.toLong()),
-                index.toFloat(), y.toFloat()
-            )
-            entry
-        }
-
-        Box(modifier = Modifier
-            .constrainAs(plot) {
-                top.linkTo(parent.top)
-                bottom.linkTo(guide4f)
-                linkTo(start = parent.start, end = parent.end)
-                height = Dimension.fillToConstraints
-            }
-        ) {
-
-            val chartEntryModel = ChartEntryModelProducer(mapSystolic, mapDiastolic)
-            MyComposePlotChart(
-                chartEntryModel,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black)
-                    .padding(bottom = 15.dp),
-                rememberLegendBloodPressure()
-            )
-
-        }
-
-        Divider(modifier = Modifier
-            .constrainAs(divider) {
-                top.linkTo(guide4f)
-
-                linkTo(start = parent.start, end = parent.end)
-                height = Dimension.wrapContent
-            }
-            .height(2.dp))
-
-        StatisticsBloodPressure(systolicListContent = systolicListContent,
-            modifier = Modifier
-                .constrainAs(statistics) {
-                    top.linkTo(divider.bottom)
-                    linkTo(start = parent.start, end = parent.end)
-                    height = Dimension.fillToConstraints
-                }
-                .background(Color(0x7FFF5722))
-                .fillMaxWidth())
-
-
-        BloodPressureSList(
-            systolicListContent,
-            diastolicListContent,
-            modifier = Modifier
-                .constrainAs(list) {
-                    top.linkTo(statistics.bottom)
-                    bottom.linkTo(parent.bottom)
-                    linkTo(start = parent.start, end = parent.end)
-                    height = Dimension.fillToConstraints
-                }
-                .fillMaxSize())
-
-    }*/
 }
 
 
@@ -277,8 +207,8 @@ fun StatisticsBloodPressure(
     systolicListContent: () -> List<Double>,
     modifier: Modifier = Modifier
 ) {
-    val filteredSystolicListContent = systolicListContent().filter { it>0.0 }
-    if(filteredSystolicListContent.isEmpty()) return
+    val filteredSystolicListContent = systolicListContent().filter { it > 0.0 }
+    if (filteredSystolicListContent.isEmpty()) return
 
     val maxValueSystolic = filteredSystolicListContent.max()
     val maxValueSystolicValue = String.format("%.1f mmHg", maxValueSystolic)
@@ -471,7 +401,7 @@ fun BloodPressureList(
                 valueBloodPressure = "$stringSystolicValue/$stringDiastolicValue mmHg",
                 resource = category ?: R.drawable.blood_pressure_gauge,
                 readableCategory = readableCategory ?: "No Category",
-                hourTime =  PlotsConstants.HOUR_INTERVALS[index]
+                hourTime = PlotsConstants.HOUR_INTERVALS[index]
             )
 
         }
