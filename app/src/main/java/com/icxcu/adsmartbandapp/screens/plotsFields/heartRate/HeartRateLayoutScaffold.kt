@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.icxcu.adsmartbandapp.R
@@ -70,7 +71,8 @@ fun HeartRateLayoutScaffold(
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.White,
-                        style = MaterialTheme.typography.bodyLarge
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center
                     )
                 },
                 navigationIcon = {
@@ -124,8 +126,6 @@ fun HeartRateLayoutScaffold(
 
         },
     )
-
-
 }
 
 @Composable
