@@ -204,25 +204,6 @@ fun BloodPressureInfoContent(
     }
 }
 
-fun findIndex(value: Double, data: List<Double>): String {
-    var hour = " "
-    if (value > 0) {
-        val filterIndexed = data.mapIndexed { index, d ->
-            if (d == value) {
-                index
-            } else {
-                -1
-            }
-        }.filter {
-            it > -1
-        }
-        if (filterIndexed.isNotEmpty()) {
-            hour = getHours()[filterIndexed[0]]
-        }
-    }
-
-    return hour
-}
 
 @Composable
 fun rememberLegendBloodPressure() = verticalLegend(

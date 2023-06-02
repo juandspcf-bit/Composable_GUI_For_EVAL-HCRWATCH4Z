@@ -1,6 +1,7 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure
 
 import com.icxcu.adsmartbandapp.R
+import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getHours
 
 val mapCategories = mapOf<String, Int>(
     "Normal" to R.drawable.normal_blood_pressure,
@@ -33,4 +34,24 @@ fun  getBloodPressureCategory(valueSystolic: Double = 0.0, valueDiastolic:Double
         }
     }
 
+}
+
+fun findIndex(value: Double, data: List<Double>): String {
+    var hour = " "
+    if (value > 0) {
+        val filterIndexed = data.mapIndexed { index, d ->
+            if (d == value) {
+                index
+            } else {
+                -1
+            }
+        }.filter {
+            it > -1
+        }
+        if (filterIndexed.isNotEmpty()) {
+            hour = getHours()[filterIndexed[0]]
+        }
+    }
+
+    return hour
 }
