@@ -17,12 +17,14 @@
 package com.icxcu.adsmartbandapp.ui.theme
 
 import android.graphics.Typeface
+import android.util.Log
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.patrykandpatrick.vico.compose.component.lineComponent
 import com.patrykandpatrick.vico.compose.component.overlayingComponent
 import com.patrykandpatrick.vico.compose.component.shapeComponent
@@ -43,7 +45,7 @@ import com.patrykandpatrick.vico.core.marker.Marker
 @Composable
 internal fun rememberMarker(): Marker {
 
-    val labelBackgroundColor = MaterialTheme.colors.onSurface
+    val labelBackgroundColor = Color.White//MaterialTheme.colors.onSurface
     val labelBackground = remember(labelBackgroundColor) {
         ShapeComponent(labelBackgroundShape, labelBackgroundColor.toArgb()).setShadow(
             radius = LABEL_BACKGROUND_SHADOW_RADIUS,
@@ -52,6 +54,7 @@ internal fun rememberMarker(): Marker {
         )
     }
     val label = textComponent(
+        color = Color.Black,
         background = labelBackground,
         lineCount = LABEL_LINE_COUNT,
         padding = labelPadding,
@@ -77,6 +80,7 @@ internal fun rememberMarker(): Marker {
     return remember(label, indicator, guideline) {
         object : MarkerComponent(label, indicator, guideline) {
             init {
+                Log.d("TEXT", "rememberMarker: $label")
                 indicatorSizeDp = INDICATOR_SIZE_DP
                 onApplyEntryColor = { entryColor ->
                     indicatorOuterComponent.color = entryColor.copyColor(INDICATOR_OUTER_COMPONENT_ALPHA)

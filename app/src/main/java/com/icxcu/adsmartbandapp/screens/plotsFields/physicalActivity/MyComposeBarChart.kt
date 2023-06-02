@@ -155,7 +155,7 @@ private const val COLUMN_WIDTH_DP = 5f
 private const val THRESHOLD_LINE_VALUE = 500f
 
 
-private val color1 = Color(COLOR_1_CODE)
+private val color1 = Color(0xFF2196F3)
 private val color2 = Color(COLOR_2_CODE)
 val chartColorsPhysicalActivity = listOf(color1)
 private val thresholdLineLabelMarginValue = 4.dp
