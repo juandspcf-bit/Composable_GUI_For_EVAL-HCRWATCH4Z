@@ -4,7 +4,6 @@ import android.graphics.Typeface
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -15,8 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -46,9 +43,7 @@ import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
 import com.icxcu.adsmartbandapp.screens.plotsFields.PlotsConstants
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.MyComposePlotChart
-import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.findFirstsIndexWithValueInDataList
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.EntryHour
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getHours
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemIconPaddingValue
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemIconSize
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemLabelTextSize
@@ -191,7 +186,7 @@ fun HeartRateInfoContent(
 
         Divider(modifier = Modifier.height(2.dp))
 
-        HeartRateList(
+        HeartRateLazyList(
             heartRateList,
             getAgeCalculated,
         )
@@ -201,7 +196,7 @@ fun HeartRateInfoContent(
 
 
 @Composable
-fun HeartRateList(
+fun HeartRateLazyList(
     heartRateList: () -> List<Double>,
     getAgeCalculated: () -> Int,
 ) {
