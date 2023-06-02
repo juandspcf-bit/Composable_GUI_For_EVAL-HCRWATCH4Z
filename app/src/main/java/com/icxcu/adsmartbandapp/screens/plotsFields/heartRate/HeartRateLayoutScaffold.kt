@@ -44,7 +44,7 @@ import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
 import com.icxcu.adsmartbandapp.screens.plotsFields.PlotsConstants
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.MyComposePlotChart
-import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.findIndex
+import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.findFirstsIndexWithValueInDataList
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.EntryHour
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getHours
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemIconPaddingValue
@@ -230,12 +230,12 @@ fun StatisticsHeartRate(heartRateListContent: () -> List<Double>, modifier: Modi
 
     val maxValueSystolic = filteredValueSystolic.max()
     val maxValueSystolicValue = String.format("%.1f bpm", maxValueSystolic)
-    val hourMax = findIndex(maxValueSystolic, heartRateListContent())
+    val hourMax = findFirstsIndexWithValueInDataList(maxValueSystolic, heartRateListContent())
 
 
     val minValueSystolic = filteredValueSystolic.min()
     val minValueSystolicValue = String.format("%.1f bpm", minValueSystolic)
-    val hourMin = findIndex(minValueSystolic, heartRateListContent())
+    val hourMin = findFirstsIndexWithValueInDataList(minValueSystolic, heartRateListContent())
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),

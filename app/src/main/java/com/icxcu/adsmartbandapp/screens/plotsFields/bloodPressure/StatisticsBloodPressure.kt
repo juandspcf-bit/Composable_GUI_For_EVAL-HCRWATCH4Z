@@ -24,12 +24,12 @@ fun StatisticsBloodPressure(
 
     val maxValueSystolic = filteredSystolicListContent.max()
     val maxValueSystolicValue = String.format("%.1f mmHg", maxValueSystolic)
-    val hourMax = findIndex(maxValueSystolic, systolicListContent())
+    val hourMax = findFirstsIndexWithValueInDataList(maxValueSystolic, systolicListContent())
 
 
     val minValueSystolic = filteredSystolicListContent.min()
     val minValueSystolicValue = String.format("%.1f mmHg", minValueSystolic)
-    val hourMin = findIndex(minValueSystolic, systolicListContent())
+    val hourMin = findFirstsIndexWithValueInDataList(minValueSystolic, systolicListContent())
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),

@@ -14,7 +14,7 @@ internal class BloodPressureLayoutScaffoldKtTest {
     @org.junit.jupiter.api.Test
     fun testFindIndex() {
         val input = listOf(0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,)
-        val hour = findIndex(1.0, input)
+        val hour = findFirstsIndexWithValueInDataList(1.0, input)
         assertEquals("1:30", hour)
     }
 }
