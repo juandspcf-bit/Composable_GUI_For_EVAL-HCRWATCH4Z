@@ -7,7 +7,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
-import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -15,7 +14,7 @@ import java.util.Locale
 
 
 @Composable
-fun PhysicalActivityInfo(
+fun PhysicalActivityRoot(
     dataViewModel: DataViewModel,
     navLambda: () -> Unit
 ) {
