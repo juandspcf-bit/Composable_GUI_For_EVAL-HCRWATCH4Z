@@ -14,7 +14,7 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun BloodPressureInfo(
+fun BloodPressureScreenRoot(
     dataViewModel: DataViewModel,
     navLambda: () -> Unit
 ) {
