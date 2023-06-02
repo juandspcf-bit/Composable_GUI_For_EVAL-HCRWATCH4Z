@@ -38,7 +38,7 @@ fun  getBloodPressureCategory(valueSystolic: Double = 0.0, valueDiastolic:Double
 
 fun findFirstsIndexWithValueInDataList(value: Double, data: List<Double>): String {
     var hour = " "
-    if (value > 0) {
+    if (value > 0 && data.isNotEmpty()) {
         val filterIndexed = data.mapIndexed { index, d ->
             if (d == value) {
                 index
