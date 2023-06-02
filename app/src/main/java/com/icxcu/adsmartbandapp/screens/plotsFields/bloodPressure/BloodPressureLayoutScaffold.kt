@@ -189,6 +189,10 @@ fun BloodPressureInfoContent(
                 .width(50.dp)
         )
 
+        Divider(
+            modifier = Modifier
+                .height(2.dp)
+        )
 
         BloodPressureSList(
             systolicListContent,
