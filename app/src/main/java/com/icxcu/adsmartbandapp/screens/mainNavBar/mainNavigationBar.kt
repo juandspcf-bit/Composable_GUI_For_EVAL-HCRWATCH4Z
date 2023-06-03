@@ -17,12 +17,6 @@ import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
 import com.icxcu.adsmartbandapp.screens.Routes
-import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.TodayBloodPressureDBHandler
-import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.TodayHeartRateDBHandler
-import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.TodayPhysicalActivityDBHandler
-import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.YesterdayBloodPressureDBHandler
-import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.YesterdayHeartRateDBHandler
-import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.YesterdayPhysicalActivityDBHandler
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import java.text.SimpleDateFormat
