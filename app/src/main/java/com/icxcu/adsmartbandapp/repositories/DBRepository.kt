@@ -2,7 +2,6 @@ package com.icxcu.adsmartbandapp.repositories
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.data.entities.HeartRate
@@ -12,13 +11,11 @@ import com.icxcu.adsmartbandapp.database.BloodPressureDao
 import com.icxcu.adsmartbandapp.database.HeartRateDao
 import com.icxcu.adsmartbandapp.database.PersonalInfoDao
 import com.icxcu.adsmartbandapp.database.PhysicalActivityDao
+import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getDoubleListFromStringMap
+import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getIntegerListFromStringMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -28,9 +25,7 @@ class DBRepository(
     private val heartRateDao: HeartRateDao,
     private val personalInfoDao: PersonalInfoDao
 ) {
-    var dayPhysicalActivityResultsFromDBForDashBoard = MutableLiveData<List<PhysicalActivity>>()
-    var dayBloodPressureResultsFromDBForDashBoard = MutableLiveData<List<BloodPressure>>()
-    var dayHeartRateResultsFromDBForDashBoard = MutableLiveData<List<HeartRate>>()
+    var dayHealthResultsFromDBFForDashBoard = MutableLiveData<Values>()
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
     var dayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
@@ -55,6 +50,216 @@ class DBRepository(
     val mySpO2AlertDialogDataHandler = MySpO2AlertDialogDataHandler()
 
 
+
+
+
+    fun getDayHealthData(
+        queryDate: String,
+        queryMacAddress: String,
+    ) {
+        coroutineScope.launch(Dispatchers.Main) {
+            val resultsPhysicalActivityFromDb = asyncDayPhysicalActivityData(queryDate, queryMacAddress)
+            val resultsPhysicalActivity = if (resultsPhysicalActivityFromDb != null
+                && resultsPhysicalActivityFromDb.isEmpty().not()) {
+                resultsPhysicalActivityFromDb
+            } else {
+
+                val stepsActivity = PhysicalActivity().apply {
+                    id = -1
+                    macAddress = queryMacAddress
+                    dateData = queryDate
+
+                    val newValuesList = mutableMapOf<String, String>()
+                    MutableList(48) { 0 }.forEachIndexed { index, i ->
+                        newValuesList[index.toString()] = i.toString()
+                    }
+                    data = newValuesList.toString()
+                    typesTable = TypesTable.STEPS
+                }
+
+                val distanceActivity = PhysicalActivity().apply {
+                    id = -1
+                    macAddress = queryMacAddress
+                    dateData = queryDate
+
+                    val newValuesList = mutableMapOf<String, String>()
+                    MutableList(48) { 0.0 }.forEachIndexed { index, i ->
+                        newValuesList[index.toString()] = i.toString()
+                    }
+                    data = newValuesList.toString()
+                    typesTable = TypesTable.DISTANCE
+                }
+
+                val caloriesListActivity = PhysicalActivity().apply {
+                    id = -1
+                    macAddress = queryMacAddress
+                    dateData = queryDate
+
+                    val newValuesList = mutableMapOf<String, String>()
+                    MutableList(48) { 0.0 }.forEachIndexed { index, i ->
+                        newValuesList[index.toString()] = i.toString()
+                    }
+                    data = newValuesList.toString()
+                    typesTable = TypesTable.CALORIES
+                }
+                    listOf(stepsActivity, distanceActivity, caloriesListActivity)
+
+            }
+
+            val resultsBloodPressureFromDB = asyncDayBloodPressureData(queryDate, queryMacAddress)
+            val resultsBloodPressure = if (resultsBloodPressureFromDB.isEmpty().not()) {
+                resultsBloodPressureFromDB
+            } else {
+
+                val bloodPressureS = BloodPressure().apply {
+                    id = -1
+                    macAddress = queryMacAddress
+                    dateData = queryDate
+
+                    val newValuesList = mutableMapOf<String, String>()
+                    MutableList(48) { 0.0 }.forEachIndexed { index, i ->
+                        newValuesList[index.toString()] = i.toString()
+                    }
+                    data = newValuesList.toString()
+                    typesTable = TypesTable.SYSTOLIC
+                }
+
+                val bloodPressureD = BloodPressure().apply {
+                    id = -1
+                    macAddress = queryMacAddress
+                    dateData = queryDate
+
+                    val newValuesList = mutableMapOf<String, String>()
+                    MutableList(48) { 0.0 }.forEachIndexed { index, i ->
+                        newValuesList[index.toString()] = i.toString()
+                    }
+                    data = newValuesList.toString()
+                    typesTable = TypesTable.DIASTOLIC
+                }
+
+                listOf(bloodPressureS, bloodPressureD)
+
+            }
+
+
+            val resultsHeartRateFromDB = asyncDayHeartRateData(queryDate, queryMacAddress)
+            val resultsHeartRate = if (resultsHeartRateFromDB.isEmpty().not()) {
+                resultsHeartRateFromDB
+            } else {
+
+                val heartRateS = HeartRate().apply {
+                    id = -1
+                    macAddress = queryMacAddress
+                    dateData = queryDate
+
+                    val newValuesList = mutableMapOf<String, String>()
+                    MutableList(48) { 0.0 }.forEachIndexed { index, i ->
+                        newValuesList[index.toString()] = i.toString()
+                    }
+                    data = newValuesList.toString()
+                    typesTable = TypesTable.HEART_RATE
+                }
+
+
+                listOf(heartRateS)
+
+            }
+
+            val dayStepListFromDB =
+                if (resultsPhysicalActivity.isEmpty().not()) {
+                    val filter =
+                        resultsPhysicalActivity.filter { it.typesTable == TypesTable.STEPS }
+                    getIntegerListFromStringMap(filter[0].data)
+                } else {
+                    List(48) { 0 }.toList()
+                }
+
+            val dayDistanceListFromDB =
+                if (resultsPhysicalActivity.isEmpty().not()) {
+                    val filter =
+                        resultsPhysicalActivity.filter { it.typesTable == TypesTable.DISTANCE }
+                    if (filter.isEmpty()) {
+                        MutableList(48) { 0.0 }.toList()
+                    } else {
+                        getDoubleListFromStringMap(filter[0].data)
+                    }
+                } else {
+                    List(48) { 0.0 }.toList()
+                }
+
+            val dayCaloriesListFromDB =
+                if (resultsPhysicalActivity.isEmpty().not()) {
+                    val filter =
+                        resultsPhysicalActivity.filter { it.typesTable == TypesTable.CALORIES }
+                    if (filter.isEmpty()) {
+                        MutableList(48) { 0.0 }.toList()
+                    } else {
+                        getDoubleListFromStringMap(filter[0].data)
+                    }
+                } else {
+                    List(48) { 0.0 }.toList()
+                }
+
+            val daySystolicListFromDB =
+                if (resultsBloodPressure.isEmpty().not()) {
+                    val filter =
+                        resultsBloodPressure.filter { it.typesTable == TypesTable.SYSTOLIC }
+                    getDoubleListFromStringMap(filter[0].data)
+                } else {
+                    MutableList(48) { 0.0 }.toList()
+                }
+
+            val dayDiastolicListFromDB =
+                if (resultsBloodPressure.isEmpty().not()) {
+                    val filter =
+                        resultsBloodPressure.filter { it.typesTable == TypesTable.DIASTOLIC }
+                    if (filter.isEmpty()) {
+                        MutableList(48) { 0.0 }.toList()
+                    } else {
+                        getDoubleListFromStringMap(filter[0].data)
+                    }
+                } else {
+                    MutableList(48) { 0.0 }.toList()
+                }
+
+
+            val dayHeartRateListFromDB =
+                if (resultsHeartRate.isEmpty().not()) {
+                    val filter = resultsHeartRate.filter { it.typesTable == TypesTable.HEART_RATE }
+                    getDoubleListFromStringMap(filter[0].data)
+                } else {
+                    MutableList(48) { 0.0 }.toList()
+                }
+
+
+            dayHealthResultsFromDBFForDashBoard.value = Values(
+                dayStepListFromDB,
+                dayDistanceListFromDB,
+                dayCaloriesListFromDB,
+                dayHeartRateListFromDB,
+                daySystolicListFromDB,
+                dayDiastolicListFromDB,
+                queryDate
+            )
+
+            Log.d("DATA_FROM_DATABASE", "DB: ${dayHealthResultsFromDBFForDashBoard.value}")
+
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     fun getAnyDayPhysicalActivityData(
         queryDate: String,
         queryMacAddress: String
@@ -62,12 +267,7 @@ class DBRepository(
         getDayPhysicalActivityData(queryDate, queryMacAddress, dayPhysicalActivityResultsFromDB)
     }
 
-    fun getAnyDayPhysicalActivityDataForDashBoard(
-        queryDate: String,
-        queryMacAddress: String
-    ) {
-        getDayPhysicalActivityData(queryDate, queryMacAddress, dayPhysicalActivityResultsFromDBForDashBoard)
-    }
+
 
     fun getTodayPhysicalActivityData(queryDate: String, queryMacAddress: String) {
         getDayPhysicalActivityData(queryDate, queryMacAddress, todayPhysicalActivityResultsFromDB)
@@ -173,13 +373,6 @@ class DBRepository(
         )
     }
 
-    fun getAnyDayBloodPressureDataForDashBoard(
-        queryDate: String,
-        queryMacAddress: String
-    ) {
-        getDayBloodPressureData(queryDate, queryMacAddress, dayBloodPressureResultsFromDBForDashBoard)
-    }
-
     fun getTodayBloodPressureData(queryDate: String, queryMacAddress: String) {
         getDayBloodPressureData(queryDate, queryMacAddress, todayBloodPressureResultsFromDB)
     }
@@ -264,13 +457,6 @@ class DBRepository(
         queryMacAddress: String
     ) {
         getDayHeartRateData(queryDate, queryMacAddress, dayHeartRateResultsFromDB)
-    }
-
-    fun getAnyDayHeartRateDataForDashBoard(
-        queryDate: String,
-        queryMacAddress: String
-    ) {
-        getDayHeartRateData(queryDate, queryMacAddress, dayHeartRateResultsFromDBForDashBoard)
     }
 
 

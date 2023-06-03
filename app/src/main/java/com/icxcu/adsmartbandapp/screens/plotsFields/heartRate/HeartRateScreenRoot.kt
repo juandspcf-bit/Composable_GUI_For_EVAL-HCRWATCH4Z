@@ -31,7 +31,7 @@ fun HeartRateScreenRoot(
     }
 
     val dayHeartRateResultsFromDB by getDayPhysicalActivityData().dayHeartRateResultsFromDB.observeAsState(
-        MutableList(0) { HeartRate() }.toList()
+        MutableList(1) { HeartRate() }.toList()
     )
 
     val ageCalculated by remember(dataViewModel) {

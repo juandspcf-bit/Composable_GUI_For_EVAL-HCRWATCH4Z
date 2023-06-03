@@ -112,9 +112,9 @@ class DataViewModel(var application: Application) : ViewModel() {
         todayHealthsDataState.todayHeartRateResultsFromDB = dbRepository.todayHeartRateResultsFromDB
         yesterdayHealthsDataState.yesterdayHeartRateResultsFromDB = dbRepository.yesterdayHeartRateResultsFromDB
 
-        dayHealthDataStateForDashBoard.dayPhysicalActivityResultsFromDBForDashBoard = dbRepository.dayPhysicalActivityResultsFromDBForDashBoard
-        dayHealthDataStateForDashBoard.dayBloodPressureResultsFromDBForDashBoard = dbRepository.dayBloodPressureResultsFromDBForDashBoard
-        dayHealthDataStateForDashBoard.dayHeartRateResultsFromDBForDashBoard = dbRepository.dayHeartRateResultsFromDBForDashBoard
+
+        dayHealthDataStateForDashBoard.dayHealthResultsFromDBForDashBoard = dbRepository.dayHealthResultsFromDBFForDashBoard
+
 
         personalInfoFromDB = dbRepository.personalInfoFromDB
         updateAlertDialogState.personalInfoAlertDialogUVLiveData =
@@ -156,6 +156,15 @@ class DataViewModel(var application: Application) : ViewModel() {
     }
 
 
+    fun getDayHealthData(
+        queryDate: String,
+        queryMacAddress: String,
+    ) {
+        dbRepository.getDayHealthData(
+            queryDate,
+            queryMacAddress
+        )
+    }
 
 
     fun getMyHeartRateAlertDialogDataHandler(): MyHeartRateAlertDialogDataHandler {
@@ -177,12 +186,6 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     fun getDayPhysicalActivityData(dateData: String, macAddress: String) {
         dbRepository.getAnyDayPhysicalActivityData(dateData, macAddress)
-    }
-    fun getDayPhysicalActivityDataForDashBoard(
-        dateData: String,
-        macAddress: String
-    ) {
-        dbRepository.getAnyDayPhysicalActivityDataForDashBoard(dateData, macAddress)
     }
 
     fun getTodayPhysicalActivityData(macAddress: String) {
@@ -207,13 +210,6 @@ class DataViewModel(var application: Application) : ViewModel() {
         dbRepository.getAnyDayBloodPressureData(dateData, macAddress)
     }
 
-    fun getDayBloodPressureDataForDashBoard(
-        dateData: String,
-        macAddress: String
-    ) {
-        dbRepository.getAnyDayBloodPressureDataForDashBoard(dateData, macAddress)
-    }
-
     fun getTodayBloodPressureData(macAddress: String) {
         dbRepository.getTodayBloodPressureData(todayFormattedDate, macAddress)
     }
@@ -234,10 +230,6 @@ class DataViewModel(var application: Application) : ViewModel() {
     //Heart Rate
     fun getDayHeartRateData(dateData: String, macAddress: String) {
         dbRepository.getAnyDayHeartRateData(dateData, macAddress)
-    }
-
-    fun getDayHeartRateDataForDashBoard(dateData: String, macAddress: String) {
-        dbRepository.getAnyDayHeartRateDataForDashBoard(dateData, macAddress)
     }
 
     fun getTodayHeartRateData(macAddress: String) {

@@ -50,103 +50,26 @@ fun MainNavigationBarWithSwValues(
         getSmartWatchState().todayDateValuesReadFromSW
     }
 
-    val dayPhysicalActivityResultsFromDB by dataViewModel
+    val dayHealthResultsFromDB by dataViewModel
         .dayHealthDataStateForDashBoard
-        .dayPhysicalActivityResultsFromDBForDashBoard
+        .dayHealthResultsFromDBForDashBoard
         .observeAsState(
-            MutableList(0) { PhysicalActivity() }.toList()
+            Values(
+                MutableList(48) { 0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                MutableList(48) { 0.0 }.toList(),
+                ""
+            )
         )
 
-    val todayValuesReadFromDB = {
-        Log.d(
-            "DATA_FROM_DATABASE", ""
-        )
-        when (dataViewModel.statusReadingDbForDashboard) {
-            StatusReadingDbForDashboard.NoREAD -> {
-                Values(
-                    stepList = listOf(),
-                    distanceList = listOf(),
-                    caloriesList = listOf(),
-                    heartRateList = listOf(),
-                    systolicList = listOf(),
-                    diastolicList = listOf(),
-                    date = "",
-                )
-            }
-
-            StatusReadingDbForDashboard.InProgressReading -> {
-                val dayStepListFromDB =
-                    if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
-                        val filter =
-                            dayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.STEPS }
-                        getIntegerListFromStringMap(filter[0].data)
-                    } else {
-                        List(48) { 0 }.toList()
-                    }
-
-                val dayDistanceListFromDB =
-                    if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
-                        val filter =
-                            dayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.DISTANCE }
-                        if (filter.isEmpty()) {
-                            MutableList(48) { 0.0 }.toList()
-                        } else {
-                            getDoubleListFromStringMap(filter[0].data)
-                        }
-                    } else {
-                        List(48) { 0.0 }.toList()
-                    }
-
-                val dayCaloriesListFromDB =
-                    if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
-                        val filter =
-                            dayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.CALORIES }
-                        if (filter.isEmpty()) {
-                            MutableList(48) { 0.0 }.toList()
-                        } else {
-                            getDoubleListFromStringMap(filter[0].data)
-                        }
-                    } else {
-                        List(48) { 0.0 }.toList()
-                    }
-
-                dataViewModel.statusReadingDbForDashboard =
-                    StatusReadingDbForDashboard.NewValuesRead
-                Values(
-                    stepList = dayStepListFromDB,
-                    distanceList = dayDistanceListFromDB,
-                    caloriesList = dayCaloriesListFromDB,
-                    heartRateList = listOf(),
-                    systolicList = listOf(),
-                    diastolicList = listOf(),
-                    date = dayPhysicalActivityResultsFromDB[0].dateData,
-                )
-            }
-
-            StatusReadingDbForDashboard.NewValuesRead -> {
-                dataViewModel.statusReadingDbForDashboard = StatusReadingDbForDashboard.NoREAD
-
-                Values(
-                    stepList = listOf(),
-                    distanceList = listOf(),
-                    caloriesList = listOf(),
-                    heartRateList = listOf(),
-                    systolicList = listOf(),
-                    diastolicList = listOf(),
-                    date = "",
-                )
-
-            }
-
-        }
+    val dayHealthValuesReadFromDB = {
+        dayHealthResultsFromDB
     }
+    Log.d("DATA_FROM_DATABASE", "MainNavigationBarWithSwValues: $dayHealthResultsFromDB")
 
-
-
-    Log.d(
-        "DATA_FROM_DATABASE",
-        "MainNavigationBar: $dayPhysicalActivityResultsFromDB  ,  ${dataViewModel.statusReadingDbForDashboard} "
-    )
 
     val todayValues = {
         val valuesLambda: () -> Values
@@ -160,19 +83,27 @@ fun MainNavigationBarWithSwValues(
         ) {
             valuesLambda = todayValuesReadFromSW
         } else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.InProgressReading
+            && getFetchingDataFromSWStatus() == SWReadingStatus.READ && dayHealthValuesReadFromDB().stepList.sum() == 0
+        ) {
+            valuesLambda = dayHealthValuesReadFromDB
+        }else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.InProgressReading
+            && getFetchingDataFromSWStatus() == SWReadingStatus.READ && dayHealthValuesReadFromDB().stepList.sum() != 0
+        ) {
+            Log.d("DATA_FROM_DATABASE", "MainNavigationBarWithSwValues: ")
+            valuesLambda = dayHealthValuesReadFromDB
+            dataViewModel.statusReadingDbForDashboard = StatusReadingDbForDashboard.NewValuesRead
+
+        } else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.NewValuesRead
             && getFetchingDataFromSWStatus() == SWReadingStatus.READ
         ) {
-            valuesLambda = todayValuesReadFromDB
-        }else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.NewValuesRead
-            && getFetchingDataFromSWStatus() == SWReadingStatus.READ
-        ) {
-            valuesLambda = todayValuesReadFromDB
-        }else{
+            valuesLambda = dayHealthValuesReadFromDB
+        } else {
             valuesLambda = todayValuesReadFromSW
         }
 
         valuesLambda
     }
+
 
 
     val getMyHeartRateAlertDialogDataHandler = {
@@ -263,23 +194,16 @@ fun MainNavigationBarWithSwValues(
             val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             val dateData = formattedDate.format(date)
 
-            dataViewModel.getDayPhysicalActivityDataForDashBoard(
-                dateData,
-                dataViewModel.macAddressDeviceBluetooth
-            )
-
-            dataViewModel.getDayBloodPressureDataForDashBoard(
-                dateData,
-                dataViewModel.macAddressDeviceBluetooth
-            )
-
-            dataViewModel.getDayHeartRateDataForDashBoard(
-                dateData,
-                dataViewModel.macAddressDeviceBluetooth
-            )
-
             dataViewModel.statusReadingDbForDashboard =
                 StatusReadingDbForDashboard.InProgressReading
+
+            dataViewModel.getDayHealthData(
+                dateData,
+                dataViewModel.macAddressDeviceBluetooth
+            )
+
+
+
             /*            navMainController.navigate(Routes.CircularProgressLoading.route){
                             popUpTo(Routes.DataHome.route)
                         }*/
@@ -386,9 +310,7 @@ class DayHealthDataState {
 }
 
 class DayHealthDataStateForDashBoard {
-    var dayPhysicalActivityResultsFromDBForDashBoard = MutableLiveData<List<PhysicalActivity>>()
-    var dayBloodPressureResultsFromDBForDashBoard = MutableLiveData<List<BloodPressure>>()
-    var dayHeartRateResultsFromDBForDashBoard = MutableLiveData<List<HeartRate>>()
+    var dayHealthResultsFromDBForDashBoard = MutableLiveData<Values>()
 }
 
 class SmartWatchState(
