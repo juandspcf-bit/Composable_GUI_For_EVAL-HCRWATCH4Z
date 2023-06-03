@@ -34,6 +34,7 @@ import com.icxcu.adsmartbandapp.screens.PermissionsScreen
 import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.mainNavBar.MainNavigationBarRoot
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
+import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusReadingDbForDashboard
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.InvalidAlertDialogState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalDataForm
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoDataState
@@ -316,6 +317,8 @@ class MainActivity : ComponentActivity() {
                     bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
                     bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
                         ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
+                    dataViewModel.statusReadingDbForDashboard = StatusReadingDbForDashboard.NoREAD
+
                     MainNavigationBarRoot(
                         dataViewModel,
                         getFetchingDataFromSWStatus,
@@ -338,6 +341,7 @@ class MainActivity : ComponentActivity() {
                     bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
                     bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
                         ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
+                    dataViewModel.statusReadingDbForDashboard = StatusReadingDbForDashboard.NoREAD
                     MainNavigationBarRoot(
                         dataViewModel,
                         getFetchingDataFromSWStatus,

@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
+import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
@@ -18,6 +19,8 @@ import com.icxcu.adsmartbandapp.repositories.BloodPressureData
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
+import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getDoubleListFromStringMap
+import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getIntegerListFromStringMap
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -29,10 +32,9 @@ fun MainNavigationBarWithSwValues(
     bluetoothName: String,
     bluetoothAddress: String,
     dataViewModel: DataViewModel,
+    getFetchingDataFromSWStatus: () -> SWReadingStatus,
     navMainController: NavHostController
 ) {
-
-
 
     val getSmartWatchState = remember(dataViewModel) {
         {
@@ -40,28 +42,137 @@ fun MainNavigationBarWithSwValues(
         }
     }
 
-    val dayDateValuesReadFromSW = {
-        getSmartWatchState().todayDateValuesReadFromSW
-    }
-
     val getVisibilityProgressbarForFetchingData = {
         getSmartWatchState().progressbarForFetchingDataFromSW
     }
 
+    val todayValuesReadFromSW = {
+        getSmartWatchState().todayDateValuesReadFromSW
+    }
 
     val dayPhysicalActivityResultsFromDB by dataViewModel
         .dayHealthDataStateForDashBoard
         .dayPhysicalActivityResultsFromDBForDashBoard
         .observeAsState(
-        MutableList(0) { PhysicalActivity() }.toList()
+            MutableList(0) { PhysicalActivity() }.toList()
         )
 
+    val todayValuesReadFromDB = {
+        Log.d(
+            "DATA_FROM_DATABASE", ""
+        )
+        when (dataViewModel.statusReadingDbForDashboard) {
+            StatusReadingDbForDashboard.NoREAD -> {
+                Values(
+                    stepList = listOf(),
+                    distanceList = listOf(),
+                    caloriesList = listOf(),
+                    heartRateList = listOf(),
+                    systolicList = listOf(),
+                    diastolicList = listOf(),
+                    date = "",
+                )
+            }
 
-    Log.d("DATA_FROM_DATABASE", "MainNavigationBar: $dayPhysicalActivityResultsFromDB")
+            StatusReadingDbForDashboard.InProgressReading -> {
+                val dayStepListFromDB =
+                    if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
+                        val filter =
+                            dayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.STEPS }
+                        getIntegerListFromStringMap(filter[0].data)
+                    } else {
+                        List(48) { 0 }.toList()
+                    }
+
+                val dayDistanceListFromDB =
+                    if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
+                        val filter =
+                            dayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.DISTANCE }
+                        if (filter.isEmpty()) {
+                            MutableList(48) { 0.0 }.toList()
+                        } else {
+                            getDoubleListFromStringMap(filter[0].data)
+                        }
+                    } else {
+                        List(48) { 0.0 }.toList()
+                    }
+
+                val dayCaloriesListFromDB =
+                    if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
+                        val filter =
+                            dayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.CALORIES }
+                        if (filter.isEmpty()) {
+                            MutableList(48) { 0.0 }.toList()
+                        } else {
+                            getDoubleListFromStringMap(filter[0].data)
+                        }
+                    } else {
+                        List(48) { 0.0 }.toList()
+                    }
+
+                dataViewModel.statusReadingDbForDashboard =
+                    StatusReadingDbForDashboard.NewValuesRead
+                Values(
+                    stepList = dayStepListFromDB,
+                    distanceList = dayDistanceListFromDB,
+                    caloriesList = dayCaloriesListFromDB,
+                    heartRateList = listOf(),
+                    systolicList = listOf(),
+                    diastolicList = listOf(),
+                    date = dayPhysicalActivityResultsFromDB[0].dateData,
+                )
+            }
+
+            StatusReadingDbForDashboard.NewValuesRead -> {
+                dataViewModel.statusReadingDbForDashboard = StatusReadingDbForDashboard.NoREAD
+
+                Values(
+                    stepList = listOf(),
+                    distanceList = listOf(),
+                    caloriesList = listOf(),
+                    heartRateList = listOf(),
+                    systolicList = listOf(),
+                    diastolicList = listOf(),
+                    date = "",
+                )
+
+            }
+
+        }
+    }
 
 
 
+    Log.d(
+        "DATA_FROM_DATABASE",
+        "MainNavigationBar: $dayPhysicalActivityResultsFromDB  ,  ${dataViewModel.statusReadingDbForDashboard} "
+    )
 
+    val todayValues = {
+        val valuesLambda: () -> Values
+
+        if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.NoREAD
+            && getFetchingDataFromSWStatus() == SWReadingStatus.IN_PROGRESS
+        ) {
+            valuesLambda = todayValuesReadFromSW
+        } else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.NoREAD
+            && getFetchingDataFromSWStatus() == SWReadingStatus.READ
+        ) {
+            valuesLambda = todayValuesReadFromSW
+        } else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.InProgressReading
+            && getFetchingDataFromSWStatus() == SWReadingStatus.READ
+        ) {
+            valuesLambda = todayValuesReadFromDB
+        }else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.NewValuesRead
+            && getFetchingDataFromSWStatus() == SWReadingStatus.READ
+        ) {
+            valuesLambda = todayValuesReadFromDB
+        }else{
+            valuesLambda = todayValuesReadFromSW
+        }
+
+        valuesLambda
+    }
 
 
     val getMyHeartRateAlertDialogDataHandler = {
@@ -167,9 +278,11 @@ fun MainNavigationBarWithSwValues(
                 dataViewModel.macAddressDeviceBluetooth
             )
 
-/*            navMainController.navigate(Routes.CircularProgressLoading.route){
-                popUpTo(Routes.DataHome.route)
-            }*/
+            dataViewModel.statusReadingDbForDashboard =
+                StatusReadingDbForDashboard.InProgressReading
+            /*            navMainController.navigate(Routes.CircularProgressLoading.route){
+                            popUpTo(Routes.DataHome.route)
+                        }*/
 
         }
     }
@@ -177,7 +290,7 @@ fun MainNavigationBarWithSwValues(
     MainNavigationBarScaffold(
         bluetoothName,
         bluetoothAddress,
-        dayDateValuesReadFromSW,
+        todayValues(),
         getVisibilityProgressbarForFetchingData,
         getMyHeartRateAlertDialogDataHandler,
         getMyHeartRate,
@@ -315,4 +428,10 @@ enum class SWReadingStatus {
     READ,
     STOPPED,
     CLEARED,
+}
+
+sealed class StatusReadingDbForDashboard {
+    object NoREAD : StatusReadingDbForDashboard()
+    object InProgressReading : StatusReadingDbForDashboard()
+    object NewValuesRead : StatusReadingDbForDashboard()
 }

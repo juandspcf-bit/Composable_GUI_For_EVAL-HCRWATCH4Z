@@ -97,6 +97,7 @@ fun MainNavigationBarRoot(dataViewModel: DataViewModel,
         bluetoothName = bluetoothName,
         bluetoothAddress = bluetoothAddress,
         dataViewModel = dataViewModel,
+        getFetchingDataFromSWStatus = getFetchingDataFromSWStatus,
         navMainController = navMainController
     )
 
