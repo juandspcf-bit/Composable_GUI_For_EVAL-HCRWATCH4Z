@@ -193,7 +193,7 @@ fun MainNavigationBar(
 }
 
 
-class TodayPhysicalActivityInfoState {
+class TodayHealthsDataState {
 
     var todayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
     var todayStepListReadFromDB by mutableStateOf(listOf<Int>())
@@ -224,7 +224,7 @@ class TodayPhysicalActivityInfoState {
     var isTodayHeartRateListInDBAlreadyUpdated by mutableStateOf(false)
 }
 
-class YesterdayPhysicalActivityInfoState {
+class YesterdayHealthsDataState {
     var yesterdayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
     var yesterdayStepListReadFromDB by mutableStateOf(listOf<Int>())
     var isYesterdayStepsListAlreadyInsertedInDB = false

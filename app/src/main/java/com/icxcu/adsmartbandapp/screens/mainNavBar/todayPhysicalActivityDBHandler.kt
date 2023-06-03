@@ -25,7 +25,7 @@ fun TodayPhysicalActivityDBHandler(
 
     val getTodayPhysicalActivityData = remember(dataViewModel) {
         {
-            dataViewModel.todayPhysicalActivityInfoState
+            dataViewModel.todayHealthsDataState
         }
     }
 

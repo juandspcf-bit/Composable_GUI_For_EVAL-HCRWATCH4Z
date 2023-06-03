@@ -25,7 +25,7 @@ fun YesterdayHeartRateDBHandler(
 
     val getYesterdayPhysicalActivityData = remember(dataViewModel) {
         {
-            dataViewModel.yesterdayPhysicalActivityInfoState
+            dataViewModel.yesterdayHealthsDataState
         }
     }
     //Data Sources

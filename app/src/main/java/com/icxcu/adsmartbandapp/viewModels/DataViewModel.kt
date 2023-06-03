@@ -23,8 +23,8 @@ import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.DayHealthDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SmartWatchState
-import com.icxcu.adsmartbandapp.screens.mainNavBar.TodayPhysicalActivityInfoState
-import com.icxcu.adsmartbandapp.screens.mainNavBar.YesterdayPhysicalActivityInfoState
+import com.icxcu.adsmartbandapp.screens.mainNavBar.TodayHealthsDataState
+import com.icxcu.adsmartbandapp.screens.mainNavBar.YesterdayHealthsDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.InvalidAlertDialogState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.UpdateAlertDialogState
@@ -55,8 +55,8 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     var statusStartedReadingDataLasThreeDaysData by mutableStateOf(false)
     var dayHealthDataState = DayHealthDataState()
-    var todayPhysicalActivityInfoState = TodayPhysicalActivityInfoState()
-    var yesterdayPhysicalActivityInfoState = YesterdayPhysicalActivityInfoState()
+    var todayHealthsDataState = TodayHealthsDataState()
+    var yesterdayHealthsDataState = YesterdayHealthsDataState()
 
 
     var personalInfoFromDB = MutableLiveData<List<PersonalInfo>>()
@@ -98,16 +98,16 @@ class DataViewModel(var application: Application) : ViewModel() {
 
 
         dayHealthDataState.dayPhysicalActivityResultsFromDB = dbRepository.dayPhysicalActivityResultsFromDB
-        todayPhysicalActivityInfoState.todayPhysicalActivityResultsFromDB = dbRepository.todayPhysicalActivityResultsFromDB
-        yesterdayPhysicalActivityInfoState.yesterdayPhysicalActivityResultsFromDB = dbRepository.yesterdayPhysicalActivityResultsFromDB
+        todayHealthsDataState.todayPhysicalActivityResultsFromDB = dbRepository.todayPhysicalActivityResultsFromDB
+        yesterdayHealthsDataState.yesterdayPhysicalActivityResultsFromDB = dbRepository.yesterdayPhysicalActivityResultsFromDB
 
         dayHealthDataState.dayBloodPressureResultsFromDB = dbRepository.dayBloodPressureResultsFromDB
-        todayPhysicalActivityInfoState.todayBloodPressureResultsFromDB = dbRepository.todayBloodPressureResultsFromDB
-        yesterdayPhysicalActivityInfoState.yesterdayBloodPressureResultsFromDB = dbRepository.yesterdayBloodPressureResultsFromDB
+        todayHealthsDataState.todayBloodPressureResultsFromDB = dbRepository.todayBloodPressureResultsFromDB
+        yesterdayHealthsDataState.yesterdayBloodPressureResultsFromDB = dbRepository.yesterdayBloodPressureResultsFromDB
 
         dayHealthDataState.dayHeartRateResultsFromDB = dbRepository.dayHeartRateResultsFromDB
-        todayPhysicalActivityInfoState.todayHeartRateResultsFromDB = dbRepository.todayHeartRateResultsFromDB
-        yesterdayPhysicalActivityInfoState.yesterdayHeartRateResultsFromDB = dbRepository.yesterdayHeartRateResultsFromDB
+        todayHealthsDataState.todayHeartRateResultsFromDB = dbRepository.todayHeartRateResultsFromDB
+        yesterdayHealthsDataState.yesterdayHeartRateResultsFromDB = dbRepository.yesterdayHeartRateResultsFromDB
 
         personalInfoFromDB = dbRepository.personalInfoFromDB
         updateAlertDialogState.personalInfoAlertDialogUVLiveData =
