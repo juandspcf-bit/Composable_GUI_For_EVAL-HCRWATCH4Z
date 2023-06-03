@@ -93,11 +93,10 @@ fun MainNavigationBarRoot(dataViewModel: DataViewModel,
     PersonalInfoDBHandler(
         dataViewModel
     )
-    MainNavigationBar(
+    MainNavigationBarWithSwValues(
         bluetoothName = bluetoothName,
         bluetoothAddress = bluetoothAddress,
         dataViewModel = dataViewModel,
-        splashViewModel = splashViewModel,
         navMainController = navMainController
     )
 

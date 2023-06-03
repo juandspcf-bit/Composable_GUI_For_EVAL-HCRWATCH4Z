@@ -28,6 +28,10 @@ class DBRepository(
     private val heartRateDao: HeartRateDao,
     private val personalInfoDao: PersonalInfoDao
 ) {
+    var dayPhysicalActivityResultsFromDBForDashBoard = MutableLiveData<List<PhysicalActivity>>()
+    var dayBloodPressureResultsFromDBForDashBoard = MutableLiveData<List<BloodPressure>>()
+    var dayHeartRateResultsFromDBForDashBoard = MutableLiveData<List<HeartRate>>()
+
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
     var dayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
     var todayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
@@ -45,23 +49,24 @@ class DBRepository(
     var personalInfoAlertDialogUVStateLiveData = MutableLiveData(false)
 
 
-
-
     val myHeartRateAlertDialogDataHandler = MyHeartRateAlertDialogDataHandler()
     val myBloodPressureAlertDialogDataHandler = MyBloodPressureAlertDialogDataHandler()
     val myTemperatureAlertDialogDataHandler = MyTemperatureAlertDialogDataHandler()
     val mySpO2AlertDialogDataHandler = MySpO2AlertDialogDataHandler()
 
 
-
-
-
-
-
-
-
-    fun getAnyDayPhysicalActivityData(queryDate: String, queryMacAddress: String) {
+    fun getAnyDayPhysicalActivityData(
+        queryDate: String,
+        queryMacAddress: String
+    ) {
         getDayPhysicalActivityData(queryDate, queryMacAddress, dayPhysicalActivityResultsFromDB)
+    }
+
+    fun getAnyDayPhysicalActivityDataForDashBoard(
+        queryDate: String,
+        queryMacAddress: String
+    ) {
+        getDayPhysicalActivityData(queryDate, queryMacAddress, dayPhysicalActivityResultsFromDBForDashBoard)
     }
 
     fun getTodayPhysicalActivityData(queryDate: String, queryMacAddress: String) {
@@ -154,11 +159,25 @@ class DBRepository(
         }.await()
 
 
+
+
+
     fun getAnyDayBloodPressureData(
         queryDate: String,
         queryMacAddress: String
     ) {
-        getDayBloodPressureData(queryDate, queryMacAddress, dayBloodPressureResultsFromDB)
+        getDayBloodPressureData(
+            queryDate,
+            queryMacAddress,
+            dayBloodPressureResultsFromDB
+        )
+    }
+
+    fun getAnyDayBloodPressureDataForDashBoard(
+        queryDate: String,
+        queryMacAddress: String
+    ) {
+        getDayBloodPressureData(queryDate, queryMacAddress, dayBloodPressureResultsFromDBForDashBoard)
     }
 
     fun getTodayBloodPressureData(queryDate: String, queryMacAddress: String) {
@@ -237,12 +256,23 @@ class DBRepository(
         }.await()
 
 
+
+
+
     fun getAnyDayHeartRateData(
         queryDate: String,
         queryMacAddress: String
     ) {
         getDayHeartRateData(queryDate, queryMacAddress, dayHeartRateResultsFromDB)
     }
+
+    fun getAnyDayHeartRateDataForDashBoard(
+        queryDate: String,
+        queryMacAddress: String
+    ) {
+        getDayHeartRateData(queryDate, queryMacAddress, dayHeartRateResultsFromDBForDashBoard)
+    }
+
 
     fun getTodayHeartRateData(queryDate: String, queryMacAddress: String) {
         getDayHeartRateData(queryDate, queryMacAddress, todayHeartRateResultsFromDB)

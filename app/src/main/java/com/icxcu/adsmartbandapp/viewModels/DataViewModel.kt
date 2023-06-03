@@ -21,6 +21,7 @@ import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.DayHealthDataState
+import com.icxcu.adsmartbandapp.screens.mainNavBar.DayHealthDataStateForDashBoard
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SmartWatchState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.TodayHealthsDataState
@@ -57,7 +58,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     var dayHealthDataState = DayHealthDataState()
     var todayHealthsDataState = TodayHealthsDataState()
     var yesterdayHealthsDataState = YesterdayHealthsDataState()
-
+    var dayHealthDataStateForDashBoard = DayHealthDataStateForDashBoard()
 
     var personalInfoFromDB = MutableLiveData<List<PersonalInfo>>()
     var personalInfoListReadFromDB = listOf<PersonalInfo>()
@@ -108,6 +109,10 @@ class DataViewModel(var application: Application) : ViewModel() {
         dayHealthDataState.dayHeartRateResultsFromDB = dbRepository.dayHeartRateResultsFromDB
         todayHealthsDataState.todayHeartRateResultsFromDB = dbRepository.todayHeartRateResultsFromDB
         yesterdayHealthsDataState.yesterdayHeartRateResultsFromDB = dbRepository.yesterdayHeartRateResultsFromDB
+
+        dayHealthDataStateForDashBoard.dayPhysicalActivityResultsFromDBForDashBoard = dbRepository.dayPhysicalActivityResultsFromDBForDashBoard
+        dayHealthDataStateForDashBoard.dayBloodPressureResultsFromDBForDashBoard = dbRepository.dayBloodPressureResultsFromDBForDashBoard
+        dayHealthDataStateForDashBoard.dayHeartRateResultsFromDBForDashBoard = dbRepository.dayHeartRateResultsFromDBForDashBoard
 
         personalInfoFromDB = dbRepository.personalInfoFromDB
         updateAlertDialogState.personalInfoAlertDialogUVLiveData =
@@ -171,6 +176,12 @@ class DataViewModel(var application: Application) : ViewModel() {
     fun getDayPhysicalActivityData(dateData: String, macAddress: String) {
         dbRepository.getAnyDayPhysicalActivityData(dateData, macAddress)
     }
+    fun getDayPhysicalActivityDataForDashBoard(
+        dateData: String,
+        macAddress: String
+    ) {
+        dbRepository.getAnyDayPhysicalActivityDataForDashBoard(dateData, macAddress)
+    }
 
     fun getTodayPhysicalActivityData(macAddress: String) {
         dbRepository.getTodayPhysicalActivityData(todayFormattedDate, macAddress)
@@ -194,6 +205,13 @@ class DataViewModel(var application: Application) : ViewModel() {
         dbRepository.getAnyDayBloodPressureData(dateData, macAddress)
     }
 
+    fun getDayBloodPressureDataForDashBoard(
+        dateData: String,
+        macAddress: String
+    ) {
+        dbRepository.getAnyDayBloodPressureDataForDashBoard(dateData, macAddress)
+    }
+
     fun getTodayBloodPressureData(macAddress: String) {
         dbRepository.getTodayBloodPressureData(todayFormattedDate, macAddress)
     }
@@ -214,6 +232,10 @@ class DataViewModel(var application: Application) : ViewModel() {
     //Heart Rate
     fun getDayHeartRateData(dateData: String, macAddress: String) {
         dbRepository.getAnyDayHeartRateData(dateData, macAddress)
+    }
+
+    fun getDayHeartRateDataForDashBoard(dateData: String, macAddress: String) {
+        dbRepository.getAnyDayHeartRateDataForDashBoard(dateData, macAddress)
     }
 
     fun getTodayHeartRateData(macAddress: String) {

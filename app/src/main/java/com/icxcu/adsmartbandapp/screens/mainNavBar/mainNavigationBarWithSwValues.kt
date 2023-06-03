@@ -1,9 +1,11 @@
 package com.icxcu.adsmartbandapp.screens.mainNavBar
 
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -17,18 +19,16 @@ import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
-import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 
 @Composable
-fun MainNavigationBar(
+fun MainNavigationBarWithSwValues(
     bluetoothName: String,
     bluetoothAddress: String,
     dataViewModel: DataViewModel,
-    splashViewModel: SplashViewModel,
     navMainController: NavHostController
 ) {
 
@@ -49,10 +49,15 @@ fun MainNavigationBar(
     }
 
 
+    val dayPhysicalActivityResultsFromDB by dataViewModel
+        .dayHealthDataStateForDashBoard
+        .dayPhysicalActivityResultsFromDBForDashBoard
+        .observeAsState(
+        MutableList(0) { PhysicalActivity() }.toList()
+        )
 
 
-
-
+    Log.d("DATA_FROM_DATABASE", "MainNavigationBar: $dayPhysicalActivityResultsFromDB")
 
 
 
@@ -147,17 +152,17 @@ fun MainNavigationBar(
             val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             val dateData = formattedDate.format(date)
 
-            dataViewModel.getDayPhysicalActivityData(
+            dataViewModel.getDayPhysicalActivityDataForDashBoard(
                 dateData,
                 dataViewModel.macAddressDeviceBluetooth
             )
 
-            dataViewModel.getDayBloodPressureData(
+            dataViewModel.getDayBloodPressureDataForDashBoard(
                 dateData,
                 dataViewModel.macAddressDeviceBluetooth
             )
 
-            dataViewModel.getDayHeartRateData(
+            dataViewModel.getDayHeartRateDataForDashBoard(
                 dateData,
                 dataViewModel.macAddressDeviceBluetooth
             )
@@ -265,6 +270,12 @@ class DayHealthDataState {
 
     var dayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
     var dayHeartRateListFromDB by mutableStateOf(listOf<Double>())
+}
+
+class DayHealthDataStateForDashBoard {
+    var dayPhysicalActivityResultsFromDBForDashBoard = MutableLiveData<List<PhysicalActivity>>()
+    var dayBloodPressureResultsFromDBForDashBoard = MutableLiveData<List<BloodPressure>>()
+    var dayHeartRateResultsFromDBForDashBoard = MutableLiveData<List<HeartRate>>()
 }
 
 class SmartWatchState(
