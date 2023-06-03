@@ -49,7 +49,7 @@ import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
-import com.icxcu.adsmartbandapp.screens.DashBoardScreen
+import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.DashBoardScreen
 import com.icxcu.adsmartbandapp.screens.NavBarItems
 import com.icxcu.adsmartbandapp.screens.NavRoutes
 import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample

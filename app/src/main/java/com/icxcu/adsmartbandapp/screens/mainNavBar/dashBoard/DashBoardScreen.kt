@@ -1,6 +1,5 @@
-package com.icxcu.adsmartbandapp.screens
+package com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,11 +16,9 @@ import androidx.navigation.compose.rememberNavController
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.repositories.Values
+import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.additionalWidgets.ArcCompose
-import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.DashBoardCard
-import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.DashBoardCardData
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DashBoardScreen(
     dayDateValuesReadFromSW: () -> Values,
