@@ -17,7 +17,6 @@ import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
 import com.icxcu.adsmartbandapp.screens.Routes
-import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.MainNavigationBarScaffold
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.TodayBloodPressureDBHandler
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.TodayHeartRateDBHandler
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.TodayPhysicalActivityDBHandler
