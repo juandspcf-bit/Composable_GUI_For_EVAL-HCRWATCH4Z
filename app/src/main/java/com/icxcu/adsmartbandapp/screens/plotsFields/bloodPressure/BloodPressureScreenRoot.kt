@@ -21,7 +21,7 @@ fun BloodPressureScreenRoot(
 
     val getDayPhysicalActivityData = remember(dataViewModel) {
         {
-            dataViewModel.dayPhysicalActivityInfoState
+            dataViewModel.dayHealthDataState
         }
     }
 
@@ -58,12 +58,12 @@ fun BloodPressureScreenRoot(
 
     val systolicListFromDB = remember(dataViewModel) {
         {
-            dataViewModel.dayPhysicalActivityInfoState.daySystolicListFromDB
+            dataViewModel.dayHealthDataState.daySystolicListFromDB
         }
     }
     val diastolicListFromDB = remember(dataViewModel) {
         {
-            dataViewModel.dayPhysicalActivityInfoState.dayDiastolicListFromDB
+            dataViewModel.dayHealthDataState.dayDiastolicListFromDB
         }
     }
 

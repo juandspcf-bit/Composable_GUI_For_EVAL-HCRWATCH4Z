@@ -20,7 +20,7 @@ import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
-import com.icxcu.adsmartbandapp.screens.mainNavBar.DayPhysicalActivityInfoState
+import com.icxcu.adsmartbandapp.screens.mainNavBar.DayHealthDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SmartWatchState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.TodayPhysicalActivityInfoState
@@ -54,7 +54,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     var selectedDay by mutableStateOf("")
 
     var statusStartedReadingDataLasThreeDaysData by mutableStateOf(false)
-    var dayPhysicalActivityInfoState = DayPhysicalActivityInfoState()
+    var dayHealthDataState = DayHealthDataState()
     var todayPhysicalActivityInfoState = TodayPhysicalActivityInfoState()
     var yesterdayPhysicalActivityInfoState = YesterdayPhysicalActivityInfoState()
 
@@ -97,15 +97,15 @@ class DataViewModel(var application: Application) : ViewModel() {
         //swRepository = SWRepository()
 
 
-        dayPhysicalActivityInfoState.dayPhysicalActivityResultsFromDB = dbRepository.dayPhysicalActivityResultsFromDB
+        dayHealthDataState.dayPhysicalActivityResultsFromDB = dbRepository.dayPhysicalActivityResultsFromDB
         todayPhysicalActivityInfoState.todayPhysicalActivityResultsFromDB = dbRepository.todayPhysicalActivityResultsFromDB
         yesterdayPhysicalActivityInfoState.yesterdayPhysicalActivityResultsFromDB = dbRepository.yesterdayPhysicalActivityResultsFromDB
 
-        dayPhysicalActivityInfoState.dayBloodPressureResultsFromDB = dbRepository.dayBloodPressureResultsFromDB
+        dayHealthDataState.dayBloodPressureResultsFromDB = dbRepository.dayBloodPressureResultsFromDB
         todayPhysicalActivityInfoState.todayBloodPressureResultsFromDB = dbRepository.todayBloodPressureResultsFromDB
         yesterdayPhysicalActivityInfoState.yesterdayBloodPressureResultsFromDB = dbRepository.yesterdayBloodPressureResultsFromDB
 
-        dayPhysicalActivityInfoState.dayHeartRateResultsFromDB = dbRepository.dayHeartRateResultsFromDB
+        dayHealthDataState.dayHeartRateResultsFromDB = dbRepository.dayHeartRateResultsFromDB
         todayPhysicalActivityInfoState.todayHeartRateResultsFromDB = dbRepository.todayHeartRateResultsFromDB
         yesterdayPhysicalActivityInfoState.yesterdayHeartRateResultsFromDB = dbRepository.yesterdayHeartRateResultsFromDB
 

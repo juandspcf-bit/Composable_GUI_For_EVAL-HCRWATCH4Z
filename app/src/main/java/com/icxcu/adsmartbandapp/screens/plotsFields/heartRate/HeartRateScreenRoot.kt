@@ -26,7 +26,7 @@ fun HeartRateScreenRoot(
 
     val getDayPhysicalActivityData = remember(dataViewModel) {
         {
-            dataViewModel.dayPhysicalActivityInfoState
+            dataViewModel.dayHealthDataState
         }
     }
 
@@ -72,7 +72,7 @@ fun HeartRateScreenRoot(
         }
 
     val heartRateListFromDB = remember(dataViewModel) {
-        { dataViewModel.dayPhysicalActivityInfoState.dayHeartRateListFromDB }
+        { dataViewModel.dayHealthDataState.dayHeartRateListFromDB }
     }
 
     val getSelectedDay = remember(dataViewModel) {

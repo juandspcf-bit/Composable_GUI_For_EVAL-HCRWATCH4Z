@@ -253,7 +253,7 @@ class YesterdayPhysicalActivityInfoState {
     var isYesterdayHeartRateListInDBAlreadyUpdated = false
 }
 
-class DayPhysicalActivityInfoState {
+class DayHealthDataState {
     var dayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
     var dayStepListFromDB by mutableStateOf(listOf<Int>())
     var dayDistanceListFromDB by mutableStateOf(listOf<Double>())

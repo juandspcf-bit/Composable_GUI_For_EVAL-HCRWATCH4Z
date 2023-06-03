@@ -22,7 +22,7 @@ fun PhysicalActivityScreenRoot(
     Log.d("PhysicalActivityInfo", "PhysicalActivityInfo: ")
     val getDayPhysicalActivityData = remember(dataViewModel) {
         {
-            dataViewModel.dayPhysicalActivityInfoState
+            dataViewModel.dayHealthDataState
         }
     }
 
@@ -73,17 +73,17 @@ fun PhysicalActivityScreenRoot(
 
     val stepsListFromDB = remember(dataViewModel) {
         {
-            dataViewModel.dayPhysicalActivityInfoState.dayStepListFromDB
+            dataViewModel.dayHealthDataState.dayStepListFromDB
         }
     }
     val distanceListFromDB = remember(dataViewModel) {
         {
-            dataViewModel.dayPhysicalActivityInfoState.dayDistanceListFromDB
+            dataViewModel.dayHealthDataState.dayDistanceListFromDB
         }
     }
     val caloriesListFromDB = remember(dataViewModel) {
         {
-            dataViewModel.dayPhysicalActivityInfoState.dayCaloriesListFromDB
+            dataViewModel.dayHealthDataState.dayCaloriesListFromDB
         }
     }
 
