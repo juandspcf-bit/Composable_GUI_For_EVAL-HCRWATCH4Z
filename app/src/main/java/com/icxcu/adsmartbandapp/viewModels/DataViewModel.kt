@@ -76,7 +76,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     var smartWatchState by mutableStateOf(SmartWatchState(todayFormattedDate, yesterdayFormattedDate))
     var swRepository: SWRepository = SWRepository()
 
-    lateinit var collecDataScope: Job
+    var collectDataScope:Job? = null
 
 
     var stateBluetoothListScreenNavigationStatus by mutableStateOf(BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_BLUETOOTH_SCREEN)
@@ -130,7 +130,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     }
 
     fun listenDataFromSmartWatch(){
-        collecDataScope = viewModelScope.launch {
+        collectDataScope = viewModelScope.launch {
             swRepository.sharedStepsFlow.collect {
                 Log.d("DATAX", "SWReadingStatus.STOPPED listenDataFromSmartWatch: ${smartWatchState.todayDateValuesReadFromSW.stepList.sum()}")
 

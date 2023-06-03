@@ -23,7 +23,7 @@ class SWRepository {
     )
     val sharedStepsFlow = _sharedStepsFlow.asSharedFlow()
 
-    lateinit var jobSW:Job
+    var jobSW:Job? = null
 
 
 
@@ -89,10 +89,10 @@ class SWRepository {
             )
             _sharedStepsFlow.emit(yesterdayValues)
             Log.d("DATAX", "requestSmartWatchDataRep:  CoroutineScope(Dispatchers.Default) END")
-            jobSW.cancel()
+            jobSW?.cancel()
         }
 
-        jobSW.invokeOnCompletion {
+        jobSW?.invokeOnCompletion {
             Log.d("DATAX", "requestSmartWatchData: cancelled")
         }
     }

@@ -32,7 +32,7 @@ import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
 import com.icxcu.adsmartbandapp.screens.BluetoothScanScreen
 import com.icxcu.adsmartbandapp.screens.PermissionsScreen
 import com.icxcu.adsmartbandapp.screens.Routes
-import com.icxcu.adsmartbandapp.screens.mainNavBar.RootMainNavigationBar
+import com.icxcu.adsmartbandapp.screens.mainNavBar.MainNavigationBarRoot
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.InvalidAlertDialogState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalDataForm
@@ -316,7 +316,7 @@ class MainActivity : ComponentActivity() {
                     bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
                     bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
                         ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
-                    RootMainNavigationBar(
+                    MainNavigationBarRoot(
                         dataViewModel,
                         getFetchingDataFromSWStatus,
                         bluetoothAddress,
@@ -338,7 +338,7 @@ class MainActivity : ComponentActivity() {
                     bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
                     bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
                         ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
-                    RootMainNavigationBar(
+                    MainNavigationBarRoot(
                         dataViewModel,
                         getFetchingDataFromSWStatus,
                         bluetoothAddress,
@@ -457,9 +457,9 @@ class MainActivity : ComponentActivity() {
                 dataViewModel.todayFormattedDate
             )
 
-        dataViewModel.swRepository.jobSW.cancel()
+        dataViewModel.swRepository.jobSW?.cancel()
 
-        dataViewModel.collecDataScope.cancel()
+        dataViewModel.collectDataScope?.cancel()
         dataViewModel.selectedDay = ""
 
         dataViewModel.statusStartedReadingDataLasThreeDaysData = false

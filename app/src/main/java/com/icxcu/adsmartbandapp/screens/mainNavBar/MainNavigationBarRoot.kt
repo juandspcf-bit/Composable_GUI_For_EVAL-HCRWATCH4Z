@@ -8,7 +8,7 @@ import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 
 @Composable
-fun RootMainNavigationBar(dataViewModel: DataViewModel,
+fun MainNavigationBarRoot(dataViewModel: DataViewModel,
                           getFetchingDataFromSWStatus: () -> SWReadingStatus,
                           bluetoothAddress:String,
                           bluetoothName:String,
@@ -46,7 +46,6 @@ fun RootMainNavigationBar(dataViewModel: DataViewModel,
             dataViewModel.getPersonalInfoData(dataViewModel.macAddressDeviceBluetooth)
             dataViewModel.statusStartedReadingDataLasThreeDaysData = true
 
-
         }
 
         SWReadingStatus.IN_PROGRESS -> {
@@ -63,6 +62,27 @@ fun RootMainNavigationBar(dataViewModel: DataViewModel,
 
             Log.d("DATAX", "Routes.DataHome.route: READ")
 
+            TodayPhysicalActivityDBHandler(
+                dataViewModel = dataViewModel
+            )
+            YesterdayPhysicalActivityDBHandler(
+                dataViewModel = dataViewModel,
+                splashViewModel = splashViewModel
+            )
+            TodayBloodPressureDBHandler(
+                dataViewModel = dataViewModel
+            )
+            YesterdayBloodPressureDBHandler(
+                dataViewModel = dataViewModel,
+                splashViewModel = splashViewModel
+            )
+            TodayHeartRateDBHandler(
+                dataViewModel = dataViewModel
+            )
+            YesterdayHeartRateDBHandler(
+                dataViewModel = dataViewModel,
+                splashViewModel = splashViewModel
+            )
 
             dataViewModel.macAddressDeviceBluetooth =
                 bluetoothAddress

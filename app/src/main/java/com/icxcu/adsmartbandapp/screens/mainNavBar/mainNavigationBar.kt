@@ -16,7 +16,6 @@ import com.icxcu.adsmartbandapp.repositories.BloodPressureData
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
-import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import java.text.SimpleDateFormat
@@ -33,25 +32,13 @@ fun MainNavigationBar(
     navMainController: NavHostController
 ) {
 
-    TodayPhysicalActivityDBHandler(dataViewModel = dataViewModel)
-    YesterdayPhysicalActivityDBHandler(
-        dataViewModel = dataViewModel,
-        splashViewModel = splashViewModel
-    )
-    TodayBloodPressureDBHandler(dataViewModel = dataViewModel, splashViewModel = splashViewModel)
-    YesterdayBloodPressureDBHandler(
-        dataViewModel = dataViewModel,
-        splashViewModel = splashViewModel
-    )
-    TodayHeartRateDBHandler(dataViewModel = dataViewModel, splashViewModel = splashViewModel)
-    YesterdayHeartRateDBHandler(dataViewModel = dataViewModel, splashViewModel = splashViewModel)
+
 
     val getSmartWatchState = remember(dataViewModel) {
         {
             dataViewModel.smartWatchState
         }
     }
-
 
     val dayDateValuesReadFromSW = {
         getSmartWatchState().todayDateValuesReadFromSW
@@ -60,6 +47,16 @@ fun MainNavigationBar(
     val getVisibilityProgressbarForFetchingData = {
         getSmartWatchState().progressbarForFetchingDataFromSW
     }
+
+
+
+
+
+
+
+
+
+
 
 
     val getMyHeartRateAlertDialogDataHandler = {
@@ -165,9 +162,9 @@ fun MainNavigationBar(
                 dataViewModel.macAddressDeviceBluetooth
             )
 
-            navMainController.navigate(Routes.CircularProgressLoading.route){
+/*            navMainController.navigate(Routes.CircularProgressLoading.route){
                 popUpTo(Routes.DataHome.route)
-            }
+            }*/
 
         }
     }
