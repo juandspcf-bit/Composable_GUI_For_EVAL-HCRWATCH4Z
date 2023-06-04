@@ -6,7 +6,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import com.icxcu.adsmartbandapp.data.TypesTable
-import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getDoubleListFromStringMap
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 import java.text.SimpleDateFormat
@@ -26,7 +25,7 @@ fun BloodPressureScreenRoot(
     }
 
     val dayBloodPressureResultsFromDB by getDayPhysicalActivityData().dayBloodPressureResultsFromDB.observeAsState(
-        MutableList(0) { BloodPressure() }.toList()
+        listOf()
     )
 
     if (dayBloodPressureResultsFromDB.isEmpty().not()) {

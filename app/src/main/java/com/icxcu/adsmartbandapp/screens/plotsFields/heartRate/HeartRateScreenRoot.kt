@@ -7,7 +7,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import com.icxcu.adsmartbandapp.data.TypesTable
-import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.ValidatorsPersonalField
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getDoubleListFromStringMap
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
@@ -31,7 +30,7 @@ fun HeartRateScreenRoot(
     }
 
     val dayHeartRateResultsFromDB by getDayPhysicalActivityData().dayHeartRateResultsFromDB.observeAsState(
-        MutableList(1) { HeartRate() }.toList()
+        listOf()
     )
 
     val ageCalculated by remember(dataViewModel) {
@@ -66,11 +65,7 @@ fun HeartRateScreenRoot(
     getDayPhysicalActivityData().dayHeartRateListFromDB =
         if (dayHeartRateResultsFromDB.isEmpty().not()) {
             val filter = dayHeartRateResultsFromDB.filter { it.typesTable == TypesTable.HEART_RATE }
-            if(filter[0].data.isNotBlank()){
-                getDoubleListFromStringMap(filter[0].data)
-            }else{
-                MutableList(48) { 0.0 }.toList()
-            }
+            getDoubleListFromStringMap(filter[0].data)
         } else {
             MutableList(48) { 0.0 }.toList()
         }

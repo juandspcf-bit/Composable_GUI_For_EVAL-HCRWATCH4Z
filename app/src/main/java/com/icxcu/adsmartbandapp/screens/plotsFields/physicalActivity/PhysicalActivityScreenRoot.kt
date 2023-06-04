@@ -6,7 +6,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import com.icxcu.adsmartbandapp.data.TypesTable
-import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -28,7 +27,7 @@ fun PhysicalActivityScreenRoot(
 
     //Data state
     val dayPhysicalActivityResultsFromDB by getDayPhysicalActivityData().dayPhysicalActivityResultsFromDB.observeAsState(
-        MutableList(0) { PhysicalActivity() }.toList()
+        listOf()
     )
 
     if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
