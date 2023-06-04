@@ -30,14 +30,14 @@ fun MainNavigationBarWithSwValues(
     bluetoothAddress: String,
     dataViewModel: DataViewModel,
     getFetchingDataFromSWStatus: () -> SWReadingStatus,
-    navMainController: NavHostController
+    navMainController: NavHostController,
 ) {
 
-    val getVisibilityProgressbarForFetchingData = remember(dataViewModel){
+    val getVisibilityProgressbarForFetchingData = remember(dataViewModel) {
         { dataViewModel.smartWatchState.progressbarForFetchingDataFromSW }
     }
 
-    val todayValuesReadFromSW = remember(dataViewModel){
+    val todayValuesReadFromSW = remember(dataViewModel) {
         { dataViewModel.smartWatchState.todayDateValuesReadFromSW }
     }
 
@@ -63,7 +63,7 @@ fun MainNavigationBarWithSwValues(
     }
 
     val setStateEnabledDatePickerMainScaffold = remember(dataViewModel) {
-        { newValue:Boolean ->
+        { newValue: Boolean ->
             dataViewModel.stateEnabledDatePickerMainScaffold = newValue
         }
     }
@@ -75,83 +75,98 @@ fun MainNavigationBarWithSwValues(
     }
 
 
+    val todayValues = remember(
+        dataViewModel,
+        getFetchingDataFromSWStatus,
+        dayHealthValuesReadFromDB,
+        todayValuesReadFromSW
+    ) {
+        {
+            val valuesLambda: () -> Values
 
-    val todayValues = {
-        val valuesLambda: () -> Values
+            if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.NoREAD
+                && getFetchingDataFromSWStatus() == SWReadingStatus.IN_PROGRESS
+            ) {
+                valuesLambda = todayValuesReadFromSW
+            } else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.NoREAD
+                && getFetchingDataFromSWStatus() == SWReadingStatus.READ
+            ) {
+                valuesLambda = todayValuesReadFromSW
+            } else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.InProgressReading
+                && getFetchingDataFromSWStatus() == SWReadingStatus.READ && dayHealthValuesReadFromDB().stepList.sum() == 0
+            ) {
+                valuesLambda = dayHealthValuesReadFromDB
+            } else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.InProgressReading
+                && getFetchingDataFromSWStatus() == SWReadingStatus.READ && dayHealthValuesReadFromDB().stepList.sum() != 0
+            ) {
+                valuesLambda = dayHealthValuesReadFromDB
+                dataViewModel.statusReadingDbForDashboard =
+                    StatusReadingDbForDashboard.NewValuesRead
 
-        if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.NoREAD
-            && getFetchingDataFromSWStatus() == SWReadingStatus.IN_PROGRESS
-        ) {
-            valuesLambda = todayValuesReadFromSW
-        } else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.NoREAD
-            && getFetchingDataFromSWStatus() == SWReadingStatus.READ
-        ) {
-            valuesLambda = todayValuesReadFromSW
-        } else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.InProgressReading
-            && getFetchingDataFromSWStatus() == SWReadingStatus.READ && dayHealthValuesReadFromDB().stepList.sum() == 0
-        ) {
-            valuesLambda = dayHealthValuesReadFromDB
-        } else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.InProgressReading
-            && getFetchingDataFromSWStatus() == SWReadingStatus.READ && dayHealthValuesReadFromDB().stepList.sum() != 0
-        ) {
-            Log.d("DATA_FROM_DATABASE", "MainNavigationBarWithSwValues: ")
-            valuesLambda = dayHealthValuesReadFromDB
-            dataViewModel.statusReadingDbForDashboard = StatusReadingDbForDashboard.NewValuesRead
+            } else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.NewValuesRead
+                && getFetchingDataFromSWStatus() == SWReadingStatus.READ
+            ) {
+                valuesLambda = dayHealthValuesReadFromDB
+            } else {
+                valuesLambda = todayValuesReadFromSW
+            }
 
-        } else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.NewValuesRead
-            && getFetchingDataFromSWStatus() == SWReadingStatus.READ
-        ) {
-            valuesLambda = dayHealthValuesReadFromDB
-        } else {
-            valuesLambda = todayValuesReadFromSW
+            valuesLambda
         }
-
-        valuesLambda
     }
 
 
-    val getMyHeartRateAlertDialogDataHandler = {
-        dataViewModel.getMyHeartRateAlertDialogDataHandler()
+    val getMyHeartRateAlertDialogDataHandler = remember(dataViewModel) {
+        {
+            dataViewModel.getMyHeartRateAlertDialogDataHandler()
+        }
     }
 
     val heartRate by getMyHeartRateAlertDialogDataHandler().getSharedFlowHeartRate()
         .collectAsState(initial = 0)
 
-    val getMyHeartRate = {
-        heartRate
+    val getMyHeartRate = remember(heartRate) {
+        { heartRate }
     }
 
 
-    val getMyBloodPressureDialogDataHandler = {
-        dataViewModel.getMyBloodPressureAlertDialogDataHandler()
+    val getMyBloodPressureDialogDataHandler = remember(dataViewModel) {
+        {
+            dataViewModel.getMyBloodPressureAlertDialogDataHandler()
+        }
     }
+
     val bloodPressure by getMyBloodPressureDialogDataHandler().getSharedFlowBloodPressure()
         .collectAsState(initial = BloodPressureData(0, 0))
 
     val circularProgressBloodPressure by getMyBloodPressureDialogDataHandler().getStateFlowCircularProgressBloodPressure()
         .collectAsState()
 
-    val getCircularProgressBloodPressure = {
-        circularProgressBloodPressure
+    val getCircularProgressBloodPressure = remember(circularProgressBloodPressure) {
+        { circularProgressBloodPressure }
     }
 
-    val getRealTimeBloodPressure = {
-        bloodPressure
+    val getRealTimeBloodPressure = remember(bloodPressure) {
+        { bloodPressure }
     }
 
 
-    val getMySpO2AlertDialogDataHandler = {
-        dataViewModel.getMySpO2AlertDialogDataHandler()
+    val getMySpO2AlertDialogDataHandler = remember(dataViewModel) {
+        {
+            dataViewModel.getMySpO2AlertDialogDataHandler()
+        }
     }
 
     val spO2 by getMySpO2AlertDialogDataHandler().getSharedFlowSpO2().collectAsState(initial = 0.0)
 
-    val getMySpO2 = {
-        spO2
+    val getMySpO2 = remember(spO2) {
+        { spO2 }
     }
 
-    val getMyTemperatureAlertDialogDataHandler = {
-        dataViewModel.getMyTemperatureAlertDialogDataHandler()
+    val getMyTemperatureAlertDialogDataHandler = remember(dataViewModel) {
+        {
+            dataViewModel.getMyTemperatureAlertDialogDataHandler()
+        }
     }
 
     val temperature by getMyTemperatureAlertDialogDataHandler().getSharedFlowTemperature()
@@ -160,12 +175,12 @@ fun MainNavigationBarWithSwValues(
     val circularProgressTemperature by getMyTemperatureAlertDialogDataHandler().getStateFlowCircularProgressTemperature()
         .collectAsState()
 
-    val getCircularProgressTemperature = {
-        circularProgressTemperature
+    val getCircularProgressTemperature = remember(circularProgressTemperature) {
+        { circularProgressTemperature }
     }
 
-    val getRealTimeTemperature = {
-        temperature
+    val getRealTimeTemperature = remember(temperature) {
+        { temperature }
     }
 
     val clearState = remember(dataViewModel) {
@@ -205,12 +220,6 @@ fun MainNavigationBarWithSwValues(
                 dateData,
                 dataViewModel.macAddressDeviceBluetooth
             )
-
-
-            /*            navMainController.navigate(Routes.CircularProgressLoading.route){
-                            popUpTo(Routes.DataHome.route)
-                        }*/
-
         }
     }
 
@@ -321,7 +330,7 @@ class DayHealthDataStateForDashBoard {
 
 class SmartWatchState(
     todayFormattedDate: String,
-    yesterdayFormattedDate: String
+    yesterdayFormattedDate: String,
 ) {
 
     var progressbarForFetchingDataFromSW by mutableStateOf(false)
