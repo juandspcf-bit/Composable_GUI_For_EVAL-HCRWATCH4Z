@@ -62,6 +62,8 @@ fun MainNavigationBarScaffold(
     bluetoothName: String = "no name",
     bluetoothAddress: String = "no address",
     dayDateValuesReadFromSW: () -> Values = { MockData.valuesToday },
+    setStateEnabledDatePickerMainScaffold: (Boolean) -> Unit,
+    getStateEnabledDatePickerMainScaffold: () -> Boolean,
     getVisibilityProgressbarForFetchingData: () -> Boolean = { false },
     getMyHeartRateAlertDialogDataHandler: () -> MyHeartRateAlertDialogDataHandler,
     getMyHeartRate: () -> Int,
@@ -100,27 +102,33 @@ fun MainNavigationBarScaffold(
                 modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                 scrollBehavior = scrollBehavior,
                 actions = {
-                    IconButton(
-                        onClick = {stateShowDialogDatePickerSetter(!stateShowDialogDatePickerValue())},
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.baseline_date_range_24),
-                            contentDescription = "Date Range",
-                            tint = Color.White,
-                            modifier = Modifier.padding(start = 2.dp, end = 2.dp)
-                        )
+                    if(getStateEnabledDatePickerMainScaffold()){
+                        IconButton(
+                            onClick = { stateShowDialogDatePickerSetter(!stateShowDialogDatePickerValue()) },
+                            enabled = getStateEnabledDatePickerMainScaffold()
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.baseline_date_range_24),
+                                contentDescription = "Date Range",
+                                tint = Color.White,
+                                modifier = Modifier.padding(start = 2.dp, end = 2.dp)
+                            )
+                        }
+
+                        IconButton(
+                            onClick = {},
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.baseline_query_stats_24),
+                                contentDescription = "Health Statistics",
+                                tint = Color.White,
+                                modifier = Modifier.padding(start = 2.dp, end = 2.dp)
+                            )
+                        }
+
                     }
 
-                    IconButton(
-                        onClick = {},
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.baseline_query_stats_24),
-                            contentDescription = "Health Statistics",
-                            tint = Color.White,
-                            modifier = Modifier.padding(start = 2.dp, end = 2.dp)
-                        )
-                    }
+
 
                 }
             )
@@ -172,7 +180,12 @@ fun MainNavigationBarScaffold(
             }
 
         },
-        bottomBar = { BottomNavigationBar(navController = navController) }
+        bottomBar = {
+            BottomNavigationBar(
+                navController = navController,
+                setStateEnabledDatePickerMainScaffold = setStateEnabledDatePickerMainScaffold,
+            )
+        }
     )
 
     if (stateShowDialogDatePickerValue()) {
@@ -239,7 +252,10 @@ fun NavigationHost(
 
 
 @Composable
-fun BottomNavigationBar(navController: NavHostController) {
+fun BottomNavigationBar(
+    navController: NavHostController,
+    setStateEnabledDatePickerMainScaffold: (Boolean) -> Unit,
+) {
 
     NavigationBar(
         containerColor = Color(0xff0d1721),
@@ -247,6 +263,11 @@ fun BottomNavigationBar(navController: NavHostController) {
     ) {
         val backStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = backStackEntry?.destination?.route
+        if(currentRoute=="CheckHealth" || currentRoute=="settings"){
+            setStateEnabledDatePickerMainScaffold(false)
+        }else{
+            setStateEnabledDatePickerMainScaffold(true)
+        }
 
         NavBarItems.BarItems.forEach { navItem ->
 

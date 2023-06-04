@@ -11,7 +11,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
-import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
@@ -19,8 +18,6 @@ import com.icxcu.adsmartbandapp.repositories.BloodPressureData
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getDoubleListFromStringMap
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getIntegerListFromStringMap
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -36,18 +33,12 @@ fun MainNavigationBarWithSwValues(
     navMainController: NavHostController
 ) {
 
-    val getSmartWatchState = remember(dataViewModel) {
-        {
-            dataViewModel.smartWatchState
-        }
+    val getVisibilityProgressbarForFetchingData = remember(dataViewModel){
+        { dataViewModel.smartWatchState.progressbarForFetchingDataFromSW }
     }
 
-    val getVisibilityProgressbarForFetchingData = {
-        getSmartWatchState().progressbarForFetchingDataFromSW
-    }
-
-    val todayValuesReadFromSW = {
-        getSmartWatchState().todayDateValuesReadFromSW
+    val todayValuesReadFromSW = remember(dataViewModel){
+        { dataViewModel.smartWatchState.todayDateValuesReadFromSW }
     }
 
     val dayHealthResultsFromDB by dataViewModel
@@ -65,10 +56,24 @@ fun MainNavigationBarWithSwValues(
             )
         )
 
-    val dayHealthValuesReadFromDB = {
-        dayHealthResultsFromDB
+    val dayHealthValuesReadFromDB = remember(dayHealthResultsFromDB) {
+        {
+            dayHealthResultsFromDB
+        }
     }
-    Log.d("DATA_FROM_DATABASE", "MainNavigationBarWithSwValues: $dayHealthResultsFromDB")
+
+    val setStateEnabledDatePickerMainScaffold = remember(dataViewModel) {
+        { newValue:Boolean ->
+            dataViewModel.stateEnabledDatePickerMainScaffold = newValue
+        }
+    }
+
+    val getStateEnabledDatePickerMainScaffold = remember(dataViewModel) {
+        {
+            dataViewModel.stateEnabledDatePickerMainScaffold
+        }
+    }
+
 
 
     val todayValues = {
@@ -86,7 +91,7 @@ fun MainNavigationBarWithSwValues(
             && getFetchingDataFromSWStatus() == SWReadingStatus.READ && dayHealthValuesReadFromDB().stepList.sum() == 0
         ) {
             valuesLambda = dayHealthValuesReadFromDB
-        }else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.InProgressReading
+        } else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.InProgressReading
             && getFetchingDataFromSWStatus() == SWReadingStatus.READ && dayHealthValuesReadFromDB().stepList.sum() != 0
         ) {
             Log.d("DATA_FROM_DATABASE", "MainNavigationBarWithSwValues: ")
@@ -103,7 +108,6 @@ fun MainNavigationBarWithSwValues(
 
         valuesLambda
     }
-
 
 
     val getMyHeartRateAlertDialogDataHandler = {
@@ -203,7 +207,6 @@ fun MainNavigationBarWithSwValues(
             )
 
 
-
             /*            navMainController.navigate(Routes.CircularProgressLoading.route){
                             popUpTo(Routes.DataHome.route)
                         }*/
@@ -211,10 +214,13 @@ fun MainNavigationBarWithSwValues(
         }
     }
 
+
     MainNavigationBarScaffold(
         bluetoothName,
         bluetoothAddress,
         todayValues(),
+        setStateEnabledDatePickerMainScaffold,
+        getStateEnabledDatePickerMainScaffold,
         getVisibilityProgressbarForFetchingData,
         getMyHeartRateAlertDialogDataHandler,
         getMyHeartRate,

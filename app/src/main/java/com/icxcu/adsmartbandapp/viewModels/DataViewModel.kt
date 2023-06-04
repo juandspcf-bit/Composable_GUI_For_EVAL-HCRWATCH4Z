@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -84,6 +85,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     var stateBluetoothListScreenNavigationStatus by mutableStateOf(BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_BLUETOOTH_SCREEN)
 
     var statusReadingDbForDashboard:StatusReadingDbForDashboard = StatusReadingDbForDashboard.NoREAD
+    var stateEnabledDatePickerMainScaffold by mutableStateOf(true)
 
     init {
         val swDb = SWRoomDatabase.getInstance(application)
