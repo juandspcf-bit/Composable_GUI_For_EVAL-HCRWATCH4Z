@@ -102,7 +102,7 @@ fun MainNavigationBarScaffold(
                 modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                 scrollBehavior = scrollBehavior,
                 actions = {
-                    if(getStateEnabledDatePickerMainScaffold()){
+                    if(getStateEnabledDatePickerMainScaffold() && getVisibilityProgressbarForFetchingData().not()){
                         IconButton(
                             onClick = { stateShowDialogDatePickerSetter(!stateShowDialogDatePickerValue()) },
                             enabled = getStateEnabledDatePickerMainScaffold()
