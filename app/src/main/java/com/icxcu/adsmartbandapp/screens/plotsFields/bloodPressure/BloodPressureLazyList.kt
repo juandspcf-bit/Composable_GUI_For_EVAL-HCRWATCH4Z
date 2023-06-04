@@ -1,5 +1,6 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -53,6 +54,7 @@ fun BloodPressureLazyList(
                 val category = mapCategories[getCategory]
                 val readableCategory = mapToReadableCategories[getCategory]
 
+                Log.d("CATEGORY", "BloodPressureLazyList: $getCategory")
 
                 RowBloodPressure(
                     valueBloodPressure = "$stringSystolicValue/$stringDiastolicValue mmHg",

@@ -43,6 +43,8 @@ fun BloodPressureScreenRoot(
             MutableList(48) { 0.0 }.toList()
         }
 
+    Log.d("DaySystolicListFromDB", "BloodPressureScreenRoot: ${getDayPhysicalActivityData().daySystolicListFromDB}")
+
     getDayPhysicalActivityData().dayDiastolicListFromDB =
         if (dayBloodPressureResultsFromDB.isEmpty().not()) {
             val filter =

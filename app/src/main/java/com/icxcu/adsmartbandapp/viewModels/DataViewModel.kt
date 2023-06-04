@@ -141,8 +141,6 @@ class DataViewModel(var application: Application) : ViewModel() {
     fun listenDataFromSmartWatch(){
         collectDataScope = viewModelScope.launch {
             swRepository.sharedStepsFlow.collect {
-                Log.d("DATAX", "SWReadingStatus.STOPPED listenDataFromSmartWatch: ${smartWatchState.todayDateValuesReadFromSW.stepList.sum()}")
-
                 when (it.date) {
                     todayFormattedDate -> {
                         smartWatchState.todayDateValuesReadFromSW = it

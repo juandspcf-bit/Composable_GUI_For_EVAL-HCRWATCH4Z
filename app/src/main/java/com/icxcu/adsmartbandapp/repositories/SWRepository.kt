@@ -71,8 +71,8 @@ class SWRepository {
                 MockData.valuesToday.distanceList,
                 MockData.valuesToday.caloriesList,
                 MockData.valuesToday.heartRateList,
-                MockData.valuesToday.diastolicList,
                 MockData.valuesToday.systolicList,
+                MockData.valuesToday.diastolicList,
                 todayFormattedDate,
             )
             _sharedStepsFlow.emit(todayValues)
@@ -83,8 +83,8 @@ class SWRepository {
                 MockData.valuesYesterday.distanceList,
                 MockData.valuesYesterday.caloriesList,
                 MockData.valuesYesterday.heartRateList,
-                MockData.valuesYesterday.diastolicList,
                 MockData.valuesYesterday.systolicList,
+                MockData.valuesYesterday.diastolicList,
                 yesterdayFormattedDate,
             )
             _sharedStepsFlow.emit(yesterdayValues)
