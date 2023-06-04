@@ -66,7 +66,11 @@ fun HeartRateScreenRoot(
     getDayPhysicalActivityData().dayHeartRateListFromDB =
         if (dayHeartRateResultsFromDB.isEmpty().not()) {
             val filter = dayHeartRateResultsFromDB.filter { it.typesTable == TypesTable.HEART_RATE }
-            getDoubleListFromStringMap(filter[0].data)
+            if(filter[0].data.isNotBlank()){
+                getDoubleListFromStringMap(filter[0].data)
+            }else{
+                MutableList(48) { 0.0 }.toList()
+            }
         } else {
             MutableList(48) { 0.0 }.toList()
         }
