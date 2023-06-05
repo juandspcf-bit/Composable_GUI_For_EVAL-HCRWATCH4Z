@@ -40,8 +40,6 @@ import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.Pe
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoInitDBHandlerAD
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.UpdateAlertDialogState
-import com.icxcu.adsmartbandapp.screens.personalnfoInit.PersonalInfoInit
-import com.icxcu.adsmartbandapp.screens.personalnfoInit.PersonalInfoInitDBHandler
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureScreenRoot
 import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenRoot
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityScreenRoot
@@ -400,16 +398,6 @@ class MainActivity : ComponentActivity() {
                     )
                     PersonalDataForm(dataViewModel = dataViewModel) {
                         navLambdaBackToMainNavigationBar()
-                    }
-                }
-
-                composable(Routes.PersonalInfoFormInit.route) {
-                    dataViewModel.getPersonalInfoData(dataViewModel.macAddressDeviceBluetooth)
-                    PersonalInfoInitDBHandler(
-                        dataViewModel
-                    )
-                    PersonalInfoInit(dataViewModel = dataViewModel) {
-                        navLambdaToBlueScannerScreen()
                     }
                 }
 
