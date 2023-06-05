@@ -166,8 +166,8 @@ fun BloodPressureContent(
         }
 
         Divider(
-            modifier = Modifier
-                .height(2.dp)
+            modifier = Modifier.height(2.dp),
+            color = Color.White
         )
 
         StatisticsBloodPressure(
@@ -179,8 +179,8 @@ fun BloodPressureContent(
         )
 
         Divider(
-            modifier = Modifier
-                .height(2.dp)
+            modifier = Modifier.height(2.dp),
+            color = Color.White
         )
 
         BloodPressureLazyList(

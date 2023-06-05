@@ -164,7 +164,10 @@ fun HeartRateContent(
 
         }
 
-        Divider(modifier = Modifier.height(2.dp))
+        Divider(
+            modifier = Modifier.height(2.dp),
+            color = Color.White
+        )
 
         StatisticsHeartRate(
             heartRateListContent = heartRateList,
@@ -174,7 +177,10 @@ fun HeartRateContent(
                 .width(50.dp)
         )
 
-        Divider(modifier = Modifier.height(2.dp))
+        Divider(
+            modifier = Modifier.height(2.dp),
+            color = Color.White
+        )
 
         HeartRateLazyList(
             heartRateList,
