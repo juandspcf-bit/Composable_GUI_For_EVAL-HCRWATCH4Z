@@ -339,7 +339,6 @@ class MainActivity : ComponentActivity() {
                         getFetchingDataFromSWStatus,
                         bluetoothAddress,
                         bluetoothName,
-                        navLambdaBackToBluetoothScanner,
                         navMainController,
                         splashViewModel
                     )
@@ -366,7 +365,6 @@ class MainActivity : ComponentActivity() {
                         getFetchingDataFromSWStatus,
                         bluetoothAddress,
                         bluetoothName,
-                        navLambdaBackToBluetoothScanner,
                         navMainController,
                         splashViewModel
                     )

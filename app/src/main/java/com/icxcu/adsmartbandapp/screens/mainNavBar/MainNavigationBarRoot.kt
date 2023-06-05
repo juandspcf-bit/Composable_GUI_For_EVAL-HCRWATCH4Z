@@ -8,13 +8,13 @@ import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 
 @Composable
-fun MainNavigationBarRoot(dataViewModel: DataViewModel,
-                          getFetchingDataFromSWStatus: () -> SWReadingStatus,
-                          bluetoothAddress:String,
-                          bluetoothName:String,
-                          navLambdaBackBluetoothScanner: () -> Unit,
-                          navMainController: NavHostController,
-                          splashViewModel: SplashViewModel
+fun MainNavigationBarRoot(
+    dataViewModel: DataViewModel,
+    getFetchingDataFromSWStatus: () -> SWReadingStatus,
+    bluetoothAddress: String,
+    bluetoothName: String,
+    navMainController: NavHostController,
+    splashViewModel: SplashViewModel
 ){
     when (getFetchingDataFromSWStatus()) {
         SWReadingStatus.CLEARED -> {
@@ -65,6 +65,9 @@ fun MainNavigationBarRoot(dataViewModel: DataViewModel,
 
             Log.d("DATAX", "Routes.DataHome.route: READ")
 
+            TodayPhysicalActivityDBHandler(
+                dataViewModel = dataViewModel
+            )
             YesterdayPhysicalActivityDBHandler(
                 dataViewModel = dataViewModel,
                 splashViewModel = splashViewModel
