@@ -84,6 +84,9 @@ fun MainNavigationBarWithSwValues(
         {
             val valuesLambda: () -> Values
 
+            Log.d("STATUS_LAMBDA",
+                "MainNavigationBarWithSwValues: ${dataViewModel.statusReadingDbForDashboard}, ${getFetchingDataFromSWStatus()}")
+
             if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.NoREAD
                 && getFetchingDataFromSWStatus() == SWReadingStatus.IN_PROGRESS
             ) {
@@ -92,7 +95,16 @@ fun MainNavigationBarWithSwValues(
                 && getFetchingDataFromSWStatus() == SWReadingStatus.READ
             ) {
                 valuesLambda = todayValuesReadFromSW
-            } else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.InProgressReading
+            } else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
+                && getFetchingDataFromSWStatus() == SWReadingStatus.READ
+            ) {
+                valuesLambda = dayHealthValuesReadFromDB
+            }else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
+                && getFetchingDataFromSWStatus() == SWReadingStatus.READ
+            ) {
+                //Log.d("STATUS_LAMBDA", "MainNavigationBarWithSwValues: NewValuesRead, SWReadingStatus.READ")
+                valuesLambda = todayValuesReadFromSW
+            }else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.InProgressReading
                 && getFetchingDataFromSWStatus() == SWReadingStatus.READ && dayHealthValuesReadFromDB().stepList.sum() == 0
             ) {
                 valuesLambda = dayHealthValuesReadFromDB
@@ -369,6 +381,8 @@ enum class SWReadingStatus {
 
 sealed class StatusReadingDbForDashboard {
     object NoREAD : StatusReadingDbForDashboard()
+    object ReadyForNewReadFromDashBoard : StatusReadingDbForDashboard()
+    object ReadyForNewReadFromFieldsPlot : StatusReadingDbForDashboard()
     object InProgressReading : StatusReadingDbForDashboard()
     object NewValuesRead : StatusReadingDbForDashboard()
 }

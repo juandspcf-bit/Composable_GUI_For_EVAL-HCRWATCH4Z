@@ -225,6 +225,7 @@ class MainActivity : ComponentActivity() {
 
             val navLambdaBackToMainNavigationBar = remember {
                 {
+                    dataViewModel.statusReadingDbForDashboard = StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
                     navMainController.popBackStack()
                 }
             }
@@ -326,7 +327,12 @@ class MainActivity : ComponentActivity() {
                     bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
                     bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
                         ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
-                    dataViewModel.statusReadingDbForDashboard = StatusReadingDbForDashboard.NoREAD
+                    if(dataViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.NoREAD
+                        && dataViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
+                    ){
+                        dataViewModel.statusReadingDbForDashboard = StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
+                    }
+
 
                     MainNavigationBarRoot(
                         dataViewModel,
@@ -350,7 +356,11 @@ class MainActivity : ComponentActivity() {
                     bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
                     bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
                         ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
-                    dataViewModel.statusReadingDbForDashboard = StatusReadingDbForDashboard.NoREAD
+                    if(dataViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.NoREAD
+                        && dataViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
+                    ){
+                        dataViewModel.statusReadingDbForDashboard = StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
+                    }
                     MainNavigationBarRoot(
                         dataViewModel,
                         getFetchingDataFromSWStatus,

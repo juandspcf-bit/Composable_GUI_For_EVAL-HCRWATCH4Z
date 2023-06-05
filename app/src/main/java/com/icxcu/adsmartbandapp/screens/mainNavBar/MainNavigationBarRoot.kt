@@ -51,6 +51,9 @@ fun MainNavigationBarRoot(dataViewModel: DataViewModel,
         SWReadingStatus.IN_PROGRESS -> {
 
             Log.d("DATAX", "Routes.DataHome.route: IN_PROGRESS")
+            TodayPhysicalActivityDBHandler(
+                dataViewModel = dataViewModel
+            )
 
 
             dataViewModel.macAddressDeviceBluetooth =
@@ -62,9 +65,6 @@ fun MainNavigationBarRoot(dataViewModel: DataViewModel,
 
             Log.d("DATAX", "Routes.DataHome.route: READ")
 
-            TodayPhysicalActivityDBHandler(
-                dataViewModel = dataViewModel
-            )
             YesterdayPhysicalActivityDBHandler(
                 dataViewModel = dataViewModel,
                 splashViewModel = splashViewModel
