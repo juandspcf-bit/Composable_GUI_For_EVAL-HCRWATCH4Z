@@ -193,6 +193,7 @@ fun MainNavigationBarWithSwValues(
 
     val clearState = remember(dataViewModel) {
         {
+            setStateEnabledDatePickerMainScaffold(false)
             dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.CLEARED
             dataViewModel.stateBluetoothListScreenNavigationStatus =
                 BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_BLUETOOTH_SCREEN

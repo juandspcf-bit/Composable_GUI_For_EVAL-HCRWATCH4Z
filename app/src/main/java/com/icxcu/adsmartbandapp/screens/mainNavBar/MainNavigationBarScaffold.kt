@@ -102,6 +102,8 @@ fun MainNavigationBarScaffold(
                 modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                 scrollBehavior = scrollBehavior,
                 actions = {
+                    Log.d("StateEnabledDatePickerMainScaffold()", "MainNavigationBarScaffold: ${getStateEnabledDatePickerMainScaffold()}")
+
                     if(getStateEnabledDatePickerMainScaffold() && getVisibilityProgressbarForFetchingData().not()){
                         IconButton(
                             onClick = { stateShowDialogDatePickerSetter(!stateShowDialogDatePickerValue()) },
@@ -184,6 +186,8 @@ fun MainNavigationBarScaffold(
             BottomNavigationBar(
                 navController = navController,
                 setStateEnabledDatePickerMainScaffold = setStateEnabledDatePickerMainScaffold,
+                getVisibilityProgressbarForFetchingData = getVisibilityProgressbarForFetchingData,
+                getStateEnabledDatePickerMainScaffold = getStateEnabledDatePickerMainScaffold,
             )
         }
     )
@@ -255,6 +259,8 @@ fun NavigationHost(
 fun BottomNavigationBar(
     navController: NavHostController,
     setStateEnabledDatePickerMainScaffold: (Boolean) -> Unit,
+    getVisibilityProgressbarForFetchingData: () -> Boolean = { false },
+    getStateEnabledDatePickerMainScaffold: () -> Boolean,
 ) {
 
     NavigationBar(
@@ -265,7 +271,9 @@ fun BottomNavigationBar(
         val currentRoute = backStackEntry?.destination?.route
         if(currentRoute=="CheckHealth" || currentRoute=="settings"){
             setStateEnabledDatePickerMainScaffold(false)
-        }else{
+        }else if(getVisibilityProgressbarForFetchingData().not()
+            && getStateEnabledDatePickerMainScaffold().not()
+            && currentRoute == "fields"){
             setStateEnabledDatePickerMainScaffold(true)
         }
 

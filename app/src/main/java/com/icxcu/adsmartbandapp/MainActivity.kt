@@ -337,7 +337,7 @@ class MainActivity : ComponentActivity() {
                         dataViewModel.statusReadingDbForDashboard = StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
                     }
 
-
+                    dataViewModel.stateEnabledDatePickerMainScaffold = false
                     MainNavigationBarRoot(
                         dataViewModel,
                         getFetchingDataFromSWStatus,

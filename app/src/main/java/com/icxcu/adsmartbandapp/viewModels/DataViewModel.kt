@@ -85,7 +85,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     var stateBluetoothListScreenNavigationStatus by mutableStateOf(BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_BLUETOOTH_SCREEN)
 
     var statusReadingDbForDashboard:StatusReadingDbForDashboard = StatusReadingDbForDashboard.NoREAD
-    var stateEnabledDatePickerMainScaffold by mutableStateOf(true)
+    var stateEnabledDatePickerMainScaffold by mutableStateOf(false)
 
     init {
         val swDb = SWRoomDatabase.getInstance(application)
