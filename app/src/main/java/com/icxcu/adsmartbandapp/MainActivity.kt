@@ -223,23 +223,27 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-            val navLambdaBackToMainNavigationBar = remember {
+            val navLambdaBackToMainNavigationBar = remember (dataViewModel, navMainController){
                 {
                     dataViewModel.statusReadingDbForDashboard = StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
                     navMainController.popBackStack()
                 }
             }
 
-            val getFetchingDataFromSWStatus = {
-                dataViewModel.smartWatchState.fetchingDataFromSWStatus
+            val getFetchingDataFromSWStatus = remember(dataViewModel){
+                {
+                    dataViewModel.smartWatchState.fetchingDataFromSWStatus
+                }
             }
 
-            val setFetchingDataFromSWStatusSTOPPED = {
-                Log.d("DATAX", "MainContent setFetchingDataFromSWStatusSTOPPED STOPPED")
+            val setFetchingDataFromSWStatusSTOPPED = remember(dataViewModel){
+                {
+                    Log.d("DATAX", "MainContent setFetchingDataFromSWStatusSTOPPED STOPPED")
 
-                dataViewModel.stateBluetoothListScreenNavigationStatus =
-                    BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_MAIN_NAV_SCREEN
-                dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.STOPPED
+                    dataViewModel.stateBluetoothListScreenNavigationStatus =
+                        BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_MAIN_NAV_SCREEN
+                    dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.STOPPED
+                }
             }
 
             val getLiveBasicBluetoothAdapterList = remember(bluetoothScannerViewModel) {
