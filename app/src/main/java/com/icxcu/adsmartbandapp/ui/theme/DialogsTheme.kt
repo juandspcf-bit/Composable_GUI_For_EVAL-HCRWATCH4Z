@@ -5,7 +5,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-private val DatePickerColorScheme = darkColorScheme(
+private val DialogsColorScheme = darkColorScheme(
     primary = Color.White,
     secondary = Color(0xFFCCC2DC),
     tertiary = Color(0xFFEFB8C8),
@@ -20,7 +20,7 @@ private val DatePickerColorScheme = darkColorScheme(
 fun DialogsTheme(
     content: @Composable () -> Unit
 ) {
-    val colorScheme = DatePickerColorScheme
+    val colorScheme = DialogsColorScheme
 
     MaterialTheme(
         colorScheme = colorScheme,
