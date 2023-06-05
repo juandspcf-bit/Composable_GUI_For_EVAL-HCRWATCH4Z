@@ -17,12 +17,6 @@ fun TodayPhysicalActivityDBHandler(
     dataViewModel: DataViewModel
 ) {
 
-    val getSmartWatchState = remember(dataViewModel) {
-        {
-            dataViewModel.smartWatchState
-        }
-    }
-
     val getTodayPhysicalActivityData = remember(dataViewModel) {
         {
             dataViewModel.todayHealthsDataState
@@ -38,13 +32,15 @@ fun TodayPhysicalActivityDBHandler(
 
     val todayDateValuesReadFromSW = remember(dataViewModel) {
         {
-            getSmartWatchState().todayDateValuesReadFromSW
+            dataViewModel.smartWatchState.todayDateValuesReadFromSW
         }
     }
     //Data Sources**
 
-    val setTodayStepListReadFromDB: (List<Int>) -> Unit = {
-        getTodayPhysicalActivityData().todayStepListReadFromDB = it
+    val setTodayStepListReadFromDB= remember(dataViewModel){
+        { newData: List<Int> ->
+            dataViewModel.todayHealthsDataState.todayStepListReadFromDB = newData
+        }
     }
 
 
@@ -56,12 +52,16 @@ fun TodayPhysicalActivityDBHandler(
     }
 
 
-    val setIsTodayStepsListAlreadyInsertedInDB: (Boolean) -> Unit = {
-        getTodayPhysicalActivityData().isTodayStepsListAlreadyInsertedInDB = it
+    val setIsTodayStepsListAlreadyInsertedInDB= remember(dataViewModel){
+        { newValue: Boolean ->
+            dataViewModel.todayHealthsDataState.isTodayStepsListAlreadyInsertedInDB = newValue
+        }
     }
 
-    val setIsTodayStepsListInDBAlreadyUpdated: (Boolean) -> Unit = {
-        getTodayPhysicalActivityData().isTodayStepsListInDBAlreadyUpdated = it
+    val setIsTodayStepsListInDBAlreadyUpdated = remember(dataViewModel){
+        { newValue: Boolean ->
+            dataViewModel.todayHealthsDataState.isTodayStepsListInDBAlreadyUpdated = newValue
+        }
     }
 
     integerFieldUpdateOrInsert(
@@ -78,8 +78,10 @@ fun TodayPhysicalActivityDBHandler(
         dateData = dataViewModel.todayFormattedDate
     )
 
-    val setTodayDistanceListReadFromDB: (List<Double>) -> Unit = {
-        getTodayPhysicalActivityData().todayDistanceListReadFromDB = it
+    val setTodayDistanceListReadFromDB= remember(dataViewModel){
+        { newData: List<Double> ->
+            getTodayPhysicalActivityData().todayDistanceListReadFromDB = newData
+        }
     }
 
 
@@ -90,12 +92,16 @@ fun TodayPhysicalActivityDBHandler(
         MutableList(48) { 0.0 }.toList()
     }
 
-    val setIsTodayDistanceListAlreadyInsertedInDB: (Boolean) -> Unit = {
-        getTodayPhysicalActivityData().isTodayDistanceListAlreadyInsertedInDB = it
+    val setIsTodayDistanceListAlreadyInsertedInDB = remember(dataViewModel){
+        { newValue: Boolean ->
+            getTodayPhysicalActivityData().isTodayDistanceListAlreadyInsertedInDB = newValue
+        }
     }
 
-    val setIsTodayDistanceListInDBAlreadyUpdated: (Boolean) -> Unit = {
-        getTodayPhysicalActivityData().isTodayDistanceListInDBAlreadyUpdated = it
+    val setIsTodayDistanceListInDBAlreadyUpdated = remember(dataViewModel){
+        { newValue: Boolean ->
+            getTodayPhysicalActivityData().isTodayDistanceListInDBAlreadyUpdated = newValue
+        }
     }
 
 
@@ -114,8 +120,10 @@ fun TodayPhysicalActivityDBHandler(
     )
 
 
-    val setTodayCaloriesListReadFromDB: (List<Double>) -> Unit = {
-        getTodayPhysicalActivityData().todayCaloriesListReadFromDB = it
+    val setTodayCaloriesListReadFromDB = remember(dataViewModel) {
+        { newData: List<Double> ->
+            getTodayPhysicalActivityData().todayCaloriesListReadFromDB = newData
+        }
     }
 
 
@@ -126,12 +134,16 @@ fun TodayPhysicalActivityDBHandler(
         MutableList(48) { 0.0 }.toList()
     }
 
-    val setIsTodayCaloriesListAlreadyInsertedInDB: (Boolean) -> Unit = {
-        getTodayPhysicalActivityData().isTodayCaloriesListAlreadyInsertedInDB = it
+    val setIsTodayCaloriesListAlreadyInsertedInDB = remember(dataViewModel){
+        { newData: Boolean ->
+            getTodayPhysicalActivityData().isTodayCaloriesListAlreadyInsertedInDB = newData
+        }
     }
 
-    val setIsTodayCaloriesListInDBAlreadyUpdated: (Boolean) -> Unit = {
-        getTodayPhysicalActivityData().isTodayCaloriesListInDBAlreadyUpdated = it
+    val setIsTodayCaloriesListInDBAlreadyUpdated = remember(dataViewModel){
+        { newData: Boolean ->
+            getTodayPhysicalActivityData().isTodayCaloriesListInDBAlreadyUpdated = newData
+        }
     }
 
 

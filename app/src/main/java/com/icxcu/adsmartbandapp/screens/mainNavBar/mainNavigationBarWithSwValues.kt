@@ -84,9 +84,6 @@ fun MainNavigationBarWithSwValues(
         {
             val valuesLambda: () -> Values
 
-            Log.d("STATUS_LAMBDA",
-                "MainNavigationBarWithSwValues: ${dataViewModel.statusReadingDbForDashboard}, ${getFetchingDataFromSWStatus()}")
-
             if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.NoREAD
                 && getFetchingDataFromSWStatus() == SWReadingStatus.IN_PROGRESS
             ) {
@@ -102,7 +99,6 @@ fun MainNavigationBarWithSwValues(
             }else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
                 && getFetchingDataFromSWStatus() == SWReadingStatus.READ
             ) {
-                //Log.d("STATUS_LAMBDA", "MainNavigationBarWithSwValues: NewValuesRead, SWReadingStatus.READ")
                 valuesLambda = todayValuesReadFromSW
             }else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.InProgressReading
                 && getFetchingDataFromSWStatus() == SWReadingStatus.READ && dayHealthValuesReadFromDB().stepList.sum() == 0
