@@ -1,5 +1,6 @@
 package com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard
 
+import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.screens.additionalWidgets.ArcCompose
+import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
 
 @Composable
 fun DashBoardCard(
@@ -41,7 +43,7 @@ fun DashBoardCard(
     resourceIconTitle: @Composable () -> Unit = { Spacer(modifier = Modifier.size(0.dp)) },
     heightCard: Dp = 200.dp,
     widthCard: Dp = 200.dp,
-    guidelineFromBottomFraction: Float = 0.5f
+    guidelineFromBottomFraction: Float = 0.5f,
 ) {
     Card(
         modifier = modifier
@@ -50,6 +52,7 @@ fun DashBoardCard(
         shape = RoundedCornerShape(size = 26.dp),
         border = BorderStroke(width = 1.dp, color = Color.Green),
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
+        colors = CardDefaults.cardColors(),
 
         ) {
 
@@ -58,7 +61,7 @@ fun DashBoardCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .background(backgroundCard)
+            //.background(backgroundCard)
         ) {
 
             Column(
@@ -102,7 +105,7 @@ fun DashBoardCard(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .background(backgroundCard)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
             ) {
 
                 Box(
@@ -120,12 +123,12 @@ fun DashBoardCard(
                 }
 
 
-                if(verticalChainData){
+                if (verticalChainData) {
                     Column(
                         verticalArrangement = Arrangement.SpaceEvenly,
                         horizontalAlignment = Alignment.CenterHorizontally,
 
-                    ) {
+                        ) {
 
                         Text(
                             modifier = Modifier,
@@ -144,7 +147,7 @@ fun DashBoardCard(
                         )
 
                     }
-                }else {
+                } else {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -197,7 +200,7 @@ data class DashBoardCardData(
     var widthCard: Dp = 400.dp,
     var verticalChainData: Boolean = true,
     var callBack: () -> Unit = {},
-    var guidelineFromBottomFraction: Float = 0.5f
+    var guidelineFromBottomFraction: Float = 0.5f,
 )
 
 @Preview(showBackground = true)
@@ -227,21 +230,29 @@ fun DashBoardCardPreview() {
         callBack = { navController.popBackStack() }
     )
 
-    DashBoardCard(
-        modifier = it.modifier.clickable {
-            it.callBack()
-        },
-        title = it.title,
-        text = it.text,
-        fieldPlural = it.fieldPlural,
-        resource = it.resource,
-        iconPadding = it.iconPadding,
-        heightCard = it.heightCard,
-        widthCard = it.widthCard,
-        verticalChainData = it.verticalChainData,
-        isWithIconTitle = it.isWithIconTitle,
-        resourceIconTitle = it.resourceIconTitle
 
-    )
+
+    ADSmartBandAppTheme(
+        darkTheme = false
+    ) {
+
+        DashBoardCard(
+            modifier = it.modifier.clickable {
+                it.callBack()
+            },
+            title = it.title,
+            text = it.text,
+            fieldPlural = it.fieldPlural,
+            resource = it.resource,
+            iconPadding = it.iconPadding,
+            heightCard = it.heightCard,
+            widthCard = it.widthCard,
+            verticalChainData = it.verticalChainData,
+            isWithIconTitle = it.isWithIconTitle,
+            resourceIconTitle = it.resourceIconTitle
+
+        )
+    }
+
 
 }

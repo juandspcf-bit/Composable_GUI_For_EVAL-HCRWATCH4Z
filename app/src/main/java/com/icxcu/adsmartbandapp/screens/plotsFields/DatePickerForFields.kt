@@ -1,5 +1,7 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields
 
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -14,6 +16,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import com.icxcu.adsmartbandapp.ui.theme.DialogsTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,40 +36,52 @@ fun DatePickerDialogSample(
         val datePickerState = rememberDatePickerState()
         val confirmEnabled =
             remember { derivedStateOf { datePickerState.selectedDateMillis != null } }
-        DatePickerDialog(
-            onDismissRequest = {
-                openDialog.value = false
-                modifyShowDialog(false)
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        openDialog.value = false
 
-                        datePickerState.selectedDateMillis?.let {
-                            stateMiliSecondsDateDialogDatePickerSetter(
-                                it
-                            )
-                        }
-                        modifyShowDialog(false)
-                    },
-                    enabled = confirmEnabled.value
-                ) {
-                    Text("OK")
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        openDialog.value = false
-                        modifyShowDialog(false)
+        DialogsTheme(
+        ){
+            DatePickerDialog(
+                onDismissRequest = {
+                    openDialog.value = false
+                    modifyShowDialog(false)
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            openDialog.value = false
+
+                            datePickerState.selectedDateMillis?.let {
+                                stateMiliSecondsDateDialogDatePickerSetter(
+                                    it
+                                )
+                            }
+                            modifyShowDialog(false)
+                        },
+                        enabled = confirmEnabled.value
+                    ) {
+                        Text(
+                            "OK",
+                            color = Color(0xFFDCE775)
+                        )
                     }
-                ) {
-                    Text("Cancel")
-                }
+                },
+                modifier = Modifier.border(2.dp, Color.Red, RoundedCornerShape(20.dp)),
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            openDialog.value = false
+                            modifyShowDialog(false)
+                        }
+                    ) {
+                        Text(
+                            "Cancel",
+                            color = Color(0xFFDCE775)
+                        )
+                    }
+                },
+            ) {
+                DatePicker(state = datePickerState)
             }
-        ) {
-            DatePicker(state = datePickerState)
         }
+
     }
 }

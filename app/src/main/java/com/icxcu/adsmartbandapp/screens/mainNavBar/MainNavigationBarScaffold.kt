@@ -97,7 +97,7 @@ fun MainNavigationBarScaffold(
                 },
 
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color(0xff0d1721),
+                    //containerColor = Color(0xff0d1721),
                 ),
                 modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                 scrollBehavior = scrollBehavior,

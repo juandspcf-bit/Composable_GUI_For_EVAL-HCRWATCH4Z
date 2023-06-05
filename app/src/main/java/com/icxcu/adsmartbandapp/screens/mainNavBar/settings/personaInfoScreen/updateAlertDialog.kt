@@ -12,60 +12,62 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.icxcu.adsmartbandapp.ui.theme.DialogsTheme
 
 @Composable
 fun UpdateAlertDialog(
     setVisibilityAlertDialogStatusPersonalInfo: (Boolean) -> Unit,
 ) {
-    AlertDialog(
-        onDismissRequest = {
-            // Dismiss the dialog when the user clicks outside the dialog or on the back button.
-            // If you want to disable that functionality, simply leave this block empty.
-            setVisibilityAlertDialogStatusPersonalInfo(false)
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    // perform the confirm action and
-                    // close the dialog
-                    setVisibilityAlertDialogStatusPersonalInfo(false)
+
+    DialogsTheme(
+    ){
+        AlertDialog(
+            onDismissRequest = {
+                // Dismiss the dialog when the user clicks outside the dialog or on the back button.
+                // If you want to disable that functionality, simply leave this block empty.
+                setVisibilityAlertDialogStatusPersonalInfo(false)
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        // perform the confirm action and
+                        // close the dialog
+                        setVisibilityAlertDialogStatusPersonalInfo(false)
+                    }
+                ) {
+                    Text(
+                        text = "Confirm",
+                        color = Color(0xFFDCE775),
+                    )
                 }
-            ) {
-                Text(
-                    text = "Confirm",
-                    color = Color(0xFFDCE775),
-                )
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    // close the dialog
-                    setVisibilityAlertDialogStatusPersonalInfo(false)
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        // close the dialog
+                        setVisibilityAlertDialogStatusPersonalInfo(false)
+                    }
+                ) {
+                    Text(
+                        text = "Dismiss",
+                        color = Color(0xFFDCE775),
+                    )
                 }
-            ) {
-                Text(
-                    text = "Dismiss",
-                    color = Color(0xFFDCE775),
-                )
-            }
-        },
-        title = {
-            Text(text = "My Data")
-        },
-        text = {
-            Text(text = "Your data was added successfully")
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(32.dp)
-            .background(Color.Transparent)
-            .border(2.dp, Color.Red, RoundedCornerShape(20.dp)),
-        containerColor = Color(0xFF000000),
-        textContentColor = Color.White,
-        titleContentColor = Color.White,
-        shape = RoundedCornerShape(20.dp)
+            },
+            title = {
+                Text(text = "My Data")
+            },
+            text = {
+                Text(text = "Your data was added successfully")
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(32.dp)
+                .background(Color.Transparent)
+                .border(2.dp, Color.Red, RoundedCornerShape(20.dp)),
+            shape = RoundedCornerShape(20.dp)
+        )
+    }
 
 
-    )
 }

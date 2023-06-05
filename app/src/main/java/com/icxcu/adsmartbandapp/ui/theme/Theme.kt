@@ -19,23 +19,29 @@ import androidx.core.view.WindowCompat
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
-    tertiary = Pink80
+    tertiary = Pink80,
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
+    primary = Color(0xFF6650a4),
     secondary = PurpleGrey40,
     tertiary = Pink40,
-    surface = Color(0xFF673AB7),
+    surface = Color(0xff0d1721), // date picker //top app bar
+    onSurface = Color.White,
+    surfaceVariant = Color.DarkGray, // cards
+    //primaryContainer =  Color(0xFFCDDC39),
+    //onPrimaryContainer: Color,
     background = Color(0xFFCDDC39),
-    /* Other default colors to override
-
-
     onPrimary = Color.White,
     onSecondary = Color.White,
     onTertiary = Color.White,
     onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
+
+    /* Other default colors to override
+
+
+
+
     */
 )
 
