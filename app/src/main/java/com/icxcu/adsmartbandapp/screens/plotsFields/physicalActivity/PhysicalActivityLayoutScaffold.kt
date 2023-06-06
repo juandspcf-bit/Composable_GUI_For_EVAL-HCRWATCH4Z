@@ -1,6 +1,7 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity
 
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
@@ -32,12 +34,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
@@ -106,15 +111,33 @@ fun PhysicalActivityLayoutScaffold(
             Box(
                 Modifier
                     .padding(padding)
-                    .fillMaxSize(), contentAlignment = Alignment.Center
+                    .background(Color(0xff1d2a35))
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
 
+               if(
+                   (stepsList().max()==0 || stepsList().isEmpty())
+                   && (distanceList().max()==0.0 || distanceList().isEmpty())
+                   && (caloriesList().max()==0.0 || caloriesList().isEmpty())
+               ){
 
-                PhysicalActivityContent(
-                    stepsList,
-                    distanceList,
-                    caloriesList
-                )
+                   Image(
+                       painter = painterResource(R.drawable.man_running_medium_light_skin_tone_svgrepo_com),
+                       modifier = Modifier.size(256.dp),
+                       contentDescription = null,
+                       contentScale = ContentScale.Fit,
+                       alignment = Alignment.Center,
+                   )
+
+               } else{
+                   PhysicalActivityContent(
+                       stepsList,
+                       distanceList,
+                       caloriesList
+                   )
+               }
+
             }
 
             if (stateShowDialogDatePickerValue()) {
