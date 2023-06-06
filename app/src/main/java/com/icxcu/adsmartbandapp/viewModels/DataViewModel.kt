@@ -4,7 +4,6 @@ import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -139,13 +138,17 @@ class DataViewModel(var application: Application) : ViewModel() {
     }
 
     fun listenDataFromSmartWatch(){
+        Log.d("FetchingDataFromSWStatusX", "listenDataFromSmartWatch")
         collectDataScope = viewModelScope.launch {
             swRepository.sharedStepsFlow.collect {
                 when (it.date) {
                     todayFormattedDate -> {
+                        Log.d("FetchingDataFromSWStatusX", "TODAY READ")
                         smartWatchState.todayDateValuesReadFromSW = it
                     }
+
                     yesterdayFormattedDate -> {
+                        Log.d("FetchingDataFromSWStatusX", "YESTERDAY READ")
                         smartWatchState.yesterdayDateValuesFromSW = it
                         smartWatchState.progressbarForFetchingDataFromSW = false
                         smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.READ

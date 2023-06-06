@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter
 
 class SWRepository {
     private val _sharedStepsFlow = MutableSharedFlow<Values>(
-        replay = 2,
+        replay = 0,
         onBufferOverflow = BufferOverflow.SUSPEND
     )
     val sharedStepsFlow = _sharedStepsFlow.asSharedFlow()
@@ -41,30 +41,6 @@ class SWRepository {
             val pastYesterdayLocalDateTime:LocalDateTime = todayLocalDateTime.minusDays(2)
             var pastYesterdayFormattedDate:String = pastYesterdayLocalDateTime.format(myFormatObj)
 
-
-
-
-
-            _sharedStepsFlow.emit(Values(
-                MutableList(48) { 0 }.toList(),
-                MutableList(48) { 0.0 }.toList(),
-                MutableList(48) { 0.0 }.toList(),
-                MutableList(48) { 0.0 }.toList(),
-                MutableList(48) { 0.0 }.toList(),
-                MutableList(48) { 0.0 }.toList(),
-                todayFormattedDate
-            ))
-
-            _sharedStepsFlow.emit(Values(
-                MutableList(48) { 0 }.toList(),
-                MutableList(48) { 0.0 }.toList(),
-                MutableList(48) { 0.0 }.toList(),
-                MutableList(48) { 0.0 }.toList(),
-                MutableList(48) { 0.0 }.toList(),
-                MutableList(48) { 0.0 }.toList(),
-                yesterdayFormattedDate
-            ))
-            delay(5000)
 
             val todayValues = Values(
                 MockData.valuesToday.stepList,

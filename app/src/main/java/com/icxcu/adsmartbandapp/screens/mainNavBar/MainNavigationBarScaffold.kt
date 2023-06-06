@@ -54,6 +54,7 @@ import com.icxcu.adsmartbandapp.screens.NavBarItems
 import com.icxcu.adsmartbandapp.screens.NavRoutes
 import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
 import com.icxcu.adsmartbandapp.screens.testHealthsScreen.TestingHealthScreen
+import kotlin.math.log
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,6 +66,7 @@ fun MainNavigationBarScaffold(
     setStateEnabledDatePickerMainScaffold: (Boolean) -> Unit,
     getStateEnabledDatePickerMainScaffold: () -> Boolean,
     getVisibilityProgressbarForFetchingData: () -> Boolean = { false },
+    getFetchingDataFromSWStatus: () -> SWReadingStatus,
     getMyHeartRateAlertDialogDataHandler: () -> MyHeartRateAlertDialogDataHandler,
     getMyHeartRate: () -> Int,
     getMyBloodPressureDialogDataHandler: () -> MyBloodPressureAlertDialogDataHandler,
@@ -79,7 +81,7 @@ fun MainNavigationBarScaffold(
     stateShowDialogDatePickerSetter: (Boolean) -> Unit,
     stateShowDialogDatePickerValue: () -> Boolean,
     stateMiliSecondsDateDialogDatePickerSetter: (Long) -> Unit,
-    navMainController: NavHostController = rememberNavController()
+    navMainController: NavHostController = rememberNavController(),
 ) {
     val navController = rememberNavController()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -102,9 +104,12 @@ fun MainNavigationBarScaffold(
                 modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                 scrollBehavior = scrollBehavior,
                 actions = {
-                    Log.d("StateEnabledDatePickerMainScaffold()", "MainNavigationBarScaffold: ${getStateEnabledDatePickerMainScaffold()}")
+                    Log.d(
+                        "StateEnabledDatePickerMainScaffold()",
+                        "MainNavigationBarScaffold: ${getStateEnabledDatePickerMainScaffold()}"
+                    )
 
-                    if(getStateEnabledDatePickerMainScaffold() && getVisibilityProgressbarForFetchingData().not()){
+                    if (getStateEnabledDatePickerMainScaffold() && getVisibilityProgressbarForFetchingData().not()) {
                         IconButton(
                             onClick = { stateShowDialogDatePickerSetter(!stateShowDialogDatePickerValue()) },
                             enabled = getStateEnabledDatePickerMainScaffold()
@@ -129,7 +134,6 @@ fun MainNavigationBarScaffold(
                         }
 
                     }
-
 
 
                 }
@@ -188,6 +192,7 @@ fun MainNavigationBarScaffold(
                 setStateEnabledDatePickerMainScaffold = setStateEnabledDatePickerMainScaffold,
                 getVisibilityProgressbarForFetchingData = getVisibilityProgressbarForFetchingData,
                 getStateEnabledDatePickerMainScaffold = getStateEnabledDatePickerMainScaffold,
+                getFetchingDataFromSWStatus = getFetchingDataFromSWStatus,
             )
         }
     )
@@ -217,7 +222,7 @@ fun NavigationHost(
     getRealTimeTemperature: () -> TemperatureData,
     getCircularProgressTemperature: () -> Int,
     clearState: () -> Unit,
-    navMainController: NavHostController
+    navMainController: NavHostController,
 ) {
     NavHost(
         navController = navController,
@@ -261,19 +266,30 @@ fun BottomNavigationBar(
     setStateEnabledDatePickerMainScaffold: (Boolean) -> Unit,
     getVisibilityProgressbarForFetchingData: () -> Boolean = { false },
     getStateEnabledDatePickerMainScaffold: () -> Boolean,
+    getFetchingDataFromSWStatus: () -> SWReadingStatus,
 ) {
 
     NavigationBar(
         containerColor = Color(0xff0d1721),
         contentColor = Color(0xFFCDDC39)
     ) {
+
+
         val backStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = backStackEntry?.destination?.route
-        if(currentRoute=="CheckHealth" || currentRoute=="settings"){
+
+        Log.d("FetchingDataFromSWStatusX", "BottomNavigationBar: ${currentRoute}, ${getFetchingDataFromSWStatus()}, ${getStateEnabledDatePickerMainScaffold()}")
+
+        if (currentRoute == "CheckHealth" || currentRoute == "settings") {
             setStateEnabledDatePickerMainScaffold(false)
-        }else if(getVisibilityProgressbarForFetchingData().not()
+        } else if (currentRoute == "fields"
+            && getFetchingDataFromSWStatus() == SWReadingStatus.IN_PROGRESS
+        ) {
+            setStateEnabledDatePickerMainScaffold(false)
+        } else if (currentRoute == "fields" &&
+            getFetchingDataFromSWStatus() == SWReadingStatus.READ
             && getStateEnabledDatePickerMainScaffold().not()
-            && currentRoute == "fields"){
+        ) {
             setStateEnabledDatePickerMainScaffold(true)
         }
 

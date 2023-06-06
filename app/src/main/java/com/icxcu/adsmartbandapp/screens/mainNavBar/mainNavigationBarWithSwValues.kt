@@ -1,7 +1,6 @@
 package com.icxcu.adsmartbandapp.screens.mainNavBar
 
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -240,6 +239,7 @@ fun MainNavigationBarWithSwValues(
         setStateEnabledDatePickerMainScaffold,
         getStateEnabledDatePickerMainScaffold,
         getVisibilityProgressbarForFetchingData,
+        getFetchingDataFromSWStatus,
         getMyHeartRateAlertDialogDataHandler,
         getMyHeartRate,
         getMyBloodPressureDialogDataHandler,

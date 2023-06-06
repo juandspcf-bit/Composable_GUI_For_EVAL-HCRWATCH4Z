@@ -24,8 +24,7 @@ fun MainNavigationBarRoot(
 
             Log.d("DATAX", "Routes.DataHome.route: STOPPED")
 
-            dataViewModel.smartWatchState.fetchingDataFromSWStatus =
-                SWReadingStatus.IN_PROGRESS
+            dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.IN_PROGRESS
 
             dataViewModel.listenDataFromSmartWatch()
             dataViewModel.requestSmartWatchData(
