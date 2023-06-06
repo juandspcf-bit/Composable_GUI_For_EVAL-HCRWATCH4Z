@@ -207,6 +207,18 @@ fun MainNavigationBarWithSwValues(
         }
     }
 
+    val setStateShowDialogDatePickerValue = remember(dataViewModel) {
+        { newValue:StatusMainTitleScaffold ->
+            dataViewModel.stateShowMainTitleScaffold = newValue
+        }
+    }
+
+    val stateShowMainTitleScaffold = remember(dataViewModel) {
+        {
+            dataViewModel.stateShowMainTitleScaffold
+        }
+    }
+
     val stateShowDialogDatePickerSetter = remember(dataViewModel) {
         { value: Boolean ->
             dataViewModel.stateShowDialogDatePicker = value
@@ -239,6 +251,8 @@ fun MainNavigationBarWithSwValues(
         setStateEnabledDatePickerMainScaffold,
         getStateEnabledDatePickerMainScaffold,
         getVisibilityProgressbarForFetchingData,
+        stateShowMainTitleScaffold,
+        setStateShowDialogDatePickerValue,
         getFetchingDataFromSWStatus,
         getMyHeartRateAlertDialogDataHandler,
         getMyHeartRate,
@@ -382,4 +396,12 @@ sealed class StatusReadingDbForDashboard {
     object ReadyForNewReadFromFieldsPlot : StatusReadingDbForDashboard()
     object InProgressReading : StatusReadingDbForDashboard()
     object NewValuesRead : StatusReadingDbForDashboard()
+}
+
+sealed class StatusMainTitleScaffold {
+    object Fields : StatusMainTitleScaffold()
+    object CheckHealth : StatusMainTitleScaffold()
+
+    object Settings : StatusMainTitleScaffold()
+
 }

@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -65,6 +66,8 @@ fun MainNavigationBarScaffold(
     setStateEnabledDatePickerMainScaffold: (Boolean) -> Unit,
     getStateEnabledDatePickerMainScaffold: () -> Boolean,
     getVisibilityProgressbarForFetchingData: () -> Boolean = { false },
+    stateShowMainTitleScaffold: () -> StatusMainTitleScaffold,
+    setStateShowDialogDatePickerValue: (StatusMainTitleScaffold) -> Unit,
     getFetchingDataFromSWStatus: () -> SWReadingStatus,
     getMyHeartRateAlertDialogDataHandler: () -> MyHeartRateAlertDialogDataHandler,
     getMyHeartRate: () -> Int,
@@ -91,10 +94,38 @@ fun MainNavigationBarScaffold(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(
-                        text = "$bluetoothName, $bluetoothAddress ", maxLines = 1,
-                        overflow = TextOverflow.Ellipsis, color = Color.White
-                    )
+                    when (stateShowMainTitleScaffold()) {
+                        StatusMainTitleScaffold.Fields -> {
+                            Text(
+                                text = "$bluetoothName, $bluetoothAddress\n${dayValues().date} ",
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                                color = Color.White,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                        StatusMainTitleScaffold.CheckHealth -> {
+                            Text(
+                                text = "Test your health",
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                color = Color.White,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                        StatusMainTitleScaffold.Settings -> {
+                            Text(
+                                text = "Settings",
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                color = Color.White,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+
+
+
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                 ),
@@ -183,7 +214,8 @@ fun MainNavigationBarScaffold(
             BottomNavigationBar(
                 navController = navController,
                 setStateEnabledDatePickerMainScaffold = setStateEnabledDatePickerMainScaffold,
-                getVisibilityProgressbarForFetchingData = getVisibilityProgressbarForFetchingData,
+                stateShowMainTitleScaffold = stateShowMainTitleScaffold,
+                setStateShowDialogDatePickerValue = setStateShowDialogDatePickerValue,
                 getStateEnabledDatePickerMainScaffold = getStateEnabledDatePickerMainScaffold,
                 getFetchingDataFromSWStatus = getFetchingDataFromSWStatus,
             )
@@ -257,7 +289,8 @@ fun NavigationHost(
 fun BottomNavigationBar(
     navController: NavHostController,
     setStateEnabledDatePickerMainScaffold: (Boolean) -> Unit,
-    getVisibilityProgressbarForFetchingData: () -> Boolean = { false },
+    stateShowMainTitleScaffold: () -> StatusMainTitleScaffold,
+    setStateShowDialogDatePickerValue: (StatusMainTitleScaffold) -> Unit,
     getStateEnabledDatePickerMainScaffold: () -> Boolean,
     getFetchingDataFromSWStatus: () -> SWReadingStatus,
 ) {
@@ -284,6 +317,18 @@ fun BottomNavigationBar(
             && getStateEnabledDatePickerMainScaffold().not()
         ) {
             setStateEnabledDatePickerMainScaffold(true)
+        }
+
+        when (currentRoute) {
+            NavRoutes.Fields.route -> {
+                setStateShowDialogDatePickerValue(StatusMainTitleScaffold.Fields)
+            }
+            NavRoutes.CheckHealth.route -> {
+                setStateShowDialogDatePickerValue(StatusMainTitleScaffold.CheckHealth)
+            }
+            NavRoutes.Settings.route -> {
+                setStateShowDialogDatePickerValue(StatusMainTitleScaffold.Settings)
+            }
         }
 
         NavBarItems.BarItems.forEach { navItem ->

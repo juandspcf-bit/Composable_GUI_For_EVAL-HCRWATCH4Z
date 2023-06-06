@@ -24,6 +24,7 @@ import com.icxcu.adsmartbandapp.screens.mainNavBar.DayHealthDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.DayHealthDataStateForDashBoard
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SmartWatchState
+import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusMainTitleScaffold
 import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusReadingDbForDashboard
 import com.icxcu.adsmartbandapp.screens.mainNavBar.TodayHealthsDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.YesterdayHealthsDataState
@@ -38,6 +39,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class DataViewModel(var application: Application) : ViewModel() {
+
 
 
     private val myFormatObj:DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
@@ -85,6 +87,9 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     var statusReadingDbForDashboard:StatusReadingDbForDashboard = StatusReadingDbForDashboard.NoRead
     var stateEnabledDatePickerMainScaffold by mutableStateOf(false)
+    var stateShowMainTitleScaffold by mutableStateOf<StatusMainTitleScaffold>(
+        StatusMainTitleScaffold.Fields
+    )
 
     init {
         val swDb = SWRoomDatabase.getInstance(application)
