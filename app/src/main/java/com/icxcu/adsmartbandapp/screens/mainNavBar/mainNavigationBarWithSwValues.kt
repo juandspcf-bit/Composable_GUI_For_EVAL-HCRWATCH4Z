@@ -84,11 +84,11 @@ fun MainNavigationBarWithSwValues(
         {
             val valuesLambda: () -> Values
 
-            if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.NoREAD
+            if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.NoRead
                 && getFetchingDataFromSWStatus() == SWReadingStatus.IN_PROGRESS
             ) {
                 valuesLambda = todayValuesReadFromSW
-            } else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.NoREAD
+            } else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.NoRead
                 && getFetchingDataFromSWStatus() == SWReadingStatus.READ
             ) {
                 valuesLambda = todayValuesReadFromSW
@@ -377,7 +377,7 @@ enum class SWReadingStatus {
 }
 
 sealed class StatusReadingDbForDashboard {
-    object NoREAD : StatusReadingDbForDashboard()
+    object NoRead : StatusReadingDbForDashboard()
     object ReadyForNewReadFromDashBoard : StatusReadingDbForDashboard()
     object ReadyForNewReadFromFieldsPlot : StatusReadingDbForDashboard()
     object InProgressReading : StatusReadingDbForDashboard()

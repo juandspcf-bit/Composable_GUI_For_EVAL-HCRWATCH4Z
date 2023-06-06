@@ -331,7 +331,7 @@ class MainActivity : ComponentActivity() {
                     bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
                     bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
                         ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
-                    if(dataViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.NoREAD
+                    if(dataViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.NoRead
                         && dataViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
                     ){
                         dataViewModel.statusReadingDbForDashboard = StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
@@ -359,7 +359,7 @@ class MainActivity : ComponentActivity() {
                     bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
                     bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
                         ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
-                    if(dataViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.NoREAD
+                    if(dataViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.NoRead
                         && dataViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
                     ){
                         dataViewModel.statusReadingDbForDashboard = StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
