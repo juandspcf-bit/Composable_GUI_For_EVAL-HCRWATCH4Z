@@ -7,8 +7,6 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,14 +15,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.data.MockData
-import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.additionalWidgets.ArcCompose
 
 @Composable
 fun DashBoardScreen(
-    dayDateValuesReadFromSW: () -> Values,
+    dayValues: () -> Values,
     navMainController: NavHostController
 ) {
 
@@ -34,7 +31,7 @@ fun DashBoardScreen(
             modifier = Modifier
                 .padding(5.dp),
             title = "Steps",
-            text = dayDateValuesReadFromSW().stepList.sum().toString(),
+            text = dayValues().stepList.sum().toString(),
             fieldPlural = "Steps",
             resource = R.drawable.walk,
             iconPadding = 0.dp,
@@ -54,7 +51,7 @@ fun DashBoardScreen(
         )
     )
 
-    val sumDistanceList = dayDateValuesReadFromSW().distanceList.sum()
+    val sumDistanceList = dayValues().distanceList.sum()
     val stringSumDistanceList = String.format("%.1f", sumDistanceList)
 
     listOf.add(
@@ -72,7 +69,7 @@ fun DashBoardScreen(
         )
     )
 
-    val sumCaloriesList = dayDateValuesReadFromSW().caloriesList.sum()
+    val sumCaloriesList = dayValues().caloriesList.sum()
     val stringSumCaloriesList = String.format("%.1f", sumCaloriesList)
 
     listOf.add(
@@ -89,7 +86,7 @@ fun DashBoardScreen(
         )
     )
 
-    val avgHeartRate = dayDateValuesReadFromSW().heartRateList.average()
+    val avgHeartRate = dayValues().heartRateList.average()
     val stringAvgHeartRate = String.format("%.1f", avgHeartRate)
 
     listOf.add(
@@ -108,7 +105,7 @@ fun DashBoardScreen(
     )
 
 
-    val bPHighMaxValue = dayDateValuesReadFromSW().systolicList.max()
+    val bPHighMaxValue = dayValues().systolicList.max()
     val stringValueBP = String.format("%.1f", bPHighMaxValue)
 
     listOf.add(
@@ -193,7 +190,7 @@ fun DashBoardScreen(
 @Composable
 fun ListDashBoardCardFieldsPreview() {
     DashBoardScreen(
-        dayDateValuesReadFromSW = {
+        dayValues = {
             MockData.valuesToday
         },
         navMainController = rememberNavController()

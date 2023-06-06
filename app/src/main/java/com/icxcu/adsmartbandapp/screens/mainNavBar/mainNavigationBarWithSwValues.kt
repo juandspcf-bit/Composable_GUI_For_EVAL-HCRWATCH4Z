@@ -74,7 +74,7 @@ fun MainNavigationBarWithSwValues(
     }
 
 
-    val todayValues = remember(
+    val dayValues = remember(
         dataViewModel,
         getFetchingDataFromSWStatus,
         dayHealthValuesReadFromDB,
@@ -235,7 +235,7 @@ fun MainNavigationBarWithSwValues(
     MainNavigationBarScaffold(
         bluetoothName,
         bluetoothAddress,
-        todayValues(),
+        dayValues(),
         setStateEnabledDatePickerMainScaffold,
         getStateEnabledDatePickerMainScaffold,
         getVisibilityProgressbarForFetchingData,

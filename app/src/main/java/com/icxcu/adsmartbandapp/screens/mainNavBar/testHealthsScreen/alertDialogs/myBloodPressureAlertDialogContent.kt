@@ -1,5 +1,6 @@
-package com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs
+package com.icxcu.adsmartbandapp.screens.mainNavBar.testHealthsScreen.alertDialogs
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -33,27 +34,29 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.icxcu.adsmartbandapp.R
-import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
-import com.icxcu.adsmartbandapp.repositories.TemperatureData
+import com.icxcu.adsmartbandapp.repositories.BloodPressureData
+import com.icxcu.adsmartbandapp.repositories.MyBloodPressureAlertDialogDataHandler
 
 @Composable
-fun MyTemperatureAlertDialogContent(
+fun MyBloodPressureAlertDialogContent(
     imageResource: Int = R.drawable.ic_launcher_foreground,
-    getMyTemperatureAlertDialogDataHandler: () -> MyTemperatureAlertDialogDataHandler,
-    getRealTimeTemperature: () -> TemperatureData,
-    getCircularProgressTemperature: () -> Int,
+    getMyBloodPressureDialogDataHandler: () -> MyBloodPressureAlertDialogDataHandler,
+    getRealTimeBloodPressure: () -> BloodPressureData,
+    getCircularProgressBloodPressure: () -> Int,
     setDialogStatus: (Boolean) -> Unit
 ) {
+    Log.d("MyProgress", "MyBloodPressureAlertDialogContent: ${getCircularProgressBloodPressure()}")
 
     Dialog(
         onDismissRequest = {
             setDialogStatus(false)
-            getMyTemperatureAlertDialogDataHandler().stopRequestSmartWatchDataTemperature()
+            getMyBloodPressureDialogDataHandler().stopRequestSmartWatchDataBloodPressure()
         },
         properties = DialogProperties(
             dismissOnClickOutside = true,
@@ -77,7 +80,7 @@ fun MyTemperatureAlertDialogContent(
             ) {
 
                 Text(
-                    text = "Check your Temperature",
+                    text = "Check your blood pressure",
                     modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
                     style = MaterialTheme.typography.displaySmall,
                     color = Color.White,
@@ -94,7 +97,7 @@ fun MyTemperatureAlertDialogContent(
 
 
                 Row(verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceEvenly){
+                horizontalArrangement = Arrangement.SpaceEvenly){
 
                     Column(
                         verticalArrangement = Arrangement.SpaceEvenly,
@@ -102,21 +105,21 @@ fun MyTemperatureAlertDialogContent(
                         modifier = Modifier.padding(end = 20.dp)
                     ) {
                         Text(
-                            text = "Body Temperature",
+                            text = "systolic",
                             modifier = Modifier.padding(top = 10.dp, bottom = 2.dp),
                             style = MaterialTheme.typography.titleLarge,
                             color = Color.White,
                             textAlign = TextAlign.Center
                         )
 
-                        val body = if(getCircularProgressTemperature()>0){
+                        val systolic = if(getCircularProgressBloodPressure()>0){
                             0
                         }else{
-                            getRealTimeTemperature().body
+                            getRealTimeBloodPressure().systolic
                         }
 
                         Text(
-                            text = "$body °C",
+                            text = "$systolic mmHg",
                             modifier = Modifier.padding(bottom = 5.dp),
                             style = MaterialTheme.typography.titleLarge,
                             color = Color.White,
@@ -129,19 +132,19 @@ fun MyTemperatureAlertDialogContent(
                         modifier = Modifier.padding(start = 20.dp)
                     ) {
                         Text(
-                            text = "Skin Temperature",
+                            text = "diastolic",
                             modifier = Modifier.padding(top = 10.dp, bottom = 2.dp),
                             style = MaterialTheme.typography.titleLarge,
                             color = Color.White,
                             textAlign = TextAlign.Center
                         )
-                        val skin = if(getCircularProgressTemperature()>0){
+                        val diastolic = if(getCircularProgressBloodPressure()>0){
                             0
                         }else{
-                            getRealTimeTemperature().skin
+                            getRealTimeBloodPressure().diastolic
                         }
                         Text(
-                            text = "$skin °C",
+                            text = "$diastolic mmHg",
                             modifier = Modifier.padding(bottom = 5.dp),
                             style = MaterialTheme.typography.titleLarge,
                             color = Color.White,
@@ -150,9 +153,9 @@ fun MyTemperatureAlertDialogContent(
                     }
                 }
 
-                if(getCircularProgressTemperature()>0){
+                if(getCircularProgressBloodPressure()>0){
                     CircularProgressIndicator(
-                        progress = getCircularProgressTemperature()/10.0f,
+                        progress = getCircularProgressBloodPressure()/10.0f,
                         modifier = Modifier
                             .padding(top = 15.dp, bottom = 15.dp)
                             .size(size = 70.dp),
@@ -161,11 +164,11 @@ fun MyTemperatureAlertDialogContent(
                     )
                 }
 
-                FilledIconToggleButtonSampleTemperature(
+                FilledIconToggleButtonSampleBloodPressure(
                     Modifier.padding(top = 20.dp, bottom = 20.dp),
                     70.dp,
-                    getMyTemperatureAlertDialogDataHandler,
-                    getCircularProgressTemperature,
+                    getMyBloodPressureDialogDataHandler,
+                    getCircularProgressBloodPressure,
                 )
 
                 Button(
@@ -178,7 +181,7 @@ fun MyTemperatureAlertDialogContent(
                     ),
                     onClick = {
                         setDialogStatus(false)
-                        getMyTemperatureAlertDialogDataHandler().stopRequestSmartWatchDataTemperature()
+                        getMyBloodPressureDialogDataHandler().stopRequestSmartWatchDataBloodPressure()
 
                     }) {
                     Text(
@@ -194,10 +197,10 @@ fun MyTemperatureAlertDialogContent(
 }
 
 @Composable
-fun FilledIconToggleButtonSampleTemperature(
+fun FilledIconToggleButtonSampleBloodPressure(
     modifier: Modifier,
     size: Dp = 100.dp,
-    getMyTemperatureAlertDialogDataHandler: () -> MyTemperatureAlertDialogDataHandler,
+    getMyBloodPressureDialogDataHandler: () -> MyBloodPressureAlertDialogDataHandler,
     progressValue:()->Int,
 ) {
     var checked by remember { mutableStateOf(false) }
@@ -216,9 +219,9 @@ fun FilledIconToggleButtonSampleTemperature(
             onCheckedChange = {
                 checked = it
                 if (checked) {
-                    getMyTemperatureAlertDialogDataHandler().requestSmartWatchDataTemperature()
+                    getMyBloodPressureDialogDataHandler().requestSmartWatchDataBloodPressure()
                 } else {
-                    getMyTemperatureAlertDialogDataHandler().stopRequestSmartWatchDataTemperature()
+                    getMyBloodPressureDialogDataHandler().stopRequestSmartWatchDataBloodPressure()
                 }
 
             },
@@ -249,21 +252,17 @@ fun FilledIconToggleButtonSampleTemperature(
 }
 
 
-/*
 @Preview(showBackground = true)
 @Composable
 fun MyBloodPressureAlertDialogContentPreview() {
-    MyBloodPressureAlertDialogContent(
+/*    MyBloodPressureAlertDialogContent(
         imageResource = R.drawable.blood_pressure_gauge,
         getRealTimeBloodPressure = {
-            mapOf(
-                "systolic" to 0,
-                "diastolic" to 0
-            )
+            BloodPressureData(0, 0)
         },
         requestRealTimeBloodPressure = {},
         stopRequestRealTimeBloodPressure = {},
         getCircularProgressBloodPressure = {5}
 
-    ) {}
-}*/
+    ) {}*/
+}

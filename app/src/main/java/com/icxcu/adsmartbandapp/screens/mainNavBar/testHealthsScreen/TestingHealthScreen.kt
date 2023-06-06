@@ -1,4 +1,4 @@
-package com.icxcu.adsmartbandapp.screens.testHealthsScreen
+package com.icxcu.adsmartbandapp.screens.mainNavBar.testHealthsScreen
 
 
 import android.util.Log
@@ -38,10 +38,10 @@ import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
-import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyBloodPressureAlertDialogContent
-import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyHeartRateAlertDialogState
-import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MySpO2AlertDialogState
-import com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs.MyTemperatureAlertDialogContent
+import com.icxcu.adsmartbandapp.screens.mainNavBar.testHealthsScreen.alertDialogs.MyBloodPressureAlertDialogContent
+import com.icxcu.adsmartbandapp.screens.mainNavBar.testHealthsScreen.alertDialogs.MyHeartRateAlertDialogState
+import com.icxcu.adsmartbandapp.screens.mainNavBar.testHealthsScreen.alertDialogs.MySpO2AlertDialogState
+import com.icxcu.adsmartbandapp.screens.mainNavBar.testHealthsScreen.alertDialogs.MyTemperatureAlertDialogContent
 
 @Composable
 fun TestingHealthScreen(

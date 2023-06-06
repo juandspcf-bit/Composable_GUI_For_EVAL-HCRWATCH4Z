@@ -1,4 +1,4 @@
-package com.icxcu.adsmartbandapp.screens.testHealthsScreen.alertDialogs
+package com.icxcu.adsmartbandapp.screens.mainNavBar.testHealthsScreen.alertDialogs
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,18 +33,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.icxcu.adsmartbandapp.R
-import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
+import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
 
 @Composable
-fun MySpO2AlertDialogState(
+fun MyHeartRateAlertDialogState(
     imageResource: Int = R.drawable.ic_launcher_foreground,
-    getMySpO2AlertDialogDataHandler: () -> MySpO2AlertDialogDataHandler,
-    getMySpO2: () -> Double,
+    getMyHeartRateAlertDialogDataHandler: () -> MyHeartRateAlertDialogDataHandler,
+    getMyHeartRate: () -> Int,
     setDialogStatus: (Boolean) -> Unit
 ) {
 
@@ -52,7 +54,7 @@ fun MySpO2AlertDialogState(
     Dialog(
         onDismissRequest = {
             setDialogStatus(false)
-            getMySpO2AlertDialogDataHandler().stopRequestSmartWatchDataSpO2()
+            getMyHeartRateAlertDialogDataHandler().stopRequestSmartWatchDataHeartRate()
         },
         properties = DialogProperties(
             dismissOnClickOutside = true,
@@ -76,7 +78,7 @@ fun MySpO2AlertDialogState(
             ) {
 
                 Text(
-                    text = "Check your oxygen saturation",
+                    text = "Check your heart rate",
                     modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
                     style = MaterialTheme.typography.displaySmall,
                     color = Color.White,
@@ -92,7 +94,7 @@ fun MySpO2AlertDialogState(
                 )
 
                 Text(
-                    text = "${getMySpO2()} %",
+                    text = "${getMyHeartRate()} BPM",
                     modifier = Modifier.padding(top = 20.dp, bottom = 20.dp),
                     style = MaterialTheme.typography.titleLarge,
                     color = Color.White,
@@ -100,10 +102,10 @@ fun MySpO2AlertDialogState(
                 )
 
 
-                FilledIconToggleButtonSampleSpO2(
+                FilledIconToggleButtonSampleHeartRate(
                     Modifier.padding(top = 20.dp, bottom = 20.dp),
                     70.dp,
-                    getMySpO2AlertDialogDataHandler,
+                    getMyHeartRateAlertDialogDataHandler,
                 )
 
                 Button(
@@ -116,7 +118,7 @@ fun MySpO2AlertDialogState(
                     ),
                     onClick = {
                         setDialogStatus(false)
-                        getMySpO2AlertDialogDataHandler().stopRequestSmartWatchDataSpO2()
+                        getMyHeartRateAlertDialogDataHandler().stopRequestSmartWatchDataHeartRate()
 
                     }) {
                     Text(
@@ -133,10 +135,10 @@ fun MySpO2AlertDialogState(
 
 
 @Composable
-fun FilledIconToggleButtonSampleSpO2(
+fun FilledIconToggleButtonSampleHeartRate(
     modifier: Modifier,
     size: Dp = 100.dp,
-    getMyHeartRateAlertDialogDataHandler: () -> MySpO2AlertDialogDataHandler,
+    getMyHeartRateAlertDialogDataHandler: () -> MyHeartRateAlertDialogDataHandler,
 ) {
     var checked by remember { mutableStateOf(false) }
 
@@ -150,9 +152,9 @@ fun FilledIconToggleButtonSampleSpO2(
             onCheckedChange = {
                 checked = it
                 if (checked) {
-                    getMyHeartRateAlertDialogDataHandler().requestSmartWatchDataSpO2()
+                    getMyHeartRateAlertDialogDataHandler().requestSmartWatchDataHeartRate()
                 } else {
-                    getMyHeartRateAlertDialogDataHandler().stopRequestSmartWatchDataSpO2()
+                    getMyHeartRateAlertDialogDataHandler().stopRequestSmartWatchDataHeartRate()
                 }
 
             },
@@ -182,3 +184,15 @@ fun FilledIconToggleButtonSampleSpO2(
 
 }
 
+
+
+@Preview(showBackground = true)
+@Composable
+fun MyHeartRateAlertDialogStatePreview() {
+/*    MyHeartRateAlertDialogState(
+        imageResource = R.drawable.heart_rate,
+        requestRealTimeHeartRate = {},
+        getRealTimeHeartRate = { 20 },
+        stopRequestRealTimeHeartRate = {}
+    ) {}*/
+}

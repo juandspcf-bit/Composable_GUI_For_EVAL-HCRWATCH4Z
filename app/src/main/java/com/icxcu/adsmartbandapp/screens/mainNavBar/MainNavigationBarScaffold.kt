@@ -53,8 +53,7 @@ import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.DashBoardScreen
 import com.icxcu.adsmartbandapp.screens.NavBarItems
 import com.icxcu.adsmartbandapp.screens.NavRoutes
 import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
-import com.icxcu.adsmartbandapp.screens.testHealthsScreen.TestingHealthScreen
-import kotlin.math.log
+import com.icxcu.adsmartbandapp.screens.mainNavBar.testHealthsScreen.TestingHealthScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,7 +61,7 @@ import kotlin.math.log
 fun MainNavigationBarScaffold(
     bluetoothName: String = "no name",
     bluetoothAddress: String = "no address",
-    dayDateValuesReadFromSW: () -> Values = { MockData.valuesToday },
+    dayValues: () -> Values = { MockData.valuesToday },
     setStateEnabledDatePickerMainScaffold: (Boolean) -> Unit,
     getStateEnabledDatePickerMainScaffold: () -> Boolean,
     getVisibilityProgressbarForFetchingData: () -> Boolean = { false },
@@ -169,7 +168,7 @@ fun MainNavigationBarScaffold(
                 NavigationHost(
                     navController = navController,
                     getVisibilityProgressbarForFetchingData = getVisibilityProgressbarForFetchingData,
-                    dayDateValuesReadFromSW = dayDateValuesReadFromSW,
+                    dayValues = dayValues,
                     getMyHeartRateAlertDialogDataHandler = getMyHeartRateAlertDialogDataHandler,
                     getMyHeartRate = getMyHeartRate,
                     getMyBloodPressureDialogDataHandler = getMyBloodPressureDialogDataHandler,
@@ -209,7 +208,7 @@ fun MainNavigationBarScaffold(
 @Composable
 fun NavigationHost(
     navController: NavHostController,
-    dayDateValuesReadFromSW: () -> Values,
+    dayValues: () -> Values,
     getVisibilityProgressbarForFetchingData: () -> Boolean = { false },
     getMyHeartRateAlertDialogDataHandler: () -> MyHeartRateAlertDialogDataHandler,
     getMyHeartRate: () -> Int,
@@ -230,7 +229,7 @@ fun NavigationHost(
     ) {
         composable(NavRoutes.Fields.route) {
             DashBoardScreen(
-                dayDateValuesReadFromSW,
+                dayValues,
                 navMainController
             )
         }
