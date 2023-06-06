@@ -96,17 +96,11 @@ fun MainNavigationBarScaffold(
                         overflow = TextOverflow.Ellipsis, color = Color.White
                     )
                 },
-
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    //containerColor = Color(0xff0d1721),
                 ),
                 modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                 scrollBehavior = scrollBehavior,
                 actions = {
-                    Log.d(
-                        "StateEnabledDatePickerMainScaffold()",
-                        "MainNavigationBarScaffold: ${getStateEnabledDatePickerMainScaffold()}"
-                    )
 
                     if (getStateEnabledDatePickerMainScaffold() && getVisibilityProgressbarForFetchingData().not()) {
                         IconButton(
