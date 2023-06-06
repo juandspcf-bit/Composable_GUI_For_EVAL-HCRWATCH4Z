@@ -58,11 +58,13 @@ fun MyHeartRateAlertDialogState(
         },
         properties = DialogProperties(
             dismissOnClickOutside = true,
-            dismissOnBackPress = true
+            dismissOnBackPress = true,
+            usePlatformDefaultWidth = false
         )
     ) {
         Surface(
             modifier = Modifier
+                .padding(start = 40.dp, end = 40.dp)
                 .fillMaxWidth()
                 .wrapContentHeight(),
             shape = RoundedCornerShape(size = 10.dp)
