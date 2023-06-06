@@ -17,6 +17,8 @@
 package com.icxcu.adsmartbandapp.ui.theme
 
 import android.graphics.Typeface
+import android.text.Spannable
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -39,8 +41,12 @@ import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.component.shape.cornered.Corner
 import com.patrykandpatrick.vico.core.component.shape.cornered.MarkerCorneredShape
 import com.patrykandpatrick.vico.core.context.MeasureContext
+import com.patrykandpatrick.vico.core.extension.appendCompat
 import com.patrykandpatrick.vico.core.extension.copyColor
+import com.patrykandpatrick.vico.core.extension.sumOf
+import com.patrykandpatrick.vico.core.extension.transformToSpannable
 import com.patrykandpatrick.vico.core.marker.Marker
+import com.patrykandpatrick.vico.core.marker.MarkerLabelFormatter
 
 @Composable
 internal fun rememberMarker(): Marker {
@@ -89,7 +95,11 @@ internal fun rememberMarker(): Marker {
                         setShadow(radius = INDICATOR_CENTER_COMPONENT_SHADOW_RADIUS, color = entryColor)
                     }
                 }
+                this.labelFormatter = MyMarkerLabelFormatter
+
             }
+
+
 
             override fun getInsets(context: MeasureContext, outInsets: Insets, segmentProperties: SegmentProperties) =
                 with(context) {
@@ -100,6 +110,31 @@ internal fun rememberMarker(): Marker {
         }
     }
 }
+
+
+public object MyMarkerLabelFormatter : MarkerLabelFormatter {
+
+    private const val PATTERN = "%.02f"
+
+    override fun getLabel(
+        markedEntries: List<Marker.EntryModel>,
+    ): CharSequence = markedEntries.transformToSpannable(
+        /*prefix = if (markedEntries.size > 1) {
+            PATTERN.format(markedEntries.sumOf { it.entry.y }) + " ("
+        } else "",*/
+        //postfix = if (markedEntries.size > 1) ")" else "",
+        separator = " - ",
+    ) { model ->
+        appendCompat(
+            PATTERN.format(model.entry.y),
+            ForegroundColorSpan(model.color),
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+        )
+    }
+}
+
+
+
 
 private const val LABEL_BACKGROUND_SHADOW_RADIUS = 4f
 private const val LABEL_BACKGROUND_SHADOW_DY = 2f
