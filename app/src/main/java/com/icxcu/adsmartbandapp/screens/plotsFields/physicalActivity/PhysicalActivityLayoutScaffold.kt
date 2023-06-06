@@ -106,7 +106,7 @@ fun PhysicalActivityLayoutScaffold(
             Box(
                 Modifier
                     .padding(padding)
-                    .fillMaxSize(), contentAlignment = Alignment.TopCenter
+                    .fillMaxSize(), contentAlignment = Alignment.Center
             ) {
 
 

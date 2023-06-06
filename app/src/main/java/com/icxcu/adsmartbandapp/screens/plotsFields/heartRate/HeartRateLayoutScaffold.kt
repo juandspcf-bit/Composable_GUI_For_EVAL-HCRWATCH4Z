@@ -108,7 +108,7 @@ fun HeartRateLayoutScaffold(
             Box(
                 Modifier
                     .padding(padding)
-                    .fillMaxSize(), contentAlignment = Alignment.TopCenter
+                    .fillMaxSize(), contentAlignment = Alignment.Center
             ) {
 
                 HeartRateContent(
