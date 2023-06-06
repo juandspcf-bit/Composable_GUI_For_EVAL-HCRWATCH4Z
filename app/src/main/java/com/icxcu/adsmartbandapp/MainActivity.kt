@@ -186,6 +186,7 @@ class MainActivity : ComponentActivity() {
                             "MainContent-1: ${dataViewModel.smartWatchState.todayDateValuesReadFromSW.stepList.sum()}"
                         )
 
+                        dataViewModel.stateEnabledDatePickerMainScaffold = false
                         navMainController.navigate(
                             Routes.DataHomeFromBluetoothScannerScreen
                                 .route + "/${name}/${address}"
@@ -337,7 +338,7 @@ class MainActivity : ComponentActivity() {
                         dataViewModel.statusReadingDbForDashboard = StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
                     }
 
-                    dataViewModel.stateEnabledDatePickerMainScaffold = false
+                    //dataViewModel.stateEnabledDatePickerMainScaffold = false
                     MainNavigationBarRoot(
                         dataViewModel,
                         getFetchingDataFromSWStatus,
