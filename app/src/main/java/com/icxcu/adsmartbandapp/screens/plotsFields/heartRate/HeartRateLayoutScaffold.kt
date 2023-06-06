@@ -1,6 +1,7 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields.heartRate
 
 import android.graphics.Typeface
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,11 +29,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
+import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureContent
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.MyComposePlotChart
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.EntryHour
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemIconPaddingValue
@@ -108,13 +112,31 @@ fun HeartRateLayoutScaffold(
             Box(
                 Modifier
                     .padding(padding)
-                    .fillMaxSize(), contentAlignment = Alignment.Center
+                    .background(Color(0xff1d2a35))
+                    .fillMaxSize(),
             ) {
 
-                HeartRateContent(
-                    heartRateList,
-                    getAgeCalculated
-                )
+
+                if(
+                    (heartRateList().max()==0.0 || heartRateList().isEmpty())
+                ){
+
+                    Image(
+                        painter = painterResource(R.drawable.cardiogram_heart_rate_svgrepo_com),
+                        modifier = Modifier
+                            .fillMaxSize(0.5f)
+                            .align(Alignment.Center),
+                        contentDescription = null,
+                        contentScale = ContentScale.Fit,
+                        alignment = Alignment.Center,
+                    )
+
+                } else{
+                    HeartRateContent(
+                        heartRateList,
+                        getAgeCalculated
+                    )
+                }
 
                 if (stateShowDialogDatePickerValue()) {
                     DatePickerDialogSample(

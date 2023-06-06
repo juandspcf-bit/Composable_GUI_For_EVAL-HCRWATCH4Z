@@ -1,6 +1,7 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure
 
 import android.graphics.Typeface
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,13 +20,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.EntryHour
+import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityContent
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemIconPaddingValue
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemIconSize
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemLabelTextSize
@@ -99,14 +104,36 @@ fun BloodPressureLayoutScaffold(
             Box(
                 Modifier
                     .padding(padding)
-                    .fillMaxSize(), contentAlignment = Alignment.Center
+                    .background(Color(0xff1d2a35))
+                    .fillMaxSize(),
             ) {
 
+                if(
+                    (systolicList().max()==0.0 || systolicList().isEmpty())
+                    && (diastolicList().max()==0.0 || diastolicList().isEmpty())
+                ){
 
-                BloodPressureContent(
-                    systolicList,
-                    diastolicList,
-                )
+                    Image(
+                        painter = painterResource(R.drawable.sphygmomanometer_svgrepo_com),
+                        modifier = Modifier
+                            .fillMaxSize(0.5f)
+                            .align(Alignment.Center),
+                        contentDescription = null,
+                        contentScale = ContentScale.Fit,
+                        alignment = Alignment.Center,
+                    )
+
+                } else{
+                    BloodPressureContent(
+                        systolicList,
+                        diastolicList,
+                    )
+                }
+
+
+
+
+
 
                 if (stateShowDialogDatePickerValue()) {
                     DatePickerDialogSample(
