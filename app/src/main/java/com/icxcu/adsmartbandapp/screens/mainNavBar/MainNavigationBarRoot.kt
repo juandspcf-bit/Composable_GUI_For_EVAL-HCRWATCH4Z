@@ -45,24 +45,6 @@ fun MainNavigationBarRoot(
             dataViewModel.getPersonalInfoData(dataViewModel.macAddressDeviceBluetooth)
             dataViewModel.statusStartedReadingDataLasThreeDaysData = true
 
-        }
-
-        SWReadingStatus.IN_PROGRESS -> {
-
-            Log.d("DATAX", "Routes.DataHome.route: IN_PROGRESS")
-            TodayPhysicalActivityDBHandler(
-                dataViewModel = dataViewModel
-            )
-
-
-            dataViewModel.macAddressDeviceBluetooth =
-                bluetoothAddress
-            dataViewModel.nameDeviceBluetooth = bluetoothName
-        }
-
-        SWReadingStatus.READ -> {
-
-            Log.d("DATAX", "Routes.DataHome.route: READ")
 
             TodayPhysicalActivityDBHandler(
                 dataViewModel = dataViewModel
@@ -85,6 +67,19 @@ fun MainNavigationBarRoot(
                 dataViewModel = dataViewModel,
                 splashViewModel = splashViewModel
             )
+
+        }
+
+        SWReadingStatus.IN_PROGRESS -> {
+
+            dataViewModel.macAddressDeviceBluetooth =
+                bluetoothAddress
+            dataViewModel.nameDeviceBluetooth = bluetoothName
+        }
+
+        SWReadingStatus.READ -> {
+
+            Log.d("DATAX", "Routes.DataHome.route: READ")
 
             dataViewModel.macAddressDeviceBluetooth =
                 bluetoothAddress

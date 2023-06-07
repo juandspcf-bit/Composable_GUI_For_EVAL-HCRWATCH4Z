@@ -7,10 +7,8 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -133,10 +131,10 @@ class MainActivity : ComponentActivity() {
 
                 startDestination = if (askPermissions.isNotEmpty()) {
                     Routes.Permissions.route
-                } else if (splashViewModel.route.isNotEmpty() && splashViewModel.route[1] == Routes.BluetoothScanner.route) {
+                } else if (splashViewModel.lastAccessedDevice.isNotEmpty() && splashViewModel.lastAccessedDevice[1] == Routes.BluetoothScanner.route) {
                     Log.d("Route", "onCreate: Routes.BluetoothScanner.route")
                     Routes.BluetoothScanner.route
-                } else if (splashViewModel.route.isNotEmpty() && splashViewModel.route[1] == Routes.DataHome.route) {
+                } else if (splashViewModel.lastAccessedDevice.isNotEmpty() && splashViewModel.lastAccessedDevice[1] == Routes.DataHome.route) {
                     Log.d("Route", "onCreate: Routes.DataHome.route")
                     Routes.DataHome.route
                 } else {
@@ -446,8 +444,8 @@ class MainActivity : ComponentActivity() {
                 ) {
                     Log.d("DATAX", "Routes.DataHome.route: ENTER")
 
-                    val bluetoothName = splashViewModel.route[2]
-                    val bluetoothAddress = splashViewModel.route[3]
+                    val bluetoothName = splashViewModel.lastAccessedDevice[2]
+                    val bluetoothAddress = splashViewModel.lastAccessedDevice[3]
 
                     bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
                     bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =

@@ -8,10 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreConstants.LAST_DEVICE_ACCESSED_ADDRESS
 import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreConstants.LAST_DEVICE_ACCESSED_NAME
 import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreHelper
-import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.screens.Routes
-import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
-import com.icxcu.adsmartbandapp.screens.mainNavBar.SmartWatchState
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,7 +30,7 @@ class SplashViewModel: ViewModel() {
 
 
 
-    var route by mutableStateOf(listOf<String>())
+    var lastAccessedDevice by mutableStateOf(listOf<String>())
 
 
     init {
@@ -65,7 +62,7 @@ fun startDelay(preferenceDataStoreHelper: PreferenceDataStoreHelper){
     }
 
     viewModelScope.launch {
-        route = deferred.await()
+        lastAccessedDevice = deferred.await()
         delay(3000)
         _stateFlow.value = true
 
