@@ -337,7 +337,7 @@ class MainActivity : ComponentActivity() {
                         }
                     },
                     exitTransition = {
-                        when (initialState.destination.route) {
+                        when (targetState.destination.route) {
                             Routes.StepsPlots.route -> ExitTransition.None
                             Routes.BloodPressurePlots.route -> ExitTransition.None
                             Routes.HeartRatePlot.route -> ExitTransition.None
@@ -386,45 +386,45 @@ class MainActivity : ComponentActivity() {
                         when (initialState.destination.route) {
                             Routes.StepsPlots.route -> EnterTransition.None
 
-/*                                slideIntoContainer(
-                                    AnimatedContentTransitionScope.SlideDirection.Right,
-                                    animationSpec = tween(300)
-                                )*/
+                            /*                                slideIntoContainer(
+                                                                AnimatedContentTransitionScope.SlideDirection.Right,
+                                                                animationSpec = tween(300)
+                                                            )*/
 
                             Routes.BloodPressurePlots.route -> EnterTransition.None
-/*                                slideIntoContainer(
-                                    AnimatedContentTransitionScope.SlideDirection.Right,
-                                    animationSpec = tween(300)
-                                )*/
+                            /*                                slideIntoContainer(
+                                                                AnimatedContentTransitionScope.SlideDirection.Right,
+                                                                animationSpec = tween(300)
+                                                            )*/
 
                             Routes.HeartRatePlot.route -> EnterTransition.None
-/*                                slideIntoContainer(
-                                    AnimatedContentTransitionScope.SlideDirection.Right,
-                                    animationSpec = tween(300)
-                                )*/
+                            /*                                slideIntoContainer(
+                                                                AnimatedContentTransitionScope.SlideDirection.Right,
+                                                                animationSpec = tween(300)
+                                                            )*/
 
                             else -> null
                         }
                     },
                     exitTransition = {
-                        when (initialState.destination.route) {
+                        when (targetState.destination.route) {
                             Routes.StepsPlots.route -> ExitTransition.None
-/*                                slideOutOfContainer(
-                                    AnimatedContentTransitionScope.SlideDirection.Right,
-                                    animationSpec = tween(300)
-                                )*/
+                            /*                                slideOutOfContainer(
+                                                                AnimatedContentTransitionScope.SlideDirection.Right,
+                                                                animationSpec = tween(300)
+                                                            )*/
 
                             Routes.BloodPressurePlots.route -> ExitTransition.None
-/*                                slideOutOfContainer(
-                                    AnimatedContentTransitionScope.SlideDirection.Right,
-                                    animationSpec = tween(300)
-                                )*/
+                            /*                                slideOutOfContainer(
+                                                                AnimatedContentTransitionScope.SlideDirection.Right,
+                                                                animationSpec = tween(300)
+                                                            )*/
 
                             Routes.HeartRatePlot.route -> ExitTransition.None
-/*                                slideOutOfContainer(
-                                    AnimatedContentTransitionScope.SlideDirection.Right,
-                                    animationSpec = tween(300)
-                                )*/
+                            /*                                slideOutOfContainer(
+                                                                AnimatedContentTransitionScope.SlideDirection.Right,
+                                                                animationSpec = tween(300)
+                                                            )*/
 
                             else -> null
                         }
@@ -461,13 +461,16 @@ class MainActivity : ComponentActivity() {
                         when (initialState.destination.route) {
                             Routes.DataHome.route ->
                                 EnterTransition.None
+
                             else -> null
                         }
                     },
-                    exitTransition = {  when (initialState.destination.route) {
-                        Routes.DataHome.route -> ExitTransition.None
-                        else -> null
-                    } }
+                    exitTransition = {
+                        when (targetState.destination.route) {
+                            Routes.DataHome.route -> ExitTransition.None
+                            else -> null
+                        }
+                    }
                 ) {
                     Log.d("DATAX", "MainContentStepsPlots:")
                     val myDateObj = LocalDateTime.now()
@@ -488,11 +491,12 @@ class MainActivity : ComponentActivity() {
                         when (initialState.destination.route) {
                             Routes.DataHome.route ->
                                 EnterTransition.None
+
                             else -> null
                         }
                     },
                     exitTransition = {
-                        when (initialState.destination.route) {
+                        when (targetState.destination.route) {
                             Routes.DataHome.route -> ExitTransition.None
                             else -> null
                         }
@@ -516,11 +520,12 @@ class MainActivity : ComponentActivity() {
                         when (initialState.destination.route) {
                             Routes.DataHome.route ->
                                 EnterTransition.None
+
                             else -> null
                         }
                     },
                     exitTransition = {
-                        when (initialState.destination.route) {
+                        when (targetState.destination.route) {
                             Routes.DataHome.route -> ExitTransition.None
                             else -> null
                         }
@@ -542,15 +547,16 @@ class MainActivity : ComponentActivity() {
                     Routes.PersonalInfoForm.route,
                     enterTransition = {
                         when (initialState.destination.route) {
-                            Routes.DataHome.route ->
-                                EnterTransition.None
+                            Routes.DataHome.route -> EnterTransition.None
                             else -> null
                         }
                     },
-                    exitTransition = {  when (initialState.destination.route) {
-                        Routes.DataHome.route -> ExitTransition.None
-                        else -> null
-                    } }
+                    exitTransition = {
+                        when (targetState.destination.route) {
+                            Routes.DataHome.route -> ExitTransition.None
+                            else -> null
+                        }
+                    }
                 ) {
                     PersonalInfoInitDBHandlerAD(
                         dataViewModel

@@ -2,6 +2,8 @@ package com.icxcu.adsmartbandapp.screens.mainNavBar
 
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -53,6 +55,7 @@ import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.DashBoardScreen
 import com.icxcu.adsmartbandapp.screens.NavBarItems
 import com.icxcu.adsmartbandapp.screens.NavRoutes
+import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
 import com.icxcu.adsmartbandapp.screens.mainNavBar.testHealthsScreen.TestingHealthScreen
 
@@ -104,6 +107,7 @@ fun MainNavigationBarScaffold(
                                 textAlign = TextAlign.Center
                             )
                         }
+
                         StatusMainTitleScaffold.CheckHealth -> {
                             Text(
                                 text = "Test your health",
@@ -113,6 +117,7 @@ fun MainNavigationBarScaffold(
                                 textAlign = TextAlign.Center
                             )
                         }
+
                         StatusMainTitleScaffold.Settings -> {
                             Text(
                                 text = "Settings",
@@ -123,7 +128,6 @@ fun MainNavigationBarScaffold(
                             )
                         }
                     }
-
 
 
                 },
@@ -253,13 +257,43 @@ fun NavigationHost(
         navController = navController,
         startDestination = NavRoutes.Fields.route,
     ) {
-        composable(NavRoutes.Fields.route) {
+        composable(NavRoutes.Fields.route,
+            enterTransition = {
+                when (initialState.destination.route) {
+                    NavRoutes.CheckHealth.route -> EnterTransition.None
+                    NavRoutes.Settings.route -> EnterTransition.None
+                    else -> null
+                }
+            },
+            exitTransition = {
+                when (targetState.destination.route) {
+                    NavRoutes.CheckHealth.route -> ExitTransition.None
+                    NavRoutes.Settings.route -> ExitTransition.None
+                    else -> null
+                }
+            }
+        ) {
             DashBoardScreen(
                 dayValues,
                 navMainController
             )
         }
-        composable(NavRoutes.CheckHealth.route) {
+        composable(NavRoutes.CheckHealth.route,
+            enterTransition = {
+                when (initialState.destination.route) {
+                    NavRoutes.Fields.route -> EnterTransition.None
+                    NavRoutes.Settings.route -> EnterTransition.None
+                    else -> null
+                }
+            },
+            exitTransition = {
+                when (targetState.destination.route) {
+                    NavRoutes.Fields.route -> ExitTransition.None
+                    NavRoutes.Settings.route -> ExitTransition.None
+                    else -> null
+                }
+            }
+        ) {
             TestingHealthScreen(
                 getVisibilityProgressbarForFetchingData,
                 getMyHeartRateAlertDialogDataHandler,
@@ -275,7 +309,22 @@ fun NavigationHost(
             )
         }
 
-        composable(NavRoutes.Settings.route) {
+        composable(NavRoutes.Settings.route,
+            enterTransition = {
+                when (initialState.destination.route) {
+                    NavRoutes.Fields.route -> EnterTransition.None
+                    NavRoutes.CheckHealth.route -> EnterTransition.None
+                    else -> null
+                }
+            },
+            exitTransition = {
+                when (targetState.destination.route) {
+                    NavRoutes.Fields.route -> ExitTransition.None
+                    NavRoutes.CheckHealth.route -> ExitTransition.None
+                    else -> null
+                }
+            }
+        ) {
             SettingsScreen(
                 navMainController,
                 clearState,
@@ -304,7 +353,10 @@ fun BottomNavigationBar(
         val backStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = backStackEntry?.destination?.route
 
-        Log.d("FetchingDataFromSWStatusX", "BottomNavigationBar: ${currentRoute}, ${getFetchingDataFromSWStatus()}, ${getStateEnabledDatePickerMainScaffold()}")
+        Log.d(
+            "FetchingDataFromSWStatusX",
+            "BottomNavigationBar: ${currentRoute}, ${getFetchingDataFromSWStatus()}, ${getStateEnabledDatePickerMainScaffold()}"
+        )
 
         if (currentRoute == "CheckHealth" || currentRoute == "settings") {
             setStateEnabledDatePickerMainScaffold(false)
@@ -323,9 +375,11 @@ fun BottomNavigationBar(
             NavRoutes.Fields.route -> {
                 setStateShowDialogDatePickerValue(StatusMainTitleScaffold.Fields)
             }
+
             NavRoutes.CheckHealth.route -> {
                 setStateShowDialogDatePickerValue(StatusMainTitleScaffold.CheckHealth)
             }
+
             NavRoutes.Settings.route -> {
                 setStateShowDialogDatePickerValue(StatusMainTitleScaffold.Settings)
             }
