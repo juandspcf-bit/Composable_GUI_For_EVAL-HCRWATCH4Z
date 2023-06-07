@@ -27,7 +27,7 @@ private val ADSmartBandAppScheme = darkColorScheme(
     surfaceVariant = Color.DarkGray, // cards
     //primaryContainer =  Color(0xFFCDDC39),
     //onPrimaryContainer: Color,
-    background = Color(0xFFCDDC39),
+    background = Color(0xff1d2a35),
     onPrimary = Color.White,
     onSecondary = Color.White,
     onTertiary = Color.White,

@@ -7,6 +7,10 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -170,37 +174,41 @@ class MainActivity : ComponentActivity() {
             val systemUiController = rememberSystemUiController()
             val navMainController = rememberNavController()
 
-            LaunchedEffect(key1 = Unit,){
+            LaunchedEffect(key1 = Unit) {
                 systemUiController.setStatusBarColor(
                     color = Color(0xFF233D63),
                     darkIcons = false
                 )
             }
 
-            val navLambdaToMainNavigationBar = remember(bluetoothScannerViewModel, navMainController) {
-                { name: String, address: String ->
-                    if (bluetoothScannerViewModel.scanningBluetoothAdaptersStatus == ScanningBluetoothAdapterStatus.SCANNING_FINISHED_WITH_RESULTS
-                        || bluetoothScannerViewModel.scanningBluetoothAdaptersStatus == ScanningBluetoothAdapterStatus.SCANNING_FORCIBLY_STOPPED) {
-                        Log.d(
-                            "DATAX",
-                            "MainContent-1: ${dataViewModel.smartWatchState.todayDateValuesReadFromSW.stepList.sum()}"
-                        )
+            val navLambdaToMainNavigationBar =
+                remember(bluetoothScannerViewModel, navMainController) {
+                    { name: String, address: String ->
+                        if (bluetoothScannerViewModel.scanningBluetoothAdaptersStatus == ScanningBluetoothAdapterStatus.SCANNING_FINISHED_WITH_RESULTS
+                            || bluetoothScannerViewModel.scanningBluetoothAdaptersStatus == ScanningBluetoothAdapterStatus.SCANNING_FORCIBLY_STOPPED
+                        ) {
+                            Log.d(
+                                "DATAX",
+                                "MainContent-1: ${dataViewModel.smartWatchState.todayDateValuesReadFromSW.stepList.sum()}"
+                            )
 
-                        dataViewModel.stateEnabledDatePickerMainScaffold = false
-                        navMainController.navigate(
-                            Routes.DataHomeFromBluetoothScannerScreen
-                                .route + "/${name}/${address}"
-                        )
+                            dataViewModel.stateEnabledDatePickerMainScaffold = false
+                            navMainController.navigate(
+                                Routes.DataHomeFromBluetoothScannerScreen
+                                    .route + "/${name}/${address}"
+                            )
 
-                        if(bluetoothScannerViewModel.bluetoothAdaptersList.isEmpty()){
-                            bluetoothScannerViewModel.scanningBluetoothAdaptersStatus = ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
-                        }else{
-                            bluetoothScannerViewModel.scanningBluetoothAdaptersStatus = ScanningBluetoothAdapterStatus.NO_SCANNING_WITH_RESULTS
+                            if (bluetoothScannerViewModel.bluetoothAdaptersList.isEmpty()) {
+                                bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
+                                    ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
+                            } else {
+                                bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
+                                    ScanningBluetoothAdapterStatus.NO_SCANNING_WITH_RESULTS
+                            }
+
                         }
-
                     }
                 }
-            }
 
 
             val navLambdaToBlueScannerScreen = remember(navMainController) {
@@ -224,20 +232,21 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-            val navLambdaBackToMainNavigationBar = remember (dataViewModel, navMainController){
+            val navLambdaBackToMainNavigationBar = remember(dataViewModel, navMainController) {
                 {
-                    dataViewModel.statusReadingDbForDashboard = StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
+                    dataViewModel.statusReadingDbForDashboard =
+                        StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
                     navMainController.popBackStack()
                 }
             }
 
-            val getFetchingDataFromSWStatus = remember(dataViewModel){
+            val getFetchingDataFromSWStatus = remember(dataViewModel) {
                 {
                     dataViewModel.smartWatchState.fetchingDataFromSWStatus
                 }
             }
 
-            val setFetchingDataFromSWStatusSTOPPED = remember(dataViewModel){
+            val setFetchingDataFromSWStatusSTOPPED = remember(dataViewModel) {
                 {
                     Log.d("DATAX", "MainContent setFetchingDataFromSWStatusSTOPPED STOPPED")
 
@@ -271,7 +280,11 @@ class MainActivity : ComponentActivity() {
                 startDestination = startDestination
             ) {
 
-                composable(Routes.CircularProgressLoading.route) {
+                composable(
+                    route = Routes.CircularProgressLoading.route,
+                    enterTransition = { null },
+                    exitTransition = { null }
+                ) {
                     CircularProgressLoading()
                 }
 
@@ -308,12 +321,29 @@ class MainActivity : ComponentActivity() {
                 }
 
                 composable(
-                    Routes.DataHomeFromBluetoothScannerScreen.route + "/{bluetoothName}/{bluetoothAddress}",                    // declaring placeholder in String route
+                    route = Routes.DataHomeFromBluetoothScannerScreen.route + "/{bluetoothName}/{bluetoothAddress}",                    // declaring placeholder in String route
                     arguments = listOf(
                         // declaring argument type
                         navArgument("bluetoothName") { type = NavType.StringType },
                         navArgument("bluetoothAddress") { type = NavType.StringType },
-                    )
+
+                        ),
+                    enterTransition = {
+                        when (initialState.destination.route) {
+                            Routes.StepsPlots.route -> EnterTransition.None
+                            Routes.BloodPressurePlots.route -> EnterTransition.None
+                            Routes.HeartRatePlot.route -> EnterTransition.None
+                            else -> null
+                        }
+                    },
+                    exitTransition = {
+                        when (initialState.destination.route) {
+                            Routes.StepsPlots.route -> ExitTransition.None
+                            Routes.BloodPressurePlots.route -> ExitTransition.None
+                            Routes.HeartRatePlot.route -> ExitTransition.None
+                            else -> null
+                        }
+                    }
                 ) { backStackEntry ->
 
                     Log.d("DATAX", "Routes.DataHomeFromBluetoothScannerScreen.route ENTERED")
@@ -332,10 +362,11 @@ class MainActivity : ComponentActivity() {
                     bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
                     bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
                         ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
-                    if(dataViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.NoRead
+                    if (dataViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.NoRead
                         && dataViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
-                    ){
-                        dataViewModel.statusReadingDbForDashboard = StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
+                    ) {
+                        dataViewModel.statusReadingDbForDashboard =
+                            StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
                     }
 
                     //dataViewModel.stateEnabledDatePickerMainScaffold = false
@@ -350,7 +381,54 @@ class MainActivity : ComponentActivity() {
                 }
 
                 composable(
-                    Routes.DataHome.route,                    // declaring placeholder in String route
+                    Routes.DataHome.route,
+                    enterTransition = {
+                        when (initialState.destination.route) {
+                            Routes.StepsPlots.route -> EnterTransition.None
+
+/*                                slideIntoContainer(
+                                    AnimatedContentTransitionScope.SlideDirection.Right,
+                                    animationSpec = tween(300)
+                                )*/
+
+                            Routes.BloodPressurePlots.route -> EnterTransition.None
+/*                                slideIntoContainer(
+                                    AnimatedContentTransitionScope.SlideDirection.Right,
+                                    animationSpec = tween(300)
+                                )*/
+
+                            Routes.HeartRatePlot.route -> EnterTransition.None
+/*                                slideIntoContainer(
+                                    AnimatedContentTransitionScope.SlideDirection.Right,
+                                    animationSpec = tween(300)
+                                )*/
+
+                            else -> null
+                        }
+                    },
+                    exitTransition = {
+                        when (initialState.destination.route) {
+                            Routes.StepsPlots.route -> ExitTransition.None
+/*                                slideOutOfContainer(
+                                    AnimatedContentTransitionScope.SlideDirection.Right,
+                                    animationSpec = tween(300)
+                                )*/
+
+                            Routes.BloodPressurePlots.route -> ExitTransition.None
+/*                                slideOutOfContainer(
+                                    AnimatedContentTransitionScope.SlideDirection.Right,
+                                    animationSpec = tween(300)
+                                )*/
+
+                            Routes.HeartRatePlot.route -> ExitTransition.None
+/*                                slideOutOfContainer(
+                                    AnimatedContentTransitionScope.SlideDirection.Right,
+                                    animationSpec = tween(300)
+                                )*/
+
+                            else -> null
+                        }
+                    }
                 ) {
                     Log.d("DATAX", "Routes.DataHome.route: ENTER")
 
@@ -360,10 +438,11 @@ class MainActivity : ComponentActivity() {
                     bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
                     bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
                         ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
-                    if(dataViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.NoRead
+                    if (dataViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.NoRead
                         && dataViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
-                    ){
-                        dataViewModel.statusReadingDbForDashboard = StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
+                    ) {
+                        dataViewModel.statusReadingDbForDashboard =
+                            StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
                     }
                     MainNavigationBarRoot(
                         dataViewModel,
@@ -376,7 +455,20 @@ class MainActivity : ComponentActivity() {
 
                 }
 
-                composable(Routes.StepsPlots.route) {
+                composable(
+                    Routes.StepsPlots.route,
+                    enterTransition = {
+                        when (initialState.destination.route) {
+                            Routes.DataHome.route ->
+                                EnterTransition.None
+                            else -> null
+                        }
+                    },
+                    exitTransition = {  when (initialState.destination.route) {
+                        Routes.DataHome.route -> ExitTransition.None
+                        else -> null
+                    } }
+                ) {
                     Log.d("DATAX", "MainContentStepsPlots:")
                     val myDateObj = LocalDateTime.now()
                     val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
@@ -390,7 +482,22 @@ class MainActivity : ComponentActivity() {
                     ) { navLambdaBackToMainNavigationBar() }
                 }
 
-                composable(Routes.BloodPressurePlots.route) {
+                composable(
+                    Routes.BloodPressurePlots.route,
+                    enterTransition = {
+                        when (initialState.destination.route) {
+                            Routes.DataHome.route ->
+                                EnterTransition.None
+                            else -> null
+                        }
+                    },
+                    exitTransition = {
+                        when (initialState.destination.route) {
+                            Routes.DataHome.route -> ExitTransition.None
+                            else -> null
+                        }
+                    }
+                ) {
                     val myDateObj = LocalDateTime.now()
                     val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                     val formattedDate = myDateObj.format(myFormatObj)
@@ -403,7 +510,22 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                composable(Routes.HeartRatePlot.route) {
+                composable(
+                    Routes.HeartRatePlot.route,
+                    enterTransition = {
+                        when (initialState.destination.route) {
+                            Routes.DataHome.route ->
+                                EnterTransition.None
+                            else -> null
+                        }
+                    },
+                    exitTransition = {
+                        when (initialState.destination.route) {
+                            Routes.DataHome.route -> ExitTransition.None
+                            else -> null
+                        }
+                    }
+                ) {
                     val myDateObj = LocalDateTime.now()
                     val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                     val formattedDate = myDateObj.format(myFormatObj)
@@ -416,7 +538,20 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                composable(Routes.PersonalInfoForm.route) {
+                composable(
+                    Routes.PersonalInfoForm.route,
+                    enterTransition = {
+                        when (initialState.destination.route) {
+                            Routes.DataHome.route ->
+                                EnterTransition.None
+                            else -> null
+                        }
+                    },
+                    exitTransition = {  when (initialState.destination.route) {
+                        Routes.DataHome.route -> ExitTransition.None
+                        else -> null
+                    } }
+                ) {
                     PersonalInfoInitDBHandlerAD(
                         dataViewModel
                     )
@@ -434,17 +569,17 @@ class MainActivity : ComponentActivity() {
 
     private fun clearStateSW(dataViewModel: DataViewModel) {
 
-        val myFormatObj:DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-        val todayLocalDateTime:LocalDateTime = LocalDateTime.now()
-        val todayFormattedDate:String = todayLocalDateTime.format(myFormatObj)
+        val myFormatObj: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+        val todayLocalDateTime: LocalDateTime = LocalDateTime.now()
+        val todayFormattedDate: String = todayLocalDateTime.format(myFormatObj)
         dataViewModel.todayFormattedDate = todayFormattedDate
 
-        val yesterdayLocalDateTime:LocalDateTime = todayLocalDateTime.minusDays(1)
-        val yesterdayFormattedDate:String = yesterdayLocalDateTime.format(myFormatObj)
+        val yesterdayLocalDateTime: LocalDateTime = todayLocalDateTime.minusDays(1)
+        val yesterdayFormattedDate: String = yesterdayLocalDateTime.format(myFormatObj)
         dataViewModel.yesterdayFormattedDate = yesterdayFormattedDate
 
-        val pastYesterdayLocalDateTime:LocalDateTime = todayLocalDateTime.minusDays(2)
-        val pastYesterdayFormattedDate:String = pastYesterdayLocalDateTime.format(myFormatObj)
+        val pastYesterdayLocalDateTime: LocalDateTime = todayLocalDateTime.minusDays(2)
+        val pastYesterdayFormattedDate: String = pastYesterdayLocalDateTime.format(myFormatObj)
         dataViewModel.pastYesterdayFormattedDate = pastYesterdayFormattedDate
 
         dataViewModel.smartWatchState.progressbarForFetchingDataFromSW = false
