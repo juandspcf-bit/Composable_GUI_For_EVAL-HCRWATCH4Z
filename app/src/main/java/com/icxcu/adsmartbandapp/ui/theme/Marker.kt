@@ -60,7 +60,7 @@ internal fun rememberMarker(): Marker {
         )
     }
     val label = textComponent(
-        color = Color.Black,
+        color = Color.White,
         background = labelBackground,
         lineCount = LABEL_LINE_COUNT,
         padding = labelPadding,
@@ -79,7 +79,8 @@ internal fun rememberMarker(): Marker {
         innerPaddingAll = indicatorCenterAndOuterComponentPaddingValue,
     )
     val guideline = lineComponent(
-        MaterialTheme.colors.onSurface.copy(GUIDELINE_ALPHA),
+        //Color.White,//MaterialTheme.colors.onSurface.copy(GUIDELINE_ALPHA),
+        color1,
         guidelineThickness,
         guidelineShape,
     )
@@ -134,7 +135,7 @@ public object MyMarkerLabelFormatter : MarkerLabelFormatter {
 }
 
 
-
+private val color1 = Color(0xFF2196F3)
 
 private const val LABEL_BACKGROUND_SHADOW_RADIUS = 4f
 private const val LABEL_BACKGROUND_SHADOW_DY = 2f
