@@ -3,10 +3,6 @@ package com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.text.TextUtils
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.magnifier
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -15,36 +11,26 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.axisValueFormatter
 
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemIconPaddingValue
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemIconSize
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemLabelTextSize
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemSpacing
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendPadding
 import com.icxcu.adsmartbandapp.ui.theme.rememberChartStyle
-import com.icxcu.adsmartbandapp.ui.theme.rememberMarker
+import com.icxcu.adsmartbandapp.ui.theme.rememberBloodPressureMarker
 import com.patrykandpatrick.vico.compose.axis.axisLabelComponent
 import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.line.lineChart
 import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollSpec
-import com.patrykandpatrick.vico.compose.component.shapeComponent
-import com.patrykandpatrick.vico.compose.component.textComponent
-import com.patrykandpatrick.vico.compose.legend.verticalLegend
-import com.patrykandpatrick.vico.compose.legend.verticalLegendItem
 import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
 import com.patrykandpatrick.vico.compose.style.currentChartStyle
 import com.patrykandpatrick.vico.core.axis.Axis
 import com.patrykandpatrick.vico.core.axis.formatter.DecimalFormatAxisValueFormatter
 import com.patrykandpatrick.vico.core.axis.horizontal.HorizontalAxis
 import com.patrykandpatrick.vico.core.chart.copy
-import com.patrykandpatrick.vico.core.component.shape.Shapes
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import com.patrykandpatrick.vico.core.legend.VerticalLegend
 import java.math.RoundingMode
 
 @Composable
-fun MyComposePlotChart(
+fun MyComposeBloodPressurePlotChart(
     chartEntryModel: ChartEntryModelProducer,
     modifier: Modifier = Modifier,
     legend: VerticalLegend
@@ -54,7 +40,7 @@ fun MyComposePlotChart(
         val defaultLines = currentChartStyle.lineChart.lines
         Chart(
             modifier = modifier,
-            marker = rememberMarker(),
+            marker = rememberBloodPressureMarker(color1),
             chartScrollSpec = rememberChartScrollSpec(isScrollEnabled = false),
             chart = lineChart(
                 remember(defaultLines) {

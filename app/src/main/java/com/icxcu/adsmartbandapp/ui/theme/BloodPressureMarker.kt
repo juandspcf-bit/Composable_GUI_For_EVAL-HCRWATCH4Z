@@ -1,22 +1,9 @@
-/*
- * Copyright 2023 by Patryk Goworowski and Patrick Michalik.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 
 package com.icxcu.adsmartbandapp.ui.theme
 
 import android.graphics.Typeface
+import android.hardware.camera2.params.ColorSpaceTransform
 import android.text.Spannable
 import android.text.style.ForegroundColorSpan
 import android.util.Log
@@ -26,7 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.patrykandpatrick.vico.compose.component.lineComponent
 import com.patrykandpatrick.vico.compose.component.overlayingComponent
 import com.patrykandpatrick.vico.compose.component.shapeComponent
@@ -43,13 +29,12 @@ import com.patrykandpatrick.vico.core.component.shape.cornered.MarkerCorneredSha
 import com.patrykandpatrick.vico.core.context.MeasureContext
 import com.patrykandpatrick.vico.core.extension.appendCompat
 import com.patrykandpatrick.vico.core.extension.copyColor
-import com.patrykandpatrick.vico.core.extension.sumOf
 import com.patrykandpatrick.vico.core.extension.transformToSpannable
 import com.patrykandpatrick.vico.core.marker.Marker
 import com.patrykandpatrick.vico.core.marker.MarkerLabelFormatter
 
 @Composable
-internal fun rememberMarker(): Marker {
+internal fun rememberBloodPressureMarker(colorMarkerGuideLine: Color): Marker {
 
     val labelBackgroundColor = Color.White//MaterialTheme.colors.onSurface
     val labelBackground = remember(labelBackgroundColor) {
@@ -60,7 +45,7 @@ internal fun rememberMarker(): Marker {
         )
     }
     val label = textComponent(
-        color = Color.White,
+        color = Color.DarkGray,
         background = labelBackground,
         lineCount = LABEL_LINE_COUNT,
         padding = labelPadding,
@@ -80,7 +65,8 @@ internal fun rememberMarker(): Marker {
     )
     val guideline = lineComponent(
         //Color.White,//MaterialTheme.colors.onSurface.copy(GUIDELINE_ALPHA),
-        color1,
+        colorMarkerGuideLine,
+        //color1,
         guidelineThickness,
         guidelineShape,
     )
@@ -96,7 +82,7 @@ internal fun rememberMarker(): Marker {
                         setShadow(radius = INDICATOR_CENTER_COMPONENT_SHADOW_RADIUS, color = entryColor)
                     }
                 }
-                this.labelFormatter = MyMarkerLabelFormatter
+                this.labelFormatter = MyBloodPressureMarkerLabelFormatter
 
             }
 
@@ -113,9 +99,9 @@ internal fun rememberMarker(): Marker {
 }
 
 
-public object MyMarkerLabelFormatter : MarkerLabelFormatter {
+public object MyBloodPressureMarkerLabelFormatter : MarkerLabelFormatter {
 
-    private const val PATTERN = "%.02f"
+    private const val PATTERN = "%.01f mmHg"
 
     override fun getLabel(
         markedEntries: List<Marker.EntryModel>,
@@ -128,14 +114,12 @@ public object MyMarkerLabelFormatter : MarkerLabelFormatter {
     ) { model ->
         appendCompat(
             PATTERN.format(model.entry.y),
-            ForegroundColorSpan(model.color),
+            ForegroundColorSpan(Color.DarkGray.toArgb()),
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
         )
     }
 }
 
-
-private val color1 = Color(0xFF2196F3)
 
 private const val LABEL_BACKGROUND_SHADOW_RADIUS = 4f
 private const val LABEL_BACKGROUND_SHADOW_DY = 2f

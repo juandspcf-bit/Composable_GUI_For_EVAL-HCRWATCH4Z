@@ -4,9 +4,6 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import android.text.TextUtils
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.magnifier
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -16,7 +13,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.ui.theme.rememberChartStyle
-import com.icxcu.adsmartbandapp.ui.theme.rememberMarker
+import com.icxcu.adsmartbandapp.ui.theme.rememberBloodPressureMarker
+import com.icxcu.adsmartbandapp.ui.theme.rememberPhysicalActivityMarker
 import com.patrykandpatrick.vico.compose.axis.axisLabelComponent
 import com.patrykandpatrick.vico.compose.axis.horizontal.bottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
@@ -26,8 +24,6 @@ import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollSpec
 import com.patrykandpatrick.vico.compose.component.shapeComponent
 import com.patrykandpatrick.vico.compose.component.textComponent
 import com.patrykandpatrick.vico.compose.dimensions.dimensionsOf
-import com.patrykandpatrick.vico.compose.legend.verticalLegend
-import com.patrykandpatrick.vico.compose.legend.verticalLegendItem
 import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
 import com.patrykandpatrick.vico.compose.style.currentChartStyle
 import com.patrykandpatrick.vico.core.axis.Axis
@@ -45,7 +41,7 @@ import java.math.RoundingMode
 import java.time.Duration
 
 @Composable
-fun MyComposeBarChart(
+fun MyPhysicalActivityComposeBarChart(
     chartEntryModel: ChartEntryModelProducer,
     modifier: Modifier = Modifier,
     legend: VerticalLegend
@@ -93,7 +89,7 @@ fun MyComposeBarChart(
                 labelRotationDegrees = 90f
             ),
 
-            marker = rememberMarker(),
+            marker = rememberPhysicalActivityMarker(color1),
             legend = legend,
             diffAnimationSpec = tween(
                 durationMillis = 6000,

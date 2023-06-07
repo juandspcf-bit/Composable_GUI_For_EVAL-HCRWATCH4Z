@@ -30,7 +30,6 @@ import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.EntryHour
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityContent
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemIconPaddingValue
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemIconSize
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemLabelTextSize
@@ -181,7 +180,7 @@ fun BloodPressureContent(
         ) {
 
             val chartEntryModel = ChartEntryModelProducer(mapSystolic, mapDiastolic)
-            MyComposePlotChart(
+            MyComposeBloodPressurePlotChart(
                 chartEntryModel,
                 modifier = Modifier
                     .fillMaxSize()
