@@ -295,7 +295,21 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-                composable(Routes.BluetoothScanner.route) {
+                composable(Routes.BluetoothScanner.route,
+                    enterTransition = {
+                        when (initialState.destination.route) {
+                            Routes.Permissions.route -> EnterTransition.None
+                            Routes.DataHome.route -> EnterTransition.None
+                            else -> null
+                        }
+                    },
+                    exitTransition = {
+                        when (targetState.destination.route) {
+                            Routes.Permissions.route -> ExitTransition.None
+                            Routes.DataHome.route -> ExitTransition.None
+                            else -> null
+                        }
+                    }) {
                     Log.d("DATAX", "Routes.BluetoothScanner.route: ENTER")
 
                     when (dataViewModel.stateBluetoothListScreenNavigationStatus) {
