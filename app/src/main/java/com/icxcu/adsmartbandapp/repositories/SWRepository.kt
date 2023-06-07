@@ -42,6 +42,8 @@ class SWRepository {
             var pastYesterdayFormattedDate:String = pastYesterdayLocalDateTime.format(myFormatObj)
 
 
+            delay(5000)
+
             val todayValues = Values(
                 MockData.valuesToday.stepList,
                 MockData.valuesToday.distanceList,
@@ -64,6 +66,8 @@ class SWRepository {
                 yesterdayFormattedDate,
             )
             _sharedStepsFlow.emit(yesterdayValues)
+
+            delay(500)
             Log.d("DATAX", "requestSmartWatchDataRep:  CoroutineScope(Dispatchers.Default) END")
             jobSW?.cancel()
         }

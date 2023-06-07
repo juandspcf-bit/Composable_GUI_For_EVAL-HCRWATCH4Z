@@ -2,10 +2,13 @@ package com.icxcu.adsmartbandapp.screens.mainNavBar
 
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavHostController
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoDBHandler
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun MainNavigationBarRoot(
@@ -16,6 +19,8 @@ fun MainNavigationBarRoot(
     navMainController: NavHostController,
     splashViewModel: SplashViewModel
 ){
+    val scope = rememberCoroutineScope()
+
     when (getFetchingDataFromSWStatus()) {
         SWReadingStatus.CLEARED -> {
             Log.d("DATAX", "Routes.DataHome.route: CLEARED")
@@ -36,6 +41,9 @@ fun MainNavigationBarRoot(
                 bluetoothAddress
             dataViewModel.nameDeviceBluetooth = bluetoothName
 
+
+
+
             dataViewModel.getTodayPhysicalActivityData(dataViewModel.macAddressDeviceBluetooth)
             dataViewModel.getYesterdayPhysicalActivityData(dataViewModel.macAddressDeviceBluetooth)
             dataViewModel.getTodayBloodPressureData(dataViewModel.macAddressDeviceBluetooth)
@@ -46,31 +54,13 @@ fun MainNavigationBarRoot(
             dataViewModel.statusStartedReadingDataLasThreeDaysData = true
 
 
-            TodayPhysicalActivityDBHandler(
-                dataViewModel = dataViewModel
-            )
-            YesterdayPhysicalActivityDBHandler(
-                dataViewModel = dataViewModel,
-                splashViewModel = splashViewModel
-            )
-            TodayBloodPressureDBHandler(
-                dataViewModel = dataViewModel
-            )
-            YesterdayBloodPressureDBHandler(
-                dataViewModel = dataViewModel,
-                splashViewModel = splashViewModel
-            )
-            TodayHeartRateDBHandler(
-                dataViewModel = dataViewModel
-            )
-            YesterdayHeartRateDBHandler(
-                dataViewModel = dataViewModel,
-                splashViewModel = splashViewModel
-            )
+
+
 
         }
 
         SWReadingStatus.IN_PROGRESS -> {
+
 
             dataViewModel.macAddressDeviceBluetooth =
                 bluetoothAddress
@@ -90,6 +80,9 @@ fun MainNavigationBarRoot(
     PersonalInfoDBHandler(
         dataViewModel
     )
+
+
+
     MainNavigationBarWithSwValues(
         bluetoothName = bluetoothName,
         bluetoothAddress = bluetoothAddress,

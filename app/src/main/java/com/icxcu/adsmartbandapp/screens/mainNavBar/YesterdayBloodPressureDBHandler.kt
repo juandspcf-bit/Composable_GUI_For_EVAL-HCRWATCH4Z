@@ -9,12 +9,10 @@ import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.doubleFieldUpdateOrInsert
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getDoubleListFromStringMap
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
-import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 
 @Composable
 fun YesterdayBloodPressureDBHandler(
-    dataViewModel: DataViewModel,
-    splashViewModel:SplashViewModel
+    dataViewModel: DataViewModel
 ) {
 
     val getSmartWatchState = remember(dataViewModel) {

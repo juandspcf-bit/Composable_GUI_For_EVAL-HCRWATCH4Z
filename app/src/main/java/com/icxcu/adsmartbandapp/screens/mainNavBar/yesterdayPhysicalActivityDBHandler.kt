@@ -11,12 +11,10 @@ import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.integerFieldUpdateO
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getDoubleListFromStringMap
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getIntegerListFromStringMap
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
-import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 
 @Composable
 fun YesterdayPhysicalActivityDBHandler(
-    dataViewModel: DataViewModel,
-    splashViewModel: SplashViewModel
+    dataViewModel: DataViewModel
 ) {
 
     val getSmartWatchState = remember(dataViewModel) {

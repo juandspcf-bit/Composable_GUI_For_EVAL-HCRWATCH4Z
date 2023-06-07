@@ -40,6 +40,28 @@ fun MainNavigationBarWithSwValues(
         { dataViewModel.smartWatchState.todayDateValuesReadFromSW }
     }
 
+
+    TodayPhysicalActivityDBHandler(
+        dataViewModel = dataViewModel
+    )
+    YesterdayPhysicalActivityDBHandler(
+        dataViewModel = dataViewModel
+    )
+    TodayBloodPressureDBHandler(
+        dataViewModel = dataViewModel
+    )
+    YesterdayBloodPressureDBHandler(
+        dataViewModel = dataViewModel
+    )
+    TodayHeartRateDBHandler(
+        dataViewModel = dataViewModel
+    )
+    YesterdayHeartRateDBHandler(
+        dataViewModel = dataViewModel
+    )
+
+
+
     val dayHealthResultsFromDB by dataViewModel
         .dayHealthDataStateForDashBoard
         .dayHealthResultsFromDBForDashBoard

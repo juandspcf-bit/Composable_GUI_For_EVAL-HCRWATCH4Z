@@ -1,5 +1,6 @@
 package com.icxcu.adsmartbandapp.screens.mainNavBar
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -30,13 +31,21 @@ fun TodayPhysicalActivityDBHandler(
         }.toList()
     )
 
+
+
     val todayDateValuesReadFromSW = remember(dataViewModel) {
         {
             dataViewModel.smartWatchState.todayDateValuesReadFromSW
         }
     }
     //Data Sources**
+    Log.d("SW_DATA", "TodayPhysicalActivitySW: ${todayDateValuesReadFromSW().stepList}")
+    if(todayPhysicalActivityResultsFromDB.isNotEmpty()){
+        Log.d("SW_DATA", "TodayPhysicalActivityDB: ${todayPhysicalActivityResultsFromDB[0].data}")
 
+    }else{
+        Log.d("SW_DATA", "TodayPhysicalActivitySW: ")
+    }
     val setTodayStepListReadFromDB= remember(dataViewModel){
         { newData: List<Int> ->
             dataViewModel.todayHealthsDataState.todayStepListReadFromDB = newData
