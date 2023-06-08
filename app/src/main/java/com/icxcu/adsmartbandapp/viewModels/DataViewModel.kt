@@ -12,6 +12,8 @@ import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
+import com.icxcu.adsmartbandapp.database.DatabaseHelperImpl
+import com.icxcu.adsmartbandapp.database.PhysicalActivityDao
 import com.icxcu.adsmartbandapp.database.SWRoomDatabase
 import com.icxcu.adsmartbandapp.repositories.DBRepository
 import com.icxcu.adsmartbandapp.repositories.MyBloodPressureAlertDialogDataHandler
@@ -32,8 +34,12 @@ import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.In
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.UpdateAlertDialogState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.ValidatorsPersonalField
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -91,9 +97,12 @@ class DataViewModel(var application: Application) : ViewModel() {
         StatusMainTitleScaffold.Fields
     )
 
+    private val dbHelper:DatabaseHelperImpl
+    private var physicalActivityDao: PhysicalActivityDao
+
     init {
         val swDb = SWRoomDatabase.getInstance(application)
-        val physicalActivityDao = swDb.physicalActivityDao()
+        physicalActivityDao = swDb.physicalActivityDao()
         val bloodPressureDao = swDb.bloodPressureDao()
         val heartRateDao = swDb.heartRateDao()
         val personalInfoDao = swDb.personalInfoDao()
@@ -104,7 +113,7 @@ class DataViewModel(var application: Application) : ViewModel() {
             personalInfoDao
         )
         //swRepository = SWRepository()
-
+        dbHelper=DatabaseHelperImpl(swDb)
 
         dayHealthDataState.dayPhysicalActivityResultsFromDB = dbRepository.dayPhysicalActivityResultsFromDB
         todayHealthsDataState.todayPhysicalActivityResultsFromDB = dbRepository.todayPhysicalActivityResultsFromDB
@@ -126,14 +135,33 @@ class DataViewModel(var application: Application) : ViewModel() {
         updateAlertDialogState.personalInfoAlertDialogUVLiveData =
             dbRepository.personalInfoAlertDialogUVStateLiveData
 
+
     }
 
+    private fun starListeningDB(name: String = "", macAddress: String = "") {
+        viewModelScope.launch {
+/*            dbHelper.getUsers(todayFormattedDate, macAddress)
+                .flowOn(Dispatchers.IO)
+                .catch { e ->
+                    // handle exception
+                }
+                .collect {
+                    Log.d("DB_FLOW", "starListeningDB: $it")
+                    // list of users from the database
+                }*/
 
+            physicalActivityDao.getAllPhysicalActivityFlow(todayFormattedDate, macAddress).collectLatest {
+                    Log.d("DB_FLOW", "starListeningDB: $it")
+                }
+        }
+    }
 
 
     fun requestSmartWatchData(name: String = "", macAddress: String = "") {
         Log.d("DATAX", "requestSmartWatchDataModel: ")
          swRepository.requestSmartWatchData()
+
+        starListeningDB(name, macAddress)
 
        viewModelScope.launch {
             delay(1000)

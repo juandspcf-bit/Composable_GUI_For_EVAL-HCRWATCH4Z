@@ -93,6 +93,8 @@ class MainActivity : ComponentActivity() {
             splashViewModel.stateFlow.value
         }
 
+
+
         setContent {
             ADSmartBandAppTheme {
                 val owner = LocalViewModelStoreOwner.current

@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PhysicalActivityDao {
@@ -21,5 +22,10 @@ interface PhysicalActivityDao {
 
     @Update
     fun updatePhysicalActivityData(physicalActivity: PhysicalActivity)
+
+
+    @Query("SELECT * FROM PhysicalActivity WHERE date_data = :date AND mac_address=:macAddress LIMIT 3")
+    fun getAllPhysicalActivityFlow(date: String, macAddress: String): Flow<List<PhysicalActivity>>
+
 
 }
