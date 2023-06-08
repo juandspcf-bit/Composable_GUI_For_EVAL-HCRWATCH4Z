@@ -328,6 +328,8 @@ fun NavigationHost(
             SettingsScreen(
                 navMainController,
                 clearState,
+                getVisibilityProgressbarForFetchingData,
+
             )
         }
     }

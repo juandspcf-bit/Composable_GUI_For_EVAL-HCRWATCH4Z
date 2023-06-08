@@ -40,6 +40,12 @@ import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.mainNavBar.MainNavigationBarRoot
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusReadingDbForDashboard
+import com.icxcu.adsmartbandapp.screens.mainNavBar.TodayBloodPressureDBHandler
+import com.icxcu.adsmartbandapp.screens.mainNavBar.TodayHeartRateDBHandler
+import com.icxcu.adsmartbandapp.screens.mainNavBar.TodayPhysicalActivityDBHandler
+import com.icxcu.adsmartbandapp.screens.mainNavBar.YesterdayBloodPressureDBHandler
+import com.icxcu.adsmartbandapp.screens.mainNavBar.YesterdayHeartRateDBHandler
+import com.icxcu.adsmartbandapp.screens.mainNavBar.YesterdayPhysicalActivityDBHandler
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.InvalidAlertDialogState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalDataForm
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoDataState
@@ -273,6 +279,14 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
+            TodayPhysicalActivityDBHandler(dataViewModel = dataViewModel)
+            YesterdayPhysicalActivityDBHandler(dataViewModel = dataViewModel)
+            TodayBloodPressureDBHandler(dataViewModel = dataViewModel)
+            YesterdayBloodPressureDBHandler(dataViewModel = dataViewModel)
+            TodayHeartRateDBHandler(dataViewModel = dataViewModel)
+            YesterdayHeartRateDBHandler(dataViewModel = dataViewModel)
+
+
             NavHost(
                 navController = navMainController,
                 startDestination = startDestination
@@ -387,8 +401,7 @@ class MainActivity : ComponentActivity() {
                         getFetchingDataFromSWStatus,
                         bluetoothAddress,
                         bluetoothName,
-                        navMainController,
-                        splashViewModel
+                        navMainController
                     )
                 }
 
@@ -461,8 +474,7 @@ class MainActivity : ComponentActivity() {
                         getFetchingDataFromSWStatus,
                         bluetoothAddress,
                         bluetoothName,
-                        navMainController,
-                        splashViewModel
+                        navMainController
                     )
 
                 }

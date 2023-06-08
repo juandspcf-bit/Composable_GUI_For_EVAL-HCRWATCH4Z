@@ -26,9 +26,7 @@ fun TodayPhysicalActivityDBHandler(
 
     val todayPhysicalActivityResultsFromDB by getTodayPhysicalActivityData()
         .todayPhysicalActivityResultsFromDB.observeAsState(
-        MutableList(0) {
-            PhysicalActivity(physicalActivityId=-1,macAddress="", dateData="", data="")
-        }.toList()
+        listOf()
     )
 
 
@@ -39,13 +37,8 @@ fun TodayPhysicalActivityDBHandler(
         }
     }
     //Data Sources**
-    Log.d("SW_DATA", "TodayPhysicalActivitySW: ${todayDateValuesReadFromSW().stepList}")
-    if(todayPhysicalActivityResultsFromDB.isNotEmpty()){
-        Log.d("SW_DATA", "TodayPhysicalActivityDB: ${todayPhysicalActivityResultsFromDB[0].data}")
 
-    }else{
-        Log.d("SW_DATA", "TodayPhysicalActivitySW: ")
-    }
+
     val setTodayStepListReadFromDB= remember(dataViewModel){
         { newData: List<Int> ->
             dataViewModel.todayHealthsDataState.todayStepListReadFromDB = newData
@@ -53,13 +46,16 @@ fun TodayPhysicalActivityDBHandler(
     }
 
 
-    getTodayPhysicalActivityData().todayStepListReadFromDB = if (todayPhysicalActivityResultsFromDB.isEmpty().not()) {
+    dataViewModel.todayHealthsDataState.todayStepListReadFromDB = if (todayPhysicalActivityResultsFromDB.isEmpty().not()) {
         val filter = todayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.STEPS }
-        getIntegerListFromStringMap(filter[0].data)
+        if(filter.isNotEmpty()){
+            getIntegerListFromStringMap(filter[0].data)
+        }else{
+            MutableList(48) { 0 }.toList()
+        }
     } else {
         MutableList(48) { 0 }.toList()
     }
-
 
     val setIsTodayStepsListAlreadyInsertedInDB= remember(dataViewModel){
         { newValue: Boolean ->
@@ -94,9 +90,15 @@ fun TodayPhysicalActivityDBHandler(
     }
 
 
-    getTodayPhysicalActivityData().todayDistanceListReadFromDB = if (todayPhysicalActivityResultsFromDB.isEmpty().not()) {
+    dataViewModel.todayHealthsDataState.todayDistanceListReadFromDB = if (todayPhysicalActivityResultsFromDB.isEmpty().not()) {
+        Log.d("MY-DATA", "TodayPhysicalActivityDBHandler: $todayPhysicalActivityResultsFromDB")
         val filter = todayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.DISTANCE }
-        getDoubleListFromStringMap(filter[0].data)
+        if(filter.isNotEmpty()){
+            getDoubleListFromStringMap(filter[0].data)
+        }else{
+            MutableList(48) { 0.0 }.toList()
+        }
+
     } else {
         MutableList(48) { 0.0 }.toList()
     }
@@ -138,7 +140,11 @@ fun TodayPhysicalActivityDBHandler(
 
     getTodayPhysicalActivityData().todayCaloriesListReadFromDB = if (todayPhysicalActivityResultsFromDB.isEmpty().not()) {
         val filter = todayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.CALORIES }
-        getDoubleListFromStringMap(filter[0].data)
+        if(filter.isNotEmpty()){
+            getDoubleListFromStringMap(filter[0].data)
+        }else{
+            MutableList(48) { 0.0 }.toList()
+        }
     } else {
         MutableList(48) { 0.0 }.toList()
     }

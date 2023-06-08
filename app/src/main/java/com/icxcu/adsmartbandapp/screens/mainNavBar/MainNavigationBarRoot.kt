@@ -2,13 +2,10 @@ package com.icxcu.adsmartbandapp.screens.mainNavBar
 
 import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavHostController
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoDBHandler
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
-import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun MainNavigationBarRoot(
@@ -16,10 +13,8 @@ fun MainNavigationBarRoot(
     getFetchingDataFromSWStatus: () -> SWReadingStatus,
     bluetoothAddress: String,
     bluetoothName: String,
-    navMainController: NavHostController,
-    splashViewModel: SplashViewModel
+    navMainController: NavHostController
 ){
-    val scope = rememberCoroutineScope()
 
     when (getFetchingDataFromSWStatus()) {
         SWReadingStatus.CLEARED -> {
@@ -41,9 +36,6 @@ fun MainNavigationBarRoot(
                 bluetoothAddress
             dataViewModel.nameDeviceBluetooth = bluetoothName
 
-
-
-
             dataViewModel.getTodayPhysicalActivityData(dataViewModel.macAddressDeviceBluetooth)
             dataViewModel.getYesterdayPhysicalActivityData(dataViewModel.macAddressDeviceBluetooth)
             dataViewModel.getTodayBloodPressureData(dataViewModel.macAddressDeviceBluetooth)
@@ -52,10 +44,6 @@ fun MainNavigationBarRoot(
             dataViewModel.getYesterdayHeartRateData(dataViewModel.macAddressDeviceBluetooth)
             dataViewModel.getPersonalInfoData(dataViewModel.macAddressDeviceBluetooth)
             dataViewModel.statusStartedReadingDataLasThreeDaysData = true
-
-
-
-
 
         }
 
@@ -80,8 +68,6 @@ fun MainNavigationBarRoot(
     PersonalInfoDBHandler(
         dataViewModel
     )
-
-
 
     MainNavigationBarWithSwValues(
         bluetoothName = bluetoothName,

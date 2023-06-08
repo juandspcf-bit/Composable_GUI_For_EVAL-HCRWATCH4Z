@@ -41,24 +41,7 @@ fun MainNavigationBarWithSwValues(
     }
 
 
-    TodayPhysicalActivityDBHandler(
-        dataViewModel = dataViewModel
-    )
-    YesterdayPhysicalActivityDBHandler(
-        dataViewModel = dataViewModel
-    )
-    TodayBloodPressureDBHandler(
-        dataViewModel = dataViewModel
-    )
-    YesterdayBloodPressureDBHandler(
-        dataViewModel = dataViewModel
-    )
-    TodayHeartRateDBHandler(
-        dataViewModel = dataViewModel
-    )
-    YesterdayHeartRateDBHandler(
-        dataViewModel = dataViewModel
-    )
+
 
 
 
@@ -218,6 +201,39 @@ fun MainNavigationBarWithSwValues(
             dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.CLEARED
             dataViewModel.stateBluetoothListScreenNavigationStatus =
                 BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_BLUETOOTH_SCREEN
+
+            dataViewModel.todayHealthsDataState.isTodayStepsListAlreadyInsertedInDB = false
+            dataViewModel.todayHealthsDataState.isTodayStepsListInDBAlreadyUpdated = false
+            dataViewModel.todayHealthsDataState.isTodayDistanceListAlreadyInsertedInDB = false
+            dataViewModel.todayHealthsDataState.isTodayDistanceListInDBAlreadyUpdated = false
+            dataViewModel.todayHealthsDataState.isTodayCaloriesListAlreadyInsertedInDB = false
+            dataViewModel.todayHealthsDataState.isTodayCaloriesListInDBAlreadyUpdated = false
+
+            dataViewModel.todayHealthsDataState.isTodaySystolicListAlreadyInsertedInDB = false
+            dataViewModel.todayHealthsDataState.isTodaySystolicListInDBAlreadyUpdated = false
+            dataViewModel.todayHealthsDataState.isTodayDiastolicListAlreadyInsertedInDB = false
+            dataViewModel.todayHealthsDataState.isTodayDiastolicListInDBAlreadyUpdated = false
+
+            dataViewModel.todayHealthsDataState.isTodayHeartRateListAlreadyInsertedInDB = false
+            dataViewModel.todayHealthsDataState.isTodayHeartRateListInDBAlreadyUpdated = false
+
+
+
+            dataViewModel.yesterdayHealthsDataState.isYesterdayStepsListAlreadyInsertedInDB = false
+            dataViewModel.yesterdayHealthsDataState.isYesterdayStepsListInDBAlreadyUpdated = false
+            dataViewModel.yesterdayHealthsDataState.isYesterdayDistanceListAlreadyInsertedInDB = false
+            dataViewModel.yesterdayHealthsDataState.isYesterdayDistanceListInDBAlreadyUpdated = false
+            dataViewModel.yesterdayHealthsDataState.isYesterdayCaloriesListAlreadyInsertedInDB = false
+            dataViewModel.yesterdayHealthsDataState.isYesterdayCaloriesListInDBAlreadyUpdated = false
+
+            dataViewModel.yesterdayHealthsDataState.isYesterdaySystolicListAlreadyInsertedInDB = false
+            dataViewModel.yesterdayHealthsDataState.isYesterdaySystolicListInDBAlreadyUpdated = false
+            dataViewModel.yesterdayHealthsDataState.isYesterdayDiastolicListAlreadyInsertedInDB = false
+            dataViewModel.yesterdayHealthsDataState.isYesterdayDiastolicListInDBAlreadyUpdated = false
+
+            dataViewModel.yesterdayHealthsDataState.isYesterdayHeartRateListAlreadyInsertedInDB = false
+            dataViewModel.yesterdayHealthsDataState.isYesterdayHeartRateListInDBAlreadyUpdated = false
+
         }
     }
 
@@ -299,31 +315,31 @@ class TodayHealthsDataState {
 
     var todayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
     var todayStepListReadFromDB by mutableStateOf(listOf<Int>())
-    var isTodayStepsListAlreadyInsertedInDB by mutableStateOf(false)
-    var isTodayStepsListInDBAlreadyUpdated by mutableStateOf(false)
+    var isTodayStepsListAlreadyInsertedInDB = false
+    var isTodayStepsListInDBAlreadyUpdated = false
 
     var todayDistanceListReadFromDB by mutableStateOf(listOf<Double>())
-    var isTodayDistanceListAlreadyInsertedInDB by mutableStateOf(false)
-    var isTodayDistanceListInDBAlreadyUpdated by mutableStateOf(false)
+    var isTodayDistanceListAlreadyInsertedInDB = false
+    var isTodayDistanceListInDBAlreadyUpdated = false
 
     var todayCaloriesListReadFromDB by mutableStateOf(listOf<Double>())
-    var isTodayCaloriesListAlreadyInsertedInDB by mutableStateOf(false)
-    var isTodayCaloriesListInDBAlreadyUpdated by mutableStateOf(false)
+    var isTodayCaloriesListAlreadyInsertedInDB = false
+    var isTodayCaloriesListInDBAlreadyUpdated = false
 
     var todayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
     var todaySystolicListReadFromDB by mutableStateOf(listOf<Double>())
-    var isTodaySystolicListAlreadyInsertedInDB by mutableStateOf(false)
-    var isTodaySystolicListInDBAlreadyUpdated by mutableStateOf(false)
+    var isTodaySystolicListAlreadyInsertedInDB = false
+    var isTodaySystolicListInDBAlreadyUpdated = false
 
     var todayDiastolicListReadFromDB by mutableStateOf(listOf<Double>())
-    var isTodayDiastolicListAlreadyInsertedInDB by mutableStateOf(false)
-    var isTodayDiastolicListInDBAlreadyUpdated by mutableStateOf(false)
+    var isTodayDiastolicListAlreadyInsertedInDB = false
+    var isTodayDiastolicListInDBAlreadyUpdated = false
 
 
     var todayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
     var todayHeartRateListReadFromDB by mutableStateOf(listOf<Double>())
-    var isTodayHeartRateListAlreadyInsertedInDB by mutableStateOf(false)
-    var isTodayHeartRateListInDBAlreadyUpdated by mutableStateOf(false)
+    var isTodayHeartRateListAlreadyInsertedInDB = false
+    var isTodayHeartRateListInDBAlreadyUpdated = false
 }
 
 class YesterdayHealthsDataState {

@@ -34,7 +34,9 @@ import com.icxcu.adsmartbandapp.screens.Routes
 fun SettingsScreen(
     navMainController: NavController,
     clearState: () -> Unit,
-) {
+    getVisibilityProgressbarForFetchingData: () -> Boolean = { false },
+
+    ) {
 
     Box(
         modifier = Modifier
@@ -48,9 +50,11 @@ fun SettingsScreen(
         ) {
 
             RowSettings(
-                navigation = {navMainController.navigate(Routes.PersonalInfoForm.route){
-                    popUpTo(Routes.DataHome.route)
-                }},
+                navigation = {
+                    navMainController.navigate(Routes.PersonalInfoForm.route) {
+                        popUpTo(Routes.DataHome.route)
+                    }
+                },
                 modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
                 text = "Personal information",
                 iconResource = R.drawable.baseline_person_24
@@ -58,13 +62,15 @@ fun SettingsScreen(
 
             RowSettings(
                 navigation = {
-                    navMainController.navigate(Routes.BluetoothScanner.route){
+                    navMainController.navigate(Routes.BluetoothScanner.route) {
                         popUpTo(0)
-                } },
+                    }
+                },
                 modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
                 text = "Connect to other device",
                 iconResource = R.drawable.baseline_watch_24,
-                clearState,
+                disableRow = getVisibilityProgressbarForFetchingData(),
+                optionalOperations = clearState,
             )
 
         }
@@ -73,11 +79,12 @@ fun SettingsScreen(
 
 @Composable
 fun RowSettings(
-    navigation: ()->Unit,
+    navigation: () -> Unit,
     modifier: Modifier = Modifier,
     text: String = "",
     iconResource: Int = R.drawable.ic_launcher_foreground,
-    optionalOperations:()->Unit = {},
+    disableRow: Boolean = false,
+    optionalOperations: () -> Unit = {},
 ) {
     Row(
         modifier = modifier,
@@ -85,16 +92,11 @@ fun RowSettings(
     ) {
 
         Box(modifier = Modifier
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onPress = {
-                        optionalOperations()
-                        navigation()
-                              },
-                    onDoubleTap = { /* Double Tap Detected */ },
-                    onLongPress = { /* Long Press Detected */ },
-                    onTap = { }
-                )
+            .clickable {
+                if (disableRow.not()) {
+                    optionalOperations()
+                    navigation()
+                }
             }
             .fillMaxWidth(0.8f)
             .padding(end = 20.dp)
@@ -118,8 +120,11 @@ fun RowSettings(
             modifier = Modifier
                 .size(50.dp)
                 .clickable {
-                    optionalOperations()
-                    navigation()
+                    if (disableRow.not()) {
+                        optionalOperations()
+                        navigation()
+                    }
+
                 }
 
         )
@@ -129,5 +134,5 @@ fun RowSettings(
 @Preview(showBackground = true)
 @Composable
 fun SettingsPreview() {
-    SettingsScreen(rememberNavController()) {}
+    SettingsScreen(rememberNavController(), {}) { false }
 }

@@ -1,5 +1,6 @@
 package com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard
 
+import android.util.Log
 import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.data.entities.Field
@@ -21,6 +22,29 @@ fun integerFieldUpdateOrInsert(
     dateData:String,
 ) {
 
+if(valuesReadFromSW.isEmpty().not() && dayFromTableData.isEmpty().not()){
+    Log.d("SW_DATA", "which values")
+    Log.d("SW_DATA", "valuesReadFromSW.isEmpty().not() ${valuesReadFromSW.isEmpty().not()}")
+    Log.d("SW_DATA", "valuesReadFromSW.max()!=0 ${valuesReadFromSW.max()!=0}")
+
+    Log.d("SW_DATA", "dayFromTableData.isEmpty().not() ${dayFromTableData.isEmpty().not()}")
+    Log.d("SW_DATA", "dayFromTableData[0].id == -1 ${dayFromTableData[0].id == -1}")
+    Log.d("SW_DATA", "isDayFieldListAlreadyInsertedInDB.not() ${isDayFieldListAlreadyInsertedInDB.not()}")
+
+}else{
+    Log.d("SW_DATA", "which values")
+    Log.d("SW_DATA", "${valuesReadFromSW.isEmpty()}")
+    Log.d("SW_DATA", "max not defined")
+
+    Log.d("SW_DATA", "${dayFromTableData.isEmpty().not()}")
+    Log.d("SW_DATA", "not defined")
+    Log.d("SW_DATA", "${isDayFieldListAlreadyInsertedInDB.not()}")
+}
+
+
+
+
+
     if (valuesReadFromSW.isEmpty().not() &&
         valuesReadFromSW.max()!=0 &&
         dayFromTableData.isEmpty().not() &&
@@ -41,15 +65,18 @@ fun integerFieldUpdateOrInsert(
                 true
             } else false
         }
-        dayFromTableData[listIndex[0]].data = newValuesList.toString()
-        setDayFieldListReadFromDB(valuesReadFromSW)
-        tableToUpdateSelector(
-            typesTableToModify,
-            dataViewModel,
-            dayFromTableData
-        )
+        if(listIndex.isNotEmpty()){
+            dayFromTableData[listIndex[0]].data = newValuesList.toString()
+            setDayFieldListReadFromDB(valuesReadFromSW)
+            tableToUpdateSelector(
+                typesTableToModify,
+                dataViewModel,
+                dayFromTableData
+            )
 
-        setIsDayFieldListInDBAlreadyUpdated(true)
+            setIsDayFieldListInDBAlreadyUpdated(true)
+        }
+
 
     } else if (valuesReadFromSW.isEmpty().not() &&
         valuesReadFromSW.max()!=0 &&
@@ -106,15 +133,19 @@ fun doubleFieldUpdateOrInsert(
                 true
             } else false
         }
-        dayFromTableData[listIndex[0]].data = newValuesList.toString()
-        setDayFieldListReadFromDB(valuesReadFromSW)
+        if(listIndex.isNotEmpty()){
+            dayFromTableData[listIndex[0]].data = newValuesList.toString()
+            setDayFieldListReadFromDB(valuesReadFromSW)
+            tableToUpdateSelector(
+                typesTableToModify,
+                dataViewModel,
+                dayFromTableData
+            )
+            setIsDayFieldListInDBAlreadyUpdated(true)
+        }
 
-        tableToUpdateSelector(
-            typesTableToModify,
-            dataViewModel,
-            dayFromTableData
-        )
-        setIsDayFieldListInDBAlreadyUpdated(true)
+
+
 
     } else if (valuesReadFromSW.isEmpty().not() &&
         valuesReadFromSW.max()!=0.0 &&
