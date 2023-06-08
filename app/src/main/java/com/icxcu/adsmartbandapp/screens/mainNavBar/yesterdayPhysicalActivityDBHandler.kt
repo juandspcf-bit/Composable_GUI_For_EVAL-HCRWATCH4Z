@@ -28,10 +28,9 @@ fun YesterdayPhysicalActivityDBHandler(
             dataViewModel.yesterdayHealthsDataState
         }
     }
-    //Data Sources
-    val yesterdayPhysicalActivityResultsFromDB by getYesterdayPhysicalActivityData().yesterdayPhysicalActivityResultsFromDB.observeAsState(
-        MutableList(0) { PhysicalActivity(physicalActivityId=-1,macAddress="", dateData="", data="") }.toList()
-    )
+
+    val yesterdayPhysicalActivityResultsFromDB = dataViewModel.yesterdayStatePhysicalActivityData.value
+
 
     val yesterdayDateValuesReadFromSW = remember(dataViewModel) {
         {

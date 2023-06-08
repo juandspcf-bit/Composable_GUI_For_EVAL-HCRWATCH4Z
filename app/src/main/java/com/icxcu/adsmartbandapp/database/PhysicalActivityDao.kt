@@ -27,5 +27,9 @@ interface PhysicalActivityDao {
     @Query("SELECT * FROM PhysicalActivity WHERE date_data = :date AND mac_address=:macAddress LIMIT 3")
     fun getAllPhysicalActivityFlow(date: String, macAddress: String): Flow<List<PhysicalActivity>>
 
+    @Query("SELECT * FROM PhysicalActivity WHERE date_data = :date AND mac_address=:macAddress LIMIT 3")
+    suspend fun getDayPhysicalActivityWithCoroutine(date: String, macAddress: String): List<PhysicalActivity>
+
+
 
 }

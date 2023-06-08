@@ -2,11 +2,8 @@ package com.icxcu.adsmartbandapp.screens.mainNavBar
 
 import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import com.icxcu.adsmartbandapp.data.TypesTable
-import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.doubleFieldUpdateOrInsert
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.integerFieldUpdateOrInsert
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getDoubleListFromStringMap
@@ -24,12 +21,7 @@ fun TodayPhysicalActivityDBHandler(
         }
     }
 
-    val todayPhysicalActivityResultsFromDB by getTodayPhysicalActivityData()
-        .todayPhysicalActivityResultsFromDB.observeAsState(
-        listOf()
-    )
-
-
+    val todayPhysicalActivityResultsFromDB = dataViewModel.todayStatePhysicalActivityData.value
 
     val todayDateValuesReadFromSW = remember(dataViewModel) {
         {

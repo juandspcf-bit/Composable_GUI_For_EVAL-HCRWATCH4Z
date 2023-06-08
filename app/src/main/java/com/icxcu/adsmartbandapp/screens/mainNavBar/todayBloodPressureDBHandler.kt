@@ -28,9 +28,11 @@ fun TodayBloodPressureDBHandler(
     }
 
     //Data Sources
-    val todayBloodPressureResultsFromDB by getTodayPhysicalActivityData().todayBloodPressureResultsFromDB.observeAsState(
+/*    val todayBloodPressureResultsFromDB by getTodayPhysicalActivityData().todayBloodPressureResultsFromDB.observeAsState(
         MutableList(0) { BloodPressure(bloodPressureId=-1,macAddress="", dateData="", data="") }.toList()
-    )
+    )*/
+
+    val todayBloodPressureResultsFromDB = dataViewModel.todayStateBloodPressureData.value
 
     val todayDateValuesReadFromSW = remember(dataViewModel) {
         {

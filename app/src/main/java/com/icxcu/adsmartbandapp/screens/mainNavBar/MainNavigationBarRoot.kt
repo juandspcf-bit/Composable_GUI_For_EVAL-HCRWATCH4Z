@@ -36,10 +36,6 @@ fun MainNavigationBarRoot(
                 bluetoothAddress
             dataViewModel.nameDeviceBluetooth = bluetoothName
 
-            dataViewModel.getTodayPhysicalActivityData(dataViewModel.macAddressDeviceBluetooth)
-            dataViewModel.getYesterdayPhysicalActivityData(dataViewModel.macAddressDeviceBluetooth)
-            dataViewModel.getTodayBloodPressureData(dataViewModel.macAddressDeviceBluetooth)
-            dataViewModel.getYesterdayBloodPressureData(dataViewModel.macAddressDeviceBluetooth)
             dataViewModel.getTodayHeartRateData(dataViewModel.macAddressDeviceBluetooth)
             dataViewModel.getYesterdayHeartRateData(dataViewModel.macAddressDeviceBluetooth)
             dataViewModel.getPersonalInfoData(dataViewModel.macAddressDeviceBluetooth)

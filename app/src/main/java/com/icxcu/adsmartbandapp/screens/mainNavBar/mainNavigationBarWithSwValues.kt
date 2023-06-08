@@ -313,7 +313,6 @@ fun MainNavigationBarWithSwValues(
 
 class TodayHealthsDataState {
 
-    var todayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
     var todayStepListReadFromDB by mutableStateOf(listOf<Int>())
     var isTodayStepsListAlreadyInsertedInDB = false
     var isTodayStepsListInDBAlreadyUpdated = false

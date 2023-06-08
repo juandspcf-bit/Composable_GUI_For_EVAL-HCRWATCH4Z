@@ -25,16 +25,13 @@ class DBRepository(
     private val heartRateDao: HeartRateDao,
     private val personalInfoDao: PersonalInfoDao
 ) {
+
     var dayHealthResultsFromDBFForDashBoard = MutableLiveData<Values>()
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
     var dayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
-    var todayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
-    var yesterdayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
 
     var dayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
-    var todayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
-    var yesterdayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
 
     var dayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
     var todayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
@@ -50,7 +47,19 @@ class DBRepository(
     val mySpO2AlertDialogDataHandler = MySpO2AlertDialogDataHandler()
 
 
+    suspend fun getDayPhysicalActivityWithCoroutine(
+        date: String,
+        macAddress: String
+    ): List<PhysicalActivity> {
+        return physicalActivityDao.getDayPhysicalActivityWithCoroutine(date, macAddress)
+    }
 
+    suspend fun getDayBloodPressureWithCoroutine(
+        date: String,
+        macAddress: String
+    ): List<BloodPressure> {
+        return bloodPressureDao.getDayBloodPressureWithCoroutine(date, macAddress)
+    }
 
 
     fun getDayHealthData(
@@ -58,9 +67,11 @@ class DBRepository(
         queryMacAddress: String,
     ) {
         coroutineScope.launch(Dispatchers.Main) {
-            val resultsPhysicalActivityFromDb = asyncDayPhysicalActivityData(queryDate, queryMacAddress)
+            val resultsPhysicalActivityFromDb =
+                asyncDayPhysicalActivityData(queryDate, queryMacAddress)
             val resultsPhysicalActivity = if (resultsPhysicalActivityFromDb != null
-                && resultsPhysicalActivityFromDb.isEmpty().not()) {
+                && resultsPhysicalActivityFromDb.isEmpty().not()
+            ) {
                 resultsPhysicalActivityFromDb
             } else {
 
@@ -102,7 +113,7 @@ class DBRepository(
                     data = newValuesList.toString()
                     typesTable = TypesTable.CALORIES
                 }
-                    listOf(stepsActivity, distanceActivity, caloriesListActivity)
+                listOf(stepsActivity, distanceActivity, caloriesListActivity)
 
             }
 
@@ -248,18 +259,6 @@ class DBRepository(
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     fun getAnyDayPhysicalActivityData(
         queryDate: String,
         queryMacAddress: String
@@ -267,19 +266,6 @@ class DBRepository(
         getDayPhysicalActivityData(queryDate, queryMacAddress, dayPhysicalActivityResultsFromDB)
     }
 
-
-
-    fun getTodayPhysicalActivityData(queryDate: String, queryMacAddress: String) {
-        getDayPhysicalActivityData(queryDate, queryMacAddress, todayPhysicalActivityResultsFromDB)
-    }
-
-    fun getYesterdayPhysicalActivityData(queryDate: String, queryMacAddress: String) {
-        getDayPhysicalActivityData(
-            queryDate,
-            queryMacAddress,
-            yesterdayPhysicalActivityResultsFromDB
-        )
-    }
 
     fun updatePhysicalActivityData(physicalActivity: PhysicalActivity) {
         coroutineScope.launch(Dispatchers.IO) {
@@ -359,9 +345,6 @@ class DBRepository(
         }.await()
 
 
-
-
-
     fun getAnyDayBloodPressureData(
         queryDate: String,
         queryMacAddress: String
@@ -371,14 +354,6 @@ class DBRepository(
             queryMacAddress,
             dayBloodPressureResultsFromDB
         )
-    }
-
-    fun getTodayBloodPressureData(queryDate: String, queryMacAddress: String) {
-        getDayBloodPressureData(queryDate, queryMacAddress, todayBloodPressureResultsFromDB)
-    }
-
-    fun getYesterdayBloodPressureData(queryDate: String, queryMacAddress: String) {
-        getDayBloodPressureData(queryDate, queryMacAddress, yesterdayBloodPressureResultsFromDB)
     }
 
     fun updateBloodPressureData(bloodPressure: BloodPressure) {
@@ -449,9 +424,6 @@ class DBRepository(
         }.await()
 
 
-
-
-
     fun getAnyDayHeartRateData(
         queryDate: String,
         queryMacAddress: String
@@ -520,7 +492,7 @@ class DBRepository(
         }.await()
 
 
-    fun getPersonalInfoData(queryMacAddress: String,){
+    fun getPersonalInfoData(queryMacAddress: String) {
         getPersonalInfoDataP(queryMacAddress, personalInfoFromDB)
     }
 
@@ -560,9 +532,13 @@ class DBRepository(
     fun insertPersonalInfo(personalInfo: PersonalInfo) {
         coroutineScope.launch(Dispatchers.IO) {
             personalInfoDao.insertPersonalInfoData(personalInfo = personalInfo)
-            withContext(Dispatchers.Main){
-                personalInfoAlertDialogUVStateLiveData.value = !(personalInfoAlertDialogUVStateLiveData.value?:true)
-                Log.d("Steps", "insertPersonalInfo: Firsts ${personalInfoAlertDialogUVStateLiveData.value}")
+            withContext(Dispatchers.Main) {
+                personalInfoAlertDialogUVStateLiveData.value =
+                    !(personalInfoAlertDialogUVStateLiveData.value ?: true)
+                Log.d(
+                    "Steps",
+                    "insertPersonalInfo: Firsts ${personalInfoAlertDialogUVStateLiveData.value}"
+                )
             }
         }
     }
@@ -570,9 +546,13 @@ class DBRepository(
     fun updatePersonalInfo(personalInfo: PersonalInfo) {
         coroutineScope.launch(Dispatchers.IO) {
             personalInfoDao.updatePersonalInfoData(personalInfo = personalInfo)
-            withContext(Dispatchers.Main){
-                personalInfoAlertDialogUVStateLiveData.value = !(personalInfoAlertDialogUVStateLiveData.value?:true)
-                Log.d("Steps", "updatePersonalInfo: Firsts ${personalInfoAlertDialogUVStateLiveData.value}")
+            withContext(Dispatchers.Main) {
+                personalInfoAlertDialogUVStateLiveData.value =
+                    !(personalInfoAlertDialogUVStateLiveData.value ?: true)
+                Log.d(
+                    "Steps",
+                    "updatePersonalInfo: Firsts ${personalInfoAlertDialogUVStateLiveData.value}"
+                )
             }
         }
     }
