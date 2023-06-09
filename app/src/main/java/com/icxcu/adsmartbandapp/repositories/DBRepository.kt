@@ -34,8 +34,6 @@ class DBRepository(
     var dayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
 
     var dayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
-    var todayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
-    var yesterdayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
 
     var personalInfoFromDB = MutableLiveData<List<PersonalInfo>>()
     var personalInfoAlertDialogUVStateLiveData = MutableLiveData(false)
@@ -59,6 +57,13 @@ class DBRepository(
         macAddress: String
     ): List<BloodPressure> {
         return bloodPressureDao.getDayBloodPressureWithCoroutine(date, macAddress)
+    }
+
+    suspend fun getDayHeartRateWithCoroutine(
+        queryDate: String,
+        queryMacAddress: String,
+    ): List<HeartRate>  {
+        return heartRateDao.getDayHeartRateWithCoroutine(queryDate, queryMacAddress)
     }
 
 
@@ -432,14 +437,6 @@ class DBRepository(
     }
 
 
-    fun getTodayHeartRateData(queryDate: String, queryMacAddress: String) {
-        getDayHeartRateData(queryDate, queryMacAddress, todayHeartRateResultsFromDB)
-    }
-
-    fun getYesterdayHeartRateData(queryDate: String, queryMacAddress: String) {
-        getDayHeartRateData(queryDate, queryMacAddress, yesterdayHeartRateResultsFromDB)
-    }
-
     fun updateHeartRateData(heartRate: HeartRate) {
         coroutineScope.launch(Dispatchers.IO) {
             heartRateDao.updateHeartRateData(heartRate = heartRate)
@@ -556,6 +553,8 @@ class DBRepository(
             }
         }
     }
+
+
 
 
 }

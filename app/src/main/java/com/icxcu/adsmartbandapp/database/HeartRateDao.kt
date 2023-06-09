@@ -22,4 +22,7 @@ interface HeartRateDao {
     @Update
     fun updateHeartRateData(heartRate: HeartRate)
 
+    @Query("SELECT * FROM HeartRate WHERE date_data = :date AND mac_address=:macAddress LIMIT 3")
+    suspend fun getDayHeartRateWithCoroutine(date: String, macAddress: String): List<HeartRate>
+
 }

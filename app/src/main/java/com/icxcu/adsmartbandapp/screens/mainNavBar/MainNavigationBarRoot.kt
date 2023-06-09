@@ -36,8 +36,6 @@ fun MainNavigationBarRoot(
                 bluetoothAddress
             dataViewModel.nameDeviceBluetooth = bluetoothName
 
-            dataViewModel.getTodayHeartRateData(dataViewModel.macAddressDeviceBluetooth)
-            dataViewModel.getYesterdayHeartRateData(dataViewModel.macAddressDeviceBluetooth)
             dataViewModel.getPersonalInfoData(dataViewModel.macAddressDeviceBluetooth)
             dataViewModel.statusStartedReadingDataLasThreeDaysData = true
 

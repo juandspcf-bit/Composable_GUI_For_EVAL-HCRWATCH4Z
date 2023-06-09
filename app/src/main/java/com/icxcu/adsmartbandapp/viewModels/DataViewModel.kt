@@ -116,13 +116,8 @@ class DataViewModel(var application: Application) : ViewModel() {
         dbHelper=DatabaseHelperImpl(swDb)
 
         dayHealthDataState.dayPhysicalActivityResultsFromDB = dbRepository.dayPhysicalActivityResultsFromDB
-
         dayHealthDataState.dayBloodPressureResultsFromDB = dbRepository.dayBloodPressureResultsFromDB
-
         dayHealthDataState.dayHeartRateResultsFromDB = dbRepository.dayHeartRateResultsFromDB
-        todayHealthsDataState.todayHeartRateResultsFromDB = dbRepository.todayHeartRateResultsFromDB
-        yesterdayHealthsDataState.yesterdayHeartRateResultsFromDB = dbRepository.yesterdayHeartRateResultsFromDB
-
 
         dayHealthDataStateForDashBoard.dayHealthResultsFromDBForDashBoard = dbRepository.dayHealthResultsFromDBFForDashBoard
 
@@ -140,6 +135,8 @@ class DataViewModel(var application: Application) : ViewModel() {
     var yesterdayStatePhysicalActivityData = mutableStateOf<List<PhysicalActivity>>(listOf())
     var todayStateBloodPressureData = mutableStateOf<List<BloodPressure>>(listOf())
     var yesterdayStateBloodPressureData = mutableStateOf<List<BloodPressure>>(listOf())
+    var todayStateHeartRateData = mutableStateOf<List<HeartRate>>(listOf())
+    var yesterdayStateHeartRateData = mutableStateOf<List<HeartRate>>(listOf())
 
     private fun getDayPhysicalActivityWithCoroutine(queryDate: String, queryMacAddress: String, dayState: MutableState<List<PhysicalActivity>>){
         val dataDeferred = viewModelScope.async {
@@ -236,6 +233,33 @@ class DataViewModel(var application: Application) : ViewModel() {
         }
     }
 
+    private fun getDayHeartRateWithCoroutine(queryDate: String, queryMacAddress: String, dayState: MutableState<List<HeartRate>>) {
+        val dataDeferred = viewModelScope.async {
+            dbRepository.getDayHeartRateWithCoroutine(queryDate, queryMacAddress)
+        }
+
+        viewModelScope.launch {
+            val dataCoroutineFromDB = dataDeferred.await()
+            dayState.value = dataCoroutineFromDB.ifEmpty {
+                val heartRateS = HeartRate().apply {
+                    id = -1
+                    macAddress = queryMacAddress
+                    dateData = queryDate
+
+                    val newValuesList = mutableMapOf<String, String>()
+                    MutableList(48) { 0.0 }.forEachIndexed { index, i ->
+                        newValuesList[index.toString()] = i.toString()
+                    }
+                    data = newValuesList.toString()
+                    typesTable = TypesTable.HEART_RATE
+                }
+
+
+                listOf(heartRateS)
+            }
+
+        }
+    }
 
         private fun starListeningDB(name: String = "", macAddress: String = "") {
         viewModelScope.launch {
@@ -255,6 +279,8 @@ class DataViewModel(var application: Application) : ViewModel() {
         getDayPhysicalActivityWithCoroutine(yesterdayFormattedDate, macAddress, yesterdayStatePhysicalActivityData)
         getDayBloodPressureWithCoroutine(todayFormattedDate, macAddress, todayStateBloodPressureData)
         getDayBloodPressureWithCoroutine(yesterdayFormattedDate, macAddress, yesterdayStateBloodPressureData)
+        getDayHeartRateWithCoroutine(todayFormattedDate, macAddress, todayStateHeartRateData)
+        getDayHeartRateWithCoroutine(yesterdayFormattedDate, macAddress, yesterdayStateHeartRateData)
 
         viewModelScope.launch {
             delay(1000)
@@ -345,14 +371,6 @@ class DataViewModel(var application: Application) : ViewModel() {
     //Heart Rate
     fun getDayHeartRateData(dateData: String, macAddress: String) {
         dbRepository.getAnyDayHeartRateData(dateData, macAddress)
-    }
-
-    fun getTodayHeartRateData(macAddress: String) {
-        dbRepository.getTodayHeartRateData(todayFormattedDate, macAddress)
-    }
-
-    fun getYesterdayHeartRateData(macAddress: String) {
-        dbRepository.getYesterdayHeartRateData(yesterdayFormattedDate, macAddress)
     }
 
     fun insertHeartRateData(heartRate: HeartRate) {

@@ -325,7 +325,6 @@ class TodayHealthsDataState {
     var isTodayCaloriesListAlreadyInsertedInDB = false
     var isTodayCaloriesListInDBAlreadyUpdated = false
 
-    var todayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
     var todaySystolicListReadFromDB by mutableStateOf(listOf<Double>())
     var isTodaySystolicListAlreadyInsertedInDB = false
     var isTodaySystolicListInDBAlreadyUpdated = false

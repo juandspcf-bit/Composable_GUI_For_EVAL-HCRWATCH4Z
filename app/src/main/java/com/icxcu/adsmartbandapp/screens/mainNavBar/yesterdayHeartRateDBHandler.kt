@@ -27,9 +27,7 @@ fun YesterdayHeartRateDBHandler(
         }
     }
     //Data Sources
-    val yesterdayHeartRateResultsFromDB by getYesterdayPhysicalActivityData().yesterdayHeartRateResultsFromDB.observeAsState(
-        MutableList(0) { HeartRate(heartRateId=-1,macAddress="", dateData="", data="") }.toList()
-    )
+    val yesterdayHeartRateResultsFromDB = dataViewModel.yesterdayStateHeartRateData.value
 
     val yesterdayDateValuesReadFromSW = remember(dataViewModel) {
         {
