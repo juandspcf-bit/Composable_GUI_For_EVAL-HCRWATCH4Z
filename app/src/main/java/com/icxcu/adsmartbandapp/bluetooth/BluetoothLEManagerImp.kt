@@ -9,11 +9,11 @@ import android.bluetooth.le.ScanCallback
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.icxcu.adsmartbandapp.REQUEST_ENABLE_BT
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
+import com.icxcu.adsmartbandapp.viewModels.ScanningBluetoothAdapterStatus
 import kotlinx.coroutines.*
 
 class BluetoothLEManagerImp(
@@ -21,7 +21,7 @@ class BluetoothLEManagerImp(
     private var mViewModel: BluetoothScannerViewModel
 ) : com.icxcu.adsmartbandapp.bluetooth.BluetoothManager {
     private var scanning = false
-    private var statusResults = -1
+    private var statusResults = ScanningBluetoothAdapterStatus.SCANNING_FORCIBLY_STOPPED
     private var jobs: Job? = null
 
 
@@ -85,7 +85,6 @@ class BluetoothLEManagerImp(
         leScanCallback: ScanCallback
     ) {
         if (!scanning) {
-
             val coroutineScope = CoroutineScope(Dispatchers.Main)
 
             if (jobs?.isActive == true)
@@ -95,8 +94,8 @@ class BluetoothLEManagerImp(
                 delay(SCAN_PERIOD)
                 if (isActive) {
                     scanning = false
-                    statusResults = 1
-                    mViewModel.liveStatusResults = statusResults
+                    statusResults = ScanningBluetoothAdapterStatus.SCANNING_FINISHED_WITH_RESULTS
+                    mViewModel.scanningBluetoothAdaptersStatus = statusResults
 
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -119,15 +118,15 @@ class BluetoothLEManagerImp(
             }
 
             scanning = true
-            statusResults = 0
-            mViewModel.liveStatusResults = statusResults
-            mViewModel.liveBasicBluetoothAdapter = mutableListOf()
+            statusResults = ScanningBluetoothAdapterStatus.SCANNING
+            mViewModel.scanningBluetoothAdaptersStatus = statusResults
+            mViewModel.bluetoothAdaptersList = mutableListOf()
             bluetoothLeScanner?.startScan(leScanCallback)
 
         } else {
             scanning = false
-            statusResults = -1
-            mViewModel.liveStatusResults = statusResults
+            statusResults = ScanningBluetoothAdapterStatus.SCANNING_FORCIBLY_STOPPED
+            mViewModel.scanningBluetoothAdaptersStatus = statusResults
             jobs?.cancel()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 if (ContextCompat.checkSelfPermission(

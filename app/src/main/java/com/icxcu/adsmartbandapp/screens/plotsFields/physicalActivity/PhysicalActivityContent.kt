@@ -1,11 +1,11 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity
 
 import android.graphics.Typeface
+import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
+
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -42,107 +43,22 @@ import com.patrykandpatrick.vico.compose.dimensions.dimensionsOf
 import com.patrykandpatrick.vico.compose.legend.verticalLegend
 import com.patrykandpatrick.vico.compose.legend.verticalLegendItem
 import com.patrykandpatrick.vico.core.component.shape.Shapes
-import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
-import java.time.Duration
+
 
 @Composable
-fun PhysicalActivityContent(
-    stepsListContent: () -> List<Int>,
-    distanceListContent: () -> List<Double>,
-    caloriesListContent: () -> List<Double>,
+fun MyPhysicalActivityTab(
+    title: String,
+    tabHeightRow: Dp,
+    onClick: () -> Unit,
+    selected: Boolean
 ) {
-    ConstraintLayout(
-        modifier = Modifier
-            .background(Color(0xff1d2a35))
-            .fillMaxSize()
-    ) {
-        val (plot, divider, tabRow, list) = createRefs()
-        val guideH3 = createGuidelineFromTop(fraction = 0.4f)
-
-
-        val stepList = {
-            stepsListContent()
-        }
-
-        val distanceList = {
-            distanceListContent()
-        }
-
-        val caloriesList = {
-            caloriesListContent()
-        }
-
-        Box(modifier = Modifier
-            .background(
-                Color(0xfff5f5f7)
-            )
-            .constrainAs(plot) {
-                top.linkTo(parent.top)
-                bottom.linkTo(guideH3)
-                linkTo(start = parent.start, end = parent.end)
-                height = Dimension.fillToConstraints
-            }
-        ) {
-
-            val stepsEntries = stepsListContent().mapIndexed { index, y ->
-                val entry = EntryHour(
-                    Duration.ofHours(24).minusMinutes(30L * index.toLong()),
-                    index.toFloat(), y.toFloat()
-                )
-                entry
-            }
-            val chartEntryModel = ChartEntryModelProducer(stepsEntries)
-
-            MyComposeBarChart(
-                chartEntryModel = chartEntryModel,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black)
-                    .padding(bottom = 15.dp),
-                legend = rememberLegendPhysicalActivity()
-            )
-
-        }
-
-        Divider(modifier = Modifier
-            .constrainAs(divider) {
-                top.linkTo(guideH3)
-                //bottom.linkTo(list.top)
-                linkTo(start = parent.start, end = parent.end)
-                height = Dimension.wrapContent
-            }
-            .height(2.dp))
-
-        ListSelector(
-            stepList,
-            distanceList,
-            caloriesList,
-            modifierTabs = Modifier
-                .constrainAs(tabRow) {
-                    top.linkTo(divider.bottom)
-                    linkTo(start = parent.start, end = parent.end)
-                    height = Dimension.fillToConstraints
-                }//.padding(top = 20.dp, bottom = 20.dp, start = 50.dp, end = 50.dp),
-            , modifierList = Modifier
-                .constrainAs(list) {
-                    top.linkTo(tabRow.bottom)
-                    bottom.linkTo(parent.bottom)
-                    linkTo(start = parent.start, end = parent.end)
-                    height = Dimension.fillToConstraints
-                }
-                .fillMaxSize())
-    }
-}
-
-@Composable
-fun MyPhysicalActivityTab(title: String, onClick: () -> Unit, selected: Boolean) {
     Tab(
         selected,
         onClick,
         selectedContentColor = Color(0xFFFFF176),
         modifier = Modifier
-            .fillMaxHeight()
-            .height(52.dp)
+            .height(tabHeightRow)
+
     ) {
         Text(
             text = title,
@@ -176,99 +92,91 @@ fun MyPhysicalActivityIndicator(modifier: Modifier){
 
 
 @Composable
-fun ListSelector(
-    stepsListContent: () -> List<Int>,
-    distanceListContent: () -> List<Double>,
-    caloriesListContent: () -> List<Double>,
-    modifierTabs: Modifier,
-    modifierList: Modifier
+fun PhysicalActivityLazyListSelector(
+    stepsList: () -> List<Int>,
+    distanceList: () -> List<Double>,
+    caloriesList: () -> List<Double>,
 ) {
-
-
-    val stepList = {
-        stepsListContent()
-    }
-
-    val distanceList = {
-        distanceListContent()
-    }
-
-    val caloriesList = {
-        caloriesListContent()
-    }
-
-    var state by remember { mutableStateOf(0) }
+    Log.d("PhysicalActivityContent", "PhysicalActivityLazyListSelector: ")
+    var selectedTab by remember { mutableStateOf(0) }
     val titles = listOf("Steps", "Distance", "Calories")
 
 // Reuse the default offset animation modifier, but use our own indicator
     val indicator = @Composable { tabPositions: List<TabPosition> ->
         MyPhysicalActivityIndicator(
-            Modifier.tabIndicatorOffset(tabPositions[state])
+            Modifier.tabIndicatorOffset(tabPositions[selectedTab])
         )
     }
 
-    TabRow(
-        selectedTabIndex = state,
-        modifier = modifierTabs,//.height(52.dp),
-        containerColor = Color.DarkGray,
-        indicator = indicator,
-        divider = {
-            Divider(modifier = Modifier.fillMaxWidth(), color = Color(0xFF7986CB))
-        },
-    ) {
-        titles.forEachIndexed { index, title ->
-            MyPhysicalActivityTab(title = title, onClick = { state = index }, selected = (index == state))
-        }
-    }
-
-    Box(
-        modifier = modifierList
-    ) {
-        getHours()
-        when (state) {
-            0 -> {
-                StepsList(
-                    stepsListContent = stepList,
-                    modifier = Modifier
-                        .fillMaxSize()
+    Column(modifier = Modifier.fillMaxSize()) {
+        val tabHeightRow = 75.dp
+        TabRow(
+            selectedTabIndex = selectedTab,
+            modifier = Modifier.height(tabHeightRow),
+            containerColor = Color.DarkGray,
+            indicator = indicator,
+            divider = {
+                Divider(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = Color(0xFF7986CB)
                 )
-            }
-
-            1 -> {
-                DistanceList(
-                    distanceListContent = distanceList,
-                    modifier = Modifier
-                        .fillMaxSize()
-                )
-            }
-
-            2 -> {
-                CaloriesList(
-                    caloriesListContent = caloriesList,
-                    modifier = Modifier
-                        .fillMaxSize()
+            },
+        ) {
+            titles.forEachIndexed { index, title ->
+                MyPhysicalActivityTab(
+                    title = title,
+                    tabHeightRow = tabHeightRow,
+                    onClick = { selectedTab = index },
+                    selected = (index == selectedTab)
                 )
             }
         }
 
+        Box(modifier = Modifier.fillMaxSize()) {
+            when (selectedTab) {
+                0 -> {
+                    StepsList(
+                        stepsList,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                1 -> {
+                    DistanceList(
+                        distanceList,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                2 -> {
+                    CaloriesList(
+                        caloriesList,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
+
+        }
+
     }
+
+
+
 }
 
 
 @Composable
 fun StepsList(
-    stepsListContent: () -> List<Int>,
+    stepsList: () -> List<Int>,
     modifier: Modifier = Modifier
 ) {
-    val stepList = {
-        stepsListContent()
-    }
+
     LazyColumn(modifier = modifier) {
         itemsIndexed(
-            stepList(),
+            stepsList(),
             key = { index, _ ->
                 PlotsConstants.HOUR_INTERVALS[index]
-            //getIntervals(index, hourList)
+
             }
         ) { index, item ->
             RowSteps(
@@ -282,12 +190,10 @@ fun StepsList(
 
 @Composable
 fun DistanceList(
-    distanceListContent: () -> List<Double>,
+    distanceList: () -> List<Double>,
     modifier: Modifier = Modifier
 ) {
-    val distanceList={
-        distanceListContent()
-    }
+
     LazyColumn(modifier = modifier) {
         itemsIndexed(
             distanceList(),
@@ -306,12 +212,10 @@ fun DistanceList(
 
 @Composable
 fun CaloriesList(
-    caloriesListContent: () -> List<Double>,
+    caloriesList: () -> List<Double>,
     modifier: Modifier = Modifier
 ) {
-    val caloriesList={
-        caloriesListContent()
-    }
+
 
     LazyColumn(modifier = modifier) {
         itemsIndexed(

@@ -1,5 +1,6 @@
 package com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard
 
+import android.util.Log
 import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.data.entities.Field
@@ -8,11 +9,11 @@ import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 
 fun integerFieldUpdateOrInsert(
-    valuesReadFromSW: List<Int>,
+    dataFieldFromSW: List<Int>,
+    dataFieldFromDB: List<Field>,
+    fieldListState: List<Int>,
     dataViewModel: DataViewModel,
-    fieldListReadFromDB: List<Int>,
-    setDayFieldListReadFromDB: (List<Int>) -> Unit,
-    dayFromTableData: List<Field>,
+    setFieldListState: (List<Int>) -> Unit,
     isDayFieldListAlreadyInsertedInDB: Boolean,
     isDayFieldListInDBAlreadyUpdated: Boolean,
     setIsDayFieldListAlreadyInsertedInDB: (Boolean) -> Unit,
@@ -21,47 +22,73 @@ fun integerFieldUpdateOrInsert(
     dateData:String,
 ) {
 
-    if (valuesReadFromSW.isEmpty().not() &&
-        valuesReadFromSW.max()!=0 &&
-        dayFromTableData.isEmpty().not() &&
-        dayFromTableData[0].id != -1 &&
-        valuesReadFromSW.toList() != fieldListReadFromDB.toList() &&
+if(dataFieldFromSW.isEmpty().not() && dataFieldFromDB.isEmpty().not()){
+    Log.d("SW_DATA", "which values")
+    Log.d("SW_DATA", "valuesReadFromSW.isEmpty().not() ${dataFieldFromSW.isEmpty().not()}")
+    Log.d("SW_DATA", "valuesReadFromSW.max()!=0 ${dataFieldFromSW.max()!=0}")
+
+    Log.d("SW_DATA", "dayFromTableData.isEmpty().not() ${dataFieldFromDB.isEmpty().not()}")
+    Log.d("SW_DATA", "dayFromTableData[0].id == -1 ${dataFieldFromDB[0].id == -1}")
+    Log.d("SW_DATA", "isDayFieldListAlreadyInsertedInDB.not() ${isDayFieldListAlreadyInsertedInDB.not()}")
+
+}else{
+    Log.d("SW_DATA", "which values")
+    Log.d("SW_DATA", "${dataFieldFromSW.isEmpty()}")
+    Log.d("SW_DATA", "max not defined")
+
+    Log.d("SW_DATA", "${dataFieldFromDB.isEmpty().not()}")
+    Log.d("SW_DATA", "not defined")
+    Log.d("SW_DATA", "${isDayFieldListAlreadyInsertedInDB.not()}")
+}
+
+
+
+
+
+    if (dataFieldFromSW.isEmpty().not() &&
+        dataFieldFromSW.max()!=0 &&
+        dataFieldFromDB.isEmpty().not() &&
+        dataFieldFromDB[0].id != -1 &&
+        dataFieldFromSW.toList() != fieldListState.toList() &&
         isDayFieldListInDBAlreadyUpdated.not()
     ) {
 
         val newValuesList = mutableMapOf<String, String>()
-        valuesReadFromSW.forEachIndexed { index, i ->
+        dataFieldFromSW.forEachIndexed { index, i ->
             newValuesList[index.toString()] = i.toString()
         }
 
         val listIndex = mutableListOf<Int>()
-        dayFromTableData.filterIndexed { index, field ->
+        dataFieldFromDB.filterIndexed { index, field ->
             if (field.typesTable == typesTableToModify) {
                 listIndex.add(index)
                 true
             } else false
         }
-        dayFromTableData[listIndex[0]].data = newValuesList.toString()
-        setDayFieldListReadFromDB(valuesReadFromSW)
-        tableToUpdateSelector(
-            typesTableToModify,
-            dataViewModel,
-            dayFromTableData
-        )
+        if(listIndex.isNotEmpty()){
+            dataFieldFromDB[listIndex[0]].data = newValuesList.toString()
+            setFieldListState(dataFieldFromSW)
+            tableToUpdateSelector(
+                typesTableToModify,
+                dataViewModel,
+                dataFieldFromDB
+            )
 
-        setIsDayFieldListInDBAlreadyUpdated(true)
+            setIsDayFieldListInDBAlreadyUpdated(true)
+        }
 
-    } else if (valuesReadFromSW.isEmpty().not() &&
-        valuesReadFromSW.max()!=0 &&
-        dayFromTableData.isEmpty().not() &&
-        dayFromTableData[0].id == -1
+
+    } else if (dataFieldFromSW.isEmpty().not() &&
+        dataFieldFromSW.max()!=0 &&
+        dataFieldFromDB.isEmpty().not() &&
+        dataFieldFromDB[0].id == -1
         && isDayFieldListAlreadyInsertedInDB.not()
     ) {
-        if(valuesReadFromSW.max()==0){
+        if(dataFieldFromSW.max()==0){
             return
         }
         tableToInsertSelector(
-            valuesReadFromSW,
+            dataFieldFromSW,
             typesTableToModify,
             dataViewModel,
             dateData
@@ -73,11 +100,11 @@ fun integerFieldUpdateOrInsert(
 }
 
 fun doubleFieldUpdateOrInsert(
-    valuesReadFromSW: List<Double>,
+    dataFieldFromSW: List<Double>,
+    dataFieldFromDB: List<Field>,
+    fieldListState: List<Double>,
     dataViewModel: DataViewModel,
-    fieldListReadFromDB: List<Double>,
-    setDayFieldListReadFromDB: (List<Double>) -> Unit,
-    dayFromTableData: List<Field>,
+    setFieldListState: (List<Double>) -> Unit,
     isDayFieldListAlreadyInsertedInDB: Boolean,
     isDayFieldListInDBAlreadyUpdated: Boolean,
     setIsDayFieldListAlreadyInsertedInDB: (Boolean) -> Unit,
@@ -85,49 +112,53 @@ fun doubleFieldUpdateOrInsert(
     typesTableToModify: TypesTable,
     dateData: String
 ) {
-    if (valuesReadFromSW.isEmpty().not() &&
-        valuesReadFromSW.max()!=0.0 &&
-        dayFromTableData.isEmpty().not() &&
-        dayFromTableData[0].id != -1 &&
-        valuesReadFromSW.toList() != fieldListReadFromDB.toList() &&
+    if (dataFieldFromSW.isEmpty().not() &&
+        dataFieldFromSW.max()!=0.0 &&
+        dataFieldFromDB.isEmpty().not() &&
+        dataFieldFromDB[0].id != -1 &&
+        dataFieldFromSW.toList() != fieldListState.toList() &&
         isDayFieldListInDBAlreadyUpdated.not()
     ) {
 
 
         val newValuesList = mutableMapOf<String, String>()
-        valuesReadFromSW.forEachIndexed { index, i ->
+        dataFieldFromSW.forEachIndexed { index, i ->
             newValuesList[index.toString()] = i.toString()
         }
 
         val listIndex = mutableListOf<Int>()
-        dayFromTableData.filterIndexed { index, field ->
+        dataFieldFromDB.filterIndexed { index, field ->
             if (field.typesTable == typesTableToModify) {
                 listIndex.add(index)
                 true
             } else false
         }
-        dayFromTableData[listIndex[0]].data = newValuesList.toString()
-        setDayFieldListReadFromDB(valuesReadFromSW)
+        if(listIndex.isNotEmpty()){
+            dataFieldFromDB[listIndex[0]].data = newValuesList.toString()
+            setFieldListState(dataFieldFromSW)
+            tableToUpdateSelector(
+                typesTableToModify,
+                dataViewModel,
+                dataFieldFromDB
+            )
+            setIsDayFieldListInDBAlreadyUpdated(true)
+        }
 
-        tableToUpdateSelector(
-            typesTableToModify,
-            dataViewModel,
-            dayFromTableData
-        )
-        setIsDayFieldListInDBAlreadyUpdated(true)
 
-    } else if (valuesReadFromSW.isEmpty().not() &&
-        valuesReadFromSW.max()!=0.0 &&
-        dayFromTableData.isEmpty().not() &&
-        dayFromTableData[0].id == -1 &&
+
+
+    } else if (dataFieldFromSW.isEmpty().not() &&
+        dataFieldFromSW.max()!=0.0 &&
+        dataFieldFromDB.isEmpty().not() &&
+        dataFieldFromDB[0].id == -1 &&
         isDayFieldListAlreadyInsertedInDB.not()
     ) {
 
-        if(valuesReadFromSW.max()==0.0){
+        if(dataFieldFromSW.max()==0.0){
             return
         }
         tableToInsertSelector(
-            valuesReadFromSW,
+            dataFieldFromSW,
         typesTableToModify,
         dataViewModel,
             dateData

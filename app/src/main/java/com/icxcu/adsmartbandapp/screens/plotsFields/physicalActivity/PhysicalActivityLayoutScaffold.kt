@@ -1,41 +1,49 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity
 
+import android.util.Log
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
+import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
 import java.text.SimpleDateFormat
+import java.time.Duration
 import java.util.Date
 import java.util.Locale
 
@@ -48,28 +56,22 @@ fun PhysicalActivityLayoutScaffold(
     getSelectedDay: () -> String,
     stateShowDialogDatePickerSetter: (Boolean) -> Unit,
     stateShowDialogDatePickerValue: () -> Boolean,
-    stateMiliSecondsDateDialogDatePickerS: () -> Long,
     stateMiliSecondsDateDialogDatePickerSetterS: (Long) -> Unit,
     navLambda: () -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val stateMiliSecondsDateDialogDatePicker = {
-        stateMiliSecondsDateDialogDatePickerS()
-    }
-    val stateMiliSecondsDateDialogDatePickerSetter:(Long) -> Unit = { value ->
-        stateMiliSecondsDateDialogDatePickerSetterS(value)
-    }
 
     Scaffold(
         topBar = {
-            MediumTopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Physical activity for ${getSelectedDay()}",
-                        maxLines = 1,
+                        text = "Physical activity for\n${getSelectedDay()}",
+                        maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.White,
-                        style = MaterialTheme.typography.bodyLarge
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center
                     )
                 },
                 navigationIcon = {
@@ -105,29 +107,41 @@ fun PhysicalActivityLayoutScaffold(
             Box(
                 Modifier
                     .padding(padding)
-                    .fillMaxSize(), contentAlignment = Alignment.TopCenter
+                    .background(Color(0xff1d2a35))
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
 
-                val stepsListScaffold = {
-                    stepsList()
-                }
-                val distanceListScaffold = {
-                    distanceList()
-                }
-                val caloriesListScaffold = {
-                    caloriesList()
-                }
-                PhysicalActivityContent(
-                    stepsListScaffold,
-                    distanceListScaffold,
-                    caloriesListScaffold
-                )
+               if(
+                   (stepsList().max()==0 || stepsList().isEmpty())
+                   && (distanceList().max()==0.0 || distanceList().isEmpty())
+                   && (caloriesList().max()==0.0 || caloriesList().isEmpty())
+               ){
+
+                   Image(
+                       painter = painterResource(R.drawable.man_running_medium_light_skin_tone_svgrepo_com),
+                       modifier = Modifier
+                           .fillMaxSize(0.5f)
+                           .align(Alignment.Center),
+                       contentDescription = null,
+                       contentScale = ContentScale.Fit,
+                       alignment = Alignment.Center,
+                   )
+
+               } else{
+                   PhysicalActivityContent(
+                       stepsList,
+                       distanceList,
+                       caloriesList
+                   )
+               }
+
             }
 
             if (stateShowDialogDatePickerValue()) {
-                DatePickerDialogSample(stateShowDialogDatePickerSetter,
-                    stateMiliSecondsDateDialogDatePicker,
-                    stateMiliSecondsDateDialogDatePickerSetter
+                DatePickerDialogSample(
+                    stateShowDialogDatePickerSetter,
+                    stateMiliSecondsDateDialogDatePickerSetterS
                 )
             }
 
@@ -137,8 +151,60 @@ fun PhysicalActivityLayoutScaffold(
 }
 
 
+@Composable
+fun PhysicalActivityContent(
+    stepsList: () -> List<Int>,
+    distanceList: () -> List<Double>,
+    caloriesList: () -> List<Double>,
+) {
+    Column(
+        modifier = Modifier
+            .background(Color(0xff1d2a35))
+            .fillMaxSize()
+    ) {
+
+        Log.d("PhysicalActivityContent", "PhysicalActivityContent: ")
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.4f)
+        ) {
+
+            val stepsEntries by remember {
+                derivedStateOf {
+                    stepsList().mapIndexed { index, y ->
+                        val entry = EntryHour(
+                            Duration.ofHours(24).minusMinutes(30L * index.toLong()),
+                            index.toFloat(), y.toFloat()
+                        )
+                        entry
+                    }
+                }
+            }
 
 
+            val chartEntryModel = ChartEntryModelProducer(stepsEntries)
+
+            MyPhysicalActivityComposeBarChart(
+                chartEntryModel = chartEntryModel,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black)
+                    .padding(start= 10.dp, end = 10.dp, bottom = 15.dp),
+                legend = rememberLegendPhysicalActivity()
+            )
+
+        }
+
+        Divider(modifier = Modifier.height(2.dp))
+
+        PhysicalActivityLazyListSelector(
+            stepsList,
+            distanceList,
+            caloriesList
+        )
+    }
+}
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
@@ -163,14 +229,11 @@ fun StepsPlotsPreview2() {
     val stateShowDialogDatePickerValue = {
         stateShowDialogDatePicker
     }
-    val stateShowDialogDatePickerSetter:(Boolean) -> Unit = { value ->
+    val stateShowDialogDatePickerSetter: (Boolean) -> Unit = { value ->
         stateShowDialogDatePicker = value
     }
 
-    val stateMiliSecondsDateDialogDatePickerVal = {
-        stateMiliSecondsDateDialogDatePicker
-    }
-    val stateMiliSecondsDateDialogDatePickerSetter:(Long) -> Unit = { value ->
+    val stateMiliSecondsDateDialogDatePickerSetter: (Long) -> Unit = { value ->
         stateMiliSecondsDateDialogDatePicker = value
 
         val date = Date(value)
@@ -179,7 +242,7 @@ fun StepsPlotsPreview2() {
     }
 
     val getSelectedDay = {
-        "///"
+        "24/10/1981"
     }
 
     val date = Date()
@@ -192,7 +255,6 @@ fun StepsPlotsPreview2() {
         getSelectedDay,
         stateShowDialogDatePickerSetter,
         stateShowDialogDatePickerValue,
-        stateMiliSecondsDateDialogDatePickerVal,
         stateMiliSecondsDateDialogDatePickerSetter
     ) {}
 }

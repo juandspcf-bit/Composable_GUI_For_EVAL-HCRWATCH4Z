@@ -1,33 +1,45 @@
 package com.icxcu.adsmartbandapp.viewModels
 
 import android.app.Application
+import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
-import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreConstants
-import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreHelper
+import com.icxcu.adsmartbandapp.database.DatabaseHelperImpl
+import com.icxcu.adsmartbandapp.database.PhysicalActivityDao
 import com.icxcu.adsmartbandapp.database.SWRoomDatabase
+import com.icxcu.adsmartbandapp.repositories.DBRepository
 import com.icxcu.adsmartbandapp.repositories.MyBloodPressureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.SWRepository
-import com.icxcu.adsmartbandapp.screens.mainNavBar.DayPhysicalActivityInfoState
+import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
+import com.icxcu.adsmartbandapp.screens.mainNavBar.DayHealthDataState
+import com.icxcu.adsmartbandapp.screens.mainNavBar.DayHealthDataStateForDashBoard
+import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SmartWatchState
-import com.icxcu.adsmartbandapp.screens.mainNavBar.TodayPhysicalActivityInfoState
-import com.icxcu.adsmartbandapp.screens.mainNavBar.YesterdayPhysicalActivityInfoState
+import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusMainTitleScaffold
+import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusReadingDbForDashboard
+import com.icxcu.adsmartbandapp.screens.mainNavBar.TodayHealthsDataState
+import com.icxcu.adsmartbandapp.screens.mainNavBar.YesterdayHealthsDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.InvalidAlertDialogState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.UpdateAlertDialogState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.ValidatorsPersonalField
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -35,31 +47,34 @@ import java.time.format.DateTimeFormatter
 class DataViewModel(var application: Application) : ViewModel() {
 
 
-    val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-    val todayLocalDateTime = LocalDateTime.now()
-    val todayFormattedDate = todayLocalDateTime.format(myFormatObj)
-    val yesterdayLocalDateTime = todayLocalDateTime.minusDays(1)
-    val yesterdayFormattedDate = yesterdayLocalDateTime.format(myFormatObj)
-    val pastYesterdayLocalDateTime = todayLocalDateTime.minusDays(2)
-    val pastYesterdayFormattedDate = pastYesterdayLocalDateTime.format(myFormatObj)
 
-    private var swRepository: SWRepository
+    private val myFormatObj:DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    private val todayLocalDateTime:LocalDateTime = LocalDateTime.now()
+    var todayFormattedDate:String = todayLocalDateTime.format(myFormatObj)
+    private val yesterdayLocalDateTime:LocalDateTime = todayLocalDateTime.minusDays(1)
+    var yesterdayFormattedDate:String = yesterdayLocalDateTime.format(myFormatObj)
+    private val pastYesterdayLocalDateTime:LocalDateTime = todayLocalDateTime.minusDays(2)
+    var pastYesterdayFormattedDate:String = pastYesterdayLocalDateTime.format(myFormatObj)
 
-    val smartWatchState = SmartWatchState(todayFormattedDate, yesterdayFormattedDate)
+    private var dbRepository: DBRepository
+    //private var swRepository: SWRepository
+
+    //val smartWatchState = SmartWatchState(todayFormattedDate, yesterdayFormattedDate)
 
     var selectedDay by mutableStateOf("")
 
-    val dayPhysicalActivityInfoState = DayPhysicalActivityInfoState()
-    val todayPhysicalActivityInfoState = TodayPhysicalActivityInfoState()
-    val yesterdayPhysicalActivityInfoState = YesterdayPhysicalActivityInfoState()
-
+    var statusStartedReadingDataLasThreeDaysData by mutableStateOf(false)
+    var dayHealthDataState = DayHealthDataState()
+    var todayHealthsDataState = TodayHealthsDataState()
+    var yesterdayHealthsDataState = YesterdayHealthsDataState()
+    var dayHealthDataStateForDashBoard = DayHealthDataStateForDashBoard()
 
     var personalInfoFromDB = MutableLiveData<List<PersonalInfo>>()
     var personalInfoListReadFromDB = listOf<PersonalInfo>()
 
-    var personalInfoDataState = PersonalInfoDataState()
-    var invalidAlertDialogState = InvalidAlertDialogState()
-    var updateAlertDialogState = UpdateAlertDialogState()
+    var personalInfoDataState by mutableStateOf(PersonalInfoDataState())
+    var invalidAlertDialogState by mutableStateOf(InvalidAlertDialogState())
+    var updateAlertDialogState by mutableStateOf(UpdateAlertDialogState())
 
     var macAddressDeviceBluetooth: String = ""
     var nameDeviceBluetooth: String = ""
@@ -68,95 +83,227 @@ class DataViewModel(var application: Application) : ViewModel() {
     var stateShowDialogDatePicker by mutableStateOf(false)
     var stateMiliSecondsDateDialogDatePicker by mutableStateOf(0L)
 
+    var smartWatchState by mutableStateOf(SmartWatchState(todayFormattedDate, yesterdayFormattedDate))
+    var swRepository: SWRepository = SWRepository()
 
-    var lastDeviceAccessedName by mutableStateOf("not fetched")
-    var lastDeviceAccessedAddress by mutableStateOf("not fetched")
+    var collectDataScope:Job? = null
+
+
+    var stateBluetoothListScreenNavigationStatus by mutableStateOf(BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_BLUETOOTH_SCREEN)
+
+    var statusReadingDbForDashboard:StatusReadingDbForDashboard = StatusReadingDbForDashboard.NoRead
+    var stateEnabledDatePickerMainScaffold by mutableStateOf(false)
+    var stateShowMainTitleScaffold by mutableStateOf<StatusMainTitleScaffold>(
+        StatusMainTitleScaffold.Fields
+    )
+
+    private val dbHelper:DatabaseHelperImpl
+    private var physicalActivityDao: PhysicalActivityDao
 
     init {
         val swDb = SWRoomDatabase.getInstance(application)
-        val physicalActivityDao = swDb.physicalActivityDao()
+        physicalActivityDao = swDb.physicalActivityDao()
         val bloodPressureDao = swDb.bloodPressureDao()
         val heartRateDao = swDb.heartRateDao()
         val personalInfoDao = swDb.personalInfoDao()
-        swRepository = SWRepository(
+        dbRepository = DBRepository(
             physicalActivityDao,
             bloodPressureDao,
             heartRateDao,
             personalInfoDao
         )
+        //swRepository = SWRepository()
+        dbHelper=DatabaseHelperImpl(swDb)
+
+        dayHealthDataState.dayPhysicalActivityResultsFromDB = dbRepository.dayPhysicalActivityResultsFromDB
+        dayHealthDataState.dayBloodPressureResultsFromDB = dbRepository.dayBloodPressureResultsFromDB
+        dayHealthDataState.dayHeartRateResultsFromDB = dbRepository.dayHeartRateResultsFromDB
+
+        dayHealthDataStateForDashBoard.dayHealthResultsFromDBForDashBoard = dbRepository.dayHealthResultsFromDBFForDashBoard
 
 
-        dayPhysicalActivityInfoState.dayPhysicalActivityResultsFromDB = swRepository.dayPhysicalActivityResultsFromDB
-        todayPhysicalActivityInfoState.todayPhysicalActivityResultsFromDB = swRepository.todayPhysicalActivityResultsFromDB
-        yesterdayPhysicalActivityInfoState.yesterdayPhysicalActivityResultsFromDB = swRepository.yesterdayPhysicalActivityResultsFromDB
-
-        dayPhysicalActivityInfoState.dayBloodPressureResultsFromDB = swRepository.dayBloodPressureResultsFromDB
-        todayPhysicalActivityInfoState.todayBloodPressureResultsFromDB = swRepository.todayBloodPressureResultsFromDB
-        yesterdayPhysicalActivityInfoState.yesterdayBloodPressureResultsFromDB = swRepository.yesterdayBloodPressureResultsFromDB
-
-        dayPhysicalActivityInfoState.dayHeartRateResultsFromDB = swRepository.dayHeartRateResultsFromDB
-        todayPhysicalActivityInfoState.todayHeartRateResultsFromDB = swRepository.todayHeartRateResultsFromDB
-        yesterdayPhysicalActivityInfoState.yesterdayHeartRateResultsFromDB = swRepository.yesterdayHeartRateResultsFromDB
-
-        personalInfoFromDB = swRepository.personalInfoFromDB
+        personalInfoFromDB = dbRepository.personalInfoFromDB
         updateAlertDialogState.personalInfoAlertDialogUVLiveData =
-            swRepository.personalInfoAlertDialogUVStateLiveData
+            dbRepository.personalInfoAlertDialogUVStateLiveData
 
 
 
-        viewModelScope.launch {
+    }
+
+    fun listenDataFromSmartWatch(){
+        Log.d("FetchingDataFromSWStatusX", "listenDataFromSmartWatch")
+        collectDataScope = viewModelScope.launch {
             swRepository.sharedStepsFlow.collect {
-
                 when (it.date) {
                     todayFormattedDate -> {
+
                         smartWatchState.todayDateValuesReadFromSW = it
                     }
 
                     yesterdayFormattedDate -> {
+
                         smartWatchState.yesterdayDateValuesFromSW = it
                         smartWatchState.progressbarForFetchingDataFromSW = false
-                        smartWatchState.isRequestForFetchingDataFromSWBeginning = true
+                        smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.READ
                     }
                 }
-
-
             }
         }
     }
 
 
-    fun readFromStorageLastDeviceAccessedName(preferenceDataStoreHelper:PreferenceDataStoreHelper){
+
+
+    var todayStatePhysicalActivityData = mutableStateOf<List<PhysicalActivity>>(listOf())
+    var yesterdayStatePhysicalActivityData = mutableStateOf<List<PhysicalActivity>>(listOf())
+    var todayStateBloodPressureData = mutableStateOf<List<BloodPressure>>(listOf())
+    var yesterdayStateBloodPressureData = mutableStateOf<List<BloodPressure>>(listOf())
+    var todayStateHeartRateData = mutableStateOf<List<HeartRate>>(listOf())
+    var yesterdayStateHeartRateData = mutableStateOf<List<HeartRate>>(listOf())
+
+    private fun getDayPhysicalActivityWithCoroutine(queryDate: String, queryMacAddress: String, dayState: MutableState<List<PhysicalActivity>>){
+        val dataDeferred = viewModelScope.async {
+            dbRepository.getDayPhysicalActivityWithCoroutine(queryDate, queryMacAddress)
+        }
+
         viewModelScope.launch {
-            lastDeviceAccessedName =  preferenceDataStoreHelper
-                .getFirstPreference(PreferenceDataStoreConstants.LAST_DEVICE_KEY_NAME,"fetched but without data")
+            val dataCoroutineFromDB = dataDeferred.await()
+
+            dayState.value = dataCoroutineFromDB.ifEmpty {
+                val stepsActivity = PhysicalActivity().apply {
+                    id = -1
+                    macAddress = queryMacAddress
+                    dateData = queryDate
+
+                    val newValuesList = mutableMapOf<String, String>()
+                    MutableList(48) { 0 }.forEachIndexed { index, i ->
+                        newValuesList[index.toString()] = i.toString()
+                    }
+                    data = newValuesList.toString()
+                    typesTable = TypesTable.STEPS
+                }
+
+                val distanceActivity = PhysicalActivity().apply {
+                    id = -1
+                    macAddress = queryMacAddress
+                    dateData = queryDate
+
+                    val newValuesList = mutableMapOf<String, String>()
+                    MutableList(48) { 0.0 }.forEachIndexed { index, i ->
+                        newValuesList[index.toString()] = i.toString()
+                    }
+                    data = newValuesList.toString()
+                    typesTable = TypesTable.DISTANCE
+                }
+
+                val caloriesListActivity = PhysicalActivity().apply {
+                    id = -1
+                    macAddress = queryMacAddress
+                    dateData = queryDate
+
+                    val newValuesList = mutableMapOf<String, String>()
+                    MutableList(48) { 0.0 }.forEachIndexed { index, i ->
+                        newValuesList[index.toString()] = i.toString()
+                    }
+                    data = newValuesList.toString()
+                    typesTable = TypesTable.CALORIES
+                }
+                listOf(stepsActivity, distanceActivity, caloriesListActivity)
+            }
+
         }
     }
 
-    fun readFromStorageLastDeviceAccessedAddress(preferenceDataStoreHelper:PreferenceDataStoreHelper){
+
+    private fun getDayBloodPressureWithCoroutine(queryDate: String, queryMacAddress: String, dayState: MutableState<List<BloodPressure>>) {
+        val dataDeferred = viewModelScope.async {
+            dbRepository.getDayBloodPressureWithCoroutine(queryDate, queryMacAddress)
+        }
+
         viewModelScope.launch {
-            lastDeviceAccessedAddress =  preferenceDataStoreHelper
-                .getFirstPreference(PreferenceDataStoreConstants.LAST_DEVICE_KEY_ADDRESS,"fetched but without data")
+            val dataCoroutineFromDB = dataDeferred.await()
+            dayState.value = dataCoroutineFromDB.ifEmpty {
+                val bloodPressureS = BloodPressure().apply {
+                    id = -1
+                    macAddress = queryMacAddress
+                    dateData = queryDate
+
+                    val newValuesList = mutableMapOf<String, String>()
+                    MutableList(48) { 0.0 }.forEachIndexed { index, i ->
+                        newValuesList[index.toString()] = i.toString()
+                    }
+                    data = newValuesList.toString()
+                    typesTable = TypesTable.SYSTOLIC
+                }
+
+                val bloodPressureD = BloodPressure().apply {
+                    id = -1
+                    macAddress = queryMacAddress
+                    dateData = queryDate
+
+                    val newValuesList = mutableMapOf<String, String>()
+                    MutableList(48) { 0.0 }.forEachIndexed { index, i ->
+                        newValuesList[index.toString()] = i.toString()
+                    }
+                    data = newValuesList.toString()
+                    typesTable = TypesTable.DIASTOLIC
+                }
+
+
+                listOf(bloodPressureS, bloodPressureD)
+            }
+
         }
     }
 
+    private fun getDayHeartRateWithCoroutine(queryDate: String, queryMacAddress: String, dayState: MutableState<List<HeartRate>>) {
+        val dataDeferred = viewModelScope.async {
+            dbRepository.getDayHeartRateWithCoroutine(queryDate, queryMacAddress)
+        }
 
-    fun writeInStorageLastDeviceAccessedName(preferenceDataStoreHelper: PreferenceDataStoreHelper, value:String) {
         viewModelScope.launch {
-            preferenceDataStoreHelper.putPreference(PreferenceDataStoreConstants.LAST_DEVICE_KEY_NAME, value)
+            val dataCoroutineFromDB = dataDeferred.await()
+            dayState.value = dataCoroutineFromDB.ifEmpty {
+                val heartRateS = HeartRate().apply {
+                    id = -1
+                    macAddress = queryMacAddress
+                    dateData = queryDate
+
+                    val newValuesList = mutableMapOf<String, String>()
+                    MutableList(48) { 0.0 }.forEachIndexed { index, i ->
+                        newValuesList[index.toString()] = i.toString()
+                    }
+                    data = newValuesList.toString()
+                    typesTable = TypesTable.HEART_RATE
+                }
+
+
+                listOf(heartRateS)
+            }
+
         }
     }
 
-    fun writeInStorageLastDeviceAccessedAddress(preferenceDataStoreHelper: PreferenceDataStoreHelper, value:String) {
+        private fun starListeningDB(name: String = "", macAddress: String = "") {
         viewModelScope.launch {
-            preferenceDataStoreHelper.putPreference(PreferenceDataStoreConstants.LAST_DEVICE_KEY_ADDRESS, value)
+            physicalActivityDao.getAllPhysicalActivityFlow(todayFormattedDate, macAddress).collectLatest {
+                    Log.d("DB_FLOW", "starListeningDB: $it")
+                }
         }
     }
-
 
 
     fun requestSmartWatchData(name: String = "", macAddress: String = "") {
+        Log.d("DATAX", "requestSmartWatchDataModel: ")
+         swRepository.requestSmartWatchData()
 
-        swRepository.requestSmartWatchData()
+        //starListeningDB(todayFormattedDate, macAddress)
+        getDayPhysicalActivityWithCoroutine(todayFormattedDate, macAddress, todayStatePhysicalActivityData)
+        getDayPhysicalActivityWithCoroutine(yesterdayFormattedDate, macAddress, yesterdayStatePhysicalActivityData)
+        getDayBloodPressureWithCoroutine(todayFormattedDate, macAddress, todayStateBloodPressureData)
+        getDayBloodPressureWithCoroutine(yesterdayFormattedDate, macAddress, yesterdayStateBloodPressureData)
+        getDayHeartRateWithCoroutine(todayFormattedDate, macAddress, todayStateHeartRateData)
+        getDayHeartRateWithCoroutine(yesterdayFormattedDate, macAddress, yesterdayStateHeartRateData)
 
         viewModelScope.launch {
             delay(1000)
@@ -165,99 +312,90 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     }
 
+
+
+    fun getDayHealthData(
+        queryDate: String,
+        queryMacAddress: String,
+    ) {
+        dbRepository.getDayHealthData(
+            queryDate,
+            queryMacAddress
+        )
+    }
+
+
     fun getMyHeartRateAlertDialogDataHandler(): MyHeartRateAlertDialogDataHandler {
-        return swRepository.myHeartRateAlertDialogDataHandler
+        return dbRepository.myHeartRateAlertDialogDataHandler
     }
 
     fun getMyBloodPressureAlertDialogDataHandler(): MyBloodPressureAlertDialogDataHandler {
-        return swRepository.myBloodPressureAlertDialogDataHandler
+        return dbRepository.myBloodPressureAlertDialogDataHandler
     }
 
     fun getMyTemperatureAlertDialogDataHandler(): MyTemperatureAlertDialogDataHandler {
-        return swRepository.myTemperatureAlertDialogDataHandler
+        return dbRepository.myTemperatureAlertDialogDataHandler
     }
 
     fun getMySpO2AlertDialogDataHandler(): MySpO2AlertDialogDataHandler {
-        return swRepository.mySpO2AlertDialogDataHandler
+        return dbRepository.mySpO2AlertDialogDataHandler
     }
 
 
     fun getDayPhysicalActivityData(dateData: String, macAddress: String) {
-        swRepository.getAnyDayPhysicalActivityData(dateData, macAddress)
+        dbRepository.getAnyDayPhysicalActivityData(dateData, macAddress)
     }
 
-    fun getTodayPhysicalActivityData(macAddress: String) {
-        swRepository.getTodayPhysicalActivityData(todayFormattedDate, macAddress)
-    }
 
-    fun getYesterdayPhysicalActivityData(macAddress: String) {
-        swRepository.getYesterdayPhysicalActivityData(yesterdayFormattedDate, macAddress)
-    }
 
     fun insertPhysicalActivityData(physicalActivity: PhysicalActivity) {
-        swRepository.insertPhysicalActivityData(physicalActivity)
+        dbRepository.insertPhysicalActivityData(physicalActivity)
     }
 
     fun updatePhysicalActivityData(physicalActivity: PhysicalActivity) {
-        swRepository.updatePhysicalActivityData(physicalActivity)
+        dbRepository.updatePhysicalActivityData(physicalActivity)
     }
 
 //Blood Pressure
 
     fun getDayBloodPressureData(dateData: String, macAddress: String) {
-        swRepository.getAnyDayBloodPressureData(dateData, macAddress)
-    }
-
-    fun getTodayBloodPressureData(macAddress: String) {
-        swRepository.getTodayBloodPressureData(todayFormattedDate, macAddress)
-    }
-
-    fun getYesterdayBloodPressureData(macAddress: String) {
-        swRepository.getYesterdayBloodPressureData(yesterdayFormattedDate, macAddress)
+        dbRepository.getAnyDayBloodPressureData(dateData, macAddress)
     }
 
     fun insertBloodPressureData(bloodPressure: BloodPressure) {
-        swRepository.insertBloodPressureData(bloodPressure)
+        dbRepository.insertBloodPressureData(bloodPressure)
     }
 
     fun updateBloodPressureData(bloodPressure: BloodPressure) {
-        swRepository.updateBloodPressureData(bloodPressure)
+        dbRepository.updateBloodPressureData(bloodPressure)
     }
 
 
     //Heart Rate
     fun getDayHeartRateData(dateData: String, macAddress: String) {
-        swRepository.getAnyDayHeartRateData(dateData, macAddress)
-    }
-
-    fun getTodayHeartRateData(macAddress: String) {
-        swRepository.getTodayHeartRateData(todayFormattedDate, macAddress)
-    }
-
-    fun getYesterdayHeartRateData(macAddress: String) {
-        swRepository.getYesterdayHeartRateData(yesterdayFormattedDate, macAddress)
+        dbRepository.getAnyDayHeartRateData(dateData, macAddress)
     }
 
     fun insertHeartRateData(heartRate: HeartRate) {
-        swRepository.insertHeartRateData(heartRate)
+        dbRepository.insertHeartRateData(heartRate)
     }
 
     fun updateHeartRateData(heartRate: HeartRate) {
-        swRepository.updateHeartRateData(heartRate)
+        dbRepository.updateHeartRateData(heartRate)
     }
 
 
     //Personal data
     fun insertPersonalData(personalInfo: PersonalInfo) {
-        swRepository.insertPersonalInfo(personalInfo)
+        dbRepository.insertPersonalInfo(personalInfo)
     }
 
     fun updatePersonalData(personalInfo: PersonalInfo) {
-        swRepository.updatePersonalInfo(personalInfo)
+        dbRepository.updatePersonalInfo(personalInfo)
     }
 
     fun getPersonalInfoData(macAddress: String) {
-        swRepository.getPersonalInfoData(macAddress)
+        dbRepository.getPersonalInfoData(macAddress)
     }
 
     fun validatePersonalInfo(
@@ -281,7 +419,5 @@ class DataViewModel(var application: Application) : ViewModel() {
 
 
     }
-
-
 
 }

@@ -1,30 +1,25 @@
 package com.icxcu.adsmartbandapp.screens.plotsFields.heartRate
 
 import android.graphics.Typeface
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -38,15 +33,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
-import com.icxcu.adsmartbandapp.screens.plotsFields.PlotsConstants
-import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.MyComposePlotChart
-import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.findIndex
+import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.MyComposeBloodPressurePlotChart
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.EntryHour
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getHours
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemIconPaddingValue
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemIconSize
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.legendItemLabelTextSize
@@ -67,29 +57,24 @@ fun HeartRateLayoutScaffold(
     getSelectedDay: () -> String,
     stateShowDialogDatePickerSetter: (Boolean) -> Unit,
     stateShowDialogDatePickerValue: () -> Boolean,
-    stateMiliSecondsDateDialogDatePickerS: () -> Long,
-    stateMiliSecondsDateDialogDatePickerSetterS: (Long) -> Unit,
-    getAgeCalculated:()->Int,
+    stateMiliSecondsDateDialogDatePickerSetter: (Long) -> Unit,
+    getAgeCalculated: () -> Int,
     navLambda: () -> Unit
 ) {
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val stateMiliSecondsDateDialogDatePicker = {
-        stateMiliSecondsDateDialogDatePickerS()
-    }
-    val stateMiliSecondsDateDialogDatePickerSetter: (Long) -> Unit = { value ->
-        stateMiliSecondsDateDialogDatePickerSetterS(value)
-    }
+
     Scaffold(
         topBar = {
-            MediumTopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Heart Rate for ${getSelectedDay()}",
-                        maxLines = 1,
+                        text = "Heart Rate for\n${getSelectedDay()}",
+                        maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.White,
-                        style = MaterialTheme.typography.bodyLarge
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center
                     )
                 },
                 navigationIcon = {
@@ -125,22 +110,35 @@ fun HeartRateLayoutScaffold(
             Box(
                 Modifier
                     .padding(padding)
-                    .fillMaxSize(), contentAlignment = Alignment.TopCenter
+                    .background(Color(0xff1d2a35))
+                    .fillMaxSize(),
             ) {
-                val heartRateListScaffold = {
-                    heartRateList()
+
+
+                if(
+                    (heartRateList().max()==0.0 || heartRateList().isEmpty())
+                ){
+
+                    Image(
+                        painter = painterResource(R.drawable.cardiogram_heart_rate_svgrepo_com),
+                        modifier = Modifier
+                            .fillMaxSize(0.5f)
+                            .align(Alignment.Center),
+                        contentDescription = null,
+                        contentScale = ContentScale.Fit,
+                        alignment = Alignment.Center,
+                    )
+
+                } else{
+                    HeartRateContent(
+                        heartRateList,
+                        getAgeCalculated
+                    )
                 }
-
-
-                HeartRateInfoContent(
-                    heartRateListScaffold,
-                    getAgeCalculated
-                )
 
                 if (stateShowDialogDatePickerValue()) {
                     DatePickerDialogSample(
                         stateShowDialogDatePickerSetter,
-                        stateMiliSecondsDateDialogDatePicker,
                         stateMiliSecondsDateDialogDatePickerSetter
                     )
                 }
@@ -148,25 +146,20 @@ fun HeartRateLayoutScaffold(
 
         },
     )
-
-
 }
 
 @Composable
-fun HeartRateInfoContent(heartRateListContent: () -> List<Double>,
-                         getAgeCalculated:()->Int,
+fun HeartRateContent(
+    heartRateList: () -> List<Double>,
+    getAgeCalculated: () -> Int,
 ) {
-    ConstraintLayout(
+    Column(
         modifier = Modifier
             .background(Color(0xff1d2a35))
             .fillMaxSize()
     ) {
-        val (plot, divider, statistics, list) = createRefs()
-        val guide4f = createGuidelineFromTop(fraction = 0.4f)
-        createGuidelineFromTop(fraction = 0.6f)
 
-
-        val mapHeartRate = heartRateListContent().mapIndexed { index, y ->
+        val mapHeartRate = heartRateList().mapIndexed { index, y ->
             val entry = EntryHour(
                 Duration.ofHours(24).minusMinutes(30L * index.toLong()),
                 index.toFloat(), y.toFloat()
@@ -174,358 +167,48 @@ fun HeartRateInfoContent(heartRateListContent: () -> List<Double>,
             entry
         }
 
-        Box(modifier = Modifier
-            .constrainAs(plot) {
-                top.linkTo(parent.top)
-                bottom.linkTo(guide4f)
-                linkTo(start = parent.start, end = parent.end)
-                height = Dimension.fillToConstraints
-            }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.4f)
         ) {
 
             val chartEntryModel = ChartEntryModelProducer(mapHeartRate)
-            MyComposePlotChart(
+            MyComposeHeartRatePlotChart(
                 chartEntryModel, modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black)
-                    .padding(bottom = 15.dp),
+                    .padding(start= 10.dp, end = 10.dp, bottom = 15.dp),
                 rememberLegendHeartRate()
             )
 
         }
 
-        Divider(modifier = Modifier
-            .constrainAs(divider) {
-                top.linkTo(guide4f)
+        Divider(
+            modifier = Modifier.height(2.dp),
+            color = Color.White
+        )
 
-                linkTo(start = parent.start, end = parent.end)
-                height = Dimension.wrapContent
-            }
-            .height(2.dp))
-
-        StatisticsHeartRate(heartRateListContent = heartRateListContent,
+        StatisticsHeartRate(
+            heartRateListContent = heartRateList,
             modifier = Modifier
-                .constrainAs(statistics) {
-                    top.linkTo(divider.bottom)
-                    linkTo(start = parent.start, end = parent.end)
-                    height = Dimension.fillToConstraints
-                }
                 .background(Color(0x7FFF5722))
-                .fillMaxWidth())
+                .fillMaxWidth()
+                .width(50.dp)
+        )
 
+        Divider(
+            modifier = Modifier.height(2.dp),
+            color = Color.White
+        )
 
-        HeartRateListS(
-            heartRateListContent,
-            getAgeCalculated,
-            modifier = Modifier
-                .constrainAs(list) {
-                    top.linkTo(statistics.bottom)
-                    bottom.linkTo(parent.bottom)
-                    linkTo(start = parent.start, end = parent.end)
-                    height = Dimension.fillToConstraints
-                }
-                .fillMaxSize())
-
-    }
-}
-
-
-@Composable
-fun StatisticsHeartRate(heartRateListContent: () -> List<Double>, modifier: Modifier) {
-    val filteredValueSystolic = heartRateListContent().filter { it >0.0 }
-    if(filteredValueSystolic.isEmpty()) return
-
-    val maxValueSystolic = filteredValueSystolic.max()
-    val maxValueSystolicValue = String.format("%.1f bpm", maxValueSystolic)
-    val hourMax = findIndex(maxValueSystolic, heartRateListContent())
-
-
-    val minValueSystolic = filteredValueSystolic.min()
-    val minValueSystolicValue = String.format("%.1f bpm", minValueSystolic)
-    val hourMin = findIndex(minValueSystolic, heartRateListContent())
-
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        modifier = modifier.padding(top = 10.dp, bottom = 10.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        item {
-            Column(
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxWidth(0.5f)
-                    .padding(bottom = 10.dp)
-            ) {
-                Text(
-                    text = "Max Value",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.White
-                )
-                Text(
-                    text = maxValueSystolicValue,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White
-                )
-            }
-        }
-
-        item {
-            Column(
-                verticalArrangement = Arrangement.SpaceAround,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxWidth(0.5f)
-                    .padding(bottom = 10.dp)
-            ) {
-                Text(
-                    text = "Min Value",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.White
-                )
-                Text(
-                    text = minValueSystolicValue,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White
-                )
-            }
-        }
-
-        item {
-            Column(
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(top = 10.dp)
-            ) {
-
-                Text(
-                    text = "Time",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.White
-                )
-                Text(
-                    hourMax,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White
-                )
-            }
-        }
-
-        item {
-            Column(
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(top = 10.dp)
-            ) {
-                Text(
-                    text = "Time",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.White
-                )
-                Text(
-                    hourMin,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White
-                )
-            }
-
-        }
-    }
-}
-
-
-@Composable
-fun HeartRateListS(heartRateListContent: () -> List<Double>,
-                   getAgeCalculated:()->Int,
-                   modifier: Modifier) {
-
-
-    val heartRateList = {
-        heartRateListContent()
-    }
-
-
-    Box(
-        modifier = modifier
-    ) {
-        getHours()
-        HeartRateList(
+        HeartRateLazyList(
             heartRateList,
             getAgeCalculated,
-            modifier = Modifier
-                .fillMaxSize()
         )
 
     }
-
 }
-
-@Composable
-fun HeartRateList(
-    heartRateListContent: () -> List<Double>,
-    getAgeCalculated: () -> Int,
-    modifier: Modifier
-) {
-
-
-    LazyColumn(modifier = modifier) {
-        itemsIndexed(items = heartRateListContent(),
-            key = { index, value ->
-                PlotsConstants.HOUR_INTERVALS[index]
-            }) { index, heartRateValue ->
-            val stringHeartRateValue = String.format("%.1f", heartRateValue)
-
-            Log.d("MyCalculatedAge", "HeartRateList: ${getAgeCalculated()}")
-            val myAge = if(getAgeCalculated()>0)(getAgeCalculated())else{41}
-            val zoneResource = getHeartRateZones(heartRateValue, myAge)
-            val zoneReadable = getReadableHeartRateZones(heartRateValue, myAge)
-
-            RowHeartRate(
-                valueHeartRate = "$stringHeartRateValue bpm",
-                resource = zoneResource,
-                readableCategory = zoneReadable,
-                hourTime =  PlotsConstants.HOUR_INTERVALS[index]
-            )
-        }
-    }
-
-}
-
-fun getHeartRateZones(heartRateValue: Double,
-                      age: Int
-): Int {
-    val maxHeartRate = 220 - age
-    val percentageOfMax = 100 * heartRateValue / maxHeartRate
-    val resource:Int
-    when {
-        (percentageOfMax < 60.0 && 50.0 >= percentageOfMax) -> {
-            resource = R.drawable.heart_rate_zone_1
-        }
-
-        (percentageOfMax < 70.0 && 60.0 >= percentageOfMax) -> {
-            resource = R.drawable.heart_rate_zone_2
-        }
-
-        (percentageOfMax < 80.0 && 70.0 >= percentageOfMax) -> {
-            resource = R.drawable.heart_rate_zone_3
-        }
-
-        (percentageOfMax < 90.0 && 80.0 >= percentageOfMax) -> {
-            resource = R.drawable.heart_rate_zone_4
-        }
-
-        (percentageOfMax < 100.0 && 90.0 >= percentageOfMax) -> {
-            resource = R.drawable.heart_rate_zone_5
-        }
-
-        else->{
-            resource = R.drawable.heart_rate
-        }
-    }
-
-    return resource
-}
-
-fun getReadableHeartRateZones(heartRateValue: Double, age: Int): String {
-    val maxHeartRate = 220 - age
-    val percentageOfMax = 100 * heartRateValue / maxHeartRate
-    val resource:String
-    when {
-        (percentageOfMax < 60.0 && 50.0 >= percentageOfMax) -> {
-            resource = "Very light"
-        }
-
-        (percentageOfMax < 70.0 && 60.0 >= percentageOfMax) -> {
-            resource = "Light"
-        }
-
-        (percentageOfMax < 80.0 && 70.0 >= percentageOfMax) -> {
-            resource = "Moderate"
-        }
-
-        (percentageOfMax < 90.0 && 80.0 >= percentageOfMax) -> {
-            resource = "Hard"
-        }
-
-        (percentageOfMax < 100.0 && 90.0 >= percentageOfMax) -> {
-            resource = "Maximum"
-        }
-
-        else->{
-            resource = "No zone"
-        }
-    }
-
-    return resource
-}
-
-@Composable
-fun RowHeartRate(
-    valueHeartRate: String,
-    resource: Int,
-    readableCategory: String,
-    hourTime: String
-) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        ConstraintLayout(
-            modifier = Modifier
-                .padding(top = 5.dp, bottom = 5.dp)
-                .fillMaxSize()
-
-        ) {
-            val (hour, icon, value) = createRefs()
-            val guideHourIcon = createGuidelineFromStart(fraction = 0.35f)
-            val gideIconValue = createGuidelineFromStart(fraction = 0.65f)
-
-            Text(text = hourTime, color = Color.White, modifier = Modifier.constrainAs(hour) {
-                linkTo(start = parent.start, end = guideHourIcon)
-                top.linkTo(parent.top)
-                bottom.linkTo(parent.bottom)
-                height = Dimension.wrapContent
-            })
-
-
-
-            Image(
-                painter = painterResource(resource),
-                contentScale = ContentScale.Fit,
-                contentDescription = null,
-                modifier = Modifier
-                    .constrainAs(icon) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(guideHourIcon)
-                        end.linkTo(gideIconValue)
-                        width = Dimension.fillToConstraints
-                    }
-                    .size(50.dp)
-                    .fillMaxWidth()
-            )
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .constrainAs(value) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(gideIconValue)
-                        end.linkTo(parent.end)
-                        width = Dimension.fillToConstraints
-                    }) {
-
-                Text(text = valueHeartRate, color = Color.White)
-                Text(readableCategory, color = Color(0x9fffffff), textAlign = TextAlign.Center)
-            }
-
-        }
-
-        Divider(modifier = Modifier.height(1.dp))
-
-
-    }
-}
-
 
 @Composable
 fun rememberLegendHeartRate() = verticalLegend(

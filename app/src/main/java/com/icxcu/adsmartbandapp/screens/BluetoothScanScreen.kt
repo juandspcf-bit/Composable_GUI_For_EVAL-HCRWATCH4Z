@@ -3,6 +3,7 @@ package com.icxcu.adsmartbandapp.screens
 
 import android.app.Activity
 import android.bluetooth.le.ScanCallback
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -30,22 +31,22 @@ import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
 import com.icxcu.adsmartbandapp.data.BasicBluetoothAdapter
+import com.icxcu.adsmartbandapp.viewModels.ScanningBluetoothAdapterStatus
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BluetoothScanScreen(
-    getLiveBasicBluetoothAdapter: () -> List<BasicBluetoothAdapter>,
-    getLiveStatusResults: () -> Int,
-    getLeScanCallback: () -> ScanCallback,
-    setIsRequestForFetchingDataFromSWBeginning: (Boolean) -> Unit,
+    getLiveBasicBluetoothAdapterList: () -> List<BasicBluetoothAdapter>,
+    setLiveBasicBluetoothAdapterList: () -> Unit,
+    getScanningBluetoothAdaptersStatus: () -> ScanningBluetoothAdapterStatus,
+    leScanCallback: ScanCallback,
     bluetoothLEManager: BluetoothManager,
     activity: Activity,
-    navLambda: (String, String) -> Unit,
+    setFetchingDataFromSWStatusSTOPPED: () -> Unit,
+    navigateMainNavBar: (String, String) -> Unit,
 ) {
-    //clearLiveBasicBluetoothAdapter()
-    setIsRequestForFetchingDataFromSWBeginning(false)
-
+    Log.d("DATAX", "BluetoothScanScreen: ENTER")
     var textState by remember {
         mutableStateOf("Swipe  down to scan devices")
     }
@@ -55,10 +56,11 @@ fun BluetoothScanScreen(
 
     fun refresh2() = refreshScope.launch {
         refreshing = true
+        setLiveBasicBluetoothAdapterList()
         val scanLocalBluetooth = bluetoothLEManager.scanLocalBluetooth(activity)
         bluetoothLEManager.scanLeDevice(
             scanLocalBluetooth,
-            getLeScanCallback()
+            leScanCallback
         )
     }
 
@@ -86,15 +88,16 @@ fun BluetoothScanScreen(
 
         }
 
-        Divider(modifier = Modifier
-            .fillMaxWidth()
-            .constrainAs(divider) {
-                top.linkTo(rowBar.bottom)
-                linkTo(parent.start, parent.end)
-                height = Dimension.fillToConstraints
-            },
-        thickness = 2.dp,
-        color = Color.Black
+        Divider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(divider) {
+                    top.linkTo(rowBar.bottom)
+                    linkTo(parent.start, parent.end)
+                    height = Dimension.fillToConstraints
+                },
+            thickness = 2.dp,
+            color = Color.Black
         )
 
 
@@ -110,18 +113,30 @@ fun BluetoothScanScreen(
                 .background(Color(0xff1d2a35))
                 .pullRefresh(state)) {
 
-
-            if (getLiveStatusResults() == -2 || getLiveBasicBluetoothAdapter().isEmpty()) {
+            if (getScanningBluetoothAdaptersStatus() ==
+                ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
+                && getLiveBasicBluetoothAdapterList().isEmpty()) {
                 ListAlbumDataEmpty()
+            } else if (getScanningBluetoothAdaptersStatus() ==
+                ScanningBluetoothAdapterStatus.NO_SCANNING_WITH_RESULTS
+                && getLiveBasicBluetoothAdapterList().isNotEmpty()) {
+                ListAlbumDataEmpty()
+                ListAlbumData(
+                    basicBluetoothAdapter = getLiveBasicBluetoothAdapterList(),
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    setFetchingDataFromSWStatusSTOPPED,
+                    navigateMainNavBar
+                )
             } else {
                 ListAlbumDataEmpty()
                 ListAlbumData(
-                    basicBluetoothAdapter = getLiveBasicBluetoothAdapter(),
+                    basicBluetoothAdapter = getLiveBasicBluetoothAdapterList(),
                     modifier = Modifier
                         .fillMaxSize(),
-                    navLambda
+                    setFetchingDataFromSWStatusSTOPPED,
+                    navigateMainNavBar
                 )
-
             }
 
             PullRefreshIndicator(
@@ -132,18 +147,26 @@ fun BluetoothScanScreen(
                     .size(50.dp),
                 scale = true
             )
-            when (getLiveStatusResults()) {
-                0 -> {
+
+            when (getScanningBluetoothAdaptersStatus()) {
+                ScanningBluetoothAdapterStatus.SCANNING -> {
                     textState = "scanning"
+                    //accessed when there is a bluetooth scanning
                 }
-                1 -> {
+
+                ScanningBluetoothAdapterStatus.SCANNING_FINISHED_WITH_RESULTS -> {
+                    //accessed when there are results from the bluetooth scan
                     refreshing = false
                     textState = "Swipe  down to scan devices"
                 }
-                -1 -> {
+
+                ScanningBluetoothAdapterStatus.SCANNING_FORCIBLY_STOPPED -> {
+                    //accessed when the bluetooth scanning is running and should be stopped
                     textState = "Swipe  down to scan devices"
                 }
-                -2 -> {
+
+                ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN -> {
+                    //accessed when the bluetooth screen is accessed
                     textState = "Swipe  down to scan devices"
                     Icon(
                         painter = painterResource(R.drawable.baseline_bluetooth_24),
@@ -154,10 +177,14 @@ fun BluetoothScanScreen(
                         tint = Color.White
                     )
                 }
+                ScanningBluetoothAdapterStatus.NO_SCANNING_WITH_RESULTS->{
+
+                }
+
 
             }
         }
-
+        Log.d("DATAX", "BluetoothScanScreen: OUT")
 
     }
 
@@ -167,7 +194,8 @@ fun BluetoothScanScreen(
 fun ListAlbumData(
     basicBluetoothAdapter: List<BasicBluetoothAdapter>,
     modifier: Modifier = Modifier,
-    navigateRoute: (String, String) -> Unit
+    setFetchingDataFromSWStatusSTOPPED: () -> Unit,
+    navigateMainNavBar: (String, String) -> Unit
 ) {
     LazyColumn(modifier = Modifier) {
         items(basicBluetoothAdapter) { item ->
@@ -181,8 +209,8 @@ fun ListAlbumData(
                             onDoubleTap = { /* Double Tap Detected */ },
                             onLongPress = { /* Long Press Detected */ },
                             onTap = {
-
-                                navigateRoute(item.name, item.address)
+                                setFetchingDataFromSWStatusSTOPPED()
+                                navigateMainNavBar(item.name, item.address)
 
                             }
                         )
@@ -237,4 +265,9 @@ fun ListAlbumDataEmpty(
         }
     }
 
+}
+
+enum class BluetoothListScreenNavigationStatus {
+    IN_PROGRESS_TO_MAIN_NAV_SCREEN,
+    IN_PROGRESS_TO_BLUETOOTH_SCREEN,
 }

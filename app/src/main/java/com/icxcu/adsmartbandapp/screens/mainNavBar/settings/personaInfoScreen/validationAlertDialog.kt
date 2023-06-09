@@ -16,71 +16,71 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.icxcu.adsmartbandapp.ui.theme.DialogsTheme
 
 @Composable
 fun ValidationAlertDialog(
     getInvalidAlertDialogState: () -> InvalidAlertDialogState,
 ) {
-    AlertDialog(
-        onDismissRequest = {
-            // Dismiss the dialog when the user clicks outside the dialog or on the back button.
-            // If you want to disable that functionality, simply leave this block empty.
-            getInvalidAlertDialogState().alertDialogPersonalFieldVisibility = false
-            getInvalidAlertDialogState().invalidFields = listOf()
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    // perform the confirm action and
-                    // close the dialog
-                    getInvalidAlertDialogState().alertDialogPersonalFieldVisibility = false
-                    getInvalidAlertDialogState().invalidFields = listOf()
+    DialogsTheme(
+    ){
+        AlertDialog(
+            onDismissRequest = {
+                // Dismiss the dialog when the user clicks outside the dialog or on the back button.
+                // If you want to disable that functionality, simply leave this block empty.
+                getInvalidAlertDialogState().alertDialogPersonalFieldVisibility = false
+                getInvalidAlertDialogState().invalidFields = listOf()
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        // perform the confirm action and
+                        // close the dialog
+                        getInvalidAlertDialogState().alertDialogPersonalFieldVisibility = false
+                        getInvalidAlertDialogState().invalidFields = listOf()
+                    }
+                ) {
+                    Text(
+                        text = "Confirm",
+                        color = Color(0xFFDCE775),
+                    )
                 }
-            ) {
-                Text(
-                    text = "Confirm",
-                    color = Color(0xFFDCE775),
-                )
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    // close the dialog
-                    getInvalidAlertDialogState().alertDialogPersonalFieldVisibility = false
-                    getInvalidAlertDialogState().invalidFields = listOf()
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        // close the dialog
+                        getInvalidAlertDialogState().alertDialogPersonalFieldVisibility = false
+                        getInvalidAlertDialogState().invalidFields = listOf()
+                    }
+                ) {
+                    Text(
+                        text = "Dismiss",
+                        color = Color(0xFFDCE775),
+                    )
                 }
-            ) {
-                Text(
-                    text = "Dismiss",
-                    color = Color(0xFFDCE775),
-                )
-            }
-        },
-        title = {
-            Text(text = "Invalid data in the form")
-        },
-        text = {
-            var initialMessage = "The following fields are invalid: "
-            getInvalidAlertDialogState().invalidFields.forEach{
-                initialMessage = initialMessage.plus(it).plus(", ")
-            }
+            },
+            title = {
+                Text(text = "Invalid data in the form")
+            },
+            text = {
+                var initialMessage = "The following fields are invalid: "
+                getInvalidAlertDialogState().invalidFields.forEach{
+                    initialMessage = initialMessage.plus(it).plus(", ")
+                }
 
-            initialMessage = initialMessage.subSequence(0, initialMessage.length-2).toString()
-            Text(text = initialMessage)
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(32.dp)
-            .background(Color.Transparent)
-            .border(2.dp, Color.Red, RoundedCornerShape(20.dp)),
-        containerColor = Color(0xFF000000),
-        textContentColor = Color.White,
-        titleContentColor = Color.White,
-        shape = RoundedCornerShape(20.dp)
+                initialMessage = initialMessage.subSequence(0, initialMessage.length-2).toString()
+                Text(text = initialMessage)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(32.dp)
+                .background(Color.Transparent)
+                .border(2.dp, Color.Red, RoundedCornerShape(20.dp)),
+            shape = RoundedCornerShape(20.dp)
+        )
+    }
 
-
-    )
 }
 
 
