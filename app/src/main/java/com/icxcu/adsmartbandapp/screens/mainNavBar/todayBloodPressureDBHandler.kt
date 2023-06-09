@@ -48,10 +48,10 @@ fun TodayBloodPressureDBHandler(
 
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = todayDateValuesReadFromSW().systolicList,
-        dataViewModel = dataViewModel,
-        fieldListReadFromDB = getTodayHealthsDataState().todaySystolicList,
-        setFieldListState = setTodaySystolicListState,
         dayFromTableData = todayBloodPressureResultsFromDB,
+        fieldListState = getTodayHealthsDataState().todaySystolicList,
+        dataViewModel = dataViewModel,
+        setFieldListState = setTodaySystolicListState,
         isDayFieldListAlreadyInsertedInDB = getTodayHealthsDataState().isTodaySystolicListAlreadyInsertedInDB,
         isDayFieldListInDBAlreadyUpdated = getTodayHealthsDataState().isTodaySystolicListInDBAlreadyUpdated,
         setIsDayFieldListAlreadyInsertedInDB = setIsTodaySystolicListAlreadyInsertedInDB,
@@ -82,10 +82,10 @@ fun TodayBloodPressureDBHandler(
 
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = todayDateValuesReadFromSW().diastolicList,
-        dataViewModel = dataViewModel,
-        fieldListReadFromDB = getTodayHealthsDataState().todayDiastolicList,
-        setFieldListState = setTodayDiastolicListState,
         dayFromTableData = todayBloodPressureResultsFromDB,
+        fieldListState = getTodayHealthsDataState().todayDiastolicList,
+        dataViewModel = dataViewModel,
+        setFieldListState = setTodayDiastolicListState,
         isDayFieldListAlreadyInsertedInDB = getTodayHealthsDataState().isTodayDiastolicListAlreadyInsertedInDB,
         isDayFieldListInDBAlreadyUpdated = getTodayHealthsDataState().isTodayDiastolicListInDBAlreadyUpdated,
         setIsDayFieldListAlreadyInsertedInDB = setIsTodayDiastolicListAlreadyInsertedInDB,

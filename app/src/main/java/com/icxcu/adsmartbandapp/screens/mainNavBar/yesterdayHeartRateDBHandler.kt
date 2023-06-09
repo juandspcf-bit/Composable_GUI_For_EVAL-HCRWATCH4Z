@@ -53,10 +53,10 @@ fun YesterdayHeartRateDBHandler(
 
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = yesterdayDateValuesReadFromSW().heartRateList,
-        dataViewModel = dataViewModel,
-        fieldListReadFromDB = yesterdayHealthsDataState().yesterdayHeartRateList,
-        setFieldListState = setYesterdayHeartRateListState,
         dayFromTableData = yesterdayHeartRateResultsFromDB,
+        fieldListState = yesterdayHealthsDataState().yesterdayHeartRateList,
+        dataViewModel = dataViewModel,
+        setFieldListState = setYesterdayHeartRateListState,
         isDayFieldListAlreadyInsertedInDB = yesterdayHealthsDataState().isYesterdayHeartRateListAlreadyInsertedInDB,
         isDayFieldListInDBAlreadyUpdated = yesterdayHealthsDataState().isYesterdayHeartRateListInDBAlreadyUpdated,
         setIsDayFieldListAlreadyInsertedInDB = setIsYesterdayHeartRateListAlreadyInsertedInDB,

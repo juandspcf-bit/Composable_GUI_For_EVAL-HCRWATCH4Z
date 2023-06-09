@@ -10,10 +10,10 @@ import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 
 fun integerFieldUpdateOrInsert(
     valuesReadFromSW: List<Int>,
-    dataViewModel: DataViewModel,
-    fieldListReadFromDB: List<Int>,
-    setFieldListState: (List<Int>) -> Unit,
     dayFromTableData: List<Field>,
+    dataViewModel: DataViewModel,
+    fieldListState: List<Int>,
+    setFieldListState: (List<Int>) -> Unit,
     isDayFieldListAlreadyInsertedInDB: Boolean,
     isDayFieldListInDBAlreadyUpdated: Boolean,
     setIsDayFieldListAlreadyInsertedInDB: (Boolean) -> Unit,
@@ -49,7 +49,7 @@ if(valuesReadFromSW.isEmpty().not() && dayFromTableData.isEmpty().not()){
         valuesReadFromSW.max()!=0 &&
         dayFromTableData.isEmpty().not() &&
         dayFromTableData[0].id != -1 &&
-        valuesReadFromSW.toList() != fieldListReadFromDB.toList() &&
+        valuesReadFromSW.toList() != fieldListState.toList() &&
         isDayFieldListInDBAlreadyUpdated.not()
     ) {
 
@@ -101,10 +101,10 @@ if(valuesReadFromSW.isEmpty().not() && dayFromTableData.isEmpty().not()){
 
 fun doubleFieldUpdateOrInsert(
     valuesReadFromSW: List<Double>,
-    dataViewModel: DataViewModel,
-    fieldListReadFromDB: List<Double>,
-    setFieldListState: (List<Double>) -> Unit,
     dayFromTableData: List<Field>,
+    fieldListState: List<Double>,
+    dataViewModel: DataViewModel,
+    setFieldListState: (List<Double>) -> Unit,
     isDayFieldListAlreadyInsertedInDB: Boolean,
     isDayFieldListInDBAlreadyUpdated: Boolean,
     setIsDayFieldListAlreadyInsertedInDB: (Boolean) -> Unit,
@@ -116,7 +116,7 @@ fun doubleFieldUpdateOrInsert(
         valuesReadFromSW.max()!=0.0 &&
         dayFromTableData.isEmpty().not() &&
         dayFromTableData[0].id != -1 &&
-        valuesReadFromSW.toList() != fieldListReadFromDB.toList() &&
+        valuesReadFromSW.toList() != fieldListState.toList() &&
         isDayFieldListInDBAlreadyUpdated.not()
     ) {
 

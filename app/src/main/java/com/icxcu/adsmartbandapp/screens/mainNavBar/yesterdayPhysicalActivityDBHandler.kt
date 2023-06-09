@@ -51,7 +51,7 @@ fun YesterdayPhysicalActivityDBHandler(
     integerFieldUpdateOrInsert(
         valuesReadFromSW = yesterdayDateValuesReadFromSW().stepList,
         dataViewModel = dataViewModel,
-        fieldListReadFromDB = getYesterdayHealthsDataState().yesterdayStepList,
+        fieldListState = getYesterdayHealthsDataState().yesterdayStepList,
         setFieldListState = setYesterdayStepListState,
         dayFromTableData = yesterdayPhysicalActivityResultsFromDB,
         isDayFieldListAlreadyInsertedInDB = getYesterdayHealthsDataState().isYesterdayStepsListAlreadyInsertedInDB,
@@ -84,10 +84,10 @@ fun YesterdayPhysicalActivityDBHandler(
 
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = yesterdayDateValuesReadFromSW().distanceList,
-        dataViewModel = dataViewModel,
-        fieldListReadFromDB = getYesterdayHealthsDataState().yesterdayDistanceList,
-        setFieldListState = setYesterdayDistanceListState,
         dayFromTableData = yesterdayPhysicalActivityResultsFromDB,
+        fieldListState = getYesterdayHealthsDataState().yesterdayDistanceList,
+        dataViewModel = dataViewModel,
+        setFieldListState = setYesterdayDistanceListState,
         isDayFieldListAlreadyInsertedInDB = getYesterdayHealthsDataState().isYesterdayDistanceListAlreadyInsertedInDB,
         isDayFieldListInDBAlreadyUpdated = getYesterdayHealthsDataState().isYesterdayDistanceListInDBAlreadyUpdated,
         setIsDayFieldListAlreadyInsertedInDB = setIsYesterdayDistanceListAlreadyInsertedInDB,
@@ -119,10 +119,10 @@ fun YesterdayPhysicalActivityDBHandler(
 
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = yesterdayDateValuesReadFromSW().caloriesList,
-        dataViewModel = dataViewModel,
-        fieldListReadFromDB = getYesterdayHealthsDataState().yesterdayCaloriesList,
-        setFieldListState = setYesterdayCaloriesListState,
         dayFromTableData = yesterdayPhysicalActivityResultsFromDB,
+        fieldListState = getYesterdayHealthsDataState().yesterdayCaloriesList,
+        dataViewModel = dataViewModel,
+        setFieldListState = setYesterdayCaloriesListState,
         isDayFieldListAlreadyInsertedInDB = getYesterdayHealthsDataState().isYesterdayCaloriesListAlreadyInsertedInDB,
         isDayFieldListInDBAlreadyUpdated = getYesterdayHealthsDataState().isYesterdayCaloriesListInDBAlreadyUpdated,
         setIsDayFieldListAlreadyInsertedInDB = setIsYesterdayCaloriesListAlreadyInsertedInDB,

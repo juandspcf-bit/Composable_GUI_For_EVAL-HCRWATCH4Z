@@ -49,10 +49,10 @@ fun YesterdayBloodPressureDBHandler(
 
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = yesterdayDateValuesReadFromSW().systolicList,
-        dataViewModel = dataViewModel,
-        fieldListReadFromDB = getYesterdayPhysicalActivityData().yesterdaySystolicList,
-        setFieldListState = setYesterdaySystolicListState,
         dayFromTableData = yesterdayBloodPressureResultsFromDB,
+        fieldListState = getYesterdayPhysicalActivityData().yesterdaySystolicList,
+        dataViewModel = dataViewModel,
+        setFieldListState = setYesterdaySystolicListState,
         isDayFieldListAlreadyInsertedInDB = getYesterdayPhysicalActivityData().isYesterdaySystolicListAlreadyInsertedInDB,
         isDayFieldListInDBAlreadyUpdated = getYesterdayPhysicalActivityData().isYesterdaySystolicListInDBAlreadyUpdated,
         setIsDayFieldListAlreadyInsertedInDB = setIsYesterdaySystolicListAlreadyInsertedInDB,
@@ -83,10 +83,10 @@ fun YesterdayBloodPressureDBHandler(
 
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = yesterdayDateValuesReadFromSW().diastolicList,
-        dataViewModel = dataViewModel,
-        fieldListReadFromDB = getYesterdayPhysicalActivityData().yesterdayDiastolicList,
-        setFieldListState = setYesterdayDiastolicListReadFromDB,
         dayFromTableData = yesterdayBloodPressureResultsFromDB,
+        fieldListState = getYesterdayPhysicalActivityData().yesterdayDiastolicList,
+        dataViewModel = dataViewModel,
+        setFieldListState = setYesterdayDiastolicListReadFromDB,
         isDayFieldListAlreadyInsertedInDB = getYesterdayPhysicalActivityData().isYesterdayDiastolicListAlreadyInsertedInDB,
         isDayFieldListInDBAlreadyUpdated = getYesterdayPhysicalActivityData().isYesterdayDiastolicListInDBAlreadyUpdated,
         setIsDayFieldListAlreadyInsertedInDB = setIsYesterdayDiastolicListAlreadyInsertedInDB,

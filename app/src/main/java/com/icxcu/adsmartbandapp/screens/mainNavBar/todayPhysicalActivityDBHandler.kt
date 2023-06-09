@@ -63,10 +63,10 @@ fun TodayPhysicalActivityDBHandler(
 
     integerFieldUpdateOrInsert(
         valuesReadFromSW = todayDateValuesReadFromSW().stepList,
-        dataViewModel = dataViewModel,
-        fieldListReadFromDB = getTodayHealthsDataState().todayStepList,
-        setFieldListState = setTodayStepListState,
         dayFromTableData = todayPhysicalActivityResultsFromDB,
+        dataViewModel = dataViewModel,
+        fieldListState = getTodayHealthsDataState().todayStepList,
+        setFieldListState = setTodayStepListState,
         isDayFieldListAlreadyInsertedInDB = getTodayHealthsDataState().isTodayStepsListAlreadyInsertedInDB,
         isDayFieldListInDBAlreadyUpdated = getTodayHealthsDataState().isTodayStepsListInDBAlreadyUpdated,
         setIsDayFieldListAlreadyInsertedInDB = setIsTodayStepsListAlreadyInsertedInDB,
@@ -110,10 +110,10 @@ fun TodayPhysicalActivityDBHandler(
 
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = todayDateValuesReadFromSW().distanceList,
-        dataViewModel = dataViewModel,
-        fieldListReadFromDB = getTodayHealthsDataState().todayDistanceList,
-        setFieldListState = setTodayDistanceListState,
         dayFromTableData = todayPhysicalActivityResultsFromDB,
+        fieldListState = getTodayHealthsDataState().todayDistanceList,
+        dataViewModel = dataViewModel,
+        setFieldListState = setTodayDistanceListState,
         isDayFieldListAlreadyInsertedInDB = getTodayHealthsDataState().isTodayDistanceListAlreadyInsertedInDB,
         isDayFieldListInDBAlreadyUpdated = getTodayHealthsDataState().isTodayDistanceListInDBAlreadyUpdated,
         setIsDayFieldListAlreadyInsertedInDB = setIsTodayDistanceListAlreadyInsertedInDB,
@@ -156,10 +156,10 @@ fun TodayPhysicalActivityDBHandler(
 
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = todayDateValuesReadFromSW().caloriesList,
-        dataViewModel = dataViewModel,
-        fieldListReadFromDB = getTodayHealthsDataState().todayCaloriesList,
-        setFieldListState = setTodayCaloriesListState,
         dayFromTableData = todayPhysicalActivityResultsFromDB,
+        fieldListState = getTodayHealthsDataState().todayCaloriesList,
+        dataViewModel = dataViewModel,
+        setFieldListState = setTodayCaloriesListState,
         isDayFieldListAlreadyInsertedInDB = getTodayHealthsDataState().isTodayCaloriesListAlreadyInsertedInDB,
         isDayFieldListInDBAlreadyUpdated = getTodayHealthsDataState().isTodayCaloriesListInDBAlreadyUpdated,
         setIsDayFieldListAlreadyInsertedInDB = setIsTodayCaloriesListAlreadyInsertedInDB,
