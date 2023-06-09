@@ -30,9 +30,8 @@ fun YesterdayHeartRateDBHandler(
         }
     }
 
-    //Data Sources**
 
-    val setYesterdayHeartRateListReadFromDB: (List<Double>) -> Unit = {
+    val setYesterdayHeartRateListState: (List<Double>) -> Unit = {
         yesterdayHealthsDataState().yesterdayHeartRateList = it
     }
 
@@ -56,7 +55,7 @@ fun YesterdayHeartRateDBHandler(
         valuesReadFromSW = yesterdayDateValuesReadFromSW().heartRateList,
         dataViewModel = dataViewModel,
         fieldListReadFromDB = yesterdayHealthsDataState().yesterdayHeartRateList,
-        setDayFieldListReadFromDB = setYesterdayHeartRateListReadFromDB,
+        setFieldListState = setYesterdayHeartRateListState,
         dayFromTableData = yesterdayHeartRateResultsFromDB,
         isDayFieldListAlreadyInsertedInDB = yesterdayHealthsDataState().isYesterdayHeartRateListAlreadyInsertedInDB,
         isDayFieldListInDBAlreadyUpdated = yesterdayHealthsDataState().isYesterdayHeartRateListInDBAlreadyUpdated,

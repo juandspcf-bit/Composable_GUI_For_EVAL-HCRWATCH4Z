@@ -12,13 +12,7 @@ fun TodayHeartRateDBHandler(
     dataViewModel: DataViewModel
 ) {
 
-    val getSmartWatchState = remember(dataViewModel) {
-        {
-            dataViewModel.smartWatchState
-        }
-    }
-
-    val getTodayPhysicalActivityData = remember(dataViewModel) {
+    val getTodayHealthsDataState = remember(dataViewModel) {
         {
             dataViewModel.todayHealthsDataState
         }
@@ -29,16 +23,16 @@ fun TodayHeartRateDBHandler(
 
     val todayDateValuesReadFromSW = remember(dataViewModel) {
         {
-            getSmartWatchState().todayDateValuesReadFromSW
+            dataViewModel.smartWatchState.todayDateValuesReadFromSW
         }
     }
 
-    val setTodayHeartRateListReadFromDB: (List<Double>) -> Unit = {
-        getTodayPhysicalActivityData().todayHeartRateList = it
+    val setTodayHeartRateListState: (List<Double>) -> Unit = {
+        getTodayHealthsDataState().todayHeartRateList = it
     }
 
 
-    getTodayPhysicalActivityData().todayHeartRateList = if (todayHeartRateResultsFromDB.isEmpty().not()) {
+    getTodayHealthsDataState().todayHeartRateList = if (todayHeartRateResultsFromDB.isEmpty().not()) {
         val filter = todayHeartRateResultsFromDB.filter { it.typesTable == TypesTable.HEART_RATE }
         getDoubleListFromStringMap(filter[0].data)
     } else {
@@ -46,22 +40,22 @@ fun TodayHeartRateDBHandler(
     }
 
     val setIsTodayHeartRateListAlreadyInsertedInDB: (Boolean) -> Unit = {
-        getTodayPhysicalActivityData().isTodayHeartRateListAlreadyInsertedInDB = it
+        getTodayHealthsDataState().isTodayHeartRateListAlreadyInsertedInDB = it
     }
 
     val setIsTodayHeartRateListInDBAlreadyUpdated: (Boolean) -> Unit = {
-        getTodayPhysicalActivityData().isTodayHeartRateListInDBAlreadyUpdated = it
+        getTodayHealthsDataState().isTodayHeartRateListInDBAlreadyUpdated = it
     }
 
 
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = todayDateValuesReadFromSW().heartRateList,
         dataViewModel = dataViewModel,
-        fieldListReadFromDB = getTodayPhysicalActivityData().todayHeartRateList,
-        setDayFieldListReadFromDB = setTodayHeartRateListReadFromDB,
+        fieldListReadFromDB = getTodayHealthsDataState().todayHeartRateList,
+        setFieldListState = setTodayHeartRateListState,
         dayFromTableData = todayHeartRateResultsFromDB,
-        isDayFieldListAlreadyInsertedInDB = getTodayPhysicalActivityData().isTodayHeartRateListAlreadyInsertedInDB,
-        isDayFieldListInDBAlreadyUpdated = getTodayPhysicalActivityData().isTodayHeartRateListInDBAlreadyUpdated,
+        isDayFieldListAlreadyInsertedInDB = getTodayHealthsDataState().isTodayHeartRateListAlreadyInsertedInDB,
+        isDayFieldListInDBAlreadyUpdated = getTodayHealthsDataState().isTodayHeartRateListInDBAlreadyUpdated,
         setIsDayFieldListAlreadyInsertedInDB = setIsTodayHeartRateListAlreadyInsertedInDB,
         setIsDayFieldListInDBAlreadyUpdated = setIsTodayHeartRateListInDBAlreadyUpdated,
         TypesTable.HEART_RATE,

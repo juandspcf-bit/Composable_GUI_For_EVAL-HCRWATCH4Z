@@ -103,7 +103,7 @@ fun doubleFieldUpdateOrInsert(
     valuesReadFromSW: List<Double>,
     dataViewModel: DataViewModel,
     fieldListReadFromDB: List<Double>,
-    setDayFieldListReadFromDB: (List<Double>) -> Unit,
+    setFieldListState: (List<Double>) -> Unit,
     dayFromTableData: List<Field>,
     isDayFieldListAlreadyInsertedInDB: Boolean,
     isDayFieldListInDBAlreadyUpdated: Boolean,
@@ -135,7 +135,7 @@ fun doubleFieldUpdateOrInsert(
         }
         if(listIndex.isNotEmpty()){
             dayFromTableData[listIndex[0]].data = newValuesList.toString()
-            setDayFieldListReadFromDB(valuesReadFromSW)
+            setFieldListState(valuesReadFromSW)
             tableToUpdateSelector(
                 typesTableToModify,
                 dataViewModel,
