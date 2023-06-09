@@ -33,10 +33,10 @@ fun YesterdayHeartRateDBHandler(
     //Data Sources**
 
     val setYesterdayHeartRateListReadFromDB: (List<Double>) -> Unit = {
-        yesterdayHealthsDataState().yesterdayHeartRateListReadFromDB = it
+        yesterdayHealthsDataState().yesterdayHeartRateList = it
     }
 
-    yesterdayHealthsDataState().yesterdayHeartRateListReadFromDB = if (yesterdayHeartRateResultsFromDB.isEmpty().not()) {
+    yesterdayHealthsDataState().yesterdayHeartRateList = if (yesterdayHeartRateResultsFromDB.isEmpty().not()) {
         val filter = yesterdayHeartRateResultsFromDB.filter { it.typesTable == TypesTable.HEART_RATE }
         getDoubleListFromStringMap(filter[0].data)
     } else {
@@ -55,7 +55,7 @@ fun YesterdayHeartRateDBHandler(
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = yesterdayDateValuesReadFromSW().heartRateList,
         dataViewModel = dataViewModel,
-        fieldListReadFromDB = yesterdayHealthsDataState().yesterdayHeartRateListReadFromDB,
+        fieldListReadFromDB = yesterdayHealthsDataState().yesterdayHeartRateList,
         setDayFieldListReadFromDB = setYesterdayHeartRateListReadFromDB,
         dayFromTableData = yesterdayHeartRateResultsFromDB,
         isDayFieldListAlreadyInsertedInDB = yesterdayHealthsDataState().isYesterdayHeartRateListAlreadyInsertedInDB,

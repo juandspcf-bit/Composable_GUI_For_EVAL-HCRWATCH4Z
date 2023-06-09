@@ -1,11 +1,8 @@
 package com.icxcu.adsmartbandapp.screens.mainNavBar
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import com.icxcu.adsmartbandapp.data.TypesTable
-import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.doubleFieldUpdateOrInsert
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getDoubleListFromStringMap
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
@@ -43,10 +40,10 @@ fun TodayBloodPressureDBHandler(
     //Data Sources**
 
     val setTodaySystolicListReadFromDB: (List<Double>) -> Unit = {
-        getTodayPhysicalActivityData().todaySystolicListReadFromDB = it
+        getTodayPhysicalActivityData().todaySystolicList = it
     }
 
-    getTodayPhysicalActivityData().todaySystolicListReadFromDB = if (todayBloodPressureResultsFromDB.isEmpty().not()) {
+    getTodayPhysicalActivityData().todaySystolicList = if (todayBloodPressureResultsFromDB.isEmpty().not()) {
         val filter = todayBloodPressureResultsFromDB.filter { it.typesTable == TypesTable.SYSTOLIC }
         getDoubleListFromStringMap(filter[0].data)
     } else {
@@ -64,7 +61,7 @@ fun TodayBloodPressureDBHandler(
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = todayDateValuesReadFromSW().systolicList,
         dataViewModel = dataViewModel,
-        fieldListReadFromDB = getTodayPhysicalActivityData().todaySystolicListReadFromDB,
+        fieldListReadFromDB = getTodayPhysicalActivityData().todaySystolicList,
         setDayFieldListReadFromDB = setTodaySystolicListReadFromDB,
         dayFromTableData = todayBloodPressureResultsFromDB,
         isDayFieldListAlreadyInsertedInDB = getTodayPhysicalActivityData().isTodaySystolicListAlreadyInsertedInDB,
@@ -77,10 +74,10 @@ fun TodayBloodPressureDBHandler(
 
 
     val setTodayDiastolicListReadFromDB: (List<Double>) -> Unit = {
-        getTodayPhysicalActivityData().todayDiastolicListReadFromDB = it
+        getTodayPhysicalActivityData().todayDiastolicList = it
     }
 
-    getTodayPhysicalActivityData().todayDiastolicListReadFromDB = if (todayBloodPressureResultsFromDB.isEmpty().not()) {
+    getTodayPhysicalActivityData().todayDiastolicList = if (todayBloodPressureResultsFromDB.isEmpty().not()) {
         val filter = todayBloodPressureResultsFromDB.filter { it.typesTable == TypesTable.DIASTOLIC }
         getDoubleListFromStringMap(filter[0].data)
     } else {
@@ -98,7 +95,7 @@ fun TodayBloodPressureDBHandler(
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = todayDateValuesReadFromSW().diastolicList,
         dataViewModel = dataViewModel,
-        fieldListReadFromDB = getTodayPhysicalActivityData().todayDiastolicListReadFromDB,
+        fieldListReadFromDB = getTodayPhysicalActivityData().todayDiastolicList,
         setDayFieldListReadFromDB = setTodayDiastolicListReadFromDB,
         dayFromTableData = todayBloodPressureResultsFromDB,
         isDayFieldListAlreadyInsertedInDB = getTodayPhysicalActivityData().isTodayDiastolicListAlreadyInsertedInDB,

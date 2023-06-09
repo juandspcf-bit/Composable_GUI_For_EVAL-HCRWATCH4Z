@@ -1,11 +1,8 @@
 package com.icxcu.adsmartbandapp.screens.mainNavBar
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import com.icxcu.adsmartbandapp.data.TypesTable
-import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.doubleFieldUpdateOrInsert
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.integerFieldUpdateOrInsert
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getDoubleListFromStringMap
@@ -41,10 +38,10 @@ fun YesterdayPhysicalActivityDBHandler(
     //Data Sources**
 
     val setYesterdayStepListReadFromDB: (List<Int>) -> Unit = {
-        getYesterdayPhysicalActivityData().yesterdayStepListReadFromDB = it
+        getYesterdayPhysicalActivityData().yesterdayStepList = it
     }
 
-    getYesterdayPhysicalActivityData().yesterdayStepListReadFromDB = if (yesterdayPhysicalActivityResultsFromDB.isEmpty().not()) {
+    getYesterdayPhysicalActivityData().yesterdayStepList = if (yesterdayPhysicalActivityResultsFromDB.isEmpty().not()) {
         val filter = yesterdayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.STEPS }
         getIntegerListFromStringMap(filter[0].data)
     } else {
@@ -62,7 +59,7 @@ fun YesterdayPhysicalActivityDBHandler(
     integerFieldUpdateOrInsert(
         valuesReadFromSW = yesterdayDateValuesReadFromSW().stepList,
         dataViewModel = dataViewModel,
-        fieldListReadFromDB = getYesterdayPhysicalActivityData().yesterdayStepListReadFromDB,
+        fieldListReadFromDB = getYesterdayPhysicalActivityData().yesterdayStepList,
         setDayFieldListReadFromDB = setYesterdayStepListReadFromDB,
         dayFromTableData = yesterdayPhysicalActivityResultsFromDB,
         isDayFieldListAlreadyInsertedInDB = getYesterdayPhysicalActivityData().isYesterdayStepsListAlreadyInsertedInDB,
@@ -74,10 +71,10 @@ fun YesterdayPhysicalActivityDBHandler(
     )
 
     val setYesterdayDistanceListReadFromDB: (List<Double>) -> Unit = {
-        getYesterdayPhysicalActivityData().yesterdayDistanceListReadFromDB = it
+        getYesterdayPhysicalActivityData().yesterdayDistanceList = it
     }
 
-    getYesterdayPhysicalActivityData().yesterdayDistanceListReadFromDB = if (yesterdayPhysicalActivityResultsFromDB.isEmpty().not()) {
+    getYesterdayPhysicalActivityData().yesterdayDistanceList = if (yesterdayPhysicalActivityResultsFromDB.isEmpty().not()) {
         val filter = yesterdayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.DISTANCE }
         getDoubleListFromStringMap(filter[0].data)
     } else {
@@ -96,7 +93,7 @@ fun YesterdayPhysicalActivityDBHandler(
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = yesterdayDateValuesReadFromSW().distanceList,
         dataViewModel = dataViewModel,
-        fieldListReadFromDB = getYesterdayPhysicalActivityData().yesterdayDistanceListReadFromDB,
+        fieldListReadFromDB = getYesterdayPhysicalActivityData().yesterdayDistanceList,
         setDayFieldListReadFromDB = setYesterdayDistanceListReadFromDB,
         dayFromTableData = yesterdayPhysicalActivityResultsFromDB,
         isDayFieldListAlreadyInsertedInDB = getYesterdayPhysicalActivityData().isYesterdayDistanceListAlreadyInsertedInDB,
@@ -109,10 +106,10 @@ fun YesterdayPhysicalActivityDBHandler(
 
 
     val setYesterdayCaloriesListReadFromDB: (List<Double>) -> Unit = {
-        getYesterdayPhysicalActivityData().yesterdayCaloriesListReadFromDB = it
+        getYesterdayPhysicalActivityData().yesterdayCaloriesList = it
     }
 
-    getYesterdayPhysicalActivityData().yesterdayCaloriesListReadFromDB = if (yesterdayPhysicalActivityResultsFromDB.isEmpty().not()) {
+    getYesterdayPhysicalActivityData().yesterdayCaloriesList = if (yesterdayPhysicalActivityResultsFromDB.isEmpty().not()) {
         val filter = yesterdayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.CALORIES }
         getDoubleListFromStringMap(filter[0].data)
     } else {
@@ -131,7 +128,7 @@ fun YesterdayPhysicalActivityDBHandler(
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = yesterdayDateValuesReadFromSW().caloriesList,
         dataViewModel = dataViewModel,
-        fieldListReadFromDB = getYesterdayPhysicalActivityData().yesterdayCaloriesListReadFromDB,
+        fieldListReadFromDB = getYesterdayPhysicalActivityData().yesterdayCaloriesList,
         setDayFieldListReadFromDB = setYesterdayCaloriesListReadFromDB,
         dayFromTableData = yesterdayPhysicalActivityResultsFromDB,
         isDayFieldListAlreadyInsertedInDB = getYesterdayPhysicalActivityData().isYesterdayCaloriesListAlreadyInsertedInDB,

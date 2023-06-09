@@ -1,11 +1,8 @@
 package com.icxcu.adsmartbandapp.screens.mainNavBar
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import com.icxcu.adsmartbandapp.data.TypesTable
-import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.doubleFieldUpdateOrInsert
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getDoubleListFromStringMap
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
@@ -37,11 +34,11 @@ fun TodayHeartRateDBHandler(
     }
 
     val setTodayHeartRateListReadFromDB: (List<Double>) -> Unit = {
-        getTodayPhysicalActivityData().todayHeartRateListReadFromDB = it
+        getTodayPhysicalActivityData().todayHeartRateList = it
     }
 
 
-    getTodayPhysicalActivityData().todayHeartRateListReadFromDB = if (todayHeartRateResultsFromDB.isEmpty().not()) {
+    getTodayPhysicalActivityData().todayHeartRateList = if (todayHeartRateResultsFromDB.isEmpty().not()) {
         val filter = todayHeartRateResultsFromDB.filter { it.typesTable == TypesTable.HEART_RATE }
         getDoubleListFromStringMap(filter[0].data)
     } else {
@@ -60,7 +57,7 @@ fun TodayHeartRateDBHandler(
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = todayDateValuesReadFromSW().heartRateList,
         dataViewModel = dataViewModel,
-        fieldListReadFromDB = getTodayPhysicalActivityData().todayHeartRateListReadFromDB,
+        fieldListReadFromDB = getTodayPhysicalActivityData().todayHeartRateList,
         setDayFieldListReadFromDB = setTodayHeartRateListReadFromDB,
         dayFromTableData = todayHeartRateResultsFromDB,
         isDayFieldListAlreadyInsertedInDB = getTodayPhysicalActivityData().isTodayHeartRateListAlreadyInsertedInDB,

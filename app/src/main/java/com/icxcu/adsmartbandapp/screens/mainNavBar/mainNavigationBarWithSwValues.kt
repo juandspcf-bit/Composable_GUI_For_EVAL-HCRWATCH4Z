@@ -313,54 +313,54 @@ fun MainNavigationBarWithSwValues(
 
 class TodayHealthsDataState {
 
-    var todayStepListReadFromDB by mutableStateOf(listOf<Int>())
+    var todayStepList by mutableStateOf(listOf<Int>())
     var isTodayStepsListAlreadyInsertedInDB = false
     var isTodayStepsListInDBAlreadyUpdated = false
 
-    var todayDistanceListReadFromDB by mutableStateOf(listOf<Double>())
+    var todayDistanceList by mutableStateOf(listOf<Double>())
     var isTodayDistanceListAlreadyInsertedInDB = false
     var isTodayDistanceListInDBAlreadyUpdated = false
 
-    var todayCaloriesListReadFromDB by mutableStateOf(listOf<Double>())
+    var todayCaloriesList by mutableStateOf(listOf<Double>())
     var isTodayCaloriesListAlreadyInsertedInDB = false
     var isTodayCaloriesListInDBAlreadyUpdated = false
 
-    var todaySystolicListReadFromDB by mutableStateOf(listOf<Double>())
+    var todaySystolicList by mutableStateOf(listOf<Double>())
     var isTodaySystolicListAlreadyInsertedInDB = false
     var isTodaySystolicListInDBAlreadyUpdated = false
 
-    var todayDiastolicListReadFromDB by mutableStateOf(listOf<Double>())
+    var todayDiastolicList by mutableStateOf(listOf<Double>())
     var isTodayDiastolicListAlreadyInsertedInDB = false
     var isTodayDiastolicListInDBAlreadyUpdated = false
 
 
-    var todayHeartRateListReadFromDB by mutableStateOf(listOf<Double>())
+    var todayHeartRateList by mutableStateOf(listOf<Double>())
     var isTodayHeartRateListAlreadyInsertedInDB = false
     var isTodayHeartRateListInDBAlreadyUpdated = false
 }
 
 class YesterdayHealthsDataState {
-    var yesterdayStepListReadFromDB by mutableStateOf(listOf<Int>())
+    var yesterdayStepList by mutableStateOf(listOf<Int>())
     var isYesterdayStepsListAlreadyInsertedInDB = false
     var isYesterdayStepsListInDBAlreadyUpdated = false
 
-    var yesterdayDistanceListReadFromDB by mutableStateOf(listOf<Double>())
+    var yesterdayDistanceList by mutableStateOf(listOf<Double>())
     var isYesterdayDistanceListAlreadyInsertedInDB = false
     var isYesterdayDistanceListInDBAlreadyUpdated = false
 
-    var yesterdayCaloriesListReadFromDB by mutableStateOf(listOf<Double>())
+    var yesterdayCaloriesList by mutableStateOf(listOf<Double>())
     var isYesterdayCaloriesListAlreadyInsertedInDB = false
     var isYesterdayCaloriesListInDBAlreadyUpdated = false
 
-    var yesterdaySystolicListReadFromDB by mutableStateOf(listOf<Double>())
+    var yesterdaySystolicList by mutableStateOf(listOf<Double>())
     var isYesterdaySystolicListAlreadyInsertedInDB = false
     var isYesterdaySystolicListInDBAlreadyUpdated = false
 
-    var yesterdayDiastolicListReadFromDB by mutableStateOf(listOf<Double>())
+    var yesterdayDiastolicList by mutableStateOf(listOf<Double>())
     var isYesterdayDiastolicListAlreadyInsertedInDB = false
     var isYesterdayDiastolicListInDBAlreadyUpdated = false
 
-    var yesterdayHeartRateListReadFromDB by mutableStateOf(listOf<Double>())
+    var yesterdayHeartRateList by mutableStateOf(listOf<Double>())
     var isYesterdayHeartRateListAlreadyInsertedInDB = false
     var isYesterdayHeartRateListInDBAlreadyUpdated = false
 }
