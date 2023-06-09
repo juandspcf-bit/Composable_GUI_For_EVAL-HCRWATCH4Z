@@ -48,8 +48,8 @@ fun YesterdayBloodPressureDBHandler(
     }
 
     doubleFieldUpdateOrInsert(
-        valuesReadFromSW = yesterdayDateValuesReadFromSW().systolicList,
-        dayFromTableData = yesterdayBloodPressureResultsFromDB,
+        dataFieldFromSW = yesterdayDateValuesReadFromSW().systolicList,
+        dataFieldFromDB = yesterdayBloodPressureResultsFromDB,
         fieldListState = getYesterdayPhysicalActivityData().yesterdaySystolicList,
         dataViewModel = dataViewModel,
         setFieldListState = setYesterdaySystolicListState,
@@ -82,8 +82,8 @@ fun YesterdayBloodPressureDBHandler(
     }
 
     doubleFieldUpdateOrInsert(
-        valuesReadFromSW = yesterdayDateValuesReadFromSW().diastolicList,
-        dayFromTableData = yesterdayBloodPressureResultsFromDB,
+        dataFieldFromSW = yesterdayDateValuesReadFromSW().diastolicList,
+        dataFieldFromDB = yesterdayBloodPressureResultsFromDB,
         fieldListState = getYesterdayPhysicalActivityData().yesterdayDiastolicList,
         dataViewModel = dataViewModel,
         setFieldListState = setYesterdayDiastolicListReadFromDB,

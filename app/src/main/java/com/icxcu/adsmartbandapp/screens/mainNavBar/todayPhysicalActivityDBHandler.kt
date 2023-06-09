@@ -62,10 +62,10 @@ fun TodayPhysicalActivityDBHandler(
     }
 
     integerFieldUpdateOrInsert(
-        valuesReadFromSW = todayDateValuesReadFromSW().stepList,
-        dayFromTableData = todayPhysicalActivityResultsFromDB,
-        dataViewModel = dataViewModel,
+        dataFieldFromSW = todayDateValuesReadFromSW().stepList,
+        dataFieldFromDB = todayPhysicalActivityResultsFromDB,
         fieldListState = getTodayHealthsDataState().todayStepList,
+        dataViewModel = dataViewModel,
         setFieldListState = setTodayStepListState,
         isDayFieldListAlreadyInsertedInDB = getTodayHealthsDataState().isTodayStepsListAlreadyInsertedInDB,
         isDayFieldListInDBAlreadyUpdated = getTodayHealthsDataState().isTodayStepsListInDBAlreadyUpdated,
@@ -109,8 +109,8 @@ fun TodayPhysicalActivityDBHandler(
 
 
     doubleFieldUpdateOrInsert(
-        valuesReadFromSW = todayDateValuesReadFromSW().distanceList,
-        dayFromTableData = todayPhysicalActivityResultsFromDB,
+        dataFieldFromSW = todayDateValuesReadFromSW().distanceList,
+        dataFieldFromDB = todayPhysicalActivityResultsFromDB,
         fieldListState = getTodayHealthsDataState().todayDistanceList,
         dataViewModel = dataViewModel,
         setFieldListState = setTodayDistanceListState,
@@ -155,8 +155,8 @@ fun TodayPhysicalActivityDBHandler(
 
 
     doubleFieldUpdateOrInsert(
-        valuesReadFromSW = todayDateValuesReadFromSW().caloriesList,
-        dayFromTableData = todayPhysicalActivityResultsFromDB,
+        dataFieldFromSW = todayDateValuesReadFromSW().caloriesList,
+        dataFieldFromDB = todayPhysicalActivityResultsFromDB,
         fieldListState = getTodayHealthsDataState().todayCaloriesList,
         dataViewModel = dataViewModel,
         setFieldListState = setTodayCaloriesListState,
