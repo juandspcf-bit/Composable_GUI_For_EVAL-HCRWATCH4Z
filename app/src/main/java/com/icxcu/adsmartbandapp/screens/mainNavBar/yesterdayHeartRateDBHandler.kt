@@ -12,7 +12,7 @@ fun YesterdayHeartRateDBHandler(
     dataViewModel: DataViewModel
 ) {
 
-    val getSmartWatchState = remember(dataViewModel) {
+    val getSmartWatchDataState = remember(dataViewModel) {
         {
             dataViewModel.smartWatchState
         }
@@ -28,7 +28,7 @@ fun YesterdayHeartRateDBHandler(
 
     val yesterdayDateValuesReadFromSW = remember(dataViewModel) {
         {
-            getSmartWatchState().yesterdayDateValuesFromSW
+            getSmartWatchDataState().yesterdayDateValuesFromSW
         }
     }
 
