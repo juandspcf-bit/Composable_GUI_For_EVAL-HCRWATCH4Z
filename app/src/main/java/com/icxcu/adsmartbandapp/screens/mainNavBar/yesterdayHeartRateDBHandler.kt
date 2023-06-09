@@ -12,33 +12,31 @@ fun YesterdayHeartRateDBHandler(
     dataViewModel: DataViewModel
 ) {
 
-    val getSmartWatchDataState = remember(dataViewModel) {
-        {
-            dataViewModel.smartWatchState
-        }
-    }
+    //state sources
 
-    val getYesterdayHealthsDataState = remember(dataViewModel) {
+    val yesterdayHealthsDataState = remember(dataViewModel) {
         {
             dataViewModel.yesterdayHealthsDataState
         }
     }
+
+
     //Data Sources
     val yesterdayHeartRateResultsFromDB = dataViewModel.yesterdayStateHeartRateData.value
 
     val yesterdayDateValuesReadFromSW = remember(dataViewModel) {
         {
-            getSmartWatchDataState().yesterdayDateValuesFromSW
+            dataViewModel.smartWatchState.yesterdayDateValuesFromSW
         }
     }
 
     //Data Sources**
 
     val setYesterdayHeartRateListReadFromDB: (List<Double>) -> Unit = {
-        getYesterdayHealthsDataState().yesterdayHeartRateListReadFromDB = it
+        yesterdayHealthsDataState().yesterdayHeartRateListReadFromDB = it
     }
 
-    getYesterdayHealthsDataState().yesterdayHeartRateListReadFromDB = if (yesterdayHeartRateResultsFromDB.isEmpty().not()) {
+    yesterdayHealthsDataState().yesterdayHeartRateListReadFromDB = if (yesterdayHeartRateResultsFromDB.isEmpty().not()) {
         val filter = yesterdayHeartRateResultsFromDB.filter { it.typesTable == TypesTable.HEART_RATE }
         getDoubleListFromStringMap(filter[0].data)
     } else {
@@ -46,22 +44,22 @@ fun YesterdayHeartRateDBHandler(
     }
 
     val setIsYesterdayHeartRateListAlreadyInsertedInDB: (Boolean) -> Unit = {
-        getYesterdayHealthsDataState().isYesterdayHeartRateListAlreadyInsertedInDB = it
+        yesterdayHealthsDataState().isYesterdayHeartRateListAlreadyInsertedInDB = it
     }
 
     val setIsYesterdayHeartRateListInDBAlreadyUpdated: (Boolean) -> Unit = {
-        getYesterdayHealthsDataState().isYesterdayHeartRateListInDBAlreadyUpdated = it
+        yesterdayHealthsDataState().isYesterdayHeartRateListInDBAlreadyUpdated = it
     }
 
 
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = yesterdayDateValuesReadFromSW().heartRateList,
         dataViewModel = dataViewModel,
-        fieldListReadFromDB = getYesterdayHealthsDataState().yesterdayHeartRateListReadFromDB,
+        fieldListReadFromDB = yesterdayHealthsDataState().yesterdayHeartRateListReadFromDB,
         setDayFieldListReadFromDB = setYesterdayHeartRateListReadFromDB,
         dayFromTableData = yesterdayHeartRateResultsFromDB,
-        isDayFieldListAlreadyInsertedInDB = getYesterdayHealthsDataState().isYesterdayHeartRateListAlreadyInsertedInDB,
-        isDayFieldListInDBAlreadyUpdated = getYesterdayHealthsDataState().isYesterdayHeartRateListInDBAlreadyUpdated,
+        isDayFieldListAlreadyInsertedInDB = yesterdayHealthsDataState().isYesterdayHeartRateListAlreadyInsertedInDB,
+        isDayFieldListInDBAlreadyUpdated = yesterdayHealthsDataState().isYesterdayHeartRateListInDBAlreadyUpdated,
         setIsDayFieldListAlreadyInsertedInDB = setIsYesterdayHeartRateListAlreadyInsertedInDB,
         setIsDayFieldListInDBAlreadyUpdated = setIsYesterdayHeartRateListInDBAlreadyUpdated,
         TypesTable.HEART_RATE,
