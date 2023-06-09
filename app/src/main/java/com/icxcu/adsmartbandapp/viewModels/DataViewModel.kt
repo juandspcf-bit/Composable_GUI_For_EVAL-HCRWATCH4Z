@@ -130,6 +130,29 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     }
 
+    fun listenDataFromSmartWatch(){
+        Log.d("FetchingDataFromSWStatusX", "listenDataFromSmartWatch")
+        collectDataScope = viewModelScope.launch {
+            swRepository.sharedStepsFlow.collect {
+                when (it.date) {
+                    todayFormattedDate -> {
+
+                        smartWatchState.todayDateValuesReadFromSW = it
+                    }
+
+                    yesterdayFormattedDate -> {
+
+                        smartWatchState.yesterdayDateValuesFromSW = it
+                        smartWatchState.progressbarForFetchingDataFromSW = false
+                        smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.READ
+                    }
+                }
+            }
+        }
+    }
+
+
+
 
     var todayStatePhysicalActivityData = mutableStateOf<List<PhysicalActivity>>(listOf())
     var yesterdayStatePhysicalActivityData = mutableStateOf<List<PhysicalActivity>>(listOf())
@@ -289,26 +312,6 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     }
 
-    fun listenDataFromSmartWatch(){
-        Log.d("FetchingDataFromSWStatusX", "listenDataFromSmartWatch")
-        collectDataScope = viewModelScope.launch {
-            swRepository.sharedStepsFlow.collect {
-                when (it.date) {
-                    todayFormattedDate -> {
-                        Log.d("FetchingDataFromSWStatusX", "TODAY READ")
-                        smartWatchState.todayDateValuesReadFromSW = it
-                    }
-
-                    yesterdayFormattedDate -> {
-                        Log.d("FetchingDataFromSWStatusX", "YESTERDAY READ")
-                        smartWatchState.yesterdayDateValuesFromSW = it
-                        smartWatchState.progressbarForFetchingDataFromSW = false
-                        smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.READ
-                    }
-                }
-            }
-        }
-    }
 
 
     fun getDayHealthData(
