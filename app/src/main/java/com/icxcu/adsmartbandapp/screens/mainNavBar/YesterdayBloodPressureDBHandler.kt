@@ -12,12 +12,6 @@ fun YesterdayBloodPressureDBHandler(
     dataViewModel: DataViewModel
 ) {
 
-    val getSmartWatchState = remember(dataViewModel) {
-        {
-            dataViewModel.smartWatchState
-        }
-    }
-
     val getYesterdayPhysicalActivityData = remember(dataViewModel) {
         {
             dataViewModel.yesterdayHealthsDataState
@@ -26,19 +20,15 @@ fun YesterdayBloodPressureDBHandler(
 
 
     //Data Sources
-
-
     val yesterdayBloodPressureResultsFromDB = dataViewModel.yesterdayStateBloodPressureData.value
 
     val yesterdayDateValuesReadFromSW = remember(dataViewModel) {
         {
-            getSmartWatchState().yesterdayDateValuesFromSW
+            dataViewModel.smartWatchState.yesterdayDateValuesFromSW
         }
     }
 
-    //Data Sources**
-
-    val setYesterdaySystolicListReadFromDB: (List<Double>) -> Unit = {
+    val setYesterdaySystolicListState: (List<Double>) -> Unit = {
         getYesterdayPhysicalActivityData().yesterdaySystolicList = it
     }
 
@@ -61,7 +51,7 @@ fun YesterdayBloodPressureDBHandler(
         valuesReadFromSW = yesterdayDateValuesReadFromSW().systolicList,
         dataViewModel = dataViewModel,
         fieldListReadFromDB = getYesterdayPhysicalActivityData().yesterdaySystolicList,
-        setFieldListState = setYesterdaySystolicListReadFromDB,
+        setFieldListState = setYesterdaySystolicListState,
         dayFromTableData = yesterdayBloodPressureResultsFromDB,
         isDayFieldListAlreadyInsertedInDB = getYesterdayPhysicalActivityData().isYesterdaySystolicListAlreadyInsertedInDB,
         isDayFieldListInDBAlreadyUpdated = getYesterdayPhysicalActivityData().isYesterdaySystolicListInDBAlreadyUpdated,
