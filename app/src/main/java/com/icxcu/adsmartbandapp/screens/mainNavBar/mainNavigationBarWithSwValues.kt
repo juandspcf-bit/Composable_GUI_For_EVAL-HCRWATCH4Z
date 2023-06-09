@@ -334,14 +334,12 @@ class TodayHealthsDataState {
     var isTodayDiastolicListInDBAlreadyUpdated = false
 
 
-    var todayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
     var todayHeartRateListReadFromDB by mutableStateOf(listOf<Double>())
     var isTodayHeartRateListAlreadyInsertedInDB = false
     var isTodayHeartRateListInDBAlreadyUpdated = false
 }
 
 class YesterdayHealthsDataState {
-    var yesterdayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
     var yesterdayStepListReadFromDB by mutableStateOf(listOf<Int>())
     var isYesterdayStepsListAlreadyInsertedInDB = false
     var isYesterdayStepsListInDBAlreadyUpdated = false
@@ -354,7 +352,6 @@ class YesterdayHealthsDataState {
     var isYesterdayCaloriesListAlreadyInsertedInDB = false
     var isYesterdayCaloriesListInDBAlreadyUpdated = false
 
-    var yesterdayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
     var yesterdaySystolicListReadFromDB by mutableStateOf(listOf<Double>())
     var isYesterdaySystolicListAlreadyInsertedInDB = false
     var isYesterdaySystolicListInDBAlreadyUpdated = false
@@ -363,7 +360,6 @@ class YesterdayHealthsDataState {
     var isYesterdayDiastolicListAlreadyInsertedInDB = false
     var isYesterdayDiastolicListInDBAlreadyUpdated = false
 
-    var yesterdayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
     var yesterdayHeartRateListReadFromDB by mutableStateOf(listOf<Double>())
     var isYesterdayHeartRateListAlreadyInsertedInDB = false
     var isYesterdayHeartRateListInDBAlreadyUpdated = false
