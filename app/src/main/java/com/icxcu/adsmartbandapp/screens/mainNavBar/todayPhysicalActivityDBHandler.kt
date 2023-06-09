@@ -15,7 +15,7 @@ fun TodayPhysicalActivityDBHandler(
     dataViewModel: DataViewModel
 ) {
 
-    val getTodayPhysicalActivityData = remember(dataViewModel) {
+    val getTodayHealthsDataState = remember(dataViewModel) {
         {
             dataViewModel.todayHealthsDataState
         }
@@ -31,7 +31,7 @@ fun TodayPhysicalActivityDBHandler(
     //Data Sources**
 
 
-    val setTodayStepListReadFromDB= remember(dataViewModel){
+    val setTodayStepListState= remember(dataViewModel){
         { newData: List<Int> ->
             dataViewModel.todayHealthsDataState.todayStepList = newData
         }
@@ -64,20 +64,20 @@ fun TodayPhysicalActivityDBHandler(
     integerFieldUpdateOrInsert(
         valuesReadFromSW = todayDateValuesReadFromSW().stepList,
         dataViewModel = dataViewModel,
-        fieldListReadFromDB = getTodayPhysicalActivityData().todayStepList,
-        setDayFieldListReadFromDB = setTodayStepListReadFromDB,
+        fieldListReadFromDB = getTodayHealthsDataState().todayStepList,
+        setFieldListState = setTodayStepListState,
         dayFromTableData = todayPhysicalActivityResultsFromDB,
-        isDayFieldListAlreadyInsertedInDB = getTodayPhysicalActivityData().isTodayStepsListAlreadyInsertedInDB,
-        isDayFieldListInDBAlreadyUpdated = getTodayPhysicalActivityData().isTodayStepsListInDBAlreadyUpdated,
+        isDayFieldListAlreadyInsertedInDB = getTodayHealthsDataState().isTodayStepsListAlreadyInsertedInDB,
+        isDayFieldListInDBAlreadyUpdated = getTodayHealthsDataState().isTodayStepsListInDBAlreadyUpdated,
         setIsDayFieldListAlreadyInsertedInDB = setIsTodayStepsListAlreadyInsertedInDB,
         setIsDayFieldListInDBAlreadyUpdated = setIsTodayStepsListInDBAlreadyUpdated,
         TypesTable.STEPS,
         dateData = dataViewModel.todayFormattedDate
     )
 
-    val setTodayDistanceListReadFromDB= remember(dataViewModel){
+    val setTodayDistanceListState= remember(dataViewModel){
         { newData: List<Double> ->
-            getTodayPhysicalActivityData().todayDistanceList = newData
+            getTodayHealthsDataState().todayDistanceList = newData
         }
     }
 
@@ -97,13 +97,13 @@ fun TodayPhysicalActivityDBHandler(
 
     val setIsTodayDistanceListAlreadyInsertedInDB = remember(dataViewModel){
         { newValue: Boolean ->
-            getTodayPhysicalActivityData().isTodayDistanceListAlreadyInsertedInDB = newValue
+            getTodayHealthsDataState().isTodayDistanceListAlreadyInsertedInDB = newValue
         }
     }
 
     val setIsTodayDistanceListInDBAlreadyUpdated = remember(dataViewModel){
         { newValue: Boolean ->
-            getTodayPhysicalActivityData().isTodayDistanceListInDBAlreadyUpdated = newValue
+            getTodayHealthsDataState().isTodayDistanceListInDBAlreadyUpdated = newValue
         }
     }
 
@@ -111,11 +111,11 @@ fun TodayPhysicalActivityDBHandler(
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = todayDateValuesReadFromSW().distanceList,
         dataViewModel = dataViewModel,
-        fieldListReadFromDB = getTodayPhysicalActivityData().todayDistanceList,
-        setFieldListState = setTodayDistanceListReadFromDB,
+        fieldListReadFromDB = getTodayHealthsDataState().todayDistanceList,
+        setFieldListState = setTodayDistanceListState,
         dayFromTableData = todayPhysicalActivityResultsFromDB,
-        isDayFieldListAlreadyInsertedInDB = getTodayPhysicalActivityData().isTodayDistanceListAlreadyInsertedInDB,
-        isDayFieldListInDBAlreadyUpdated = getTodayPhysicalActivityData().isTodayDistanceListInDBAlreadyUpdated,
+        isDayFieldListAlreadyInsertedInDB = getTodayHealthsDataState().isTodayDistanceListAlreadyInsertedInDB,
+        isDayFieldListInDBAlreadyUpdated = getTodayHealthsDataState().isTodayDistanceListInDBAlreadyUpdated,
         setIsDayFieldListAlreadyInsertedInDB = setIsTodayDistanceListAlreadyInsertedInDB,
         setIsDayFieldListInDBAlreadyUpdated = setIsTodayDistanceListInDBAlreadyUpdated,
         TypesTable.DISTANCE,
@@ -123,14 +123,14 @@ fun TodayPhysicalActivityDBHandler(
     )
 
 
-    val setTodayCaloriesListReadFromDB = remember(dataViewModel) {
+    val setTodayCaloriesListState = remember(dataViewModel) {
         { newData: List<Double> ->
-            getTodayPhysicalActivityData().todayCaloriesList = newData
+            getTodayHealthsDataState().todayCaloriesList = newData
         }
     }
 
 
-    getTodayPhysicalActivityData().todayCaloriesList = if (todayPhysicalActivityResultsFromDB.isEmpty().not()) {
+    getTodayHealthsDataState().todayCaloriesList = if (todayPhysicalActivityResultsFromDB.isEmpty().not()) {
         val filter = todayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.CALORIES }
         if(filter.isNotEmpty()){
             getDoubleListFromStringMap(filter[0].data)
@@ -143,13 +143,13 @@ fun TodayPhysicalActivityDBHandler(
 
     val setIsTodayCaloriesListAlreadyInsertedInDB = remember(dataViewModel){
         { newData: Boolean ->
-            getTodayPhysicalActivityData().isTodayCaloriesListAlreadyInsertedInDB = newData
+            getTodayHealthsDataState().isTodayCaloriesListAlreadyInsertedInDB = newData
         }
     }
 
     val setIsTodayCaloriesListInDBAlreadyUpdated = remember(dataViewModel){
         { newData: Boolean ->
-            getTodayPhysicalActivityData().isTodayCaloriesListInDBAlreadyUpdated = newData
+            getTodayHealthsDataState().isTodayCaloriesListInDBAlreadyUpdated = newData
         }
     }
 
@@ -157,11 +157,11 @@ fun TodayPhysicalActivityDBHandler(
     doubleFieldUpdateOrInsert(
         valuesReadFromSW = todayDateValuesReadFromSW().caloriesList,
         dataViewModel = dataViewModel,
-        fieldListReadFromDB = getTodayPhysicalActivityData().todayCaloriesList,
-        setFieldListState = setTodayCaloriesListReadFromDB,
+        fieldListReadFromDB = getTodayHealthsDataState().todayCaloriesList,
+        setFieldListState = setTodayCaloriesListState,
         dayFromTableData = todayPhysicalActivityResultsFromDB,
-        isDayFieldListAlreadyInsertedInDB = getTodayPhysicalActivityData().isTodayCaloriesListAlreadyInsertedInDB,
-        isDayFieldListInDBAlreadyUpdated = getTodayPhysicalActivityData().isTodayCaloriesListInDBAlreadyUpdated,
+        isDayFieldListAlreadyInsertedInDB = getTodayHealthsDataState().isTodayCaloriesListAlreadyInsertedInDB,
+        isDayFieldListInDBAlreadyUpdated = getTodayHealthsDataState().isTodayCaloriesListInDBAlreadyUpdated,
         setIsDayFieldListAlreadyInsertedInDB = setIsTodayCaloriesListAlreadyInsertedInDB,
         setIsDayFieldListInDBAlreadyUpdated = setIsTodayCaloriesListInDBAlreadyUpdated,
         TypesTable.CALORIES,

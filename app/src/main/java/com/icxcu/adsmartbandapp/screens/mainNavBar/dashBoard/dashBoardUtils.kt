@@ -12,7 +12,7 @@ fun integerFieldUpdateOrInsert(
     valuesReadFromSW: List<Int>,
     dataViewModel: DataViewModel,
     fieldListReadFromDB: List<Int>,
-    setDayFieldListReadFromDB: (List<Int>) -> Unit,
+    setFieldListState: (List<Int>) -> Unit,
     dayFromTableData: List<Field>,
     isDayFieldListAlreadyInsertedInDB: Boolean,
     isDayFieldListInDBAlreadyUpdated: Boolean,
@@ -67,7 +67,7 @@ if(valuesReadFromSW.isEmpty().not() && dayFromTableData.isEmpty().not()){
         }
         if(listIndex.isNotEmpty()){
             dayFromTableData[listIndex[0]].data = newValuesList.toString()
-            setDayFieldListReadFromDB(valuesReadFromSW)
+            setFieldListState(valuesReadFromSW)
             tableToUpdateSelector(
                 typesTableToModify,
                 dataViewModel,
