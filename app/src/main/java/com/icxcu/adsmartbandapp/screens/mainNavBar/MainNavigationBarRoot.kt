@@ -26,15 +26,17 @@ fun MainNavigationBarRoot(
 
             dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.IN_PROGRESS
 
+            dataViewModel.macAddressDeviceBluetooth =
+                bluetoothAddress
+            dataViewModel.nameDeviceBluetooth = bluetoothName
+
             dataViewModel.listenDataFromSmartWatch()
             dataViewModel.requestSmartWatchData(
                 bluetoothName,
                 bluetoothAddress
             )
 
-            dataViewModel.macAddressDeviceBluetooth =
-                bluetoothAddress
-            dataViewModel.nameDeviceBluetooth = bluetoothName
+
 
             dataViewModel.getPersonalInfoData(dataViewModel.macAddressDeviceBluetooth)
             dataViewModel.statusStartedReadingDataLasThreeDaysData = true

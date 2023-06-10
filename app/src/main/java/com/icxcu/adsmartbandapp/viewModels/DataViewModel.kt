@@ -208,18 +208,20 @@ class DataViewModel(var application: Application) : ViewModel() {
 
 
     private fun starListeningDB(name: String = "", macAddress: String = "") {
+        Log.d("DB_FLOW", "starListeningDB")
         viewModelScope.launch {
             physicalActivityDao.getAllPhysicalActivityFlow(todayFormattedDate, macAddress)
                 .collectLatest {
-                    Log.d("DB_FLOW", "starListeningDB: $it")
+                    Log.d("DB_FLOW", "starListeningDB of $macAddress: $it")
                 }
         }
     }
 
 
     fun requestSmartWatchData(name: String = "", macAddress: String = "") {
-        Log.d("DATAX", "requestSmartWatchDataModel: ")
         swRepository.requestSmartWatchData()
+
+        starListeningDB(macAddress = macAddressDeviceBluetooth)
 
         viewModelScope.launch {
             delay(1000)
