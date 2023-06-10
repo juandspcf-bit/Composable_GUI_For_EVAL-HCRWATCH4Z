@@ -36,5 +36,29 @@ class BloodPressure : Field {
         return "BloodPressure(bloodPressureId=$id, macAddress='$macAddress', typesTable=$typesTable, dateData='$dateData', data='$data')"
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as BloodPressure
+
+        if (id != other.id) return false
+        if (macAddress != other.macAddress) return false
+        if (typesTable != other.typesTable) return false
+        if (dateData != other.dateData) return false
+        if (data != other.data) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id
+        result = 31 * result + macAddress.hashCode()
+        result = 31 * result + typesTable.hashCode()
+        result = 31 * result + dateData.hashCode()
+        result = 31 * result + data.hashCode()
+        return result
+    }
+
 
 }

@@ -237,6 +237,7 @@ class MainActivity : ComponentActivity() {
                     dataViewModel.statusReadingDbForDashboard =
                         StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
                     navMainController.popBackStack()
+                    dataViewModel.jobPhysicalActivityState?.cancel()
                 }
             }
 
@@ -487,11 +488,9 @@ class MainActivity : ComponentActivity() {
                     Log.d("DATAX", "MainContentStepsPlots:")
                     val myDateObj = LocalDateTime.now()
                     val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-                    val formattedDate = myDateObj.format(myFormatObj)
-                    dataViewModel.getDayPhysicalActivityData(
-                        formattedDate,
-                        dataViewModel.macAddressDeviceBluetooth
-                    )
+                    val todayFormattedDate = myDateObj.format(myFormatObj)
+
+                    dataViewModel.starListeningDayPhysicalActivityDB(todayFormattedDate, macAddress = dataViewModel.macAddressDeviceBluetooth, )
                     PhysicalActivityScreenRoot(
                         dataViewModel = dataViewModel
                     ) { navLambdaBackToMainNavigationBar() }
@@ -517,10 +516,11 @@ class MainActivity : ComponentActivity() {
                     val myDateObj = LocalDateTime.now()
                     val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                     val formattedDate = myDateObj.format(myFormatObj)
-                    dataViewModel.getDayBloodPressureData(
+                    /*dataViewModel.getDayBloodPressureData(
                         formattedDate,
                         dataViewModel.macAddressDeviceBluetooth
-                    )
+                    )*/
+                    dataViewModel.starListeningBloodPressureDB(formattedDate, dataViewModel.macAddressDeviceBluetooth)
                     BloodPressureScreenRoot(dataViewModel = dataViewModel) {
                         navLambdaBackToMainNavigationBar()
                     }

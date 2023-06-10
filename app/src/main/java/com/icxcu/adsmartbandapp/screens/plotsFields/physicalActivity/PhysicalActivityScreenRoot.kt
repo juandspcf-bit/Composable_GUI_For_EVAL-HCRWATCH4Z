@@ -25,10 +25,7 @@ fun PhysicalActivityScreenRoot(
         }
     }
 
-    //Data state
-    val dayPhysicalActivityResultsFromDB by getDayPhysicalActivityData().dayPhysicalActivityResultsFromDB.observeAsState(
-        listOf()
-    )
+    val dayPhysicalActivityResultsFromDB = dataViewModel.dayPhysicalActivityState
 
     if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
         dataViewModel.selectedDay = dayPhysicalActivityResultsFromDB[0].dateData
@@ -113,10 +110,9 @@ fun PhysicalActivityScreenRoot(
             val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             val dateData = formattedDate.format(date)
 
-            dataViewModel.getDayPhysicalActivityData(
-                dateData,
-                dataViewModel.macAddressDeviceBluetooth
-            )
+            dataViewModel.jobPhysicalActivityState?.cancel()
+            dataViewModel.starListeningDayPhysicalActivityDB(dateData, macAddress = dataViewModel.macAddressDeviceBluetooth, )
+            dataViewModel.selectedDay = dateData
         }
     }
 

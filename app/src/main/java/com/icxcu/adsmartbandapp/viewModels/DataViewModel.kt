@@ -2,18 +2,17 @@ package com.icxcu.adsmartbandapp.viewModels
 
 import android.app.Application
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
+import com.icxcu.adsmartbandapp.database.BloodPressureDao
 import com.icxcu.adsmartbandapp.database.DatabaseHelperImpl
 import com.icxcu.adsmartbandapp.database.PhysicalActivityDao
 import com.icxcu.adsmartbandapp.database.SWRoomDatabase
@@ -37,9 +36,8 @@ import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.Pe
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.UpdateAlertDialogState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.ValidatorsPersonalField
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -104,11 +102,18 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     private val dbHelper: DatabaseHelperImpl
     private var physicalActivityDao: PhysicalActivityDao
+    private var bloodPressureDao: BloodPressureDao
+
+    var dayPhysicalActivityState by mutableStateOf<List<PhysicalActivity>>(listOf())
+    var jobPhysicalActivityState: Job? = null
+
+    var dayBloodPressureState by mutableStateOf<List<BloodPressure>>(listOf())
+    var jobBloodPressureState: Job? = null
 
     init {
         val swDb = SWRoomDatabase.getInstance(application)
         physicalActivityDao = swDb.physicalActivityDao()
-        val bloodPressureDao = swDb.bloodPressureDao()
+        bloodPressureDao = swDb.bloodPressureDao()
         val heartRateDao = swDb.heartRateDao()
         val personalInfoDao = swDb.personalInfoDao()
         dbRepository = DBRepository(
@@ -207,12 +212,24 @@ class DataViewModel(var application: Application) : ViewModel() {
     }
 
 
-    private fun starListeningDB(name: String = "", macAddress: String = "") {
-        Log.d("DB_FLOW", "starListeningDB")
-        viewModelScope.launch {
-            physicalActivityDao.getAllPhysicalActivityFlow(todayFormattedDate, macAddress)
-                .collectLatest {
+    fun starListeningDayPhysicalActivityDB(dateData: String="", macAddress: String = "", ) {
+        jobPhysicalActivityState = viewModelScope.launch {
+            physicalActivityDao.getAllPhysicalActivityFlow(dateData, macAddress)
+                .distinctUntilChanged()
+                .collect {
                     Log.d("DB_FLOW", "starListeningDB of $macAddress: $it")
+                    dayPhysicalActivityState = it
+                }
+        }
+    }
+
+    fun starListeningBloodPressureDB(dateData: String="", macAddress: String = "", ) {
+        jobBloodPressureState = viewModelScope.launch {
+            bloodPressureDao.getDayBloodPressureFlow(dateData, macAddress)
+                .distinctUntilChanged()
+                .collect {
+                    Log.d("DB_FLOW", "starListeningDB of $macAddress: $it")
+                    dayBloodPressureState = it
                 }
         }
     }
@@ -221,7 +238,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     fun requestSmartWatchData(name: String = "", macAddress: String = "") {
         swRepository.requestSmartWatchData()
 
-        starListeningDB(macAddress = macAddressDeviceBluetooth)
+        //starListeningDB(macAddress = macAddressDeviceBluetooth)
 
         viewModelScope.launch {
             delay(1000)

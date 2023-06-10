@@ -6,6 +6,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BloodPressureDao {
@@ -23,6 +24,8 @@ interface BloodPressureDao {
     @Update
     fun updateBloodPressureData(bloodPressure: BloodPressure)
 
+    @Query("SELECT * FROM BloodPressure WHERE date_data = :date AND mac_address=:macAddress LIMIT 3")
+    fun getDayBloodPressureFlow(date: String, macAddress: String): Flow<List<BloodPressure>>
     @Query("SELECT * FROM BloodPressure WHERE date_data = :date AND mac_address=:macAddress LIMIT 3")
     suspend fun getDayBloodPressureWithCoroutine(date: String, macAddress: String): List<BloodPressure>
 

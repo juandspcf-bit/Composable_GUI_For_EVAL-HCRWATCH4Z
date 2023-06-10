@@ -24,9 +24,11 @@ fun BloodPressureScreenRoot(
         }
     }
 
-    val dayBloodPressureResultsFromDB by getDayPhysicalActivityData().dayBloodPressureResultsFromDB.observeAsState(
+/*    val dayBloodPressureResultsFromDB by getDayPhysicalActivityData().dayBloodPressureResultsFromDB.observeAsState(
         listOf()
-    )
+    )*/
+
+    val dayBloodPressureResultsFromDB = dataViewModel.dayBloodPressureState
 
     if (dayBloodPressureResultsFromDB.isEmpty().not()) {
         Log.d("date", "BloodPressureInfo: $dayBloodPressureResultsFromDB")
@@ -95,10 +97,14 @@ fun BloodPressureScreenRoot(
             val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             val dateData = formattedDate.format(date)
 
-            dataViewModel.getDayBloodPressureData(
+/*            dataViewModel.getDayBloodPressureData(
                 dateData,
                 dataViewModel.macAddressDeviceBluetooth
-            )
+            )*/
+
+            dataViewModel.jobBloodPressureState?.cancel()
+            dataViewModel.starListeningBloodPressureDB(dateData, macAddress = dataViewModel.macAddressDeviceBluetooth, )
+            dataViewModel.selectedDay = dateData
         }
     }
 
