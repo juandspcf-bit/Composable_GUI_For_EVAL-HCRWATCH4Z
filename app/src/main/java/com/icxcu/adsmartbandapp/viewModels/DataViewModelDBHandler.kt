@@ -44,7 +44,6 @@ fun updateOrInsertPhysicalActivityDataBase(
 
 
         val todayDistanceList = if (dataCoroutineFromDB.isEmpty().not()) {
-            Log.d("MY-DATA", "TodayPhysicalActivityDBHandler: $dataCoroutineFromDB")
             val filter = dataCoroutineFromDB.filter { it.typesTable == TypesTable.DISTANCE }
             if (filter.isNotEmpty()) {
                 getDoubleListFromStringMap(filter[0].data)
@@ -169,6 +168,54 @@ fun updateOrInsertBloodPressureDataBase(
 
 }
 
+
+fun updateOrInsertHeartRateDataBase(
+    values: Values,
+    queryDate: String,
+    queryMacAddress: String,
+    dataViewModel: DataViewModel,
+    dbRepository: DBRepository
+) {
+    val scope = CoroutineScope(Dispatchers.IO)
+    scope.launch {
+
+        val dataDeferred = async {
+            dbRepository.getDayHeartRateWithCoroutine(queryDate, queryMacAddress)
+        }
+
+        var dataCoroutineFromDB = dataDeferred.await()
+
+        dataCoroutineFromDB = dataCoroutineFromDB.ifEmpty {
+            notFoundHeartRateList(queryDate, queryMacAddress)
+        }
+
+        val heartRateList = if (dataCoroutineFromDB.isEmpty().not()) {
+            val filter = dataCoroutineFromDB.filter { it.typesTable == TypesTable.HEART_RATE }
+            if (filter.isNotEmpty()) {
+                getDoubleListFromStringMap(filter[0].data)
+            } else {
+                MutableList(48) { 0.0 }.toList()
+            }
+
+        } else {
+            MutableList(48) { 0.0 }.toList()
+        }
+
+
+        doubleFieldUpdateOrInsert(
+            dataFieldFromSW = values.heartRateList,
+            dataFieldFromDB = dataCoroutineFromDB,
+            fieldListState = heartRateList,
+            dataViewModel = dataViewModel,
+            typesTableToModify = TypesTable.HEART_RATE,
+            dateData = queryDate,
+        )
+
+
+
+    }
+
+}
 
 
 

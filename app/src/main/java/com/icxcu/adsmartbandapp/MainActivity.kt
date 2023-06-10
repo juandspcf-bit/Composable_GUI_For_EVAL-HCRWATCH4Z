@@ -281,14 +281,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            //TodayPhysicalActivityDBHandler(dataViewModel = dataViewModel)
-            //YesterdayPhysicalActivityDBHandler(dataViewModel = dataViewModel)
-/*            TodayBloodPressureDBHandler(dataViewModel = dataViewModel)
-            YesterdayBloodPressureDBHandler(dataViewModel = dataViewModel)
-            TodayHeartRateDBHandler(dataViewModel = dataViewModel)
-            YesterdayHeartRateDBHandler(dataViewModel = dataViewModel)*/
-
-
             NavHost(
                 navController = navMainController,
                 startDestination = startDestination

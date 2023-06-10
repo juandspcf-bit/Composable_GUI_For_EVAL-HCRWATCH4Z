@@ -79,6 +79,25 @@ fun notFoundBloodPressureList(queryDate: String, queryMacAddress: String):List<B
         return listOf(bloodPressureS, bloodPressureD)
 }
 
+fun notFoundHeartRateList(queryDate: String, queryMacAddress: String):List<HeartRate>{
+    val heartRateS = HeartRate().apply {
+        id = -1
+        macAddress = queryMacAddress
+        dateData = queryDate
+
+        val newValuesList = mutableMapOf<String, String>()
+        MutableList(48) { 0.0 }.forEachIndexed { index, i ->
+            newValuesList[index.toString()] = i.toString()
+        }
+        data = newValuesList.toString()
+        typesTable = TypesTable.HEART_RATE
+    }
+
+
+    return listOf(heartRateS)
+}
+
+
 
 fun integerFieldUpdateOrInsert(
     dataFieldFromSW: List<Int>,
