@@ -23,7 +23,6 @@ import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.SWRepository
-import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.DayHealthDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.DayHealthDataStateForDashBoard
@@ -48,14 +47,13 @@ import java.time.format.DateTimeFormatter
 class DataViewModel(var application: Application) : ViewModel() {
 
 
-
-    private val myFormatObj:DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-    private val todayLocalDateTime:LocalDateTime = LocalDateTime.now()
-    var todayFormattedDate:String = todayLocalDateTime.format(myFormatObj)
-    private val yesterdayLocalDateTime:LocalDateTime = todayLocalDateTime.minusDays(1)
-    var yesterdayFormattedDate:String = yesterdayLocalDateTime.format(myFormatObj)
-    private val pastYesterdayLocalDateTime:LocalDateTime = todayLocalDateTime.minusDays(2)
-    var pastYesterdayFormattedDate:String = pastYesterdayLocalDateTime.format(myFormatObj)
+    private val myFormatObj: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    private val todayLocalDateTime: LocalDateTime = LocalDateTime.now()
+    var todayFormattedDate: String = todayLocalDateTime.format(myFormatObj)
+    private val yesterdayLocalDateTime: LocalDateTime = todayLocalDateTime.minusDays(1)
+    var yesterdayFormattedDate: String = yesterdayLocalDateTime.format(myFormatObj)
+    private val pastYesterdayLocalDateTime: LocalDateTime = todayLocalDateTime.minusDays(2)
+    var pastYesterdayFormattedDate: String = pastYesterdayLocalDateTime.format(myFormatObj)
 
     private var dbRepository: DBRepository
 
@@ -82,21 +80,29 @@ class DataViewModel(var application: Application) : ViewModel() {
     var stateShowDialogDatePicker by mutableStateOf(false)
     var stateMiliSecondsDateDialogDatePicker by mutableStateOf(0L)
 
-    var smartWatchState by mutableStateOf(SmartWatchState(todayFormattedDate, yesterdayFormattedDate))
+    var smartWatchState by mutableStateOf(
+        SmartWatchState(
+            todayFormattedDate,
+            yesterdayFormattedDate
+        )
+    )
     var swRepository: SWRepository = SWRepository()
 
-    var collectDataScope:Job? = null
+    var collectDataScope: Job? = null
 
 
-    var stateBluetoothListScreenNavigationStatus by mutableStateOf(BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_BLUETOOTH_SCREEN)
+    var stateBluetoothListScreenNavigationStatus by mutableStateOf(
+        BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_BLUETOOTH_SCREEN
+    )
 
-    var statusReadingDbForDashboard:StatusReadingDbForDashboard = StatusReadingDbForDashboard.NoRead
+    var statusReadingDbForDashboard: StatusReadingDbForDashboard =
+        StatusReadingDbForDashboard.NoRead
     var stateEnabledDatePickerMainScaffold by mutableStateOf(false)
     var stateShowMainTitleScaffold by mutableStateOf<StatusMainTitleScaffold>(
         StatusMainTitleScaffold.Fields
     )
 
-    private val dbHelper:DatabaseHelperImpl
+    private val dbHelper: DatabaseHelperImpl
     private var physicalActivityDao: PhysicalActivityDao
 
     init {
@@ -112,13 +118,16 @@ class DataViewModel(var application: Application) : ViewModel() {
             personalInfoDao
         )
         //swRepository = SWRepository()
-        dbHelper=DatabaseHelperImpl(swDb)
+        dbHelper = DatabaseHelperImpl(swDb)
 
-        dayHealthDataState.dayPhysicalActivityResultsFromDB = dbRepository.dayPhysicalActivityResultsFromDB
-        dayHealthDataState.dayBloodPressureResultsFromDB = dbRepository.dayBloodPressureResultsFromDB
+        dayHealthDataState.dayPhysicalActivityResultsFromDB =
+            dbRepository.dayPhysicalActivityResultsFromDB
+        dayHealthDataState.dayBloodPressureResultsFromDB =
+            dbRepository.dayBloodPressureResultsFromDB
         dayHealthDataState.dayHeartRateResultsFromDB = dbRepository.dayHeartRateResultsFromDB
 
-        dayHealthDataStateForDashBoard.dayHealthResultsFromDBForDashBoard = dbRepository.dayHealthResultsFromDBFForDashBoard
+        dayHealthDataStateForDashBoard.dayHealthResultsFromDBForDashBoard =
+            dbRepository.dayHealthResultsFromDBFForDashBoard
 
 
         personalInfoFromDB = dbRepository.personalInfoFromDB
@@ -126,10 +135,9 @@ class DataViewModel(var application: Application) : ViewModel() {
             dbRepository.personalInfoAlertDialogUVStateLiveData
 
 
-
     }
 
-    fun listenDataFromSmartWatch(){
+    fun listenDataFromSmartWatch() {
         Log.d("FetchingDataFromSWStatusX", "listenDataFromSmartWatch")
         collectDataScope = viewModelScope.launch {
             swRepository.sharedStepsFlow.collect {
@@ -137,12 +145,43 @@ class DataViewModel(var application: Application) : ViewModel() {
                     todayFormattedDate -> {
 
                         smartWatchState.todayDateValuesReadFromSW = it
-                        updateDataBase(it)
+                        updateOrInsertPhysicalActivityDataBase(
+                            it,
+                            todayFormattedDate,
+                            macAddressDeviceBluetooth,
+                            this@DataViewModel,
+                            dbRepository
+                        )
+
+                        updateOrInsertBloodPressureDataBase(
+                            it,
+                            todayFormattedDate,
+                            macAddressDeviceBluetooth,
+                            this@DataViewModel,
+                            dbRepository
+                        )
+
                     }
 
                     yesterdayFormattedDate -> {
 
                         smartWatchState.yesterdayDateValuesFromSW = it
+                        updateOrInsertPhysicalActivityDataBase(
+                            it,
+                            yesterdayFormattedDate,
+                            macAddressDeviceBluetooth,
+                            this@DataViewModel,
+                            dbRepository
+                        )
+
+                        updateOrInsertBloodPressureDataBase(
+                            it,
+                            yesterdayFormattedDate,
+                            macAddressDeviceBluetooth,
+                            this@DataViewModel,
+                            dbRepository
+                        )
+
                         smartWatchState.progressbarForFetchingDataFromSW = false
                         smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.READ
                     }
@@ -151,73 +190,22 @@ class DataViewModel(var application: Application) : ViewModel() {
         }
     }
 
-    private fun updateDataBase(values: Values) {
 
-    }
 
 
     var todayStatePhysicalActivityDataReadFromDB = mutableStateOf<List<PhysicalActivity>>(listOf())
-    var yesterdayStatePhysicalActivityDataReadFromDB = mutableStateOf<List<PhysicalActivity>>(listOf())
+    var yesterdayStatePhysicalActivityDataReadFromDB =
+        mutableStateOf<List<PhysicalActivity>>(listOf())
     var todayStateBloodPressureDataReadFromDB = mutableStateOf<List<BloodPressure>>(listOf())
     var yesterdayStateBloodPressureDataReadFromDB = mutableStateOf<List<BloodPressure>>(listOf())
     var todayStateHeartRateDataReadFromDB = mutableStateOf<List<HeartRate>>(listOf())
     var yesterdayStateHeartRateDataReadFromDB = mutableStateOf<List<HeartRate>>(listOf())
 
-    private fun getDayPhysicalActivityWithCoroutine(queryDate: String, queryMacAddress: String, dayState: MutableState<List<PhysicalActivity>>){
-        val dataDeferred = viewModelScope.async {
-            dbRepository.getDayPhysicalActivityWithCoroutine(queryDate, queryMacAddress)
-        }
-
-        viewModelScope.launch {
-            val dataCoroutineFromDB = dataDeferred.await()
-
-            dayState.value = dataCoroutineFromDB.ifEmpty {
-                val stepsActivity = PhysicalActivity().apply {
-                    id = -1
-                    macAddress = queryMacAddress
-                    dateData = queryDate
-
-                    val newValuesList = mutableMapOf<String, String>()
-                    MutableList(48) { 0 }.forEachIndexed { index, i ->
-                        newValuesList[index.toString()] = i.toString()
-                    }
-                    data = newValuesList.toString()
-                    typesTable = TypesTable.STEPS
-                }
-
-                val distanceActivity = PhysicalActivity().apply {
-                    id = -1
-                    macAddress = queryMacAddress
-                    dateData = queryDate
-
-                    val newValuesList = mutableMapOf<String, String>()
-                    MutableList(48) { 0.0 }.forEachIndexed { index, i ->
-                        newValuesList[index.toString()] = i.toString()
-                    }
-                    data = newValuesList.toString()
-                    typesTable = TypesTable.DISTANCE
-                }
-
-                val caloriesListActivity = PhysicalActivity().apply {
-                    id = -1
-                    macAddress = queryMacAddress
-                    dateData = queryDate
-
-                    val newValuesList = mutableMapOf<String, String>()
-                    MutableList(48) { 0.0 }.forEachIndexed { index, i ->
-                        newValuesList[index.toString()] = i.toString()
-                    }
-                    data = newValuesList.toString()
-                    typesTable = TypesTable.CALORIES
-                }
-                listOf(stepsActivity, distanceActivity, caloriesListActivity)
-            }
-
-        }
-    }
-
-
-    private fun getDayBloodPressureWithCoroutine(queryDate: String, queryMacAddress: String, dayState: MutableState<List<BloodPressure>>) {
+    private fun getDayBloodPressureWithCoroutine(
+        queryDate: String,
+        queryMacAddress: String,
+        dayState: MutableState<List<BloodPressure>>,
+    ) {
         val dataDeferred = viewModelScope.async {
             dbRepository.getDayBloodPressureWithCoroutine(queryDate, queryMacAddress)
         }
@@ -258,7 +246,11 @@ class DataViewModel(var application: Application) : ViewModel() {
         }
     }
 
-    private fun getDayHeartRateWithCoroutine(queryDate: String, queryMacAddress: String, dayState: MutableState<List<HeartRate>>) {
+    private fun getDayHeartRateWithCoroutine(
+        queryDate: String,
+        queryMacAddress: String,
+        dayState: MutableState<List<HeartRate>>,
+    ) {
         val dataDeferred = viewModelScope.async {
             dbRepository.getDayHeartRateWithCoroutine(queryDate, queryMacAddress)
         }
@@ -286,9 +278,10 @@ class DataViewModel(var application: Application) : ViewModel() {
         }
     }
 
-        private fun starListeningDB(name: String = "", macAddress: String = "") {
+    private fun starListeningDB(name: String = "", macAddress: String = "") {
         viewModelScope.launch {
-            physicalActivityDao.getAllPhysicalActivityFlow(todayFormattedDate, macAddress).collectLatest {
+            physicalActivityDao.getAllPhysicalActivityFlow(todayFormattedDate, macAddress)
+                .collectLatest {
                     Log.d("DB_FLOW", "starListeningDB: $it")
                 }
         }
@@ -297,15 +290,28 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     fun requestSmartWatchData(name: String = "", macAddress: String = "") {
         Log.d("DATAX", "requestSmartWatchDataModel: ")
-         swRepository.requestSmartWatchData()
+        swRepository.requestSmartWatchData()
 
-        //starListeningDB(todayFormattedDate, macAddress)
-        getDayPhysicalActivityWithCoroutine(todayFormattedDate, macAddress, todayStatePhysicalActivityDataReadFromDB)
-        getDayPhysicalActivityWithCoroutine(yesterdayFormattedDate, macAddress, yesterdayStatePhysicalActivityDataReadFromDB)
-        getDayBloodPressureWithCoroutine(todayFormattedDate, macAddress, todayStateBloodPressureDataReadFromDB)
-        getDayBloodPressureWithCoroutine(yesterdayFormattedDate, macAddress, yesterdayStateBloodPressureDataReadFromDB)
-        getDayHeartRateWithCoroutine(todayFormattedDate, macAddress, todayStateHeartRateDataReadFromDB)
-        getDayHeartRateWithCoroutine(yesterdayFormattedDate, macAddress, yesterdayStateHeartRateDataReadFromDB)
+/*        getDayBloodPressureWithCoroutine(
+            todayFormattedDate,
+            macAddress,
+            todayStateBloodPressureDataReadFromDB
+        )
+        getDayBloodPressureWithCoroutine(
+            yesterdayFormattedDate,
+            macAddress,
+            yesterdayStateBloodPressureDataReadFromDB
+        )
+        getDayHeartRateWithCoroutine(
+            todayFormattedDate,
+            macAddress,
+            todayStateHeartRateDataReadFromDB
+        )
+        getDayHeartRateWithCoroutine(
+            yesterdayFormattedDate,
+            macAddress,
+            yesterdayStateHeartRateDataReadFromDB
+        )*/
 
         viewModelScope.launch {
             delay(1000)
@@ -313,7 +319,6 @@ class DataViewModel(var application: Application) : ViewModel() {
         }
 
     }
-
 
 
     fun getDayHealthData(
@@ -347,7 +352,6 @@ class DataViewModel(var application: Application) : ViewModel() {
     fun getDayPhysicalActivityData(dateData: String, macAddress: String) {
         dbRepository.getAnyDayPhysicalActivityData(dateData, macAddress)
     }
-
 
 
     fun insertPhysicalActivityData(physicalActivity: PhysicalActivity) {
@@ -405,14 +409,17 @@ class DataViewModel(var application: Application) : ViewModel() {
     ): List<String> {
         val validationFields = mapOf(
             "Name" to getPersonalInfoDataStateState().name.isNotBlank(),
-            "Birthday" to ValidatorsPersonalField.dateValidator(getPersonalInfoDataStateState().date).isNotBlank(),
-            "Weight" to ValidatorsPersonalField.weightValidator(getPersonalInfoDataStateState().weight).isNotBlank(),
-            "Height" to ValidatorsPersonalField.heightValidator(getPersonalInfoDataStateState().height).isNotBlank()
+            "Birthday" to ValidatorsPersonalField.dateValidator(getPersonalInfoDataStateState().date)
+                .isNotBlank(),
+            "Weight" to ValidatorsPersonalField.weightValidator(getPersonalInfoDataStateState().weight)
+                .isNotBlank(),
+            "Height" to ValidatorsPersonalField.heightValidator(getPersonalInfoDataStateState().height)
+                .isNotBlank()
         )
 
         val invalidFields = mutableListOf<String>()
-        validationFields.forEach{ (key, value) ->
-            if (value.not()){
+        validationFields.forEach { (key, value) ->
+            if (value.not()) {
                 invalidFields.add(key)
             }
         }
