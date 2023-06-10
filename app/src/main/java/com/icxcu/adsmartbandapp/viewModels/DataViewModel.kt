@@ -23,6 +23,7 @@ import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.SWRepository
+import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.DayHealthDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.DayHealthDataStateForDashBoard
@@ -57,9 +58,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     var pastYesterdayFormattedDate:String = pastYesterdayLocalDateTime.format(myFormatObj)
 
     private var dbRepository: DBRepository
-    //private var swRepository: SWRepository
 
-    //val smartWatchState = SmartWatchState(todayFormattedDate, yesterdayFormattedDate)
 
     var selectedDay by mutableStateOf("")
 
@@ -138,6 +137,7 @@ class DataViewModel(var application: Application) : ViewModel() {
                     todayFormattedDate -> {
 
                         smartWatchState.todayDateValuesReadFromSW = it
+                        updateDataBase(it)
                     }
 
                     yesterdayFormattedDate -> {
@@ -151,15 +151,17 @@ class DataViewModel(var application: Application) : ViewModel() {
         }
     }
 
+    private fun updateDataBase(values: Values) {
+
+    }
 
 
-
-    var todayStatePhysicalActivityData = mutableStateOf<List<PhysicalActivity>>(listOf())
-    var yesterdayStatePhysicalActivityData = mutableStateOf<List<PhysicalActivity>>(listOf())
-    var todayStateBloodPressureData = mutableStateOf<List<BloodPressure>>(listOf())
-    var yesterdayStateBloodPressureData = mutableStateOf<List<BloodPressure>>(listOf())
-    var todayStateHeartRateData = mutableStateOf<List<HeartRate>>(listOf())
-    var yesterdayStateHeartRateData = mutableStateOf<List<HeartRate>>(listOf())
+    var todayStatePhysicalActivityDataReadFromDB = mutableStateOf<List<PhysicalActivity>>(listOf())
+    var yesterdayStatePhysicalActivityDataReadFromDB = mutableStateOf<List<PhysicalActivity>>(listOf())
+    var todayStateBloodPressureDataReadFromDB = mutableStateOf<List<BloodPressure>>(listOf())
+    var yesterdayStateBloodPressureDataReadFromDB = mutableStateOf<List<BloodPressure>>(listOf())
+    var todayStateHeartRateDataReadFromDB = mutableStateOf<List<HeartRate>>(listOf())
+    var yesterdayStateHeartRateDataReadFromDB = mutableStateOf<List<HeartRate>>(listOf())
 
     private fun getDayPhysicalActivityWithCoroutine(queryDate: String, queryMacAddress: String, dayState: MutableState<List<PhysicalActivity>>){
         val dataDeferred = viewModelScope.async {
@@ -298,12 +300,12 @@ class DataViewModel(var application: Application) : ViewModel() {
          swRepository.requestSmartWatchData()
 
         //starListeningDB(todayFormattedDate, macAddress)
-        getDayPhysicalActivityWithCoroutine(todayFormattedDate, macAddress, todayStatePhysicalActivityData)
-        getDayPhysicalActivityWithCoroutine(yesterdayFormattedDate, macAddress, yesterdayStatePhysicalActivityData)
-        getDayBloodPressureWithCoroutine(todayFormattedDate, macAddress, todayStateBloodPressureData)
-        getDayBloodPressureWithCoroutine(yesterdayFormattedDate, macAddress, yesterdayStateBloodPressureData)
-        getDayHeartRateWithCoroutine(todayFormattedDate, macAddress, todayStateHeartRateData)
-        getDayHeartRateWithCoroutine(yesterdayFormattedDate, macAddress, yesterdayStateHeartRateData)
+        getDayPhysicalActivityWithCoroutine(todayFormattedDate, macAddress, todayStatePhysicalActivityDataReadFromDB)
+        getDayPhysicalActivityWithCoroutine(yesterdayFormattedDate, macAddress, yesterdayStatePhysicalActivityDataReadFromDB)
+        getDayBloodPressureWithCoroutine(todayFormattedDate, macAddress, todayStateBloodPressureDataReadFromDB)
+        getDayBloodPressureWithCoroutine(yesterdayFormattedDate, macAddress, yesterdayStateBloodPressureDataReadFromDB)
+        getDayHeartRateWithCoroutine(todayFormattedDate, macAddress, todayStateHeartRateDataReadFromDB)
+        getDayHeartRateWithCoroutine(yesterdayFormattedDate, macAddress, yesterdayStateHeartRateDataReadFromDB)
 
         viewModelScope.launch {
             delay(1000)

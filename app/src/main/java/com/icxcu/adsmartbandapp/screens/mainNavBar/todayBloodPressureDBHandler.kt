@@ -19,7 +19,7 @@ fun TodayBloodPressureDBHandler(
     }
 
     //Data Sources
-    val todayBloodPressureResultsFromDB = dataViewModel.todayStateBloodPressureData.value
+    val todayBloodPressureResultsFromDB = dataViewModel.todayStateBloodPressureDataReadFromDB.value
 
     val todayDateValuesReadFromSW = remember(dataViewModel) {
         {

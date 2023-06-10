@@ -22,7 +22,7 @@ fun YesterdayHeartRateDBHandler(
 
 
     //Data Sources
-    val yesterdayHeartRateResultsFromDB = dataViewModel.yesterdayStateHeartRateData.value
+    val yesterdayHeartRateResultsFromDB = dataViewModel.yesterdayStateHeartRateDataReadFromDB.value
 
     val yesterdayDateValuesReadFromSW = remember(dataViewModel) {
         {

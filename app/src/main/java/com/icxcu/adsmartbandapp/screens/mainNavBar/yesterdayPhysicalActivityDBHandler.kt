@@ -19,7 +19,7 @@ fun YesterdayPhysicalActivityDBHandler(
         }
     }
 
-    val yesterdayPhysicalActivityResultsFromDB = dataViewModel.yesterdayStatePhysicalActivityData.value
+    val yesterdayPhysicalActivityResultsFromDB = dataViewModel.yesterdayStatePhysicalActivityDataReadFromDB.value
 
     val yesterdayDateValuesReadFromSW = remember(dataViewModel) {
         {
