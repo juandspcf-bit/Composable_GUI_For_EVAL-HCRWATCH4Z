@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -87,21 +88,30 @@ fun RowSettings(
     optionalOperations: () -> Unit = {},
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier.alpha(
+            if (disableRow.not()) {
+                1f
+            } else {
+                0.5f
+            }
+        ),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        Box(modifier = Modifier
-            .clickable {
-                if (disableRow.not()) {
-                    optionalOperations()
-                    navigation()
-                }
+        Box(
+            modifier = if (disableRow.not()) {
+                Modifier
+                    .clickable {
+                        optionalOperations()
+                        navigation()
+                    }
+            } else {
+                Modifier
             }
-            .fillMaxWidth(0.8f)
-            .padding(end = 20.dp)
-            .clip(shape = RoundedCornerShape(size = 12.dp))
-            .background(color = Color(0xFFE91E63))
+                .fillMaxWidth(0.8f)
+                .padding(end = 20.dp)
+                .clip(shape = RoundedCornerShape(size = 12.dp))
+                .background(color = Color(0xFFE91E63))
         ) {
 
             Text(
@@ -117,15 +127,14 @@ fun RowSettings(
             painter = painterResource(iconResource),
             contentDescription = "Date Range",
             tint = Color.White,
-            modifier = Modifier
-                .size(50.dp)
-                .clickable {
-                    if (disableRow.not()) {
-                        optionalOperations()
-                        navigation()
-                    }
+            modifier = if (disableRow.not()) {
+                Modifier.clickable {
+                    optionalOperations()
+                    navigation()
+            }} else {
+                Modifier
+            }.size(50.dp)
 
-                }
 
         )
     }
