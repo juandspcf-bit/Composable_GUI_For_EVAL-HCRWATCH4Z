@@ -207,16 +207,6 @@ class DataViewModel(var application: Application) : ViewModel() {
     }
 
 
-
-
-    var todayStatePhysicalActivityDataReadFromDB = mutableStateOf<List<PhysicalActivity>>(listOf())
-    var yesterdayStatePhysicalActivityDataReadFromDB =
-        mutableStateOf<List<PhysicalActivity>>(listOf())
-    var todayStateBloodPressureDataReadFromDB = mutableStateOf<List<BloodPressure>>(listOf())
-    var yesterdayStateBloodPressureDataReadFromDB = mutableStateOf<List<BloodPressure>>(listOf())
-    var todayStateHeartRateDataReadFromDB = mutableStateOf<List<HeartRate>>(listOf())
-    var yesterdayStateHeartRateDataReadFromDB = mutableStateOf<List<HeartRate>>(listOf())
-
     private fun starListeningDB(name: String = "", macAddress: String = "") {
         viewModelScope.launch {
             physicalActivityDao.getAllPhysicalActivityFlow(todayFormattedDate, macAddress)
