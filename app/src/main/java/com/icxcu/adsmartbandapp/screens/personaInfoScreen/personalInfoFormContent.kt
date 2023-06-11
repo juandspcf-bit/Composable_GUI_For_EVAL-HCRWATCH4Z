@@ -4,8 +4,11 @@ import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.launch
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,17 +17,24 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -48,7 +58,7 @@ fun PersonalInfoContent(
 
     val scrollState = rememberScrollState()
 
-    var selectedUri by remember { mutableStateOf<Uri?>(null) }
+    var selectedUri by rememberSaveable { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
 
     val launcher =
@@ -75,13 +85,16 @@ fun PersonalInfoContent(
                 contentAlignment = Alignment.CenterEnd,
                 modifier = Modifier
                     .size(128.dp)
-                    .background(color = Color.Red)
-                    .clickable {
+                    .clip(CircleShape)
+                    .background(Color(0xff1d2a35))
+                    .border(2.dp, Color.White, CircleShape).clickable {
                         launcher.launch(arrayOf("image/*"))
                     },
             ) {
+
                 AsyncImage(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize()
+                    ,
                     contentScale = ContentScale.Crop,
                     model = ImageRequest.Builder(context)
                         .data(selectedUri)
@@ -89,7 +102,6 @@ fun PersonalInfoContent(
                     contentDescription = null
                 )
             }
-
 
             NameTextFieldComposable(
                 getPersonalInfoDataStateState = getPersonalInfoDataStateState,
