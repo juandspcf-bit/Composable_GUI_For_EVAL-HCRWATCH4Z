@@ -46,7 +46,7 @@ fun DashBoardScreen(
                     radius = 60.dp
                 )
             },
-            callBack = { navMainController.navigate(Routes.StepsPlots.route) },
+            callBack = { navMainController.navigate(Routes.PhysicalActivity.route) },
             guidelineFromBottomFraction = 0.35f
         )
     )

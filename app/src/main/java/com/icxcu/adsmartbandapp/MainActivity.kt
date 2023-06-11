@@ -62,7 +62,6 @@ import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.ScanningBluetoothAdapterStatus
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import com.icxcu.adsmartbandapp.viewModels.permissionsRequired
-import kotlinx.coroutines.cancel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -353,7 +352,7 @@ class MainActivity : ComponentActivity() {
                         ),
                     enterTransition = {
                         when (initialState.destination.route) {
-                            Routes.StepsPlots.route -> EnterTransition.None
+                            Routes.PhysicalActivity.route -> EnterTransition.None
                             Routes.BloodPressurePlots.route -> EnterTransition.None
                             Routes.HeartRatePlot.route -> EnterTransition.None
                             else -> null
@@ -361,7 +360,7 @@ class MainActivity : ComponentActivity() {
                     },
                     exitTransition = {
                         when (targetState.destination.route) {
-                            Routes.StepsPlots.route -> ExitTransition.None
+                            Routes.PhysicalActivity.route -> ExitTransition.None
                             Routes.BloodPressurePlots.route -> ExitTransition.None
                             Routes.HeartRatePlot.route -> ExitTransition.None
                             else -> null
@@ -407,7 +406,7 @@ class MainActivity : ComponentActivity() {
                     Routes.DataHome.route,
                     enterTransition = {
                         when (initialState.destination.route) {
-                            Routes.StepsPlots.route -> EnterTransition.None
+                            Routes.PhysicalActivity.route -> EnterTransition.None
 
                             /*                                slideIntoContainer(
                                                                 AnimatedContentTransitionScope.SlideDirection.Right,
@@ -431,7 +430,7 @@ class MainActivity : ComponentActivity() {
                     },
                     exitTransition = {
                         when (targetState.destination.route) {
-                            Routes.StepsPlots.route -> ExitTransition.None
+                            Routes.PhysicalActivity.route -> ExitTransition.None
                             /*                                slideOutOfContainer(
                                                                 AnimatedContentTransitionScope.SlideDirection.Right,
                                                                 animationSpec = tween(300)
@@ -483,7 +482,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 composable(
-                    Routes.StepsPlots.route,
+                    Routes.PhysicalActivity.route,
                     enterTransition = {
                         when (initialState.destination.route) {
                             Routes.DataHome.route ->
