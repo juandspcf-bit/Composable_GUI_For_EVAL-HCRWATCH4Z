@@ -41,6 +41,7 @@ fun PersonalInfoContent(
             .background(Color(0xff1d2a35)),
         contentAlignment = Alignment.Center
     ) {
+
         Column(
             modifier = Modifier.verticalScroll(scrollState).padding(start = 15.dp, end = 15.dp),
             verticalArrangement = Arrangement.SpaceEvenly
