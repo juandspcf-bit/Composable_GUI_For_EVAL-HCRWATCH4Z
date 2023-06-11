@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.icxcu.adsmartbandapp.data.entities.HeartRate
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HeartRateDao {
@@ -22,6 +23,8 @@ interface HeartRateDao {
     @Update
     fun updateHeartRateData(heartRate: HeartRate)
 
+    @Query("SELECT * FROM HeartRate WHERE date_data = :date AND mac_address=:macAddress")
+    fun getDayHeartRateWithFlow(date: String, macAddress: String): Flow<List<HeartRate>>
     @Query("SELECT * FROM HeartRate WHERE date_data = :date AND mac_address=:macAddress LIMIT 3")
     suspend fun getDayHeartRateWithCoroutine(date: String, macAddress: String): List<HeartRate>
 

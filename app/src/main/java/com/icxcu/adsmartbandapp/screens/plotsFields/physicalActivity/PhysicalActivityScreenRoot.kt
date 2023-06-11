@@ -131,3 +131,9 @@ fun PhysicalActivityScreenRoot(
 }
 
 
+sealed class PhysicalActivityScreenNavStatus{
+    object Started: PhysicalActivityScreenNavStatus()
+    object Leaving: PhysicalActivityScreenNavStatus()
+}
+
+

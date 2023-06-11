@@ -45,8 +45,11 @@ import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.Pe
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoInitDBHandlerAD
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.UpdateAlertDialogState
+import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureScreenRoot
+import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenRoot
+import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityScreenRoot
 import com.icxcu.adsmartbandapp.screens.progressLoading.CircularProgressLoading
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
@@ -59,6 +62,7 @@ import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.ScanningBluetoothAdapterStatus
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import com.icxcu.adsmartbandapp.viewModels.permissionsRequired
+import kotlinx.coroutines.cancel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -238,6 +242,10 @@ class MainActivity : ComponentActivity() {
                         StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
                     navMainController.popBackStack()
                     dataViewModel.jobPhysicalActivityState?.cancel()
+                    dataViewModel.jobBloodPressureState?.cancel()
+                    dataViewModel.jobHeartRateState?.cancel()
+
+
                 }
             }
 
@@ -384,7 +392,8 @@ class MainActivity : ComponentActivity() {
                             StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
                     }
 
-                    //dataViewModel.stateEnabledDatePickerMainScaffold = false
+                    dataViewModel.physicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Leaving
+
                     MainNavigationBarRoot(
                         dataViewModel,
                         getFetchingDataFromSWStatus,
@@ -458,6 +467,11 @@ class MainActivity : ComponentActivity() {
                         dataViewModel.statusReadingDbForDashboard =
                             StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
                     }
+
+                    dataViewModel.physicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Leaving
+                    dataViewModel.bloodPressureScreenNavStatus = BloodPressureScreenNavStatus.Leaving
+                    dataViewModel.heartRateScreenNavStatus = HeartRateScreenNavStatus.Leaving
+
                     MainNavigationBarRoot(
                         dataViewModel,
                         getFetchingDataFromSWStatus,
@@ -485,12 +499,19 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 ) {
-                    Log.d("DATAX", "MainContentStepsPlots:")
                     val myDateObj = LocalDateTime.now()
                     val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                     val todayFormattedDate = myDateObj.format(myFormatObj)
 
-                    dataViewModel.starListeningDayPhysicalActivityDB(todayFormattedDate, macAddress = dataViewModel.macAddressDeviceBluetooth, )
+                    when(dataViewModel.physicalActivityScreenNavStatus){
+                        PhysicalActivityScreenNavStatus.Leaving->{
+                            dataViewModel.physicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Started
+                            dataViewModel.starListeningDayPhysicalActivityDB(todayFormattedDate, macAddress = dataViewModel.macAddressDeviceBluetooth, )
+                        }
+                        else->{
+
+                        }
+                    }
                     PhysicalActivityScreenRoot(
                         dataViewModel = dataViewModel
                     ) { navLambdaBackToMainNavigationBar() }
@@ -515,13 +536,19 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val myDateObj = LocalDateTime.now()
                     val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-                    val formattedDate = myDateObj.format(myFormatObj)
-                    /*dataViewModel.getDayBloodPressureData(
-                        formattedDate,
-                        dataViewModel.macAddressDeviceBluetooth
-                    )*/
-                    dataViewModel.starListeningBloodPressureDB(formattedDate, dataViewModel.macAddressDeviceBluetooth)
-                    BloodPressureScreenRoot(dataViewModel = dataViewModel) {
+                    val todayFormattedDate = myDateObj.format(myFormatObj)
+
+                    when(dataViewModel.bloodPressureScreenNavStatus){
+                        BloodPressureScreenNavStatus.Leaving->{
+                            dataViewModel.bloodPressureScreenNavStatus = BloodPressureScreenNavStatus.Started
+                            dataViewModel.starListeningBloodPressureDB(todayFormattedDate, dataViewModel.macAddressDeviceBluetooth)
+                        }
+                        else->{
+
+                        }
+                    }
+
+                 BloodPressureScreenRoot(dataViewModel = dataViewModel) {
                         navLambdaBackToMainNavigationBar()
                     }
                 }
@@ -545,11 +572,18 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val myDateObj = LocalDateTime.now()
                     val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-                    val formattedDate = myDateObj.format(myFormatObj)
-                    dataViewModel.getDayHeartRateData(
-                        formattedDate,
-                        dataViewModel.macAddressDeviceBluetooth
-                    )
+                    val todayFormattedDate = myDateObj.format(myFormatObj)
+
+                    when(dataViewModel.heartRateScreenNavStatus){
+                        HeartRateScreenNavStatus.Leaving->{
+                            dataViewModel.heartRateScreenNavStatus = HeartRateScreenNavStatus.Started
+                            dataViewModel.starListeningHeartRateDB(todayFormattedDate, dataViewModel.macAddressDeviceBluetooth)
+                        }
+                        else->{
+
+                        }
+                    }
+
                     HeartRateScreenRoot(dataViewModel = dataViewModel) {
                         navLambdaBackToMainNavigationBar()
                     }

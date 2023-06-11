@@ -35,6 +35,9 @@ import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.In
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.UpdateAlertDialogState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.ValidatorsPersonalField
+import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureScreenNavStatus
+import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenNavStatus
+import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityScreenNavStatus
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -106,9 +109,15 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     var dayPhysicalActivityState by mutableStateOf<List<PhysicalActivity>>(listOf())
     var jobPhysicalActivityState: Job? = null
+    var physicalActivityScreenNavStatus: PhysicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Leaving
 
     var dayBloodPressureState by mutableStateOf<List<BloodPressure>>(listOf())
     var jobBloodPressureState: Job? = null
+    var bloodPressureScreenNavStatus: BloodPressureScreenNavStatus = BloodPressureScreenNavStatus.Leaving
+
+    var dayHeartRateState by mutableStateOf<List<HeartRate>>(listOf())
+    var jobHeartRateState: Job? = null
+    var heartRateScreenNavStatus: HeartRateScreenNavStatus = HeartRateScreenNavStatus.Leaving
 
     init {
         val swDb = SWRoomDatabase.getInstance(application)
@@ -214,7 +223,7 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     fun starListeningDayPhysicalActivityDB(dateData: String="", macAddress: String = "", ) {
         jobPhysicalActivityState = viewModelScope.launch {
-            physicalActivityDao.getAllPhysicalActivityFlow(dateData, macAddress)
+            dbRepository.getDayPhysicalActivityWithFlow(dateData, macAddress)
                 .distinctUntilChanged()
                 .collect {
                     Log.d("DB_FLOW", "starListeningDB of $macAddress: $it")
@@ -225,11 +234,22 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     fun starListeningBloodPressureDB(dateData: String="", macAddress: String = "", ) {
         jobBloodPressureState = viewModelScope.launch {
-            bloodPressureDao.getDayBloodPressureFlow(dateData, macAddress)
+            dbRepository.getDayBloodPressureWithFlow(dateData, macAddress)
                 .distinctUntilChanged()
                 .collect {
                     Log.d("DB_FLOW", "starListeningDB of $macAddress: $it")
                     dayBloodPressureState = it
+                }
+        }
+    }
+
+    fun starListeningHeartRateDB(dateData: String="", macAddress: String = "", ) {
+        jobHeartRateState = viewModelScope.launch {
+            dbRepository.getDayHeartRateWithFlow(dateData, macAddress)
+                .distinctUntilChanged()
+                .collect {
+                    Log.d("DB_FLOW", "starListeningDB of $macAddress: $it")
+                    dayHeartRateState = it
                 }
         }
     }

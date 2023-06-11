@@ -16,6 +16,7 @@ import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getIntegerL
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -66,6 +67,17 @@ class DBRepository(
         return heartRateDao.getDayHeartRateWithCoroutine(queryDate, queryMacAddress)
     }
 
+    fun getDayHeartRateWithFlow(date: String, macAddress: String): Flow<List<HeartRate>>{
+        return heartRateDao.getDayHeartRateWithFlow(date, macAddress)
+    }
+
+    fun getDayPhysicalActivityWithFlow(date: String, macAddress: String): Flow<List<PhysicalActivity>>{
+        return physicalActivityDao.getDayPhysicalActivityWithFlow(date, macAddress)
+    }
+
+    fun getDayBloodPressureWithFlow(date: String, macAddress: String): Flow<List<BloodPressure>>{
+        return bloodPressureDao.getDayBloodPressureWithFlow(date, macAddress)
+    }
 
     fun getDayHealthData(
         queryDate: String,

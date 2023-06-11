@@ -29,9 +29,11 @@ fun HeartRateScreenRoot(
         }
     }
 
-    val dayHeartRateResultsFromDB by getDayPhysicalActivityData().dayHeartRateResultsFromDB.observeAsState(
+/*    val dayHeartRateResultsFromDB by getDayPhysicalActivityData().dayHeartRateResultsFromDB.observeAsState(
         listOf()
-    )
+    )*/
+
+    val dayHeartRateResultsFromDB = dataViewModel.dayHeartRateState
 
     val ageCalculated by remember(dataViewModel) {
         derivedStateOf {
@@ -99,10 +101,13 @@ fun HeartRateScreenRoot(
             val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             val dateData = formattedDate.format(date)
 
-            dataViewModel.getDayHeartRateData(
+/*            dataViewModel.getDayHeartRateData(
                 dateData,
                 dataViewModel.macAddressDeviceBluetooth
-            )
+            )*/
+            dataViewModel.jobHeartRateState?.cancel()
+            dataViewModel.starListeningHeartRateDB(dateData, macAddress = dataViewModel.macAddressDeviceBluetooth, )
+            dataViewModel.selectedDay = dateData
         }
     }
 
@@ -117,6 +122,11 @@ fun HeartRateScreenRoot(
         navLambda = navLambda
     )
 
+}
+
+sealed class HeartRateScreenNavStatus{
+    object Started: HeartRateScreenNavStatus()
+    object Leaving: HeartRateScreenNavStatus()
 }
 
 
