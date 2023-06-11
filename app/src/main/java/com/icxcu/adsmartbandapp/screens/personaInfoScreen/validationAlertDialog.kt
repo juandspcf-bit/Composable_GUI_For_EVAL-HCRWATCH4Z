@@ -1,4 +1,4 @@
-package com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen
+package com.icxcu.adsmartbandapp.screens.personaInfoScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

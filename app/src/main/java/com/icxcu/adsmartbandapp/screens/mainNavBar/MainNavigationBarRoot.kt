@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavHostController
-import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoDBHandler
+import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDBHandler
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 
 @Composable

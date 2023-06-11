@@ -1,4 +1,4 @@
-package com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen
+package com.icxcu.adsmartbandapp.screens.personaInfoScreen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.sp
 import com.icxcu.adsmartbandapp.R
 
 @Composable
-fun NumericHeightTextFieldComposable(
+fun NumericWeightTextFieldComposable(
     getPersonalInfoDataStateState: () -> PersonalInfoDataState,
     onNumericUnitTextChange: (String) -> Unit,
     onNumericUnitTextFieldVisibilityChange: (Boolean) -> Unit,
@@ -52,7 +52,7 @@ fun NumericHeightTextFieldComposable(
             modifier = Modifier
                 .pointerInput(Unit) {
                     detectTapGestures(
-                        onPress = { onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().heightTextFieldVisibility) },
+                        onPress = { onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().weightTextFieldVisibility) },
                         onDoubleTap = { /* Double Tap Detected */ },
                         onLongPress = { /* Long Press Detected */ },
                         onTap = {  }
@@ -64,7 +64,7 @@ fun NumericHeightTextFieldComposable(
                 .background(color = Color(0xFFE91E63))
         ) {
 
-            val numberValidated = validator(getPersonalInfoDataStateState().height)
+            val numberValidated = validator(getPersonalInfoDataStateState().weight)
 
             val displayNumericUnit = if (numberValidated == "") {
                 "Your $contentDescription"
@@ -88,17 +88,17 @@ fun NumericHeightTextFieldComposable(
             modifier = Modifier.fillMaxWidth(1f)
                 .size(50.dp)
                 .clickable {
-                    onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().heightTextFieldVisibility)
+                    onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().weightTextFieldVisibility)
                 }
         )
     }
 
     AnimatedVisibility(
-        visible = getPersonalInfoDataStateState().heightTextFieldVisibility,
+        visible = getPersonalInfoDataStateState().weightTextFieldVisibility,
         enter = expandVertically(animationSpec = tween(durationMillis = 1000)),
         exit = slideOutVertically()
     ) {
-        NumericHeightTexField(
+        NumericUnitTexField(
             getPersonalInfoDataStateState,
             onNumericUnitTextChange = onNumericUnitTextChange,
             onNumericUnitTextFieldVisibilityChange,
@@ -112,7 +112,7 @@ fun NumericHeightTextFieldComposable(
 
 
 @Composable
-fun NumericHeightTexField(
+fun NumericUnitTexField(
     getPersonalInfoDataStateState: () -> PersonalInfoDataState,
     onNumericUnitTextChange: (String) -> Unit,
     onNumericUnitTextFieldVisibilityChange: (Boolean) -> Unit,
@@ -122,7 +122,7 @@ fun NumericHeightTexField(
     ) {
 
     OutlinedTextField(
-        value = getPersonalInfoDataStateState().height,
+        value = getPersonalInfoDataStateState().weight,
         onValueChange = onNumericUnitTextChange,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number,
@@ -144,7 +144,7 @@ fun NumericHeightTexField(
         },
         keyboardActions = KeyboardActions(
             onDone = {
-                onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().heightTextFieldVisibility)
+                onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().weightTextFieldVisibility)
             }
         ),
         colors = TextFieldDefaults.colors(

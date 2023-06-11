@@ -31,10 +31,10 @@ import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusMainTitleScaffold
 import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusReadingDbForDashboard
 import com.icxcu.adsmartbandapp.screens.mainNavBar.TodayHealthsDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.YesterdayHealthsDataState
-import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.InvalidAlertDialogState
-import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.PersonalInfoDataState
-import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.UpdateAlertDialogState
-import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen.ValidatorsPersonalField
+import com.icxcu.adsmartbandapp.screens.personaInfoScreen.InvalidAlertDialogState
+import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataState
+import com.icxcu.adsmartbandapp.screens.personaInfoScreen.UpdateAlertDialogState
+import com.icxcu.adsmartbandapp.screens.personaInfoScreen.ValidatorsPersonalField
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityScreenNavStatus

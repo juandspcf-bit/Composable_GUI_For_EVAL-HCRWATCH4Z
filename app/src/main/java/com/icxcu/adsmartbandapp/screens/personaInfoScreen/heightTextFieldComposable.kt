@@ -1,6 +1,5 @@
-package com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen
+package com.icxcu.adsmartbandapp.screens.personaInfoScreen
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
@@ -16,8 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -30,27 +27,24 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.OffsetMapping
-import androidx.compose.ui.text.input.TransformedText
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.icxcu.adsmartbandapp.R
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 
 @Composable
-fun DateTextFieldComposable(
+fun NumericHeightTextFieldComposable(
     getPersonalInfoDataStateState: () -> PersonalInfoDataState,
-    onDateTextChange: (String) -> Unit,
-    onDateTextFieldVisibilityChange: (Boolean) -> Unit,
+    onNumericUnitTextChange: (String) -> Unit,
+    onNumericUnitTextFieldVisibilityChange: (Boolean) -> Unit,
+    unit:String,
+    contentDescription:String = "",
+    resourceIcon1:Int = R.drawable.ic_launcher_foreground,
+    validator: (String) -> String
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
 
@@ -58,7 +52,7 @@ fun DateTextFieldComposable(
             modifier = Modifier
                 .pointerInput(Unit) {
                     detectTapGestures(
-                        onPress = { onDateTextFieldVisibilityChange(!getPersonalInfoDataStateState().dateTextFieldVisibility) },
+                        onPress = { onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().heightTextFieldVisibility) },
                         onDoubleTap = { /* Double Tap Detected */ },
                         onLongPress = { /* Long Press Detected */ },
                         onTap = {  }
@@ -70,29 +64,16 @@ fun DateTextFieldComposable(
                 .background(color = Color(0xFFE91E63))
         ) {
 
-            val displayDate = if (getPersonalInfoDataStateState().date == "") {
-                "Your birthdate"
+            val numberValidated = validator(getPersonalInfoDataStateState().height)
+
+            val displayNumericUnit = if (numberValidated == "") {
+                "Your $contentDescription"
             } else {
-                val trimmed = if (getPersonalInfoDataStateState().date.length >= 8) getPersonalInfoDataStateState().date.substring(0..7) else getPersonalInfoDataStateState().date
-                var out = ""
-                for (i in trimmed.indices) {
-                    out += trimmed[i]
-                    if (i % 2 == 1 && i < 4) out += "/"
-                }
-
-                Log.d("FilteringForm", "PersonalInfoDBHandler: $out")
-
-                try {
-                    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-                    LocalDate.parse(out, formatter)
-                }catch (e: DateTimeParseException){
-                    out = "Enter a valid date"
-                }
-                out
+                "$numberValidated $unit"
             }
 
             Text(
-                displayDate,
+                displayNumericUnit,
                 textAlign = TextAlign.Start,
                 color = Color.White,
                 style = MaterialTheme.typography.bodyMedium,
@@ -101,26 +82,28 @@ fun DateTextFieldComposable(
         }
 
         Icon(
-            painter = painterResource(R.drawable.baseline_date_range_24),
-            contentDescription = "Date Range",
+            painter = painterResource(resourceIcon1),
+            contentDescription = contentDescription,
             tint = Color(0xFFFFC107),
             modifier = Modifier.fillMaxWidth(1f)
                 .size(50.dp)
                 .clickable {
-                    onDateTextFieldVisibilityChange(!getPersonalInfoDataStateState().dateTextFieldVisibility)
+                    onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().heightTextFieldVisibility)
                 }
         )
     }
 
     AnimatedVisibility(
-        visible = getPersonalInfoDataStateState().dateTextFieldVisibility,
+        visible = getPersonalInfoDataStateState().heightTextFieldVisibility,
         enter = expandVertically(animationSpec = tween(durationMillis = 1000)),
         exit = slideOutVertically()
     ) {
-        DateTexField(
+        NumericHeightTexField(
             getPersonalInfoDataStateState,
-            onDateTextChange = onDateTextChange,
-            onDateTextFieldVisibilityChange,
+            onNumericUnitTextChange = onNumericUnitTextChange,
+            onNumericUnitTextFieldVisibilityChange,
+            contentDescription = contentDescription,
+            resourceIcon1 = resourceIcon1
         )
     }
 
@@ -129,21 +112,24 @@ fun DateTextFieldComposable(
 
 
 @Composable
-fun DateTexField(
+fun NumericHeightTexField(
     getPersonalInfoDataStateState: () -> PersonalInfoDataState,
-    onDateTextChange: (String) -> Unit,
-    onDateTextFieldVisibilityChange: (Boolean) -> Unit,
-) {
+    onNumericUnitTextChange: (String) -> Unit,
+    onNumericUnitTextFieldVisibilityChange: (Boolean) -> Unit,
+    contentDescription:String = "",
+    resourceIcon1:Int = R.drawable.ic_launcher_foreground,
+
+    ) {
 
     OutlinedTextField(
-        value = getPersonalInfoDataStateState().date,
-        onValueChange = onDateTextChange,
+        value = getPersonalInfoDataStateState().height,
+        onValueChange = onNumericUnitTextChange,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number,
             imeAction = ImeAction.Done
         ),
         singleLine = true,
-        label = { Text("Your Birthday") },
+        label = { Text("Your $contentDescription") },
         modifier = Modifier.padding(10.dp)
             .background(Color(0xff1d2a35)),
         textStyle = TextStyle(
@@ -152,16 +138,15 @@ fun DateTexField(
         ),
         trailingIcon = {
             Icon(
-                imageVector = Icons.Default.DateRange,
-                contentDescription = "Birthday Icon"
+                painter = painterResource(resourceIcon1),
+                contentDescription = contentDescription,
             )
         },
         keyboardActions = KeyboardActions(
             onDone = {
-                onDateTextFieldVisibilityChange(!getPersonalInfoDataStateState().dateTextFieldVisibility)
+                onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().heightTextFieldVisibility)
             }
         ),
-        visualTransformation = DateTransformation(),
         colors = TextFieldDefaults.colors(
             focusedTextColor = Color.White,
             unfocusedTextColor = Color.White,
@@ -176,39 +161,4 @@ fun DateTexField(
         )
 
     )
-}
-
-
-class DateTransformation() : VisualTransformation {
-    override fun filter(text: AnnotatedString): TransformedText {
-        return dateFilter(text)
-    }
-}
-
-fun dateFilter(text: AnnotatedString): TransformedText {
-
-    val trimmed = if (text.text.length >= 8) text.text.substring(0..7) else text.text
-    var out = ""
-    for (i in trimmed.indices) {
-        out += trimmed[i]
-        if (i % 2 == 1 && i < 4) out += "/"
-    }
-
-    val numberOffsetTranslator = object : OffsetMapping {
-        override fun originalToTransformed(offset: Int): Int {
-            if (offset <= 1) return offset
-            if (offset <= 3) return offset +1
-            if (offset <= 8) return offset +2
-            return 10
-        }
-
-        override fun transformedToOriginal(offset: Int): Int {
-            if (offset <=2) return offset
-            if (offset <=5) return offset -1
-            if (offset <=10) return offset -2
-            return 8
-        }
-    }
-
-    return TransformedText(AnnotatedString(out), numberOffsetTranslator)
 }

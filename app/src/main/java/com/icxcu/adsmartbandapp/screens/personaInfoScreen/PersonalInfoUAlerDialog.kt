@@ -1,4 +1,4 @@
-package com.icxcu.adsmartbandapp.screens.mainNavBar.settings.personaInfoScreen
+package com.icxcu.adsmartbandapp.screens.personaInfoScreen
 
 import android.util.Log
 import androidx.compose.runtime.Composable
