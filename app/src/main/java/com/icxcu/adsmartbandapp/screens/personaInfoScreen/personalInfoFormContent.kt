@@ -1,24 +1,37 @@
 package com.icxcu.adsmartbandapp.screens.personaInfoScreen
 
+import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 
@@ -35,6 +48,14 @@ fun PersonalInfoContent(
 
     val scrollState = rememberScrollState()
 
+    var selectedUri by remember { mutableStateOf<Uri?>(null) }
+    val context = LocalContext.current
+
+    val launcher =
+        rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            selectedUri = uri
+        }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -43,9 +64,32 @@ fun PersonalInfoContent(
     ) {
 
         Column(
-            modifier = Modifier.verticalScroll(scrollState).padding(start = 15.dp, end = 15.dp),
-            verticalArrangement = Arrangement.SpaceEvenly
+            modifier = Modifier
+                .verticalScroll(scrollState)
+                .padding(start = 15.dp, end = 15.dp),
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            Box(
+                contentAlignment = Alignment.CenterEnd,
+                modifier = Modifier
+                    .size(128.dp)
+                    .background(color = Color.Red)
+                    .clickable {
+                        launcher.launch(arrayOf("image/*"))
+                    },
+            ) {
+                AsyncImage(
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop,
+                    model = ImageRequest.Builder(context)
+                        .data(selectedUri)
+                        .build(),
+                    contentDescription = null
+                )
+            }
+
 
             NameTextFieldComposable(
                 getPersonalInfoDataStateState = getPersonalInfoDataStateState,
@@ -94,9 +138,12 @@ fun PersonalInfoContent(
                     val personalInfoListReadFromDB = getPersonalInfoListReadFromDB()
                     if (personalInfoListReadFromDB.isNotEmpty() && personalInfoListReadFromDB[0].id != -1) {
                         personalInfoListReadFromDB[0].name = getPersonalInfoDataStateState().name
-                        personalInfoListReadFromDB[0].birthdate = getPersonalInfoDataStateState().date
-                        personalInfoListReadFromDB[0].weight = getPersonalInfoDataStateState().weight.toDouble()
-                        personalInfoListReadFromDB[0].height = getPersonalInfoDataStateState().height.toDouble()
+                        personalInfoListReadFromDB[0].birthdate =
+                            getPersonalInfoDataStateState().date
+                        personalInfoListReadFromDB[0].weight =
+                            getPersonalInfoDataStateState().weight.toDouble()
+                        personalInfoListReadFromDB[0].height =
+                            getPersonalInfoDataStateState().height.toDouble()
                         Log.d("Flow", "PersonalInfoFormScaffold: updating")
                         updatePersonalData(personalInfoListReadFromDB[0])
                     } else {
@@ -116,7 +163,7 @@ fun PersonalInfoContent(
 
             }
 
-            if ( getInvalidAlertDialogState().alertDialogPersonalFieldVisibility) {
+            if (getInvalidAlertDialogState().alertDialogPersonalFieldVisibility) {
                 ValidationAlertDialog(
                     getInvalidAlertDialogState,
                 )
