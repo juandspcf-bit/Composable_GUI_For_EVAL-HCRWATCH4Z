@@ -84,12 +84,15 @@ fun PersonalInfoContent(
             Box(
                 contentAlignment = Alignment.CenterEnd,
                 modifier = Modifier
-                    .size(128.dp)
+                    .padding(30.dp)
+                    .size(190.dp)
                     .clip(CircleShape)
                     .background(Color(0xff1d2a35))
-                    .border(2.dp, Color.White, CircleShape).clickable {
+                    .border(2.dp, Color.White, CircleShape)
+                    .clickable {
                         launcher.launch(arrayOf("image/*"))
-                    },
+                    }
+                    ,
             ) {
 
                 AsyncImage(
@@ -97,7 +100,9 @@ fun PersonalInfoContent(
                     ,
                     contentScale = ContentScale.Crop,
                     model = ImageRequest.Builder(context)
-                        .data(selectedUri)
+                        .data(if(selectedUri !=null){selectedUri}else {
+                            R.drawable.user
+                        })
                         .build(),
                     contentDescription = null
                 )
