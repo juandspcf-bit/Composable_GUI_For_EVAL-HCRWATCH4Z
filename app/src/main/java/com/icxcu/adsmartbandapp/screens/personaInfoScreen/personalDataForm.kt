@@ -110,12 +110,9 @@ class PersonalInfoDataState {
 
 }
 
-
-
-
-@Preview(showBackground = true)
-@Composable
-fun PersonalDataFormPreview2() {
-
-    //PersonalDataForm()
+sealed class PersonalInfoDataScreenNavStatus{
+    object Started: PersonalInfoDataScreenNavStatus()
+    object Leaving: PersonalInfoDataScreenNavStatus()
 }
+
+
