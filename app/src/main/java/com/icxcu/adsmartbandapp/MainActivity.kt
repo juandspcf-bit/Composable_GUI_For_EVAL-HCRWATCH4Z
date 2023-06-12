@@ -158,11 +158,12 @@ class MainActivity : ComponentActivity() {
 
     override fun onRestart() {
         super.onRestart()
-        setContent {
+        Log.d("OnRestart", "onRestart: ")
+        /*setContent {
             ADSmartBandAppTheme {
                 MainContent()
             }
-        }
+        }*/
     }
 
 
