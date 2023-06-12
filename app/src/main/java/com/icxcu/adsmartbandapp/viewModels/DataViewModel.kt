@@ -332,11 +332,8 @@ class DataViewModel(var application: Application) : ViewModel() {
     }
 
 
-    fun getDayPhysicalActivityData(dateData: String, macAddress: String) {
-        dbRepository.getAnyDayPhysicalActivityData(dateData, macAddress)
-    }
 
-
+    // data fields db handling
     fun insertPhysicalActivityData(physicalActivity: PhysicalActivity) {
         dbRepository.insertPhysicalActivityData(physicalActivity)
     }
@@ -345,24 +342,12 @@ class DataViewModel(var application: Application) : ViewModel() {
         dbRepository.updatePhysicalActivityData(physicalActivity)
     }
 
-//Blood Pressure
-
-    fun getDayBloodPressureData(dateData: String, macAddress: String) {
-        dbRepository.getAnyDayBloodPressureData(dateData, macAddress)
-    }
-
     fun insertBloodPressureData(bloodPressure: BloodPressure) {
         dbRepository.insertBloodPressureData(bloodPressure)
     }
 
     fun updateBloodPressureData(bloodPressure: BloodPressure) {
         dbRepository.updateBloodPressureData(bloodPressure)
-    }
-
-
-    //Heart Rate
-    fun getDayHeartRateData(dateData: String, macAddress: String) {
-        dbRepository.getAnyDayHeartRateData(dateData, macAddress)
     }
 
     fun insertHeartRateData(heartRate: HeartRate) {
