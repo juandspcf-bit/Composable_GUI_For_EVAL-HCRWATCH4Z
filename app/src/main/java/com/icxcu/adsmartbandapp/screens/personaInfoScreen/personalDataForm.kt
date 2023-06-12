@@ -7,6 +7,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 
@@ -26,13 +27,28 @@ fun PersonalInfoDataScreenRoot(
     val getInvalidAlertDialogState = remember(dataViewModel) {{dataViewModel.invalidAlertDialogState}}
     val validatePersonalInfo = remember(dataViewModel, getPersonalInfoDataState) {{dataViewModel.validatePersonalInfo( getPersonalInfoDataState )}}
     val getUpdateAlertDialogState = remember(dataViewModel) {{dataViewModel.updateAlertDialogState}}
-    val getPersonalInfoListReadFromDB = remember(dataViewModel) {{dataViewModel.personalInfoListReadFromDB}}
+    val getPersonalInfoListReadFromDB = remember(dataViewModel) {
+        {
+            val dataFromDB = dataViewModel.personalInfoDataStateC
+            if (dataFromDB.isEmpty().not() && dataFromDB[0].id!=-1) {
+                val filter = dataFromDB.filter { it.typesTable == TypesTable.PERSONAL_INFO }
+                getPersonalInfoDataState().name = filter[0].name
+                getPersonalInfoDataState().date = filter[0].birthdate
+                getPersonalInfoDataState().weight = filter[0].weight.toString()
+                getPersonalInfoDataState().height = filter[0].height.toString()
+                filter
+            } else {
+                mutableListOf()
+            }
+
+
+        }
+    }
+
 
     val personalInfoAlertDialogUStateDB by
     getUpdateAlertDialogState().personalInfoAlertDialogUVLiveData
         .observeAsState(initial = false)
-
-    Log.d("State", "PersonalDataForm: $personalInfoAlertDialogUStateDB")
 
     getUpdateAlertDialogState().alertDialogUPersonalFieldVisibility = personalInfoAlertDialogUStateDB?:false
 

@@ -59,9 +59,9 @@ fun MainNavigationBarRoot(
         }
     }
 
-    PersonalInfoDBHandler(
+/*    PersonalInfoDBHandler(
         dataViewModel
-    )
+    )*/
 
     MainNavigationBarWithSwValues(
         bluetoothName = bluetoothName,

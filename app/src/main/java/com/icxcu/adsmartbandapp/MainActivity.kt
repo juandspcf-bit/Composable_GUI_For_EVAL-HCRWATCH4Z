@@ -41,6 +41,7 @@ import com.icxcu.adsmartbandapp.screens.mainNavBar.MainNavigationBarRoot
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusReadingDbForDashboard
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.InvalidAlertDialogState
+import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenRoot
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataState
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoInitDBHandlerAD
@@ -244,6 +245,7 @@ class MainActivity : ComponentActivity() {
                     dataViewModel.jobPhysicalActivityState?.cancel()
                     dataViewModel.jobBloodPressureState?.cancel()
                     dataViewModel.jobHeartRateState?.cancel()
+                    dataViewModel.jobPersonalInfoDataState?.cancel()
 
 
                 }
@@ -393,6 +395,9 @@ class MainActivity : ComponentActivity() {
                     }
 
                     dataViewModel.physicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Leaving
+                    dataViewModel.bloodPressureScreenNavStatus = BloodPressureScreenNavStatus.Leaving
+                    dataViewModel.heartRateScreenNavStatus = HeartRateScreenNavStatus.Leaving
+                    dataViewModel.personalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Leaving
 
                     MainNavigationBarRoot(
                         dataViewModel,
@@ -471,6 +476,7 @@ class MainActivity : ComponentActivity() {
                     dataViewModel.physicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Leaving
                     dataViewModel.bloodPressureScreenNavStatus = BloodPressureScreenNavStatus.Leaving
                     dataViewModel.heartRateScreenNavStatus = HeartRateScreenNavStatus.Leaving
+                    dataViewModel.personalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Leaving
 
                     MainNavigationBarRoot(
                         dataViewModel,
@@ -604,7 +610,19 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 ) {
-                    PersonalInfoInitDBHandlerAD(
+
+                    when(dataViewModel.personalInfoDataScreenNavStatus){
+                        PersonalInfoDataScreenNavStatus.Leaving->{
+                            dataViewModel.personalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Started
+                            dataViewModel.starListeningPersonalInfoDB(macAddress = dataViewModel.macAddressDeviceBluetooth)
+                        }
+                        else->{
+
+                        }
+                    }
+
+
+                   PersonalInfoInitDBHandlerAD(
                         dataViewModel
                     )
                     PersonalInfoDataScreenRoot(dataViewModel = dataViewModel) {

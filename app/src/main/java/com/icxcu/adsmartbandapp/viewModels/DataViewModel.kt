@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
@@ -32,6 +33,7 @@ import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusReadingDbForDashboard
 import com.icxcu.adsmartbandapp.screens.mainNavBar.TodayHealthsDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.YesterdayHealthsDataState
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.InvalidAlertDialogState
+import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataState
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.UpdateAlertDialogState
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.ValidatorsPersonalField
@@ -39,6 +41,7 @@ import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureS
 import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityScreenNavStatus
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -70,7 +73,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     var personalInfoFromDB = MutableLiveData<List<PersonalInfo>>()
     var personalInfoListReadFromDB = listOf<PersonalInfo>()
 
-    var personalInfoDataState by mutableStateOf(PersonalInfoDataState())
+    var personalInfoDataState = PersonalInfoDataState()
     var invalidAlertDialogState by mutableStateOf(InvalidAlertDialogState())
     var updateAlertDialogState by mutableStateOf(UpdateAlertDialogState())
 
@@ -119,7 +122,9 @@ class DataViewModel(var application: Application) : ViewModel() {
     var jobHeartRateState: Job? = null
     var heartRateScreenNavStatus: HeartRateScreenNavStatus = HeartRateScreenNavStatus.Leaving
 
-
+    var personalInfoDataStateC by mutableStateOf<List<PersonalInfo>>(listOf())
+    var jobPersonalInfoDataState: Job? = null
+    var personalInfoDataScreenNavStatus: PersonalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Leaving
 
     init {
         val swDb = SWRoomDatabase.getInstance(application)
@@ -256,6 +261,35 @@ class DataViewModel(var application: Application) : ViewModel() {
         }
     }
 
+    fun starListeningPersonalInfoDB(macAddress: String = "") {
+        jobHeartRateState = viewModelScope.launch {
+
+            val dataDeferred = async {
+                dbRepository.getPersonalInfoWithCoroutine(macAddress)
+            }
+
+            val dataCoroutineFromDB = dataDeferred.await()
+
+            personalInfoDataStateC = dataCoroutineFromDB.ifEmpty {
+                MutableList(1) { PersonalInfo(
+                    id = -1,
+                    macAddress = "",
+                    typesTable= TypesTable.PERSONAL_INFO,
+                    name = "",
+                    birthdate = "",
+                    weight = 0.0,
+                    height = 0.0 ) }.toList()
+            }
+
+            personalInfoDataState.apply {
+                name = personalInfoDataStateC[0].name
+                date = personalInfoDataStateC[0].birthdate
+                height = personalInfoDataStateC[0].height.toString()
+                weight = personalInfoDataStateC[0].weight.toString()
+            }
+
+        }
+    }
 
     fun requestSmartWatchData(name: String = "", macAddress: String = "") {
         swRepository.requestSmartWatchData()
