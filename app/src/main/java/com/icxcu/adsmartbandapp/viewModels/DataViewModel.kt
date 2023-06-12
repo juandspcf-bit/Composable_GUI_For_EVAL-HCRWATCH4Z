@@ -119,6 +119,8 @@ class DataViewModel(var application: Application) : ViewModel() {
     var jobHeartRateState: Job? = null
     var heartRateScreenNavStatus: HeartRateScreenNavStatus = HeartRateScreenNavStatus.Leaving
 
+
+
     init {
         val swDb = SWRoomDatabase.getInstance(application)
         physicalActivityDao = swDb.physicalActivityDao()

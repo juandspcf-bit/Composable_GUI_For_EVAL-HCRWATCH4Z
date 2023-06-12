@@ -41,7 +41,7 @@ import com.icxcu.adsmartbandapp.screens.mainNavBar.MainNavigationBarRoot
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusReadingDbForDashboard
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.InvalidAlertDialogState
-import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalDataForm
+import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalDataFormScreenRoot
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataState
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoInitDBHandlerAD
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.UpdateAlertDialogState
@@ -607,7 +607,7 @@ class MainActivity : ComponentActivity() {
                     PersonalInfoInitDBHandlerAD(
                         dataViewModel
                     )
-                    PersonalDataForm(dataViewModel = dataViewModel) {
+                    PersonalDataFormScreenRoot(dataViewModel = dataViewModel) {
                         navLambdaBackToMainNavigationBar()
                     }
                 }

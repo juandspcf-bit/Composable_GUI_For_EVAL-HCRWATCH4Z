@@ -12,7 +12,7 @@ import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 
 @Composable
-fun PersonalDataForm(
+fun PersonalDataFormScreenRoot(
     dataViewModel: DataViewModel,
     navLambda: () -> Unit
 ) {

@@ -67,6 +67,13 @@ class DBRepository(
         return heartRateDao.getDayHeartRateWithCoroutine(queryDate, queryMacAddress)
     }
 
+    suspend fun getPersonalInfoWithCoroutine(
+        macAddress: String
+    ): List<PersonalInfo>{
+        return personalInfoDao.getPersonalInfoWithCoroutine(macAddress)
+    }
+
+
     fun getDayHeartRateWithFlow(date: String, macAddress: String): Flow<List<HeartRate>>{
         return heartRateDao.getDayHeartRateWithFlow(date, macAddress)
     }
@@ -78,6 +85,7 @@ class DBRepository(
     fun getDayBloodPressureWithFlow(date: String, macAddress: String): Flow<List<BloodPressure>>{
         return bloodPressureDao.getDayBloodPressureWithFlow(date, macAddress)
     }
+
 
     fun getDayHealthData(
         queryDate: String,
