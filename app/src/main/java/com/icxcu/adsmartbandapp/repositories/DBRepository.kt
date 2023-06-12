@@ -408,6 +408,11 @@ class DBRepository(
     }
 
 
+    suspend fun updatePersonalInfoDataWithCoroutine(personalInfo: PersonalInfo):Boolean {
+        personalInfoDao.updatePersonalInfoDataWithCoroutine(personalInfo = personalInfo)
+        return true
+    }
+
 
 
 }

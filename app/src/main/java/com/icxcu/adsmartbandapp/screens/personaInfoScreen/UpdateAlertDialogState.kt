@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 
 class UpdateAlertDialogState {
     var personalInfoAlertDialogUVLiveData = MutableLiveData(false)
+    var updatePersonalInfoDataWithCoroutineAD by mutableStateOf(false)
     var alertDialogUPersonalFieldVisibility by mutableStateOf(false)
 
     val setVisibilityAlertDialogStatusPersonalInfoU = { value:Boolean ->

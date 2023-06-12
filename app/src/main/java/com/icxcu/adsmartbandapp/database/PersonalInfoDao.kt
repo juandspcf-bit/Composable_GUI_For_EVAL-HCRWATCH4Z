@@ -11,6 +11,7 @@ interface PersonalInfoDao {
     @Insert
     fun insertPersonalInfoData(personalInfo: PersonalInfo)
 
+
     @Query("SELECT * FROM PersonalInfo WHERE mac_address=:macAddress")
     fun getPersonalInfo(macAddress: String): List<PersonalInfo>
 
@@ -19,4 +20,7 @@ interface PersonalInfoDao {
 
     @Update
     fun updatePersonalInfoData(personalInfo: PersonalInfo)
+
+    @Update
+    suspend fun updatePersonalInfoDataWithCoroutine(personalInfo: PersonalInfo)
 }

@@ -46,11 +46,13 @@ fun PersonalInfoDataScreenRoot(
     }
 
 
-    val personalInfoAlertDialogUStateDB by
+/*    val personalInfoAlertDialogUStateDB by
     getUpdateAlertDialogState().personalInfoAlertDialogUVLiveData
         .observeAsState(initial = false)
 
-    getUpdateAlertDialogState().alertDialogUPersonalFieldVisibility = personalInfoAlertDialogUStateDB?:false
+    getUpdateAlertDialogState().alertDialogUPersonalFieldVisibility = personalInfoAlertDialogUStateDB?:false*/
+
+    //getUpdateAlertDialogState().alertDialogUPersonalFieldVisibility = dataViewModel.invalidAlertDialogState.alertDialogPersonalFieldVisibility
 
     val insertPersonalData= { personalInfo:PersonalInfo->
         personalInfo.macAddress = dataViewModel.macAddressDeviceBluetooth
@@ -58,7 +60,7 @@ fun PersonalInfoDataScreenRoot(
     }
 
     val updatePersonalData= { personalInfo:PersonalInfo->
-        dataViewModel.updatePersonalData(personalInfo)
+        dataViewModel.updatePersonalInfoDataWithCoroutine(personalInfo)
     }
 
     PersonalInfoFormScaffold(

@@ -75,7 +75,7 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     var personalInfoDataState = PersonalInfoDataState()
     var invalidAlertDialogState by mutableStateOf(InvalidAlertDialogState())
-    var updateAlertDialogState by mutableStateOf(UpdateAlertDialogState())
+    var updateAlertDialogState = UpdateAlertDialogState()
 
     var macAddressDeviceBluetooth: String = ""
     var nameDeviceBluetooth: String = ""
@@ -125,6 +125,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     var personalInfoDataStateC by mutableStateOf<List<PersonalInfo>>(listOf())
     var jobPersonalInfoDataState: Job? = null
     var personalInfoDataScreenNavStatus: PersonalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Leaving
+    var updatePersonalInfoDataWithCoroutineAD by mutableStateOf(false)
 
     init {
         val swDb = SWRoomDatabase.getInstance(application)
@@ -367,6 +368,19 @@ class DataViewModel(var application: Application) : ViewModel() {
     fun updatePersonalData(personalInfo: PersonalInfo) {
         dbRepository.updatePersonalInfo(personalInfo)
     }
+
+    fun updatePersonalInfoDataWithCoroutine(personalInfo: PersonalInfo) {
+        val dataDeferred = viewModelScope.async {
+            dbRepository.updatePersonalInfoDataWithCoroutine(personalInfo = personalInfo)
+        }
+
+        viewModelScope.launch {
+            updateAlertDialogState.alertDialogUPersonalFieldVisibility = dataDeferred.await()
+        }
+
+
+    }
+
 
     fun getPersonalInfoData(macAddress: String) {
         dbRepository.getPersonalInfoData(macAddress)
