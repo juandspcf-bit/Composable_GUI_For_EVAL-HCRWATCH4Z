@@ -4,11 +4,9 @@ import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.launch
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,23 +16,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -51,15 +44,19 @@ fun PersonalInfoContent(
     getPersonalInfoListReadFromDB: () -> List<PersonalInfo>,
     validatePersonalInfo: () -> List<String> = { listOf() },
     getInvalidAlertDialogState: () -> InvalidAlertDialogState,
-    getUpdateAlertDialogState: () -> UpdateAlertDialogState,
     updatePersonalData: (PersonalInfo) -> Unit = {},
     insertPersonalData: (PersonalInfo) -> Unit = {},
 ) {
 
     val scrollState = rememberScrollState()
 
-    var selectedUri by rememberSaveable { mutableStateOf<Uri?>(null) }
+    var selectedUri by rememberSaveable { mutableStateOf( if(getPersonalInfoDataStateState().uri!=""){Uri.parse(getPersonalInfoDataStateState().uri)}else{null} ) }
     val context = LocalContext.current
+    selectedUri?.let {
+        getPersonalInfoDataStateState().uri = selectedUri?.path.toString()
+        Log.d("AVATAR", "PersonalInfoContent: $selectedUri")
+    }
+
 
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
@@ -153,23 +150,31 @@ fun PersonalInfoContent(
                     }
 
                     val personalInfoListReadFromDB = getPersonalInfoListReadFromDB()
-                    if (personalInfoListReadFromDB.isNotEmpty() && personalInfoListReadFromDB[0].id != -1) {
-                        personalInfoListReadFromDB[0].name = getPersonalInfoDataStateState().name
-                        personalInfoListReadFromDB[0].birthdate =
-                            getPersonalInfoDataStateState().date
-                        personalInfoListReadFromDB[0].weight =
-                            getPersonalInfoDataStateState().weight.toDouble()
-                        personalInfoListReadFromDB[0].height =
-                            getPersonalInfoDataStateState().height.toDouble()
-                        Log.d("Flow", "PersonalInfoFormScaffold: updating")
-                        updatePersonalData(personalInfoListReadFromDB[0])
+                    Log.d("AVATAR", "Update: ${getPersonalInfoDataStateState().uri}")
+                    if (personalInfoListReadFromDB[0].id != -1) {
+                        val personalInfo = PersonalInfo().apply {
+                            id = getPersonalInfoDataStateState().id
+                            uri = getPersonalInfoDataStateState().uri
+                            macAddress = getPersonalInfoDataStateState().macAddress
+                            name = getPersonalInfoDataStateState().name
+                            birthdate = getPersonalInfoDataStateState().date
+                            weight = getPersonalInfoDataStateState().weight.toDouble()
+                            height = getPersonalInfoDataStateState().height.toDouble()
+                        }
+
+                        updatePersonalData(personalInfo)
+
+
                     } else {
-                        val personalInfo = PersonalInfo()
-                        personalInfo.name = getPersonalInfoDataStateState().name
-                        personalInfo.birthdate = getPersonalInfoDataStateState().date
-                        personalInfo.weight = getPersonalInfoDataStateState().weight.toDouble()
-                        personalInfo.height = getPersonalInfoDataStateState().height.toDouble()
-                        Log.d("Flow", "PersonalInfoFormScaffold: inserting")
+                        val personalInfo = PersonalInfo().apply{
+                            macAddress = personalInfoListReadFromDB[0].macAddress
+                            uri = getPersonalInfoDataStateState().uri
+                            name = getPersonalInfoDataStateState().name
+                            birthdate = getPersonalInfoDataStateState().date
+                            weight = getPersonalInfoDataStateState().weight.toDouble()
+                            height = getPersonalInfoDataStateState().height.toDouble()
+                        }
+
                         insertPersonalData(personalInfo)
                     }
 
@@ -180,15 +185,11 @@ fun PersonalInfoContent(
 
             }
 
-            if (getInvalidAlertDialogState().alertDialogPersonalFieldVisibility) {
-                ValidationAlertDialog(
-                    getInvalidAlertDialogState,
-                )
-            }
 
-            if (getUpdateAlertDialogState().alertDialogUPersonalFieldVisibility) {
-                UpdateAlertDialog(getUpdateAlertDialogState().setVisibilityAlertDialogStatusPersonalInfoU)
-            }
+
+
+
+
 
         }
     }
@@ -204,7 +205,6 @@ fun PersonalInfoContentPreview() {
         getPersonalInfoListReadFromDB = { listOf(PersonalInfo()) },
         validatePersonalInfo = { listOf() },
         getInvalidAlertDialogState = { InvalidAlertDialogState() },
-        getUpdateAlertDialogState = { UpdateAlertDialogState() },
         updatePersonalData = {},
         insertPersonalData = {},
     )

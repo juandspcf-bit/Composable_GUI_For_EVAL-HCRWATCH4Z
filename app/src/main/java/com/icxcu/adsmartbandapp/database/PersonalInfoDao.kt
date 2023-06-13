@@ -18,8 +18,9 @@ interface PersonalInfoDao {
     @Query("SELECT * FROM PersonalInfo WHERE mac_address=:macAddress")
     suspend fun getPersonalInfoWithCoroutine(macAddress: String): List<PersonalInfo>
 
-    @Update
-    fun updatePersonalInfoData(personalInfo: PersonalInfo)
+
+    @Insert
+    suspend fun insertPersonalInfoDataWithCoroutine(personalInfo: PersonalInfo)
 
     @Update
     suspend fun updatePersonalInfoDataWithCoroutine(personalInfo: PersonalInfo)

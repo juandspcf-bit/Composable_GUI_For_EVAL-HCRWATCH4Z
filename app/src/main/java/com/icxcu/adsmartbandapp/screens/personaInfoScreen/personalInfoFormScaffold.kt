@@ -30,7 +30,8 @@ fun PersonalInfoFormScaffold(
     getPersonalInfoListReadFromDB: () -> List<PersonalInfo>,
     validatePersonalInfo: () -> List<String> = { listOf() },
     getInvalidAlertDialogState: () -> InvalidAlertDialogState,
-    getUpdateAlertDialogState: () -> UpdateAlertDialogState,
+    getUpdateAlertDialogVisibilityState: () -> UpdateAlertDialogPersonalFieldVisibilityState,
+    getInsertAlertDialogVisibilityState: () -> InsertAlertDialogPersonalFieldVisibilityState,
     updatePersonalData: (PersonalInfo) -> Unit = {},
     insertPersonalData: (PersonalInfo) -> Unit = {},
 ) {
@@ -83,10 +84,23 @@ fun PersonalInfoFormScaffold(
                     getPersonalInfoListReadFromDB,
                     validatePersonalInfo,
                     getInvalidAlertDialogState,
-                    getUpdateAlertDialogState,
                     updatePersonalData,
                     insertPersonalData,
                 )
+
+                if (getInvalidAlertDialogState().alertDialogPersonalFieldVisibility) {
+                    ValidationAlertDialog(
+                        getInvalidAlertDialogState,
+                    )
+                }
+
+                if (getUpdateAlertDialogVisibilityState().updateAlertDialogPersonalFieldVisibility) {
+                    UpdateAlertDialog(getUpdateAlertDialogVisibilityState().setUpdateAlertDialogPersonalFieldVisibility)
+                }
+
+                if (getInsertAlertDialogVisibilityState().insertAlertDialogPersonalFieldVisibility) {
+                    InsertAlertDialog(getInsertAlertDialogVisibilityState().setInsertAlertDialogPersonalFieldVisibility)
+                }
             }
 
 
@@ -104,7 +118,8 @@ fun PersonalInfoFormScaffoldPreview() {
         getPersonalInfoListReadFromDB = { listOf(PersonalInfo()) },
         validatePersonalInfo = { listOf() },
         getInvalidAlertDialogState = { InvalidAlertDialogState() },
-        getUpdateAlertDialogState = { UpdateAlertDialogState() },
+        getUpdateAlertDialogVisibilityState = { UpdateAlertDialogPersonalFieldVisibilityState() },
+        getInsertAlertDialogVisibilityState = { InsertAlertDialogPersonalFieldVisibilityState() },
         updatePersonalData = {},
         insertPersonalData = {},
     )

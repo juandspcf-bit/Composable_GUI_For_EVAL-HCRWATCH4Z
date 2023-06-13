@@ -32,10 +32,11 @@ import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusMainTitleScaffold
 import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusReadingDbForDashboard
 import com.icxcu.adsmartbandapp.screens.mainNavBar.TodayHealthsDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.YesterdayHealthsDataState
+import com.icxcu.adsmartbandapp.screens.personaInfoScreen.InsertAlertDialogPersonalFieldVisibilityState
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.InvalidAlertDialogState
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataState
-import com.icxcu.adsmartbandapp.screens.personaInfoScreen.UpdateAlertDialogState
+import com.icxcu.adsmartbandapp.screens.personaInfoScreen.UpdateAlertDialogPersonalFieldVisibilityState
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.ValidatorsPersonalField
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenNavStatus
@@ -74,8 +75,9 @@ class DataViewModel(var application: Application) : ViewModel() {
     var personalInfoListReadFromDB = listOf<PersonalInfo>()
 
     var personalInfoDataState = PersonalInfoDataState()
-    var invalidAlertDialogState by mutableStateOf(InvalidAlertDialogState())
-    var updateAlertDialogState = UpdateAlertDialogState()
+    var invalidAlertDialogState = InvalidAlertDialogState()
+    var updateAlertDialogPersonalFieldVisibilityState = UpdateAlertDialogPersonalFieldVisibilityState()
+    var insertAlertDialogPersonalFieldVisibilityState = InsertAlertDialogPersonalFieldVisibilityState()
 
     var macAddressDeviceBluetooth: String = ""
     var nameDeviceBluetooth: String = ""
@@ -153,9 +155,6 @@ class DataViewModel(var application: Application) : ViewModel() {
 
 
         personalInfoFromDB = dbRepository.personalInfoFromDB
-        updateAlertDialogState.personalInfoAlertDialogUVLiveData =
-            dbRepository.personalInfoAlertDialogUVStateLiveData
-
 
     }
 
@@ -274,8 +273,9 @@ class DataViewModel(var application: Application) : ViewModel() {
             personalInfoDataStateC = dataCoroutineFromDB.ifEmpty {
                 MutableList(1) { PersonalInfo(
                     id = -1,
-                    macAddress = "",
+                    macAddress = macAddress,
                     typesTable= TypesTable.PERSONAL_INFO,
+                    uri = "",
                     name = "",
                     birthdate = "",
                     weight = 0.0,
@@ -361,29 +361,29 @@ class DataViewModel(var application: Application) : ViewModel() {
 
 
     //Personal data
-    fun insertPersonalData(personalInfo: PersonalInfo) {
-        dbRepository.insertPersonalInfo(personalInfo)
-    }
-
-    fun updatePersonalData(personalInfo: PersonalInfo) {
-        dbRepository.updatePersonalInfo(personalInfo)
-    }
-
     fun updatePersonalInfoDataWithCoroutine(personalInfo: PersonalInfo) {
         val dataDeferred = viewModelScope.async {
             dbRepository.updatePersonalInfoDataWithCoroutine(personalInfo = personalInfo)
         }
 
         viewModelScope.launch {
-            updateAlertDialogState.alertDialogUPersonalFieldVisibility = dataDeferred.await()
+            updateAlertDialogPersonalFieldVisibilityState
+                .updateAlertDialogPersonalFieldVisibility = dataDeferred.await()
+        }
+    }
+
+    fun insertPersonalInfoDataWithCoroutine(personalInfo: PersonalInfo) {
+        val dataDeferred = viewModelScope.async {
+            dbRepository.insertPersonalInfoDataWithCoroutine(personalInfo)
+        }
+
+        viewModelScope.launch {
+            insertAlertDialogPersonalFieldVisibilityState
+                .insertAlertDialogPersonalFieldVisibility = dataDeferred.await()
+            starListeningPersonalInfoDB(macAddressDeviceBluetooth)
         }
 
 
-    }
-
-
-    fun getPersonalInfoData(macAddress: String) {
-        dbRepository.getPersonalInfoData(macAddress)
     }
 
     fun validatePersonalInfo(

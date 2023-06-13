@@ -19,6 +19,10 @@ class PersonalInfo {
     @ColumnInfo(name = "types_table")
     var typesTable: TypesTable = TypesTable.PERSONAL_INFO
 
+
+    @ColumnInfo(name = "uri")
+    var uri: String = ""
+
     @ColumnInfo(name = "name")
     var name: String = ""
 
@@ -36,6 +40,7 @@ class PersonalInfo {
         id: Int,
         macAddress: String,
         typesTable: TypesTable,
+        uri: String,
         name: String,
         birthdate: String,
         weight: Double,
@@ -44,6 +49,7 @@ class PersonalInfo {
         this.id = id
         this.macAddress = macAddress
         this.typesTable = typesTable
+        this.uri = uri
         this.name = name
         this.birthdate = birthdate
         this.weight = weight
@@ -53,6 +59,7 @@ class PersonalInfo {
     override fun toString(): String {
         return "PersonalInfo(id=$id, macAddress='$macAddress', typesTable=$typesTable, name='$name', birthdate='$birthdate', weight=$weight, height=$height)"
     }
+
 
 
 }

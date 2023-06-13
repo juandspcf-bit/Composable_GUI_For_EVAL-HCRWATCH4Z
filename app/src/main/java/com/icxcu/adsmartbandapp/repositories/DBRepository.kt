@@ -37,8 +37,6 @@ class DBRepository(
     var dayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
 
     var personalInfoFromDB = MutableLiveData<List<PersonalInfo>>()
-    var personalInfoAlertDialogUVStateLiveData = MutableLiveData(false)
-
 
     val myHeartRateAlertDialogDataHandler = MyHeartRateAlertDialogDataHandler()
     val myBloodPressureAlertDialogDataHandler = MyBloodPressureAlertDialogDataHandler()
@@ -342,74 +340,23 @@ class DBRepository(
         }.await()
 
 
-    fun getPersonalInfoData(queryMacAddress: String) {
-        getPersonalInfoDataP(queryMacAddress, personalInfoFromDB)
-    }
-
-    private fun getPersonalInfoDataP(
-        queryMacAddress: String,
-        data: MutableLiveData<List<PersonalInfo>>
-    ) {
-        coroutineScope.launch(Dispatchers.Main) {
-            val results = asyncPersonalDataData(queryMacAddress)
-            if (results.isEmpty().not()) {
-                data.value = results
-            } else {
-                val personalInfoS = PersonalInfo().apply {
-                    id = -1
-                    macAddress = queryMacAddress
-                    typesTable = TypesTable.PERSONAL_INFO
-                    name = ""
-                    birthdate = ""
-                    weight = 0.0
-                    height = 0.0
-                }
-
-
-                data.value = listOf(personalInfoS)
-
-            }
-
-
-        }
-    }
-
-    private suspend fun asyncPersonalDataData(macAddress: String): List<PersonalInfo> =
-        coroutineScope.async(Dispatchers.IO) {
-            return@async personalInfoDao.getPersonalInfo(macAddress)
-        }.await()
-
     fun insertPersonalInfo(personalInfo: PersonalInfo) {
         coroutineScope.launch(Dispatchers.IO) {
             personalInfoDao.insertPersonalInfoData(personalInfo = personalInfo)
             withContext(Dispatchers.Main) {
-                personalInfoAlertDialogUVStateLiveData.value =
-                    !(personalInfoAlertDialogUVStateLiveData.value ?: true)
-                Log.d(
-                    "Steps",
-                    "insertPersonalInfo: Firsts ${personalInfoAlertDialogUVStateLiveData.value}"
-                )
+/*                personalInfoAlertDialogUVStateLiveData.value =
+                    !(personalInfoAlertDialogUVStateLiveData.value ?: true)*/
             }
         }
     }
-
-    fun updatePersonalInfo(personalInfo: PersonalInfo) {
-        coroutineScope.launch(Dispatchers.IO) {
-            personalInfoDao.updatePersonalInfoData(personalInfo = personalInfo)
-            withContext(Dispatchers.Main) {
-                personalInfoAlertDialogUVStateLiveData.value =
-                    !(personalInfoAlertDialogUVStateLiveData.value ?: true)
-                Log.d(
-                    "UpdatePersonalInfo",
-                    "updatePersonalInfo: Firsts ${personalInfoAlertDialogUVStateLiveData.value}"
-                )
-            }
-        }
-    }
-
 
     suspend fun updatePersonalInfoDataWithCoroutine(personalInfo: PersonalInfo):Boolean {
-        personalInfoDao.updatePersonalInfoDataWithCoroutine(personalInfo = personalInfo)
+        personalInfoDao.updatePersonalInfoDataWithCoroutine(personalInfo)
+        return true
+    }
+
+    suspend fun insertPersonalInfoDataWithCoroutine(personalInfo: PersonalInfo):Boolean {
+        personalInfoDao.insertPersonalInfoDataWithCoroutine(personalInfo)
         return true
     }
 

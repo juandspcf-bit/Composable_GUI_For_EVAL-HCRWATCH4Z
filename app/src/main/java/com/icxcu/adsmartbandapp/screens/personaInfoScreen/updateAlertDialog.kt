@@ -58,7 +58,66 @@ fun UpdateAlertDialog(
                 Text(text = "My Data")
             },
             text = {
-                Text(text = "Your data was added successfully")
+                Text(text = "Your data was updated successfully")
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(32.dp)
+                .background(Color.Transparent)
+                .border(2.dp, Color.Red, RoundedCornerShape(20.dp)),
+            shape = RoundedCornerShape(20.dp)
+        )
+    }
+
+
+}
+
+
+@Composable
+fun InsertAlertDialog(
+    setVisibilityAlertDialogStatusPersonalInfo: (Boolean) -> Unit,
+) {
+
+    DialogsTheme(
+    ){
+        AlertDialog(
+            onDismissRequest = {
+                // Dismiss the dialog when the user clicks outside the dialog or on the back button.
+                // If you want to disable that functionality, simply leave this block empty.
+                setVisibilityAlertDialogStatusPersonalInfo(false)
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        // perform the confirm action and
+                        // close the dialog
+                        setVisibilityAlertDialogStatusPersonalInfo(false)
+                    }
+                ) {
+                    Text(
+                        text = "Confirm",
+                        color = Color(0xFFDCE775),
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        // close the dialog
+                        setVisibilityAlertDialogStatusPersonalInfo(false)
+                    }
+                ) {
+                    Text(
+                        text = "Dismiss",
+                        color = Color(0xFFDCE775),
+                    )
+                }
+            },
+            title = {
+                Text(text = "My Data")
+            },
+            text = {
+                Text(text = "Your data was inserted successfully")
             },
             modifier = Modifier
                 .fillMaxWidth()

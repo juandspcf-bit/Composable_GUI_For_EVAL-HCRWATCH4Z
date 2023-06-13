@@ -3,7 +3,6 @@ package com.icxcu.adsmartbandapp.screens.personaInfoScreen
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -17,46 +16,34 @@ fun PersonalInfoDataScreenRoot(
     navLambda: () -> Unit
 ) {
 
-
-    //Data Sources
-
-
-
-
     val getPersonalInfoDataState = remember(dataViewModel) {{dataViewModel.personalInfoDataState}}
     val getInvalidAlertDialogState = remember(dataViewModel) {{dataViewModel.invalidAlertDialogState}}
     val validatePersonalInfo = remember(dataViewModel, getPersonalInfoDataState) {{dataViewModel.validatePersonalInfo( getPersonalInfoDataState )}}
-    val getUpdateAlertDialogState = remember(dataViewModel) {{dataViewModel.updateAlertDialogState}}
+    val getUpdateAlertDialogVisibilityState = remember(dataViewModel) {{dataViewModel.updateAlertDialogPersonalFieldVisibilityState}}
+    val getInsertAlertDialogVisibilityState = remember(dataViewModel) {{dataViewModel.insertAlertDialogPersonalFieldVisibilityState}}
+
     val getPersonalInfoListReadFromDB = remember(dataViewModel) {
         {
-            val dataFromDB = dataViewModel.personalInfoDataStateC
-            if (dataFromDB.isEmpty().not() && dataFromDB[0].id!=-1) {
-                val filter = dataFromDB.filter { it.typesTable == TypesTable.PERSONAL_INFO }
-                getPersonalInfoDataState().name = filter[0].name
-                getPersonalInfoDataState().date = filter[0].birthdate
-                getPersonalInfoDataState().weight = filter[0].weight.toString()
-                getPersonalInfoDataState().height = filter[0].height.toString()
-                filter
-            } else {
-                mutableListOf()
-            }
-
-
+            dataViewModel.personalInfoDataStateC
         }
     }
 
+    val dataFromDB = getPersonalInfoListReadFromDB()
 
-/*    val personalInfoAlertDialogUStateDB by
-    getUpdateAlertDialogState().personalInfoAlertDialogUVLiveData
-        .observeAsState(initial = false)
-
-    getUpdateAlertDialogState().alertDialogUPersonalFieldVisibility = personalInfoAlertDialogUStateDB?:false*/
-
-    //getUpdateAlertDialogState().alertDialogUPersonalFieldVisibility = dataViewModel.invalidAlertDialogState.alertDialogPersonalFieldVisibility
+    if (dataFromDB.isEmpty().not() && dataFromDB[0].id!=-1) {
+        val filter = dataFromDB.filter { it.typesTable == TypesTable.PERSONAL_INFO }
+        getPersonalInfoDataState().id = filter[0].id
+        getPersonalInfoDataState().uri = filter[0].uri
+        getPersonalInfoDataState().name = filter[0].name
+        getPersonalInfoDataState().macAddress = filter[0].macAddress
+        getPersonalInfoDataState().date = filter[0].birthdate
+        getPersonalInfoDataState().weight = filter[0].weight.toString()
+        getPersonalInfoDataState().height = filter[0].height.toString()
+        Log.d("AVATAR", "dataFromDB: ${getPersonalInfoDataState().uri}")
+    }
 
     val insertPersonalData= { personalInfo:PersonalInfo->
-        personalInfo.macAddress = dataViewModel.macAddressDeviceBluetooth
-        dataViewModel.insertPersonalData(personalInfo)
+        dataViewModel.insertPersonalInfoDataWithCoroutine(personalInfo)
     }
 
     val updatePersonalData= { personalInfo:PersonalInfo->
@@ -69,7 +56,8 @@ fun PersonalInfoDataScreenRoot(
         getPersonalInfoListReadFromDB,
         validatePersonalInfo,
         getInvalidAlertDialogState,
-        getUpdateAlertDialogState,
+        getUpdateAlertDialogVisibilityState,
+        getInsertAlertDialogVisibilityState,
         updatePersonalData,
         insertPersonalData
     )
@@ -79,12 +67,21 @@ fun PersonalInfoDataScreenRoot(
 }
 
 class PersonalInfoDataState {
+    var id by mutableStateOf(0)
+
+    var uri by mutableStateOf("")
+
     var name by mutableStateOf("")
     var nameTextFieldVisibility by mutableStateOf(false)
+
+    var macAddress by mutableStateOf("")
+
     var date by mutableStateOf("")
     var dateTextFieldVisibility by mutableStateOf(false)
+
     var weight by mutableStateOf("")
     var weightTextFieldVisibility by mutableStateOf(false)
+
     var height by mutableStateOf("")
     var heightTextFieldVisibility by mutableStateOf(false)
 

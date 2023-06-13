@@ -40,12 +40,12 @@ import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.mainNavBar.MainNavigationBarRoot
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusReadingDbForDashboard
+import com.icxcu.adsmartbandapp.screens.personaInfoScreen.InsertAlertDialogPersonalFieldVisibilityState
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.InvalidAlertDialogState
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenRoot
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataState
-import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoInitDBHandlerAD
-import com.icxcu.adsmartbandapp.screens.personaInfoScreen.UpdateAlertDialogState
+import com.icxcu.adsmartbandapp.screens.personaInfoScreen.UpdateAlertDialogPersonalFieldVisibilityState
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureScreenRoot
 import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenNavStatus
@@ -622,9 +622,6 @@ class MainActivity : ComponentActivity() {
                     }
 
 
-                   PersonalInfoInitDBHandlerAD(
-                        dataViewModel
-                    )
                     PersonalInfoDataScreenRoot(dataViewModel = dataViewModel) {
                         navLambdaBackToMainNavigationBar()
                     }
@@ -692,7 +689,8 @@ class MainActivity : ComponentActivity() {
 
         dataViewModel.personalInfoDataState = PersonalInfoDataState()
         dataViewModel.invalidAlertDialogState = InvalidAlertDialogState()
-        dataViewModel.updateAlertDialogState = UpdateAlertDialogState()
+        dataViewModel.updateAlertDialogPersonalFieldVisibilityState = UpdateAlertDialogPersonalFieldVisibilityState()
+        dataViewModel.insertAlertDialogPersonalFieldVisibilityState = InsertAlertDialogPersonalFieldVisibilityState()
 
         dataViewModel.macAddressDeviceBluetooth = ""
         dataViewModel.nameDeviceBluetooth = ""
