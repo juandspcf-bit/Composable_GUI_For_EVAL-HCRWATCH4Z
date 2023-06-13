@@ -1,6 +1,8 @@
 package com.icxcu.adsmartbandapp.screens.personaInfoScreen
 
+import android.database.Cursor
 import android.net.Uri
+import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -35,8 +37,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.anggrayudi.storage.media.MediaFile
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
+import com.icxcu.adsmartbandapp.screens.personaInfoScreen.utils.FileUtils
 
 @Composable
 fun PersonalInfoContent(
@@ -52,9 +56,14 @@ fun PersonalInfoContent(
 
     var selectedUri by rememberSaveable { mutableStateOf( if(getPersonalInfoDataStateState().uri!=""){Uri.parse(getPersonalInfoDataStateState().uri)}else{null} ) }
     val context = LocalContext.current
+
+    context.contentResolver
+
     selectedUri?.let {
-        getPersonalInfoDataStateState().uri = selectedUri?.path.toString()
-        Log.d("AVATAR", "PersonalInfoContent: $selectedUri")
+        val mediaFile = MediaFile(context, it)
+        val path = mediaFile.absolutePath
+        Log.d("AVATAR", "PersonalInfoContent: $path")
+
     }
 
 
@@ -62,6 +71,8 @@ fun PersonalInfoContent(
         rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
             selectedUri = uri
         }
+
+
 
     Box(
         modifier = Modifier
@@ -97,9 +108,9 @@ fun PersonalInfoContent(
                     ,
                     contentScale = ContentScale.Crop,
                     model = ImageRequest.Builder(context)
-                        .data(if(selectedUri !=null){selectedUri}else {
+                        .data(Uri.parse("content://com.android.providers.media.documents/document/image%3A1000000006")/*if(selectedUri !=null){selectedUri}else {
                             R.drawable.user
-                        })
+                        }*/)
                         .build(),
                     contentDescription = null
                 )
@@ -154,7 +165,7 @@ fun PersonalInfoContent(
                     if (personalInfoListReadFromDB[0].id != -1) {
                         val personalInfo = PersonalInfo().apply {
                             id = getPersonalInfoDataStateState().id
-                            uri = getPersonalInfoDataStateState().uri
+                            uri = selectedUri.toString()
                             macAddress = getPersonalInfoDataStateState().macAddress
                             name = getPersonalInfoDataStateState().name
                             birthdate = getPersonalInfoDataStateState().date
@@ -168,7 +179,7 @@ fun PersonalInfoContent(
                     } else {
                         val personalInfo = PersonalInfo().apply{
                             macAddress = personalInfoListReadFromDB[0].macAddress
-                            uri = getPersonalInfoDataStateState().uri
+                            uri = selectedUri.toString()
                             name = getPersonalInfoDataStateState().name
                             birthdate = getPersonalInfoDataStateState().date
                             weight = getPersonalInfoDataStateState().weight.toDouble()
