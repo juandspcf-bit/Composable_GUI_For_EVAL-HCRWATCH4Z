@@ -229,28 +229,30 @@ fun PersonalInfoContent(
 
 private fun uri(
     context: Context,
-    uri: Uri,
+    uri: Uri
 ): Uri? {
-    var bitmap: Bitmap? = null
+    var bitmap: Bitmap?
     var imageUri:Uri? = null
     val fos: OutputStream?
 
     try {
-        val inputStream = context.contentResolver.openInputStream(uri)
+        val resolver = context.contentResolver
+
+        val inputStream = resolver.openInputStream(uri)
         inputStream.use {
             bitmap = BitmapFactory.decodeStream(it)
         }
 
-        val resolver = context.contentResolver
+
         val contentValues = ContentValues()
         contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "myImage.jpg")
         contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
+        imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
 
-        imageUri =
-            resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
         fos = imageUri?.let {
-            resolver.openOutputStream(it)
+            resolver.openOutputStream(it,"wt")
         }
+
 
         bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, fos)
         Objects.requireNonNull(fos)
