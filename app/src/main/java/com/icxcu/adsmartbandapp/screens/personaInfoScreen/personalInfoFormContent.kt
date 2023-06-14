@@ -1,6 +1,9 @@
 package com.icxcu.adsmartbandapp.screens.personaInfoScreen
 
-import android.database.Cursor
+import android.content.ContentValues
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
@@ -24,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -37,14 +41,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.anggrayudi.storage.media.MediaFile
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
-import com.icxcu.adsmartbandapp.screens.personaInfoScreen.utils.FileUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.io.IOException
+import java.io.OutputStream
+import java.util.Objects
+
 
 @Composable
 fun PersonalInfoContent(
-    getPersonalInfoDataStateState: () -> PersonalInfoDataState,
+    getPersonalInfoDataState: () -> PersonalInfoDataState,
     getPersonalInfoListReadFromDB: () -> List<PersonalInfo>,
     validatePersonalInfo: () -> List<String> = { listOf() },
     getInvalidAlertDialogState: () -> InvalidAlertDialogState,
@@ -52,26 +60,18 @@ fun PersonalInfoContent(
     insertPersonalData: (PersonalInfo) -> Unit = {},
 ) {
 
+    var selectedUri by rememberSaveable { mutableStateOf<Uri?>( null) }
+    Log.d("AVATAR", "Initial values: ${getPersonalInfoDataState().uri}, ${getPersonalInfoDataState().name}")
+
+
+    val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
-
-    var selectedUri by rememberSaveable { mutableStateOf( if(getPersonalInfoDataStateState().uri!=""){Uri.parse(getPersonalInfoDataStateState().uri)}else{null} ) }
     val context = LocalContext.current
-
-    context.contentResolver
-
-    selectedUri?.let {
-        val mediaFile = MediaFile(context, it)
-        val path = mediaFile.absolutePath
-        Log.d("AVATAR", "PersonalInfoContent: $path")
-
-    }
-
 
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
             selectedUri = uri
         }
-
 
 
     Box(
@@ -99,8 +99,7 @@ fun PersonalInfoContent(
                     .border(2.dp, Color.White, CircleShape)
                     .clickable {
                         launcher.launch(arrayOf("image/*"))
-                    }
-                    ,
+                    },
             ) {
 
                 AsyncImage(
@@ -108,30 +107,36 @@ fun PersonalInfoContent(
                     ,
                     contentScale = ContentScale.Crop,
                     model = ImageRequest.Builder(context)
-                        .data(Uri.parse("content://com.android.providers.media.documents/document/image%3A1000000006")/*if(selectedUri !=null){selectedUri}else {
-                            R.drawable.user
-                        }*/)
+                        .data(
+                            if(selectedUri!=null){
+                                selectedUri
+                            }else if(getPersonalInfoDataState().uri!=""){
+                                Uri.parse(getPersonalInfoDataState().uri)
+                            }else{
+                                R.drawable.user
+                            }
+                        )
                         .build(),
                     contentDescription = null
                 )
             }
 
             NameTextFieldComposable(
-                getPersonalInfoDataStateState = getPersonalInfoDataStateState,
-                onTextChange = getPersonalInfoDataStateState().onTextChange,
-                onNameTextFieldVisibilityChange = getPersonalInfoDataStateState().onNameTextFieldVisibilityChange
+                getPersonalInfoDataStateState = getPersonalInfoDataState,
+                onTextChange = getPersonalInfoDataState().onTextChange,
+                onNameTextFieldVisibilityChange = getPersonalInfoDataState().onNameTextFieldVisibilityChange
             )
 
             DateTextFieldComposable(
-                getPersonalInfoDataStateState = getPersonalInfoDataStateState,
-                onDateTextChange = getPersonalInfoDataStateState().onDateTextChange,
-                onDateTextFieldVisibilityChange = getPersonalInfoDataStateState().onDateTextFieldVisibilityChange
+                getPersonalInfoDataStateState = getPersonalInfoDataState,
+                onDateTextChange = getPersonalInfoDataState().onDateTextChange,
+                onDateTextFieldVisibilityChange = getPersonalInfoDataState().onDateTextFieldVisibilityChange
             )
 
             NumericWeightTextFieldComposable(
-                getPersonalInfoDataStateState = getPersonalInfoDataStateState,
-                onNumericUnitTextChange = getPersonalInfoDataStateState().onWeightTextChange,
-                onNumericUnitTextFieldVisibilityChange = getPersonalInfoDataStateState().onWeightTextFieldVisibilityChange,
+                getPersonalInfoDataStateState = getPersonalInfoDataState,
+                onNumericUnitTextChange = getPersonalInfoDataState().onWeightTextChange,
+                onNumericUnitTextFieldVisibilityChange = getPersonalInfoDataState().onWeightTextFieldVisibilityChange,
                 unit = "Kg",
                 contentDescription = "weight",
                 resourceIcon1 = R.drawable.baseline_point_of_sale_24,
@@ -139,9 +144,9 @@ fun PersonalInfoContent(
             )
 
             NumericHeightTextFieldComposable(
-                getPersonalInfoDataStateState = getPersonalInfoDataStateState,
-                onNumericUnitTextChange = getPersonalInfoDataStateState().onHeightTextChange,
-                onNumericUnitTextFieldVisibilityChange = getPersonalInfoDataStateState().onHeightTextFieldVisibilityChange,
+                getPersonalInfoDataStateState = getPersonalInfoDataState,
+                onNumericUnitTextChange = getPersonalInfoDataState().onHeightTextChange,
+                onNumericUnitTextFieldVisibilityChange = getPersonalInfoDataState().onHeightTextFieldVisibilityChange,
                 unit = "m",
                 contentDescription = "height",
                 resourceIcon1 = R.drawable.baseline_boy_24,
@@ -161,35 +166,50 @@ fun PersonalInfoContent(
                     }
 
                     val personalInfoListReadFromDB = getPersonalInfoListReadFromDB()
-                    Log.d("AVATAR", "Update: ${getPersonalInfoDataStateState().uri}")
+                    Log.d("AVATAR", "Update: ${getPersonalInfoDataState().uri}")
                     if (personalInfoListReadFromDB[0].id != -1) {
-                        val personalInfo = PersonalInfo().apply {
-                            id = getPersonalInfoDataStateState().id
-                            uri = selectedUri.toString()
-                            macAddress = getPersonalInfoDataStateState().macAddress
-                            name = getPersonalInfoDataStateState().name
-                            birthdate = getPersonalInfoDataStateState().date
-                            weight = getPersonalInfoDataStateState().weight.toDouble()
-                            height = getPersonalInfoDataStateState().height.toDouble()
+
+
+
+                        scope.launch(Dispatchers.IO) {
+                            selectedUri?.let { uri ->
+
+                                val imageUri = uri(context, uri)
+
+                                val personalInfo = PersonalInfo().apply {
+                                    id = getPersonalInfoDataState().id
+                                    this.uri = imageUri?.toString() ?: ""
+                                    macAddress = getPersonalInfoDataState().macAddress
+                                    name = getPersonalInfoDataState().name
+                                    birthdate = getPersonalInfoDataState().date
+                                    weight = getPersonalInfoDataState().weight.toDouble()
+                                    height = getPersonalInfoDataState().height.toDouble()
+                                }
+                                updatePersonalData(personalInfo)
+
+                            }
                         }
-
-                        updatePersonalData(personalInfo)
-
 
                     } else {
-                        val personalInfo = PersonalInfo().apply{
-                            macAddress = personalInfoListReadFromDB[0].macAddress
-                            uri = selectedUri.toString()
-                            name = getPersonalInfoDataStateState().name
-                            birthdate = getPersonalInfoDataStateState().date
-                            weight = getPersonalInfoDataStateState().weight.toDouble()
-                            height = getPersonalInfoDataStateState().height.toDouble()
+
+                        scope.launch(Dispatchers.IO) {
+                            selectedUri?.let { uri ->
+
+                                val imageUri = uri(context, uri)
+
+                                val personalInfo = PersonalInfo().apply{
+                                    macAddress = personalInfoListReadFromDB[0].macAddress
+                                    this.uri = imageUri?.toString() ?: ""
+                                    name = getPersonalInfoDataState().name
+                                    birthdate = getPersonalInfoDataState().date
+                                    weight = getPersonalInfoDataState().weight.toDouble()
+                                    height = getPersonalInfoDataState().height.toDouble()
+                                }
+                                insertPersonalData(personalInfo)
+
+                            }
                         }
-
-                        insertPersonalData(personalInfo)
                     }
-
-
                 }
             ) {
                 Text(text = "Save info", color = Color.White, textAlign = TextAlign.Center)
@@ -207,12 +227,47 @@ fun PersonalInfoContent(
 
 }
 
+private fun uri(
+    context: Context,
+    uri: Uri,
+): Uri? {
+    var bitmap: Bitmap? = null
+    var imageUri:Uri? = null
+    val fos: OutputStream?
+
+    try {
+        val inputStream = context.contentResolver.openInputStream(uri)
+        inputStream.use {
+            bitmap = BitmapFactory.decodeStream(it)
+        }
+
+        val resolver = context.contentResolver
+        val contentValues = ContentValues()
+        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "myImage.jpg")
+        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
+
+        imageUri =
+            resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+        fos = imageUri?.let {
+            resolver.openOutputStream(it)
+        }
+
+        bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+        Objects.requireNonNull(fos)
+
+        Log.d("AVATAR", "PersonalInfoContent: $imageUri")
+    } catch (e: IOException) {
+        Log.d("AVATAR", "PersonalInfoContent: failed  $e")
+    }
+    return imageUri
+}
+
 
 @Preview(showBackground = true)
 @Composable
 fun PersonalInfoContentPreview() {
     PersonalInfoContent(
-        getPersonalInfoDataStateState = { PersonalInfoDataState() },
+        getPersonalInfoDataState = { PersonalInfoDataState() },
         getPersonalInfoListReadFromDB = { listOf(PersonalInfo()) },
         validatePersonalInfo = { listOf() },
         getInvalidAlertDialogState = { InvalidAlertDialogState() },
