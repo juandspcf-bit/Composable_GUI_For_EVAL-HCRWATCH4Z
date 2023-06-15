@@ -60,6 +60,7 @@ import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 import com.icxcu.adsmartbandapp.viewModels.DataViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModel
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModelFactory
+import com.icxcu.adsmartbandapp.viewModels.PersonalInfoViewModel
 import com.icxcu.adsmartbandapp.viewModels.ScanningBluetoothAdapterStatus
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import com.icxcu.adsmartbandapp.viewModels.permissionsRequired
@@ -70,6 +71,7 @@ const val REQUEST_ENABLE_BT: Int = 500
 
 class MainActivity : ComponentActivity() {
     private lateinit var dataViewModel: DataViewModel
+    private lateinit var personalInfoViewModel: PersonalInfoViewModel
     private lateinit var bluetoothLEManager: BluetoothManager
     private lateinit var bluetoothScannerViewModel: BluetoothScannerViewModel
     private lateinit var permissionsViewModel: PermissionsViewModel
@@ -121,6 +123,15 @@ class MainActivity : ComponentActivity() {
                                     as Application
                         )
                     )
+
+/*                    dataViewModel = viewModel(
+                        it,
+                        "DataViewModel",
+                        DataViewModelFactory(
+                            LocalContext.current.applicationContext
+                                    as Application
+                        )
+                    )*/
 
 
                 }
