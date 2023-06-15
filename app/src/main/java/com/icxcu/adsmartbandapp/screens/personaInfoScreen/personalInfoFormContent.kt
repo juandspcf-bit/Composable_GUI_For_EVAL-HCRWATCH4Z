@@ -1,11 +1,10 @@
 package com.icxcu.adsmartbandapp.screens.personaInfoScreen
 
-import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.media.ThumbnailUtils
 import android.net.Uri
-import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,6 +24,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -45,9 +45,12 @@ import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
+import java.io.FileInputStream
+import java.io.FileNotFoundException
 import java.io.IOException
-import java.io.OutputStream
-import java.util.Objects
+
 
 
 @Composable
@@ -61,8 +64,7 @@ fun PersonalInfoContent(
 ) {
 
     var selectedUri by rememberSaveable { mutableStateOf<Uri?>( null) }
-    Log.d("AVATAR", "Initial values: ${getPersonalInfoDataState().uri}, ${getPersonalInfoDataState().name}")
-
+    var initialBitmap by rememberSaveable { mutableStateOf<Bitmap?>(null) }
 
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
@@ -72,6 +74,24 @@ fun PersonalInfoContent(
         rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
             selectedUri = uri
         }
+
+
+    LaunchedEffect(key1 = true,){
+        Log.d("AVATAR", "Launch Effect ")
+        launch(Dispatchers.IO){
+            try {
+                val fin: FileInputStream = context.openFileInput("myImage.jpg")
+                val decodedBitmap = BitmapFactory.decodeStream(fin)
+                withContext(Dispatchers.Main){
+                    initialBitmap = decodedBitmap
+                }
+                fin.close()
+            }catch (e: FileNotFoundException){
+                Log.d("AVATAR", "PersonalInfoContent: not profile image found")
+            }
+
+        }
+    }
 
 
     Box(
@@ -110,8 +130,8 @@ fun PersonalInfoContent(
                         .data(
                             if(selectedUri!=null){
                                 selectedUri
-                            }else if(getPersonalInfoDataState().uri!=""){
-                                Uri.parse(getPersonalInfoDataState().uri)
+                            }else if(initialBitmap!=null){
+                                initialBitmap
                             }else{
                                 R.drawable.user
                             }
@@ -174,11 +194,11 @@ fun PersonalInfoContent(
                         scope.launch(Dispatchers.IO) {
                             selectedUri?.let { uri ->
 
-                                val imageUri = uri(context, uri)
+                                storeImageProfile(context, uri)
 
                                 val personalInfo = PersonalInfo().apply {
                                     id = getPersonalInfoDataState().id
-                                    this.uri = imageUri?.toString() ?: ""
+                                    //this.uri = imageUri?.toString() ?: ""
                                     macAddress = getPersonalInfoDataState().macAddress
                                     name = getPersonalInfoDataState().name
                                     birthdate = getPersonalInfoDataState().date
@@ -195,11 +215,11 @@ fun PersonalInfoContent(
                         scope.launch(Dispatchers.IO) {
                             selectedUri?.let { uri ->
 
-                                val imageUri = uri(context, uri)
+                                storeImageProfile(context, uri)
 
                                 val personalInfo = PersonalInfo().apply{
                                     macAddress = personalInfoListReadFromDB[0].macAddress
-                                    this.uri = imageUri?.toString() ?: ""
+                                    //this.uri = imageUri?.toString() ?: ""
                                     name = getPersonalInfoDataState().name
                                     birthdate = getPersonalInfoDataState().date
                                     weight = getPersonalInfoDataState().weight.toDouble()
@@ -227,13 +247,11 @@ fun PersonalInfoContent(
 
 }
 
-private fun uri(
+private fun storeImageProfile(
     context: Context,
-    uri: Uri
-): Uri? {
+    uri: Uri,
+) {
     var bitmap: Bitmap?
-    var imageUri:Uri? = null
-    val fos: OutputStream?
 
     try {
         val resolver = context.contentResolver
@@ -243,10 +261,19 @@ private fun uri(
             bitmap = BitmapFactory.decodeStream(it)
         }
 
+        bitmap = ThumbnailUtils.extractThumbnail(bitmap, 256,256)
 
-        val contentValues = ContentValues()
+        val stream = ByteArrayOutputStream()
+        bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+        val byteArray = stream.toByteArray()
+        context.openFileOutput("myImage.jpg", Context.MODE_PRIVATE).use {
+            it.write(byteArray)
+        }
+
+/*        val contentValues = ContentValues()
         contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "myImage.jpg")
         contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
+        //contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.getDataDirectory().absolutePath)
         imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
 
         fos = imageUri?.let {
@@ -257,11 +284,14 @@ private fun uri(
         bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, fos)
         Objects.requireNonNull(fos)
 
-        Log.d("AVATAR", "PersonalInfoContent: $imageUri")
+        Log.d("AVATAR", "PersonalInfoContent: $imageUri")*/
+
+/*        */
+
+
     } catch (e: IOException) {
         Log.d("AVATAR", "PersonalInfoContent: failed  $e")
     }
-    return imageUri
 }
 
 
