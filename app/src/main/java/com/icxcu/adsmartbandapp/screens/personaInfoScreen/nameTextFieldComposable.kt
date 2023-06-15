@@ -80,7 +80,7 @@ fun NameTextFieldComposable(
         Icon(
             painter = painterResource(R.drawable.baseline_person_24),
             contentDescription = "Date Range",
-            tint = Color(0xFFFFC107),
+            tint = Color.White,
             modifier = Modifier.fillMaxWidth(1f)
                 .size(50.dp)
                 .clickable {

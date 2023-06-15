@@ -84,7 +84,7 @@ fun NumericHeightTextFieldComposable(
         Icon(
             painter = painterResource(resourceIcon1),
             contentDescription = contentDescription,
-            tint = Color(0xFFFFC107),
+            tint = Color.White,
             modifier = Modifier.fillMaxWidth(1f)
                 .size(50.dp)
                 .clickable {
