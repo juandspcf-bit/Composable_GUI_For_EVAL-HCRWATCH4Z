@@ -6,7 +6,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -44,20 +43,17 @@ fun NameTextFieldComposable(
     onTextChange: (String) -> Unit,
     onNameTextFieldVisibilityChange: (Boolean) -> Unit,
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
 
         Box(
             modifier = Modifier
-                .pointerInput(Unit) {
-                    detectTapGestures(
-                        onPress = { onNameTextFieldVisibilityChange(!getPersonalInfoDataStateState().nameTextFieldVisibility) },
-                        onDoubleTap = { /* Double Tap Detected */ },
-                        onLongPress = { /* Long Press Detected */ },
-                        onTap = {  }
-                    )
+                .clickable {
+                    onNameTextFieldVisibilityChange(!getPersonalInfoDataStateState().nameTextFieldVisibility)
                 }
                 .fillMaxWidth(0.85f)
-                //.padding(start = 20.dp, end = 20.dp)
                 .clip(shape = RoundedCornerShape(size = 12.dp))
                 .background(color = Color(0xFFE91E63))
         ) {
@@ -89,19 +85,24 @@ fun NameTextFieldComposable(
         )
     }
 
-
-
-    AnimatedVisibility(
-        visible = getPersonalInfoDataStateState().nameTextFieldVisibility,
-        enter = expandVertically(animationSpec = tween(durationMillis = 1000)),
-        exit = slideOutVertically()
-    ) {
-        NameTexField(
-            getPersonalInfoDataStateState,
-            onTextChange = onTextChange,
-            onNameTextFieldVisibilityChange,
-        )
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.CenterStart
+    ){
+        AnimatedVisibility(
+            visible = getPersonalInfoDataStateState().nameTextFieldVisibility,
+            enter = expandVertically(animationSpec = tween(durationMillis = 1000)),
+            exit = slideOutVertically()
+        ) {
+            NameTexField(
+                getPersonalInfoDataStateState,
+                onTextChange = onTextChange,
+                onNameTextFieldVisibilityChange,
+            )
+        }
     }
+
+
 
 
 }

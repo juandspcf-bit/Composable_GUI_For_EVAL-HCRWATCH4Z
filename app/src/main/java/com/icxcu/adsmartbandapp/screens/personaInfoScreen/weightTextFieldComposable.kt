@@ -7,6 +7,7 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -46,7 +47,10 @@ fun NumericWeightTextFieldComposable(
     resourceIcon1:Int = R.drawable.ic_launcher_foreground,
     validator: (String) -> String
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
 
         Box(
             modifier = Modifier
@@ -93,19 +97,26 @@ fun NumericWeightTextFieldComposable(
         )
     }
 
-    AnimatedVisibility(
-        visible = getPersonalInfoDataStateState().weightTextFieldVisibility,
-        enter = expandVertically(animationSpec = tween(durationMillis = 1000)),
-        exit = slideOutVertically()
-    ) {
-        NumericUnitTexField(
-            getPersonalInfoDataStateState,
-            onNumericUnitTextChange = onNumericUnitTextChange,
-            onNumericUnitTextFieldVisibilityChange,
-            contentDescription = contentDescription,
-            resourceIcon1 = resourceIcon1
-        )
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.CenterStart
+    ){
+        AnimatedVisibility(
+            visible = getPersonalInfoDataStateState().weightTextFieldVisibility,
+            enter = expandVertically(animationSpec = tween(durationMillis = 1000)),
+            exit = slideOutVertically()
+        ) {
+            NumericUnitTexField(
+                getPersonalInfoDataStateState,
+                onNumericUnitTextChange = onNumericUnitTextChange,
+                onNumericUnitTextFieldVisibilityChange,
+                contentDescription = contentDescription,
+                resourceIcon1 = resourceIcon1
+            )
+        }
     }
+
+
 
 
 }

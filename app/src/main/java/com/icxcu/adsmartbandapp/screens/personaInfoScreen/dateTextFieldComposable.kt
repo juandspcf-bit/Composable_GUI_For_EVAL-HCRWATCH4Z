@@ -8,6 +8,7 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -52,7 +53,10 @@ fun DateTextFieldComposable(
     onDateTextChange: (String) -> Unit,
     onDateTextFieldVisibilityChange: (Boolean) -> Unit,
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
 
         Box(
             modifier = Modifier
@@ -61,7 +65,7 @@ fun DateTextFieldComposable(
                         onPress = { onDateTextFieldVisibilityChange(!getPersonalInfoDataStateState().dateTextFieldVisibility) },
                         onDoubleTap = { /* Double Tap Detected */ },
                         onLongPress = { /* Long Press Detected */ },
-                        onTap = {  }
+                        onTap = { }
                     )
                 }
                 .fillMaxWidth(0.85f)
@@ -73,7 +77,10 @@ fun DateTextFieldComposable(
             val displayDate = if (getPersonalInfoDataStateState().date == "") {
                 "Your birthdate"
             } else {
-                val trimmed = if (getPersonalInfoDataStateState().date.length >= 8) getPersonalInfoDataStateState().date.substring(0..7) else getPersonalInfoDataStateState().date
+                val trimmed =
+                    if (getPersonalInfoDataStateState().date.length >= 8) getPersonalInfoDataStateState().date.substring(
+                        0..7
+                    ) else getPersonalInfoDataStateState().date
                 var out = ""
                 for (i in trimmed.indices) {
                     out += trimmed[i]
@@ -85,7 +92,7 @@ fun DateTextFieldComposable(
                 try {
                     val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                     LocalDate.parse(out, formatter)
-                }catch (e: DateTimeParseException){
+                } catch (e: DateTimeParseException) {
                     out = "Enter a valid date"
                 }
                 out
@@ -104,7 +111,8 @@ fun DateTextFieldComposable(
             painter = painterResource(R.drawable.baseline_date_range_24),
             contentDescription = "Date Range",
             tint = Color.White,
-            modifier = Modifier.fillMaxWidth(1f)
+            modifier = Modifier
+                .fillMaxWidth(1f)
                 .size(50.dp)
                 .clickable {
                     onDateTextFieldVisibilityChange(!getPersonalInfoDataStateState().dateTextFieldVisibility)
@@ -112,16 +120,21 @@ fun DateTextFieldComposable(
         )
     }
 
-    AnimatedVisibility(
-        visible = getPersonalInfoDataStateState().dateTextFieldVisibility,
-        enter = expandVertically(animationSpec = tween(durationMillis = 1000)),
-        exit = slideOutVertically()
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.CenterStart
     ) {
-        DateTexField(
-            getPersonalInfoDataStateState,
-            onDateTextChange = onDateTextChange,
-            onDateTextFieldVisibilityChange,
-        )
+        AnimatedVisibility(
+            visible = getPersonalInfoDataStateState().dateTextFieldVisibility,
+            enter = expandVertically(animationSpec = tween(durationMillis = 1000)),
+            exit = slideOutVertically()
+        ) {
+            DateTexField(
+                getPersonalInfoDataStateState,
+                onDateTextChange = onDateTextChange,
+                onDateTextFieldVisibilityChange,
+            )
+        }
     }
 
 
@@ -144,7 +157,8 @@ fun DateTexField(
         ),
         singleLine = true,
         label = { Text("Your Birthday") },
-        modifier = Modifier.padding(10.dp)
+        modifier = Modifier
+            .padding(10.dp)
             .background(Color(0xff1d2a35)),
         textStyle = TextStyle(
             fontWeight = FontWeight.Bold,
@@ -197,15 +211,15 @@ fun dateFilter(text: AnnotatedString): TransformedText {
     val numberOffsetTranslator = object : OffsetMapping {
         override fun originalToTransformed(offset: Int): Int {
             if (offset <= 1) return offset
-            if (offset <= 3) return offset +1
-            if (offset <= 8) return offset +2
+            if (offset <= 3) return offset + 1
+            if (offset <= 8) return offset + 2
             return 10
         }
 
         override fun transformedToOriginal(offset: Int): Int {
-            if (offset <=2) return offset
-            if (offset <=5) return offset -1
-            if (offset <=10) return offset -2
+            if (offset <= 2) return offset
+            if (offset <= 5) return offset - 1
+            if (offset <= 10) return offset - 2
             return 8
         }
     }
