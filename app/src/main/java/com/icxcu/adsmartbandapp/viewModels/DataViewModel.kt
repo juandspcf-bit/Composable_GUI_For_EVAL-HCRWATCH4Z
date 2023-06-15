@@ -275,7 +275,6 @@ class DataViewModel(var application: Application) : ViewModel() {
                     id = -1,
                     macAddress = macAddress,
                     typesTable= TypesTable.PERSONAL_INFO,
-                    uri = "",
                     name = "",
                     birthdate = "",
                     weight = 0.0,
@@ -369,6 +368,7 @@ class DataViewModel(var application: Application) : ViewModel() {
         viewModelScope.launch {
             updateAlertDialogPersonalFieldVisibilityState
                 .updateAlertDialogPersonalFieldVisibility = dataDeferred.await()
+            starListeningPersonalInfoDB(macAddressDeviceBluetooth)
         }
     }
 

@@ -186,48 +186,43 @@ fun PersonalInfoContent(
                     }
 
                     val personalInfoListReadFromDB = getPersonalInfoListReadFromDB()
-                    Log.d("AVATAR", "Update: ${getPersonalInfoDataState().uri}")
                     if (personalInfoListReadFromDB[0].id != -1) {
 
 
 
                         scope.launch(Dispatchers.IO) {
                             selectedUri?.let { uri ->
-
                                 storeImageProfile(context, uri)
-
-                                val personalInfo = PersonalInfo().apply {
-                                    id = getPersonalInfoDataState().id
-                                    //this.uri = imageUri?.toString() ?: ""
-                                    macAddress = getPersonalInfoDataState().macAddress
-                                    name = getPersonalInfoDataState().name
-                                    birthdate = getPersonalInfoDataState().date
-                                    weight = getPersonalInfoDataState().weight.toDouble()
-                                    height = getPersonalInfoDataState().height.toDouble()
-                                }
-                                updatePersonalData(personalInfo)
-
                             }
+
+                            val personalInfo = PersonalInfo().apply {
+                                id = getPersonalInfoDataState().id
+                                macAddress = getPersonalInfoDataState().macAddress
+                                name = getPersonalInfoDataState().name
+                                birthdate = getPersonalInfoDataState().date
+                                weight = getPersonalInfoDataState().weight.toDouble()
+                                height = getPersonalInfoDataState().height.toDouble()
+                            }
+                            updatePersonalData(personalInfo)
+
+
                         }
 
                     } else {
 
                         scope.launch(Dispatchers.IO) {
                             selectedUri?.let { uri ->
-
                                 storeImageProfile(context, uri)
-
-                                val personalInfo = PersonalInfo().apply{
-                                    macAddress = personalInfoListReadFromDB[0].macAddress
-                                    //this.uri = imageUri?.toString() ?: ""
-                                    name = getPersonalInfoDataState().name
-                                    birthdate = getPersonalInfoDataState().date
-                                    weight = getPersonalInfoDataState().weight.toDouble()
-                                    height = getPersonalInfoDataState().height.toDouble()
-                                }
-                                insertPersonalData(personalInfo)
-
                             }
+
+                            val personalInfo = PersonalInfo().apply{
+                                macAddress = personalInfoListReadFromDB[0].macAddress
+                                name = getPersonalInfoDataState().name
+                                birthdate = getPersonalInfoDataState().date
+                                weight = getPersonalInfoDataState().weight.toDouble()
+                                height = getPersonalInfoDataState().height.toDouble()
+                            }
+                            insertPersonalData(personalInfo)
                         }
                     }
                 }

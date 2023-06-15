@@ -33,7 +33,6 @@ fun PersonalInfoDataScreenRoot(
     if (dataFromDB.isEmpty().not() && dataFromDB[0].id!=-1) {
         val filter = dataFromDB.filter { it.typesTable == TypesTable.PERSONAL_INFO }
         getPersonalInfoDataState().id = filter[0].id
-        getPersonalInfoDataState().uri = filter[0].uri
         getPersonalInfoDataState().name = filter[0].name
         getPersonalInfoDataState().macAddress = filter[0].macAddress
         getPersonalInfoDataState().date = filter[0].birthdate
