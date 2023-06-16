@@ -21,13 +21,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navigation
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothLEManagerImp
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
@@ -72,7 +76,7 @@ const val REQUEST_ENABLE_BT: Int = 500
 
 class MainActivity : ComponentActivity() {
     private lateinit var dataViewModel: DataViewModel
-    private lateinit var personalInfoViewModel: PersonalInfoViewModel
+    //private lateinit var personalInfoViewModel: PersonalInfoViewModel
     private lateinit var bluetoothLEManager: BluetoothManager
     private lateinit var bluetoothScannerViewModel: BluetoothScannerViewModel
     private lateinit var permissionsViewModel: PermissionsViewModel
@@ -125,14 +129,14 @@ class MainActivity : ComponentActivity() {
                         )
                     )
 
-                    personalInfoViewModel = viewModel(
+/*                    personalInfoViewModel = viewModel(
                         it,
                         "PersonalInfoViewModel",
                         PersonalInfoViewModelFactory(
                             LocalContext.current.applicationContext
                                     as Application
                         )
-                    )
+                    )*/
 
 
                 }
@@ -257,11 +261,11 @@ class MainActivity : ComponentActivity() {
                     dataViewModel.jobPhysicalActivityState?.cancel()
                     dataViewModel.jobBloodPressureState?.cancel()
                     dataViewModel.jobHeartRateState?.cancel()
-                    personalInfoViewModel.jobPersonalInfoDataState?.cancel()
-
 
                 }
             }
+
+
 
             val getFetchingDataFromSWStatus = remember(dataViewModel) {
                 {
@@ -409,7 +413,6 @@ class MainActivity : ComponentActivity() {
                     dataViewModel.physicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Leaving
                     dataViewModel.bloodPressureScreenNavStatus = BloodPressureScreenNavStatus.Leaving
                     dataViewModel.heartRateScreenNavStatus = HeartRateScreenNavStatus.Leaving
-                    personalInfoViewModel.personalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Leaving
 
                     MainNavigationBarRoot(
                         dataViewModel,
@@ -488,7 +491,6 @@ class MainActivity : ComponentActivity() {
                     dataViewModel.physicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Leaving
                     dataViewModel.bloodPressureScreenNavStatus = BloodPressureScreenNavStatus.Leaving
                     dataViewModel.heartRateScreenNavStatus = HeartRateScreenNavStatus.Leaving
-                    personalInfoViewModel.personalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Leaving
 
                     MainNavigationBarRoot(
                         dataViewModel,
@@ -607,40 +609,50 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                composable(
-                    Routes.PersonalInfoForm.route,
-                    enterTransition = {
-                        when (initialState.destination.route) {
-                            Routes.DataHome.route -> EnterTransition.None
-                            else -> null
-                        }
-                    },
-                    exitTransition = {
-                        when (targetState.destination.route) {
-                            Routes.DataHome.route -> ExitTransition.None
-                            else -> null
-                        }
-                    }
-                ) {
+                navigation(
+                    startDestination = "personal_info",
+                    route = "PERSONAL_INFO"
+                ){
 
-                    when(personalInfoViewModel.personalInfoDataScreenNavStatus){
-                        PersonalInfoDataScreenNavStatus.Leaving->{
-                            personalInfoViewModel.personalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Started
-                            personalInfoViewModel.starListeningPersonalInfoDB(macAddress = dataViewModel.macAddressDeviceBluetooth)
+                    composable(
+                        "personal_info",
+                        enterTransition = {
+                            when (initialState.destination.route) {
+                                Routes.DataHome.route -> EnterTransition.None
+                                else -> null
+                            }
+                        },
+                        exitTransition = {
+                            when (targetState.destination.route) {
+                                Routes.DataHome.route -> ExitTransition.None
+                                else -> null
+                            }
                         }
-                        else->{
-
-                        }
-                    }
-
-
-                    PersonalInfoDataScreenRoot(
-                        personalInfoViewModel,
-                        dataViewModel.macAddressDeviceBluetooth
                     ) {
-                        navLambdaBackToMainNavigationBar()
+
+                        val personalInfoViewModel = it.personalInfoViewModel<PersonalInfoViewModel>(navController = navMainController)
+
+                        when(personalInfoViewModel.personalInfoDataScreenNavStatus){
+                            PersonalInfoDataScreenNavStatus.Leaving->{
+                                personalInfoViewModel.personalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Started
+                                personalInfoViewModel.starListeningPersonalInfoDB(macAddress = dataViewModel.macAddressDeviceBluetooth)
+                            }
+                            else->{
+
+                            }
+                        }
+
+
+                        PersonalInfoDataScreenRoot(
+                            personalInfoViewModel,
+                            dataViewModel.macAddressDeviceBluetooth,
+                            navMainController)
                     }
+
+
                 }
+
+
 
             }
 
@@ -700,15 +712,33 @@ class MainActivity : ComponentActivity() {
 
         dataViewModel.personalInfoListReadFromDB = listOf()
 
-        personalInfoViewModel.personalInfoDataState = PersonalInfoDataState()
-        personalInfoViewModel.invalidAlertDialogState = InvalidAlertDialogState()
-        personalInfoViewModel.updateAlertDialogPersonalFieldVisibilityState = UpdateAlertDialogPersonalFieldVisibilityState()
-        personalInfoViewModel.insertAlertDialogPersonalFieldVisibilityState = InsertAlertDialogPersonalFieldVisibilityState()
-
         dataViewModel.macAddressDeviceBluetooth = ""
         dataViewModel.nameDeviceBluetooth = ""
     }
 }
+
+
+@Composable
+inline fun<reified T: ViewModel> NavBackStackEntry.personalInfoViewModel(navController: NavController): T{
+    val navGraphRoute = destination.parent?.route ?: return viewModel()
+    val parentEntry = remember (this){
+        navController.getBackStackEntry(navGraphRoute)
+    }
+
+    val personalInfoViewModel: PersonalInfoViewModel?
+
+    personalInfoViewModel = viewModel(
+    parentEntry,
+    "PersonalInfoViewModel",
+    PersonalInfoViewModelFactory(
+        LocalContext.current.applicationContext
+                as Application
+    ),
+
+    )
+    return personalInfoViewModel as T
+}
+
 
 
 @Preview(showBackground = true)

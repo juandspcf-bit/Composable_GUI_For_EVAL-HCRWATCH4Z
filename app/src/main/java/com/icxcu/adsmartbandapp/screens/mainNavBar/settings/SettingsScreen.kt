@@ -52,7 +52,7 @@ fun SettingsScreen(
 
             RowSettings(
                 navigation = {
-                    navMainController.navigate(Routes.PersonalInfoForm.route) {
+                    navMainController.navigate("PERSONAL_INFO") {
                         popUpTo(Routes.DataHome.route)
                     }
                 },

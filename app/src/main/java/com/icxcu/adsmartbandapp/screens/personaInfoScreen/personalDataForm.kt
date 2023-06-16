@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.navigation.NavHostController
 import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 import com.icxcu.adsmartbandapp.viewModels.PersonalInfoViewModel
@@ -14,8 +15,17 @@ import com.icxcu.adsmartbandapp.viewModels.PersonalInfoViewModel
 fun PersonalInfoDataScreenRoot(
     personalInfoViewModel: PersonalInfoViewModel,
     macAddressDeviceBluetooth: String,
-    navLambda: () -> Unit
+    navMainController: NavHostController
 ) {
+
+    val navLambdaBackToMainNavigationBarFromPersonalInfo = remember(navMainController) {
+        {
+            navMainController.popBackStack("PERSONAL_INFO", true)
+            Unit
+        }
+    }
+
+    Log.d("PERSONAL_INFO_SCREEN", "PersonalInfoDataScreenRoot: ")
 
     val getPersonalInfoDataState = remember(personalInfoViewModel) {{personalInfoViewModel.personalInfoDataState}}
     val getInvalidAlertDialogState = remember(personalInfoViewModel) {{personalInfoViewModel.invalidAlertDialogState}}
@@ -61,7 +71,7 @@ fun PersonalInfoDataScreenRoot(
     }
 
     PersonalInfoFormScaffold(
-        navLambda,
+        navLambdaBackToMainNavigationBarFromPersonalInfo,
         getPersonalInfoDataState,
         getPersonalInfoListReadFromDB,
         validatePersonalInfo,
