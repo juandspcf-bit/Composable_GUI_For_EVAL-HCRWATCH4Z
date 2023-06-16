@@ -8,23 +8,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
-import com.icxcu.adsmartbandapp.viewModels.DataViewModel
+import com.icxcu.adsmartbandapp.viewModels.PersonalInfoViewModel
 
 @Composable
 fun PersonalInfoDataScreenRoot(
-    dataViewModel: DataViewModel,
+    personalInfoViewModel: PersonalInfoViewModel,
+    macAddressDeviceBluetooth: String,
     navLambda: () -> Unit
 ) {
 
-    val getPersonalInfoDataState = remember(dataViewModel) {{dataViewModel.personalInfoDataState}}
-    val getInvalidAlertDialogState = remember(dataViewModel) {{dataViewModel.invalidAlertDialogState}}
-    val validatePersonalInfo = remember(dataViewModel, getPersonalInfoDataState) {{dataViewModel.validatePersonalInfo( getPersonalInfoDataState )}}
-    val getUpdateAlertDialogVisibilityState = remember(dataViewModel) {{dataViewModel.updateAlertDialogPersonalFieldVisibilityState}}
-    val getInsertAlertDialogVisibilityState = remember(dataViewModel) {{dataViewModel.insertAlertDialogPersonalFieldVisibilityState}}
+    val getPersonalInfoDataState = remember(personalInfoViewModel) {{personalInfoViewModel.personalInfoDataState}}
+    val getInvalidAlertDialogState = remember(personalInfoViewModel) {{personalInfoViewModel.invalidAlertDialogState}}
+    val validatePersonalInfo = remember(personalInfoViewModel, getPersonalInfoDataState) {{personalInfoViewModel.validatePersonalInfo( getPersonalInfoDataState )}}
+    val getUpdateAlertDialogVisibilityState = remember(personalInfoViewModel) {{personalInfoViewModel.updateAlertDialogPersonalFieldVisibilityState}}
+    val getInsertAlertDialogVisibilityState = remember(personalInfoViewModel) {{personalInfoViewModel.insertAlertDialogPersonalFieldVisibilityState}}
 
-    val getPersonalInfoListReadFromDB = remember(dataViewModel) {
+    val getPersonalInfoListReadFromDB = remember(personalInfoViewModel) {
         {
-            dataViewModel.personalInfoDataStateC
+            personalInfoViewModel.personalInfoDataStateC
         }
     }
 
@@ -41,20 +42,20 @@ fun PersonalInfoDataScreenRoot(
         Log.d("AVATAR", "dataFromDB: ${getPersonalInfoDataState().uri}")
     }
 
-    val insertPersonalData= remember(dataViewModel){
+    val insertPersonalData= remember(personalInfoViewModel){
         { personalInfo: PersonalInfo ->
-            dataViewModel.insertPersonalInfoDataWithCoroutine(
+            personalInfoViewModel.insertPersonalInfoDataWithCoroutine(
                 personalInfo,
-                dataViewModel.macAddressDeviceBluetooth
+                macAddressDeviceBluetooth
             )
         }
     }
 
-    val updatePersonalData= remember(dataViewModel){
+    val updatePersonalData= remember(personalInfoViewModel){
         { personalInfo: PersonalInfo ->
-            dataViewModel.updatePersonalInfoDataWithCoroutine(
+            personalInfoViewModel.updatePersonalInfoDataWithCoroutine(
                 personalInfo,
-                dataViewModel.macAddressDeviceBluetooth
+                macAddressDeviceBluetooth
             )
         }
     }

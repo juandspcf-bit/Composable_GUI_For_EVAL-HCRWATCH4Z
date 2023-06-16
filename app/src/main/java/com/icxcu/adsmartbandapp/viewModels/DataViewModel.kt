@@ -71,13 +71,9 @@ class DataViewModel(var application: Application) : ViewModel() {
     var yesterdayHealthsDataState = YesterdayHealthsDataState()
     var dayHealthDataStateForDashBoard = DayHealthDataStateForDashBoard()
 
-    var personalInfoFromDB = MutableLiveData<List<PersonalInfo>>()
     var personalInfoListReadFromDB = listOf<PersonalInfo>()
 
-    var personalInfoDataState = PersonalInfoDataState()
-    var invalidAlertDialogState = InvalidAlertDialogState()
-    var updateAlertDialogPersonalFieldVisibilityState = UpdateAlertDialogPersonalFieldVisibilityState()
-    var insertAlertDialogPersonalFieldVisibilityState = InsertAlertDialogPersonalFieldVisibilityState()
+
 
     var macAddressDeviceBluetooth: String = ""
     var nameDeviceBluetooth: String = ""
@@ -124,10 +120,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     var jobHeartRateState: Job? = null
     var heartRateScreenNavStatus: HeartRateScreenNavStatus = HeartRateScreenNavStatus.Leaving
 
-    var personalInfoDataStateC by mutableStateOf<List<PersonalInfo>>(listOf())
-    var jobPersonalInfoDataState: Job? = null
-    var personalInfoDataScreenNavStatus: PersonalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Leaving
-    var updatePersonalInfoDataWithCoroutineAD by mutableStateOf(false)
+
 
     init {
         val swDb = SWRoomDatabase.getInstance(application)
@@ -141,7 +134,7 @@ class DataViewModel(var application: Application) : ViewModel() {
             heartRateDao,
             personalInfoDao
         )
-        //swRepository = SWRepository()
+
         dbHelper = DatabaseHelperImpl(swDb)
 
         dayHealthDataState.dayPhysicalActivityResultsFromDB =
@@ -152,9 +145,6 @@ class DataViewModel(var application: Application) : ViewModel() {
 
         dayHealthDataStateForDashBoard.dayHealthResultsFromDBForDashBoard =
             dbRepository.dayHealthResultsFromDBFForDashBoard
-
-
-        personalInfoFromDB = dbRepository.personalInfoFromDB
 
     }
 
@@ -261,35 +251,6 @@ class DataViewModel(var application: Application) : ViewModel() {
         }
     }
 
-    fun starListeningPersonalInfoDB(macAddress: String = "") {
-        jobHeartRateState = viewModelScope.launch {
-
-            val dataDeferred = async {
-                dbRepository.getPersonalInfoWithCoroutine(macAddress)
-            }
-
-            val dataCoroutineFromDB = dataDeferred.await()
-
-            personalInfoDataStateC = dataCoroutineFromDB.ifEmpty {
-                MutableList(1) { PersonalInfo(
-                    id = -1,
-                    macAddress = macAddress,
-                    typesTable= TypesTable.PERSONAL_INFO,
-                    name = "",
-                    birthdate = "",
-                    weight = 0.0,
-                    height = 0.0 ) }.toList()
-            }
-
-            personalInfoDataState.apply {
-                name = personalInfoDataStateC[0].name
-                date = personalInfoDataStateC[0].birthdate
-                height = personalInfoDataStateC[0].height.toString()
-                weight = personalInfoDataStateC[0].weight.toString()
-            }
-
-        }
-    }
 
     fun requestSmartWatchData(name: String = "", macAddress: String = "") {
         swRepository.requestSmartWatchData()
@@ -356,59 +317,6 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     fun updateHeartRateData(heartRate: HeartRate) {
         dbRepository.updateHeartRateData(heartRate)
-    }
-
-
-    //Personal data
-    fun updatePersonalInfoDataWithCoroutine(personalInfo: PersonalInfo, macAddressDeviceBluetooth:String) {
-        val dataDeferred = viewModelScope.async {
-            dbRepository.updatePersonalInfoDataWithCoroutine(personalInfo = personalInfo)
-        }
-
-        viewModelScope.launch {
-            updateAlertDialogPersonalFieldVisibilityState
-                .updateAlertDialogPersonalFieldVisibility = dataDeferred.await()
-            starListeningPersonalInfoDB(macAddressDeviceBluetooth)
-        }
-    }
-
-    fun insertPersonalInfoDataWithCoroutine(personalInfo: PersonalInfo, macAddressDeviceBluetooth:String) {
-        val dataDeferred = viewModelScope.async {
-            dbRepository.insertPersonalInfoDataWithCoroutine(personalInfo)
-        }
-
-        viewModelScope.launch {
-            insertAlertDialogPersonalFieldVisibilityState
-                .insertAlertDialogPersonalFieldVisibility = dataDeferred.await()
-            starListeningPersonalInfoDB(macAddressDeviceBluetooth)
-        }
-
-
-    }
-
-    fun validatePersonalInfo(
-        getPersonalInfoDataStateState: () -> PersonalInfoDataState,
-    ): List<String> {
-        val validationFields = mapOf(
-            "Name" to getPersonalInfoDataStateState().name.isNotBlank(),
-            "Birthday" to ValidatorsPersonalField.dateValidator(getPersonalInfoDataStateState().date)
-                .isNotBlank(),
-            "Weight" to ValidatorsPersonalField.weightValidator(getPersonalInfoDataStateState().weight)
-                .isNotBlank(),
-            "Height" to ValidatorsPersonalField.heightValidator(getPersonalInfoDataStateState().height)
-                .isNotBlank()
-        )
-
-        val invalidFields = mutableListOf<String>()
-        validationFields.forEach { (key, value) ->
-            if (value.not()) {
-                invalidFields.add(key)
-            }
-        }
-
-        return invalidFields.toList()
-
-
     }
 
 }

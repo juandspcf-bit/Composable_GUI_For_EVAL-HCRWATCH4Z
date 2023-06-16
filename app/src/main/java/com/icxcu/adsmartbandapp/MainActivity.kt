@@ -257,7 +257,7 @@ class MainActivity : ComponentActivity() {
                     dataViewModel.jobPhysicalActivityState?.cancel()
                     dataViewModel.jobBloodPressureState?.cancel()
                     dataViewModel.jobHeartRateState?.cancel()
-                    dataViewModel.jobPersonalInfoDataState?.cancel()
+                    personalInfoViewModel.jobPersonalInfoDataState?.cancel()
 
 
                 }
@@ -409,7 +409,7 @@ class MainActivity : ComponentActivity() {
                     dataViewModel.physicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Leaving
                     dataViewModel.bloodPressureScreenNavStatus = BloodPressureScreenNavStatus.Leaving
                     dataViewModel.heartRateScreenNavStatus = HeartRateScreenNavStatus.Leaving
-                    dataViewModel.personalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Leaving
+                    personalInfoViewModel.personalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Leaving
 
                     MainNavigationBarRoot(
                         dataViewModel,
@@ -488,7 +488,7 @@ class MainActivity : ComponentActivity() {
                     dataViewModel.physicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Leaving
                     dataViewModel.bloodPressureScreenNavStatus = BloodPressureScreenNavStatus.Leaving
                     dataViewModel.heartRateScreenNavStatus = HeartRateScreenNavStatus.Leaving
-                    dataViewModel.personalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Leaving
+                    personalInfoViewModel.personalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Leaving
 
                     MainNavigationBarRoot(
                         dataViewModel,
@@ -623,10 +623,10 @@ class MainActivity : ComponentActivity() {
                     }
                 ) {
 
-                    when(dataViewModel.personalInfoDataScreenNavStatus){
+                    when(personalInfoViewModel.personalInfoDataScreenNavStatus){
                         PersonalInfoDataScreenNavStatus.Leaving->{
-                            dataViewModel.personalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Started
-                            dataViewModel.starListeningPersonalInfoDB(macAddress = dataViewModel.macAddressDeviceBluetooth)
+                            personalInfoViewModel.personalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Started
+                            personalInfoViewModel.starListeningPersonalInfoDB(macAddress = dataViewModel.macAddressDeviceBluetooth)
                         }
                         else->{
 
@@ -634,7 +634,10 @@ class MainActivity : ComponentActivity() {
                     }
 
 
-                    PersonalInfoDataScreenRoot(dataViewModel = dataViewModel) {
+                    PersonalInfoDataScreenRoot(
+                        personalInfoViewModel,
+                        dataViewModel.macAddressDeviceBluetooth
+                    ) {
                         navLambdaBackToMainNavigationBar()
                     }
                 }
@@ -695,14 +698,12 @@ class MainActivity : ComponentActivity() {
         dataViewModel.statusStartedReadingDataLasThreeDaysData = false
 
 
-
-        dataViewModel.personalInfoFromDB.value = listOf()
         dataViewModel.personalInfoListReadFromDB = listOf()
 
-        dataViewModel.personalInfoDataState = PersonalInfoDataState()
-        dataViewModel.invalidAlertDialogState = InvalidAlertDialogState()
-        dataViewModel.updateAlertDialogPersonalFieldVisibilityState = UpdateAlertDialogPersonalFieldVisibilityState()
-        dataViewModel.insertAlertDialogPersonalFieldVisibilityState = InsertAlertDialogPersonalFieldVisibilityState()
+        personalInfoViewModel.personalInfoDataState = PersonalInfoDataState()
+        personalInfoViewModel.invalidAlertDialogState = InvalidAlertDialogState()
+        personalInfoViewModel.updateAlertDialogPersonalFieldVisibilityState = UpdateAlertDialogPersonalFieldVisibilityState()
+        personalInfoViewModel.insertAlertDialogPersonalFieldVisibilityState = InsertAlertDialogPersonalFieldVisibilityState()
 
         dataViewModel.macAddressDeviceBluetooth = ""
         dataViewModel.nameDeviceBluetooth = ""

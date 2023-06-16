@@ -29,20 +29,13 @@ fun HeartRateScreenRoot(
         }
     }
 
-/*    val dayHeartRateResultsFromDB by getDayPhysicalActivityData().dayHeartRateResultsFromDB.observeAsState(
-        listOf()
-    )*/
+
 
     val dayHeartRateResultsFromDB = dataViewModel.dayHeartRateState
 
     val ageCalculated by remember(dataViewModel) {
         derivedStateOf {
-            val date =
-                ValidatorsPersonalField.dateValidator(dataViewModel.personalInfoDataState.date)
-            Log.d(
-                "VerifyingDate",
-                "HeartRateInfo: date ${dataViewModel.personalInfoDataState.date}"
-            )
+            val date = ValidatorsPersonalField.dateValidator("24/10/1981")
             val age = try {
                 val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                 val myBirthsDate = LocalDate.parse(date, formatter)
