@@ -61,6 +61,7 @@ import com.icxcu.adsmartbandapp.viewModels.DataViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModel
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.PersonalInfoViewModel
+import com.icxcu.adsmartbandapp.viewModels.PersonalInfoViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.ScanningBluetoothAdapterStatus
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import com.icxcu.adsmartbandapp.viewModels.permissionsRequired
@@ -124,14 +125,14 @@ class MainActivity : ComponentActivity() {
                         )
                     )
 
-/*                    dataViewModel = viewModel(
+                    personalInfoViewModel = viewModel(
                         it,
-                        "DataViewModel",
-                        DataViewModelFactory(
+                        "PersonalInfoViewModel",
+                        PersonalInfoViewModelFactory(
                             LocalContext.current.applicationContext
                                     as Application
                         )
-                    )*/
+                    )
 
 
                 }
