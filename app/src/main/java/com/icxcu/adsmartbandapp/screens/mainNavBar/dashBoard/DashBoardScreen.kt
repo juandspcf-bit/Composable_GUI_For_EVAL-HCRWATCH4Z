@@ -16,7 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.repositories.Values
-import com.icxcu.adsmartbandapp.screens.NestedRoutes
+import com.icxcu.adsmartbandapp.screens.PhysicalActivityNestedRoute
 import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.additionalWidgets.ArcCompose
 
@@ -47,7 +47,7 @@ fun DashBoardScreen(
                     radius = 60.dp
                 )
             },
-            callBack = { navMainController.navigate(NestedRoutes.PhysicalActivityNav.route) },
+            callBack = { navMainController.navigate(PhysicalActivityNestedRoute.PhysicalActivityRoute.route) },
             guidelineFromBottomFraction = 0.35f
         )
     )

@@ -36,8 +36,9 @@ import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreH
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
 import com.icxcu.adsmartbandapp.screens.BluetoothScanScreen
-import com.icxcu.adsmartbandapp.screens.NestedRoutes
+import com.icxcu.adsmartbandapp.screens.PhysicalActivityNestedRoute
 import com.icxcu.adsmartbandapp.screens.PermissionsScreen
+import com.icxcu.adsmartbandapp.screens.PersonalInfoNestedRoute
 import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.mainNavBar.MainNavigationBarRoot
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
@@ -480,8 +481,8 @@ class MainActivity : ComponentActivity() {
 
 
                 navigation(
-                    startDestination = NestedRoutes.PhysicalActivityNav.subRoute,// "physical_activity",
-                    route = NestedRoutes.PhysicalActivityNav.route//"PHYSICAL_ACTIVITY"
+                    startDestination = PhysicalActivityNestedRoute.PhysicalActivityScreen.subRoute,// "physical_activity",
+                    route = PhysicalActivityNestedRoute.PhysicalActivityRoute.route//"PHYSICAL_ACTIVITY"
                 ){
                     composable(
                         "physical_activity",
@@ -600,8 +601,8 @@ class MainActivity : ComponentActivity() {
                 }
 
                 navigation(
-                    startDestination = NestedRoutes.PersonalInfoNav.subRoute,
-                    route = NestedRoutes.PersonalInfoNav.route
+                    startDestination = PersonalInfoNestedRoute.PersonalInfoScreen.subRoute,
+                    route = PersonalInfoNestedRoute.PersonalInfoRoute.route
                 ){
 
                     composable(

@@ -2,7 +2,6 @@ package com.icxcu.adsmartbandapp.screens.mainNavBar.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,16 +19,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
 import com.icxcu.adsmartbandapp.R
-import com.icxcu.adsmartbandapp.screens.NestedRoutes
+import com.icxcu.adsmartbandapp.screens.PersonalInfoNestedRoute
+import com.icxcu.adsmartbandapp.screens.PhysicalActivityNestedRoute
 import com.icxcu.adsmartbandapp.screens.Routes
 
 @Composable
@@ -53,7 +51,7 @@ fun SettingsScreen(
 
             RowSettings(
                 navigation = {
-                    navMainController.navigate(NestedRoutes.PersonalInfoNav.route) {
+                    navMainController.navigate(PersonalInfoNestedRoute.PersonalInfoRoute.route) {
                         popUpTo(Routes.DataHome.route)
                     }
                 },

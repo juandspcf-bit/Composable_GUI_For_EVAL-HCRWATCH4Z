@@ -19,8 +19,14 @@ sealed class Routes(val route: String) {
 }
 
 
-sealed class NestedRoutes(val route:String, val subRoute:String){
-    object PhysicalActivityNav: NestedRoutes("PHYSICAL_ACTIVITY", "physical_activity")
-    object PersonalInfoNav: NestedRoutes("PERSONAL_INFO", "personal_info")
+sealed class PhysicalActivityNestedRoute(val route:String, val subRoute:String){
+    object PhysicalActivityRoute: PhysicalActivityNestedRoute("PHYSICAL_ACTIVITY", "")
+    object PhysicalActivityScreen: PhysicalActivityNestedRoute("PHYSICAL_ACTIVITY", "physical_activity")
+
+}
+
+sealed class PersonalInfoNestedRoute(val route:String, val subRoute:String){
+    object PersonalInfoRoute: PersonalInfoNestedRoute("PERSONAL_INFO", "")
+    object PersonalInfoScreen: PersonalInfoNestedRoute("PERSONAL_INFO", "personal_info")
 
 }
