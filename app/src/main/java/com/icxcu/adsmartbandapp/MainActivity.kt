@@ -600,8 +600,8 @@ class MainActivity : ComponentActivity() {
                 }
 
                 navigation(
-                    startDestination = "personal_info",
-                    route = "PERSONAL_INFO"
+                    startDestination = NestedRoutes.PersonalInfoNav.subRoute,
+                    route = NestedRoutes.PersonalInfoNav.route
                 ){
 
                     composable(
