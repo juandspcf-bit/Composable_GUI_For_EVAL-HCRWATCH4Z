@@ -27,7 +27,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.screens.PersonalInfoNestedRoute
-import com.icxcu.adsmartbandapp.screens.PhysicalActivityNestedRoute
 import com.icxcu.adsmartbandapp.screens.Routes
 
 @Composable
@@ -51,7 +50,7 @@ fun SettingsScreen(
 
             RowSettings(
                 navigation = {
-                    navMainController.navigate(PersonalInfoNestedRoute.PersonalInfoRoute.route) {
+                    navMainController.navigate(PersonalInfoNestedRoute.PersonalInfoMainRoute().route) {
                         popUpTo(Routes.DataHome.route)
                     }
                 },

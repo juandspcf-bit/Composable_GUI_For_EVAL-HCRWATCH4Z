@@ -481,8 +481,8 @@ class MainActivity : ComponentActivity() {
 
 
                 navigation(
-                    startDestination = PhysicalActivityNestedRoute.PhysicalActivityScreen.subRoute,// "physical_activity",
-                    route = PhysicalActivityNestedRoute.PhysicalActivityRoute.route//"PHYSICAL_ACTIVITY"
+                    startDestination = PhysicalActivityNestedRoute.PhysicalActivityScreen().route,// "physical_activity",
+                    route = PhysicalActivityNestedRoute.PhysicalActivityMainRoute().route//"PHYSICAL_ACTIVITY"
                 ){
                     composable(
                         "physical_activity",
@@ -601,8 +601,8 @@ class MainActivity : ComponentActivity() {
                 }
 
                 navigation(
-                    startDestination = PersonalInfoNestedRoute.PersonalInfoScreen.subRoute,
-                    route = PersonalInfoNestedRoute.PersonalInfoRoute.route
+                    startDestination = PersonalInfoNestedRoute.PersonalInfoScreen().route,
+                    route = PersonalInfoNestedRoute.PersonalInfoMainRoute().route
                 ){
 
                     composable(

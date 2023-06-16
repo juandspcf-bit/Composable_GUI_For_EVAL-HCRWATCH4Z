@@ -21,7 +21,7 @@ fun PhysicalActivityScreenRoot(
 
     val navLambdaBackToMainNavigationBar = remember(navMainController) {
         {
-            navMainController.popBackStack(PhysicalActivityNestedRoute.PhysicalActivityRoute.route, true)
+            navMainController.popBackStack(PhysicalActivityNestedRoute.PhysicalActivityMainRoute().route, true)
             Unit
         }
     }

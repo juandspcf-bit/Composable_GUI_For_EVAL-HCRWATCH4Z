@@ -10,7 +10,6 @@ import androidx.navigation.NavHostController
 import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 import com.icxcu.adsmartbandapp.screens.PersonalInfoNestedRoute
-import com.icxcu.adsmartbandapp.screens.PhysicalActivityNestedRoute
 import com.icxcu.adsmartbandapp.viewModels.PersonalInfoViewModel
 
 @Composable
@@ -22,7 +21,7 @@ fun PersonalInfoDataScreenRoot(
 
     val navLambdaBackToMainNavigationBarFromPersonalInfo = remember(navMainController) {
         {
-            navMainController.popBackStack(PersonalInfoNestedRoute.PersonalInfoRoute.route, true)
+            navMainController.popBackStack(PersonalInfoNestedRoute.PersonalInfoMainRoute().route, true)
             Unit
         }
     }

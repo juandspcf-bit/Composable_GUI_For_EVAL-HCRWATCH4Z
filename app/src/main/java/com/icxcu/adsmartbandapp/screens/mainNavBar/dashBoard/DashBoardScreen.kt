@@ -47,7 +47,7 @@ fun DashBoardScreen(
                     radius = 60.dp
                 )
             },
-            callBack = { navMainController.navigate(PhysicalActivityNestedRoute.PhysicalActivityRoute.route) },
+            callBack = { navMainController.navigate(PhysicalActivityNestedRoute.PhysicalActivityMainRoute().route) },
             guidelineFromBottomFraction = 0.35f
         )
     )

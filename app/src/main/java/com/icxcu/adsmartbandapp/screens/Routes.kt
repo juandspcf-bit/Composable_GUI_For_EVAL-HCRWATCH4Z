@@ -18,15 +18,18 @@ sealed class Routes(val route: String) {
 
 }
 
-
-sealed class PhysicalActivityNestedRoute(val route:String, val subRoute:String){
-    object PhysicalActivityRoute: PhysicalActivityNestedRoute("PHYSICAL_ACTIVITY", "")
-    object PhysicalActivityScreen: PhysicalActivityNestedRoute("PHYSICAL_ACTIVITY", "physical_activity")
+sealed class PhysicalActivityNestedRoute(){
+    class PhysicalActivityMainRoute(var route: String = "PHYSICAL_ACTIVITY") :
+        PhysicalActivityNestedRoute()
+    class PhysicalActivityScreen(var route: String = "physical_activity"):
+        PhysicalActivityNestedRoute()
 
 }
 
-sealed class PersonalInfoNestedRoute(val route:String, val subRoute:String){
-    object PersonalInfoRoute: PersonalInfoNestedRoute("PERSONAL_INFO", "")
-    object PersonalInfoScreen: PersonalInfoNestedRoute("PERSONAL_INFO", "personal_info")
+sealed class PersonalInfoNestedRoute{
+    class PersonalInfoMainRoute(var route: String = "PERSONAL_INFO") :
+        PersonalInfoNestedRoute()
+    class PersonalInfoScreen(var route: String = "personal_info") :
+        PersonalInfoNestedRoute()
 
 }
