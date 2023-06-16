@@ -34,6 +34,7 @@ import com.icxcu.adsmartbandapp.bluetooth.BluetoothLEManagerImp
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
 import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreHelper
 import com.icxcu.adsmartbandapp.repositories.Values
+import com.icxcu.adsmartbandapp.screens.BloodPressureNestedRoute
 import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
 import com.icxcu.adsmartbandapp.screens.BluetoothScanScreen
 import com.icxcu.adsmartbandapp.screens.PhysicalActivityNestedRoute
@@ -52,9 +53,11 @@ import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenRoo
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityScreenRoot
 import com.icxcu.adsmartbandapp.screens.progressLoading.CircularProgressLoading
+import com.icxcu.adsmartbandapp.screens.viewModelProviders.bloodPressureViewModel
 import com.icxcu.adsmartbandapp.screens.viewModelProviders.personalInfoViewModel
 import com.icxcu.adsmartbandapp.screens.viewModelProviders.physicalActivityViewModel
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
+import com.icxcu.adsmartbandapp.viewModels.BloodPressureViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
@@ -236,8 +239,6 @@ class MainActivity : ComponentActivity() {
                     dataViewModel.statusReadingDbForDashboard =
                         StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
                     navMainController.popBackStack()
-                    //dataViewModel.jobPhysicalActivityState?.cancel()
-                    dataViewModel.jobBloodPressureState?.cancel()
                     dataViewModel.jobHeartRateState?.cancel()
 
                 }
@@ -386,8 +387,7 @@ class MainActivity : ComponentActivity() {
                             StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
                     }
 
-                    //dataViewModel.physicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Leaving
-                    dataViewModel.bloodPressureScreenNavStatus = BloodPressureScreenNavStatus.Leaving
+
                     dataViewModel.heartRateScreenNavStatus = HeartRateScreenNavStatus.Leaving
 
                     MainNavigationBarRoot(
@@ -464,8 +464,6 @@ class MainActivity : ComponentActivity() {
                             StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
                     }
 
-                    //dataViewModel.physicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Leaving
-                    dataViewModel.bloodPressureScreenNavStatus = BloodPressureScreenNavStatus.Leaving
                     dataViewModel.heartRateScreenNavStatus = HeartRateScreenNavStatus.Leaving
 
                     MainNavigationBarRoot(
@@ -485,7 +483,7 @@ class MainActivity : ComponentActivity() {
                     route = PhysicalActivityNestedRoute.PhysicalActivityMainRoute().route//"PHYSICAL_ACTIVITY"
                 ){
                     composable(
-                        "physical_activity",
+                        PhysicalActivityNestedRoute.PhysicalActivityScreen().route,
                         enterTransition = {
                             when (initialState.destination.route) {
                                 Routes.DataHome.route ->
@@ -525,44 +523,53 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
+                navigation(
+                    startDestination = BloodPressureNestedRoute.BloodPressureScreen().route,// "physical_activity",
+                    route = BloodPressureNestedRoute.BloodPressureMainRoute().route//"PHYSICAL_ACTIVITY"
+                ){
+                    composable(
+                        Routes.BloodPressurePlots.route,
+                        enterTransition = {
+                            when (initialState.destination.route) {
+                                Routes.DataHome.route ->
+                                    EnterTransition.None
 
-
-
-                composable(
-                    Routes.BloodPressurePlots.route,
-                    enterTransition = {
-                        when (initialState.destination.route) {
-                            Routes.DataHome.route ->
-                                EnterTransition.None
-
-                            else -> null
+                                else -> null
+                            }
+                        },
+                        exitTransition = {
+                            when (targetState.destination.route) {
+                                Routes.DataHome.route -> ExitTransition.None
+                                else -> null
+                            }
                         }
-                    },
-                    exitTransition = {
-                        when (targetState.destination.route) {
-                            Routes.DataHome.route -> ExitTransition.None
-                            else -> null
-                        }
-                    }
-                ) {
-                    val myDateObj = LocalDateTime.now()
-                    val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-                    val todayFormattedDate = myDateObj.format(myFormatObj)
+                    ) {
+                        val bloodPressureViewModel = it.bloodPressureViewModel<BloodPressureViewModel>(navController = navMainController)
 
-                    when(dataViewModel.bloodPressureScreenNavStatus){
-                        BloodPressureScreenNavStatus.Leaving->{
-                            dataViewModel.bloodPressureScreenNavStatus = BloodPressureScreenNavStatus.Started
-                            dataViewModel.starListeningBloodPressureDB(todayFormattedDate, dataViewModel.macAddressDeviceBluetooth)
-                        }
-                        else->{
+                        val myDateObj = LocalDateTime.now()
+                        val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                        val todayFormattedDate = myDateObj.format(myFormatObj)
 
-                        }
-                    }
+                        when(bloodPressureViewModel.bloodPressureScreenNavStatus){
+                            BloodPressureScreenNavStatus.Leaving->{
+                                bloodPressureViewModel.bloodPressureScreenNavStatus = BloodPressureScreenNavStatus.Started
+                                bloodPressureViewModel.starListeningBloodPressureDB(todayFormattedDate, dataViewModel.macAddressDeviceBluetooth)
+                            }
+                            else->{
 
-                 BloodPressureScreenRoot(dataViewModel = dataViewModel) {
-                        navLambdaBackToMainNavigationBar()
+                            }
+                        }
+
+                        BloodPressureScreenRoot(
+                            bloodPressureViewModel,
+                            dataViewModel.macAddressDeviceBluetooth,
+                            navMainController
+                        )
                     }
                 }
+
+
+
 
                 composable(
                     Routes.HeartRatePlot.route,
@@ -606,7 +613,7 @@ class MainActivity : ComponentActivity() {
                 ){
 
                     composable(
-                        "personal_info",
+                        PersonalInfoNestedRoute.PersonalInfoScreen().route,
                         enterTransition = {
                             when (initialState.destination.route) {
                                 Routes.DataHome.route -> EnterTransition.None

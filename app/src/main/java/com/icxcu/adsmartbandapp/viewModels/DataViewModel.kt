@@ -95,10 +95,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     private var bloodPressureDao: BloodPressureDao
 
 
-    var dayBloodPressureState by mutableStateOf<List<BloodPressure>>(listOf())
-    var jobBloodPressureState: Job? = null
-    var bloodPressureScreenNavStatus: BloodPressureScreenNavStatus =
-        BloodPressureScreenNavStatus.Leaving
+
 
     var dayHeartRateState by mutableStateOf<List<HeartRate>>(listOf())
     var jobHeartRateState: Job? = null
@@ -120,10 +117,7 @@ class DataViewModel(var application: Application) : ViewModel() {
 
         dbHelper = DatabaseHelperImpl(swDb)
 
-
-        dayHealthDataState.dayBloodPressureResultsFromDB =
-            dbRepository.dayBloodPressureResultsFromDB
-        dayHealthDataState.dayHeartRateResultsFromDB = dbRepository.dayHeartRateResultsFromDB
+       dayHealthDataState.dayHeartRateResultsFromDB = dbRepository.dayHeartRateResultsFromDB
 
         dayHealthDataStateForDashBoard.dayHealthResultsFromDBForDashBoard =
             dbRepository.dayHealthResultsFromDBFForDashBoard
@@ -200,16 +194,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     }
 
 
-    fun starListeningBloodPressureDB(dateData: String = "", macAddress: String = "") {
-        jobBloodPressureState = viewModelScope.launch {
-            dbRepository.getDayBloodPressureWithFlow(dateData, macAddress)
-                .distinctUntilChanged()
-                .collect {
-                    Log.d("DB_FLOW", "starListeningDB of $macAddress: $it")
-                    dayBloodPressureState = it
-                }
-        }
-    }
+
 
     fun starListeningHeartRateDB(dateData: String = "", macAddress: String = "") {
         jobHeartRateState = viewModelScope.launch {

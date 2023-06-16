@@ -5,8 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
+import androidx.navigation.NavController
 import com.icxcu.adsmartbandapp.data.TypesTable
+import com.icxcu.adsmartbandapp.screens.BloodPressureNestedRoute
+import com.icxcu.adsmartbandapp.screens.PhysicalActivityNestedRoute
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getDoubleListFromStringMap
+import com.icxcu.adsmartbandapp.viewModels.BloodPressureViewModel
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -14,13 +18,16 @@ import java.util.Locale
 
 @Composable
 fun BloodPressureScreenRoot(
-    dataViewModel: DataViewModel,
-    navLambda: () -> Unit
+    dataViewModel: BloodPressureViewModel,
+    macAddressDeviceBluetooth:String,
+    navMainController: NavController
 ) {
 
-    val getDayPhysicalActivityData = remember(dataViewModel) {
+
+    val navLambdaBackToMainNavigationBar = remember(navMainController) {
         {
-            dataViewModel.dayHealthDataState
+            navMainController.popBackStack(BloodPressureNestedRoute.BloodPressureMainRoute().route, true)
+            Unit
         }
     }
 
@@ -31,7 +38,7 @@ fun BloodPressureScreenRoot(
         dataViewModel.selectedDay = dayBloodPressureResultsFromDB[0].dateData
     }
 
-    getDayPhysicalActivityData().daySystolicListFromDB =
+    dataViewModel.daySystolicListFromDB =
         if (dayBloodPressureResultsFromDB.isEmpty().not()) {
             val filter =
                 dayBloodPressureResultsFromDB.filter { it.typesTable == TypesTable.SYSTOLIC }
@@ -40,9 +47,7 @@ fun BloodPressureScreenRoot(
             MutableList(48) { 0.0 }.toList()
         }
 
-    Log.d("DaySystolicListFromDB", "BloodPressureScreenRoot: ${getDayPhysicalActivityData().daySystolicListFromDB}")
-
-    getDayPhysicalActivityData().dayDiastolicListFromDB =
+    dataViewModel.dayDiastolicListFromDB =
         if (dayBloodPressureResultsFromDB.isEmpty().not()) {
             val filter =
                 dayBloodPressureResultsFromDB.filter { it.typesTable == TypesTable.DIASTOLIC }
@@ -57,12 +62,12 @@ fun BloodPressureScreenRoot(
 
     val systolicListFromDB = remember(dataViewModel) {
         {
-            dataViewModel.dayHealthDataState.daySystolicListFromDB
+            dataViewModel.daySystolicListFromDB
         }
     }
     val diastolicListFromDB = remember(dataViewModel) {
         {
-            dataViewModel.dayHealthDataState.dayDiastolicListFromDB
+            dataViewModel.dayDiastolicListFromDB
         }
     }
 
@@ -94,7 +99,7 @@ fun BloodPressureScreenRoot(
             val dateData = formattedDate.format(date)
 
             dataViewModel.jobBloodPressureState?.cancel()
-            dataViewModel.starListeningBloodPressureDB(dateData, macAddress = dataViewModel.macAddressDeviceBluetooth, )
+            dataViewModel.starListeningBloodPressureDB(dateData, macAddressDeviceBluetooth, )
             dataViewModel.selectedDay = dateData
         }
     }
@@ -106,7 +111,7 @@ fun BloodPressureScreenRoot(
         stateShowDialogDatePickerSetter = stateShowDialogDatePickerSetter,
         stateShowDialogDatePickerValue = stateShowDialogDatePickerValue,
         stateMiliSecondsDateDialogDatePickerSetter = stateMiliSecondsDateDialogDatePickerSetter,
-        navLambda = navLambda
+        navLambda = navLambdaBackToMainNavigationBar
     )
 
 }
