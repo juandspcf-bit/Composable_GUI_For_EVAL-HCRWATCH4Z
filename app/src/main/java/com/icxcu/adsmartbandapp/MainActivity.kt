@@ -36,6 +36,7 @@ import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreH
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
 import com.icxcu.adsmartbandapp.screens.BluetoothScanScreen
+import com.icxcu.adsmartbandapp.screens.NestedRoutes
 import com.icxcu.adsmartbandapp.screens.PermissionsScreen
 import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.mainNavBar.MainNavigationBarRoot
@@ -479,8 +480,8 @@ class MainActivity : ComponentActivity() {
 
 
                 navigation(
-                    startDestination = "physical_activity",
-                    route = "PHYSICAL_ACTIVITY"
+                    startDestination = NestedRoutes.PhysicalActivityNav.subRoute,// "physical_activity",
+                    route = NestedRoutes.PhysicalActivityNav.route//"PHYSICAL_ACTIVITY"
                 ){
                     composable(
                         "physical_activity",

@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import com.icxcu.adsmartbandapp.data.TypesTable
+import com.icxcu.adsmartbandapp.screens.NestedRoutes
 import com.icxcu.adsmartbandapp.viewModels.PhysicalActivityViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -20,7 +21,7 @@ fun PhysicalActivityScreenRoot(
 
     val navLambdaBackToMainNavigationBar = remember(navMainController) {
         {
-            navMainController.popBackStack("PHYSICAL_ACTIVITY", true)
+            navMainController.popBackStack(NestedRoutes.PhysicalActivityNav.route, true)
             Unit
         }
     }

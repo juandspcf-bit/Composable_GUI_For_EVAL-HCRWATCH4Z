@@ -17,3 +17,9 @@ sealed class Routes(val route: String) {
 
 
 }
+
+
+sealed class NestedRoutes(val route:String, val subRoute:String){
+    object PhysicalActivityNav: NestedRoutes("PHYSICAL_ACTIVITY", "physical_activity")
+
+}
