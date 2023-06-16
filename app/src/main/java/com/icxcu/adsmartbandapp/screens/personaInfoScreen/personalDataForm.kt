@@ -41,12 +41,22 @@ fun PersonalInfoDataScreenRoot(
         Log.d("AVATAR", "dataFromDB: ${getPersonalInfoDataState().uri}")
     }
 
-    val insertPersonalData= { personalInfo:PersonalInfo->
-        dataViewModel.insertPersonalInfoDataWithCoroutine(personalInfo, dataViewModel.macAddressDeviceBluetooth)
+    val insertPersonalData= remember(dataViewModel){
+        { personalInfo: PersonalInfo ->
+            dataViewModel.insertPersonalInfoDataWithCoroutine(
+                personalInfo,
+                dataViewModel.macAddressDeviceBluetooth
+            )
+        }
     }
 
-    val updatePersonalData= { personalInfo:PersonalInfo->
-        dataViewModel.updatePersonalInfoDataWithCoroutine(personalInfo, dataViewModel.macAddressDeviceBluetooth)
+    val updatePersonalData= remember(dataViewModel){
+        { personalInfo: PersonalInfo ->
+            dataViewModel.updatePersonalInfoDataWithCoroutine(
+                personalInfo,
+                dataViewModel.macAddressDeviceBluetooth
+            )
+        }
     }
 
     PersonalInfoFormScaffold(
