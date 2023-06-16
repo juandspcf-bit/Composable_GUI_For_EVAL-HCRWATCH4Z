@@ -7,6 +7,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
+import com.icxcu.adsmartbandapp.viewModels.PhysicalActivityViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -14,7 +15,8 @@ import java.util.Locale
 
 @Composable
 fun PhysicalActivityScreenRoot(
-    dataViewModel: DataViewModel,
+    dataViewModel: PhysicalActivityViewModel,
+    macAddressDeviceBluetooth:String,
     navLambda: () -> Unit
 ) {
 
@@ -111,7 +113,7 @@ fun PhysicalActivityScreenRoot(
             val dateData = formattedDate.format(date)
 
             dataViewModel.jobPhysicalActivityState?.cancel()
-            dataViewModel.starListeningDayPhysicalActivityDB(dateData, macAddress = dataViewModel.macAddressDeviceBluetooth, )
+            dataViewModel.starListeningDayPhysicalActivityDB(dateData, macAddress = macAddressDeviceBluetooth, )
             dataViewModel.selectedDay = dateData
         }
     }

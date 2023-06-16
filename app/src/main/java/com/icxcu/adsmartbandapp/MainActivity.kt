@@ -21,11 +21,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -44,12 +41,8 @@ import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.mainNavBar.MainNavigationBarRoot
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusReadingDbForDashboard
-import com.icxcu.adsmartbandapp.screens.personaInfoScreen.InsertAlertDialogPersonalFieldVisibilityState
-import com.icxcu.adsmartbandapp.screens.personaInfoScreen.InvalidAlertDialogState
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenRoot
-import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataState
-import com.icxcu.adsmartbandapp.screens.personaInfoScreen.UpdateAlertDialogPersonalFieldVisibilityState
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureScreenRoot
 import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenNavStatus
@@ -58,6 +51,7 @@ import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalAct
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityScreenRoot
 import com.icxcu.adsmartbandapp.screens.progressLoading.CircularProgressLoading
 import com.icxcu.adsmartbandapp.screens.viewModelProviders.personalInfoViewModel
+import com.icxcu.adsmartbandapp.screens.viewModelProviders.physicalActivityViewModel
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModelFactory
@@ -66,7 +60,7 @@ import com.icxcu.adsmartbandapp.viewModels.DataViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModel
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.PersonalInfoViewModel
-import com.icxcu.adsmartbandapp.viewModels.PersonalInfoViewModelFactory
+import com.icxcu.adsmartbandapp.viewModels.PhysicalActivityViewModel
 import com.icxcu.adsmartbandapp.viewModels.ScanningBluetoothAdapterStatus
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import com.icxcu.adsmartbandapp.viewModels.permissionsRequired
@@ -240,7 +234,7 @@ class MainActivity : ComponentActivity() {
                     dataViewModel.statusReadingDbForDashboard =
                         StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
                     navMainController.popBackStack()
-                    dataViewModel.jobPhysicalActivityState?.cancel()
+                    //dataViewModel.jobPhysicalActivityState?.cancel()
                     dataViewModel.jobBloodPressureState?.cancel()
                     dataViewModel.jobHeartRateState?.cancel()
 
@@ -390,7 +384,7 @@ class MainActivity : ComponentActivity() {
                             StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
                     }
 
-                    dataViewModel.physicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Leaving
+                    //dataViewModel.physicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Leaving
                     dataViewModel.bloodPressureScreenNavStatus = BloodPressureScreenNavStatus.Leaving
                     dataViewModel.heartRateScreenNavStatus = HeartRateScreenNavStatus.Leaving
 
@@ -468,7 +462,7 @@ class MainActivity : ComponentActivity() {
                             StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
                     }
 
-                    dataViewModel.physicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Leaving
+                    //dataViewModel.physicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Leaving
                     dataViewModel.bloodPressureScreenNavStatus = BloodPressureScreenNavStatus.Leaving
                     dataViewModel.heartRateScreenNavStatus = HeartRateScreenNavStatus.Leaving
 
@@ -482,40 +476,54 @@ class MainActivity : ComponentActivity() {
 
                 }
 
-                composable(
-                    Routes.PhysicalActivity.route,
-                    enterTransition = {
-                        when (initialState.destination.route) {
-                            Routes.DataHome.route ->
-                                EnterTransition.None
 
-                            else -> null
+
+                navigation(
+                    startDestination = "physical_activity",
+                    route = "PHYSICAL_ACTIVITY"
+                ){
+                    composable(
+                        Routes.PhysicalActivity.route,
+                        enterTransition = {
+                            when (initialState.destination.route) {
+                                Routes.DataHome.route ->
+                                    EnterTransition.None
+
+                                else -> null
+                            }
+                        },
+                        exitTransition = {
+                            when (targetState.destination.route) {
+                                Routes.DataHome.route -> ExitTransition.None
+                                else -> null
+                            }
                         }
-                    },
-                    exitTransition = {
-                        when (targetState.destination.route) {
-                            Routes.DataHome.route -> ExitTransition.None
-                            else -> null
+                    ) {
+                        val physicalActivityViewModel = it.physicalActivityViewModel<PhysicalActivityViewModel>(navController = navMainController)
+
+
+                        val myDateObj = LocalDateTime.now()
+                        val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                        val todayFormattedDate = myDateObj.format(myFormatObj)
+
+                        when(physicalActivityViewModel.physicalActivityScreenNavStatus){
+                            PhysicalActivityScreenNavStatus.Leaving->{
+                                physicalActivityViewModel.physicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Started
+                                physicalActivityViewModel.starListeningDayPhysicalActivityDB(todayFormattedDate, macAddress = dataViewModel.macAddressDeviceBluetooth, )
+                            }
+                            else->{
+
+                            }
                         }
+                        PhysicalActivityScreenRoot(
+                            dataViewModel = physicalActivityViewModel,
+                            macAddressDeviceBluetooth = dataViewModel.macAddressDeviceBluetooth
+                        ) { navLambdaBackToMainNavigationBar() }
                     }
-                ) {
-                    val myDateObj = LocalDateTime.now()
-                    val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-                    val todayFormattedDate = myDateObj.format(myFormatObj)
-
-                    when(dataViewModel.physicalActivityScreenNavStatus){
-                        PhysicalActivityScreenNavStatus.Leaving->{
-                            dataViewModel.physicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Started
-                            dataViewModel.starListeningDayPhysicalActivityDB(todayFormattedDate, macAddress = dataViewModel.macAddressDeviceBluetooth, )
-                        }
-                        else->{
-
-                        }
-                    }
-                    PhysicalActivityScreenRoot(
-                        dataViewModel = dataViewModel
-                    ) { navLambdaBackToMainNavigationBar() }
                 }
+
+
+
 
                 composable(
                     Routes.BloodPressurePlots.route,

@@ -9,7 +9,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import com.icxcu.adsmartbandapp.viewModels.PersonalInfoViewModel
-import com.icxcu.adsmartbandapp.viewModels.PersonalInfoViewModelFactory
+import com.icxcu.adsmartbandapp.viewModels.PersonalInformationViewModelFactory
+import com.icxcu.adsmartbandapp.viewModels.PhysicalActivityViewModel
+import com.icxcu.adsmartbandapp.viewModels.PhysicalActivityViewModelFactory
 
 @Composable
 inline fun<reified T: ViewModel> NavBackStackEntry.personalInfoViewModel(navController: NavController): T{
@@ -18,16 +20,37 @@ inline fun<reified T: ViewModel> NavBackStackEntry.personalInfoViewModel(navCont
         navController.getBackStackEntry(navGraphRoute)
     }
 
-    val personalInfoViewModel: PersonalInfoViewModel?
+    val viewModel: PersonalInfoViewModel?
 
-    personalInfoViewModel = viewModel(
+    viewModel = viewModel(
         parentEntry,
         "PersonalInfoViewModel",
-        PersonalInfoViewModelFactory(
+        PersonalInformationViewModelFactory(
             LocalContext.current.applicationContext
                     as Application
         ),
 
         )
-    return personalInfoViewModel as T
+    return viewModel as T
+}
+
+@Composable
+inline fun<reified T: ViewModel> NavBackStackEntry.physicalActivityViewModel(navController: NavController): T{
+    val navGraphRoute = destination.parent?.route ?: return viewModel()
+    val parentEntry = remember (this){
+        navController.getBackStackEntry(navGraphRoute)
+    }
+
+    val viewModel: PhysicalActivityViewModel?
+
+    viewModel = viewModel(
+        parentEntry,
+        "PersonalInfoViewModel",
+        PhysicalActivityViewModelFactory(
+            LocalContext.current.applicationContext
+                    as Application
+        ),
+
+        )
+    return viewModel as T
 }
