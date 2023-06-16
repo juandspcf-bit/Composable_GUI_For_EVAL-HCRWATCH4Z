@@ -5,10 +5,8 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
@@ -32,17 +30,9 @@ import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusMainTitleScaffold
 import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusReadingDbForDashboard
 import com.icxcu.adsmartbandapp.screens.mainNavBar.TodayHealthsDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.YesterdayHealthsDataState
-import com.icxcu.adsmartbandapp.screens.personaInfoScreen.InsertAlertDialogPersonalFieldVisibilityState
-import com.icxcu.adsmartbandapp.screens.personaInfoScreen.InvalidAlertDialogState
-import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenNavStatus
-import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataState
-import com.icxcu.adsmartbandapp.screens.personaInfoScreen.UpdateAlertDialogPersonalFieldVisibilityState
-import com.icxcu.adsmartbandapp.screens.personaInfoScreen.ValidatorsPersonalField
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenNavStatus
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityScreenNavStatus
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -108,9 +98,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     private var physicalActivityDao: PhysicalActivityDao
     private var bloodPressureDao: BloodPressureDao
 
-    var dayPhysicalActivityState by mutableStateOf<List<PhysicalActivity>>(listOf())
-    var jobPhysicalActivityState: Job? = null
-    var physicalActivityScreenNavStatus: PhysicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Leaving
+
 
     var dayBloodPressureState by mutableStateOf<List<BloodPressure>>(listOf())
     var jobBloodPressureState: Job? = null
@@ -137,8 +125,7 @@ class DataViewModel(var application: Application) : ViewModel() {
 
         dbHelper = DatabaseHelperImpl(swDb)
 
-        dayHealthDataState.dayPhysicalActivityResultsFromDB =
-            dbRepository.dayPhysicalActivityResultsFromDB
+
         dayHealthDataState.dayBloodPressureResultsFromDB =
             dbRepository.dayBloodPressureResultsFromDB
         dayHealthDataState.dayHeartRateResultsFromDB = dbRepository.dayHeartRateResultsFromDB
@@ -218,16 +205,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     }
 
 
-    fun starListeningDayPhysicalActivityDB(dateData: String="", macAddress: String = "", ) {
-        jobPhysicalActivityState = viewModelScope.launch {
-            dbRepository.getDayPhysicalActivityWithFlow(dateData, macAddress)
-                .distinctUntilChanged()
-                .collect {
-                    Log.d("DB_FLOW", "starListeningDB of $macAddress: $it")
-                    dayPhysicalActivityState = it
-                }
-        }
-    }
+
 
     fun starListeningBloodPressureDB(dateData: String="", macAddress: String = "", ) {
         jobBloodPressureState = viewModelScope.launch {

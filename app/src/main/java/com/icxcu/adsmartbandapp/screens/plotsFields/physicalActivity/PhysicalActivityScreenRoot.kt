@@ -2,11 +2,9 @@ package com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity
 
 import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
+import androidx.navigation.NavHostController
 import com.icxcu.adsmartbandapp.data.TypesTable
-import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 import com.icxcu.adsmartbandapp.viewModels.PhysicalActivityViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -15,25 +13,28 @@ import java.util.Locale
 
 @Composable
 fun PhysicalActivityScreenRoot(
-    dataViewModel: PhysicalActivityViewModel,
+    physicalActivityViewModel: PhysicalActivityViewModel,
     macAddressDeviceBluetooth:String,
-    navLambda: () -> Unit
+    navMainController: NavHostController
 ) {
 
-    Log.d("PhysicalActivityInfo", "PhysicalActivityInfo: ")
-    val getDayPhysicalActivityData = remember(dataViewModel) {
+    val navLambdaBackToMainNavigationBar = remember(navMainController) {
         {
-            dataViewModel.dayHealthDataState
+            navMainController.popBackStack("PHYSICAL_ACTIVITY", true)
+            Unit
         }
     }
 
-    val dayPhysicalActivityResultsFromDB = dataViewModel.dayPhysicalActivityState
+    Log.d("PhysicalActivityInfo", "PhysicalActivityInfo: ")
+
+
+    val dayPhysicalActivityResultsFromDB = physicalActivityViewModel.dayPhysicalActivityState
 
     if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
-        dataViewModel.selectedDay = dayPhysicalActivityResultsFromDB[0].dateData
+        physicalActivityViewModel.selectedDay = dayPhysicalActivityResultsFromDB[0].dateData
     }
 
-    getDayPhysicalActivityData().dayStepListFromDB =
+    physicalActivityViewModel.dayStepListFromDB =
         if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
             val filter =
                 dayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.STEPS }
@@ -42,7 +43,7 @@ fun PhysicalActivityScreenRoot(
             MutableList(48) { 0 }.toList()
         }
 
-    getDayPhysicalActivityData().dayDistanceListFromDB =
+    physicalActivityViewModel.dayDistanceListFromDB =
         if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
             val filter =
                 dayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.DISTANCE }
@@ -55,7 +56,7 @@ fun PhysicalActivityScreenRoot(
             MutableList(48) { 0.0 }.toList()
         }
 
-    getDayPhysicalActivityData().dayCaloriesListFromDB =
+    physicalActivityViewModel.dayCaloriesListFromDB =
         if (dayPhysicalActivityResultsFromDB.isEmpty().not()) {
             val filter =
                 dayPhysicalActivityResultsFromDB.filter { it.typesTable == TypesTable.CALORIES }
@@ -69,52 +70,52 @@ fun PhysicalActivityScreenRoot(
         }
 
 
-    val stepsListFromDB = remember(dataViewModel) {
+    val stepsListFromDB = remember(physicalActivityViewModel) {
         {
-            dataViewModel.dayHealthDataState.dayStepListFromDB
+            physicalActivityViewModel.dayStepListFromDB
         }
     }
-    val distanceListFromDB = remember(dataViewModel) {
+    val distanceListFromDB = remember(physicalActivityViewModel) {
         {
-            dataViewModel.dayHealthDataState.dayDistanceListFromDB
+            physicalActivityViewModel.dayDistanceListFromDB
         }
     }
-    val caloriesListFromDB = remember(dataViewModel) {
+    val caloriesListFromDB = remember(physicalActivityViewModel) {
         {
-            dataViewModel.dayHealthDataState.dayCaloriesListFromDB
+            physicalActivityViewModel.dayCaloriesListFromDB
         }
     }
 
-    val getSelectedDay = remember(dataViewModel) {
+    val getSelectedDay = remember(physicalActivityViewModel) {
         {
-            dataViewModel.selectedDay
+            physicalActivityViewModel.selectedDay
         }
     }
 
     //DialogDatePicker State
-    val stateShowDialogDatePickerValue = remember(dataViewModel) {
+    val stateShowDialogDatePickerValue = remember(physicalActivityViewModel) {
         {
-            dataViewModel.stateShowDialogDatePicker
+            physicalActivityViewModel.stateShowDialogDatePicker
         }
     }
 
-    val stateShowDialogDatePickerSetter = remember(dataViewModel) {
+    val stateShowDialogDatePickerSetter = remember(physicalActivityViewModel) {
         { value: Boolean ->
-            dataViewModel.stateShowDialogDatePicker = value
+            physicalActivityViewModel.stateShowDialogDatePicker = value
         }
     }
 
-    val stateMiliSecondsDateDialogDatePickerSetter = remember(dataViewModel) {
+    val stateMiliSecondsDateDialogDatePickerSetter = remember(physicalActivityViewModel) {
         { value: Long ->
-            dataViewModel.stateMiliSecondsDateDialogDatePicker = value
+            physicalActivityViewModel.stateMiliSecondsDateDialogDatePicker = value
 
             val date = Date(value)
             val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             val dateData = formattedDate.format(date)
 
-            dataViewModel.jobPhysicalActivityState?.cancel()
-            dataViewModel.starListeningDayPhysicalActivityDB(dateData, macAddress = macAddressDeviceBluetooth, )
-            dataViewModel.selectedDay = dateData
+            physicalActivityViewModel.jobPhysicalActivityState?.cancel()
+            physicalActivityViewModel.starListeningDayPhysicalActivityDB(dateData, macAddress = macAddressDeviceBluetooth, )
+            physicalActivityViewModel.selectedDay = dateData
         }
     }
 
@@ -127,7 +128,7 @@ fun PhysicalActivityScreenRoot(
         stateShowDialogDatePickerSetter,
         stateShowDialogDatePickerValue,
         stateMiliSecondsDateDialogDatePickerSetter,
-        navLambda
+        navLambdaBackToMainNavigationBar
     )
 
 }

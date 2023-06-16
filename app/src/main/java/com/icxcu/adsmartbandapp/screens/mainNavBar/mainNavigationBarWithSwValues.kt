@@ -366,10 +366,7 @@ class YesterdayHealthsDataState {
 }
 
 class DayHealthDataState {
-    var dayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
-    var dayStepListFromDB by mutableStateOf(listOf<Int>())
-    var dayDistanceListFromDB by mutableStateOf(listOf<Double>())
-    var dayCaloriesListFromDB by mutableStateOf(listOf<Double>())
+
 
     var dayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
     var daySystolicListFromDB by mutableStateOf(listOf<Double>())

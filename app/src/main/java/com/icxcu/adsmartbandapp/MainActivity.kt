@@ -483,7 +483,7 @@ class MainActivity : ComponentActivity() {
                     route = "PHYSICAL_ACTIVITY"
                 ){
                     composable(
-                        Routes.PhysicalActivity.route,
+                        "physical_activity",
                         enterTransition = {
                             when (initialState.destination.route) {
                                 Routes.DataHome.route ->
@@ -516,9 +516,10 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                         PhysicalActivityScreenRoot(
-                            dataViewModel = physicalActivityViewModel,
-                            macAddressDeviceBluetooth = dataViewModel.macAddressDeviceBluetooth
-                        ) { navLambdaBackToMainNavigationBar() }
+                            physicalActivityViewModel = physicalActivityViewModel,
+                            macAddressDeviceBluetooth = dataViewModel.macAddressDeviceBluetooth,
+                            navMainController
+                        )
                     }
                 }
 

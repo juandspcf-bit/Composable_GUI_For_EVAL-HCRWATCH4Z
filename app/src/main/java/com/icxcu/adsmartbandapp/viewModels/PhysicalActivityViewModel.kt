@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
@@ -30,6 +31,10 @@ class PhysicalActivityViewModel (var application: Application) : ViewModel() {
     var dayPhysicalActivityState by mutableStateOf<List<PhysicalActivity>>(listOf())
     var jobPhysicalActivityState: Job? = null
     var physicalActivityScreenNavStatus: PhysicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Leaving
+
+    var dayStepListFromDB by mutableStateOf(listOf<Int>())
+    var dayDistanceListFromDB by mutableStateOf(listOf<Double>())
+    var dayCaloriesListFromDB by mutableStateOf(listOf<Double>())
 
     init {
         val swDb = SWRoomDatabase.getInstance(application)
