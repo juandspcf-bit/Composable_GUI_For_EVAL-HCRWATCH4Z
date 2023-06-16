@@ -26,8 +26,6 @@ class PhysicalActivityViewModel (var application: Application) : ViewModel() {
     var stateShowDialogDatePicker by mutableStateOf(false)
     var stateMiliSecondsDateDialogDatePicker by mutableStateOf(0L)
 
-    var dayHealthDataState = DayHealthDataState()
-
     var dayPhysicalActivityState by mutableStateOf<List<PhysicalActivity>>(listOf())
     var jobPhysicalActivityState: Job? = null
     var physicalActivityScreenNavStatus: PhysicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Leaving

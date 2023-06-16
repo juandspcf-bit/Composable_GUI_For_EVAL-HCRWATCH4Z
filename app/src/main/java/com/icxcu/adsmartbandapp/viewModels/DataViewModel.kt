@@ -28,8 +28,7 @@ import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SmartWatchState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusMainTitleScaffold
 import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusReadingDbForDashboard
-import com.icxcu.adsmartbandapp.screens.mainNavBar.TodayHealthsDataState
-import com.icxcu.adsmartbandapp.screens.mainNavBar.YesterdayHealthsDataState
+
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenNavStatus
 import kotlinx.coroutines.Job
@@ -57,12 +56,9 @@ class DataViewModel(var application: Application) : ViewModel() {
 
     var statusStartedReadingDataLasThreeDaysData by mutableStateOf(false)
     var dayHealthDataState = DayHealthDataState()
-    var todayHealthsDataState = TodayHealthsDataState()
-    var yesterdayHealthsDataState = YesterdayHealthsDataState()
     var dayHealthDataStateForDashBoard = DayHealthDataStateForDashBoard()
 
     var personalInfoListReadFromDB = listOf<PersonalInfo>()
-
 
 
     var macAddressDeviceBluetooth: String = ""
@@ -99,15 +95,14 @@ class DataViewModel(var application: Application) : ViewModel() {
     private var bloodPressureDao: BloodPressureDao
 
 
-
     var dayBloodPressureState by mutableStateOf<List<BloodPressure>>(listOf())
     var jobBloodPressureState: Job? = null
-    var bloodPressureScreenNavStatus: BloodPressureScreenNavStatus = BloodPressureScreenNavStatus.Leaving
+    var bloodPressureScreenNavStatus: BloodPressureScreenNavStatus =
+        BloodPressureScreenNavStatus.Leaving
 
     var dayHeartRateState by mutableStateOf<List<HeartRate>>(listOf())
     var jobHeartRateState: Job? = null
     var heartRateScreenNavStatus: HeartRateScreenNavStatus = HeartRateScreenNavStatus.Leaving
-
 
 
     init {
@@ -205,9 +200,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     }
 
 
-
-
-    fun starListeningBloodPressureDB(dateData: String="", macAddress: String = "", ) {
+    fun starListeningBloodPressureDB(dateData: String = "", macAddress: String = "") {
         jobBloodPressureState = viewModelScope.launch {
             dbRepository.getDayBloodPressureWithFlow(dateData, macAddress)
                 .distinctUntilChanged()
@@ -218,7 +211,7 @@ class DataViewModel(var application: Application) : ViewModel() {
         }
     }
 
-    fun starListeningHeartRateDB(dateData: String="", macAddress: String = "", ) {
+    fun starListeningHeartRateDB(dateData: String = "", macAddress: String = "") {
         jobHeartRateState = viewModelScope.launch {
             dbRepository.getDayHeartRateWithFlow(dateData, macAddress)
                 .distinctUntilChanged()
@@ -269,7 +262,6 @@ class DataViewModel(var application: Application) : ViewModel() {
     fun getMySpO2AlertDialogDataHandler(): MySpO2AlertDialogDataHandler {
         return dbRepository.mySpO2AlertDialogDataHandler
     }
-
 
 
     // data fields db handling
