@@ -42,11 +42,11 @@ fun PersonalInfoDataScreenRoot(
     }
 
     val insertPersonalData= { personalInfo:PersonalInfo->
-        dataViewModel.insertPersonalInfoDataWithCoroutine(personalInfo)
+        dataViewModel.insertPersonalInfoDataWithCoroutine(personalInfo, dataViewModel.macAddressDeviceBluetooth)
     }
 
     val updatePersonalData= { personalInfo:PersonalInfo->
-        dataViewModel.updatePersonalInfoDataWithCoroutine(personalInfo)
+        dataViewModel.updatePersonalInfoDataWithCoroutine(personalInfo, dataViewModel.macAddressDeviceBluetooth)
     }
 
     PersonalInfoFormScaffold(

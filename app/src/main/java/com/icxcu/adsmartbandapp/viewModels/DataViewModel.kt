@@ -360,7 +360,7 @@ class DataViewModel(var application: Application) : ViewModel() {
 
 
     //Personal data
-    fun updatePersonalInfoDataWithCoroutine(personalInfo: PersonalInfo) {
+    fun updatePersonalInfoDataWithCoroutine(personalInfo: PersonalInfo, macAddressDeviceBluetooth:String) {
         val dataDeferred = viewModelScope.async {
             dbRepository.updatePersonalInfoDataWithCoroutine(personalInfo = personalInfo)
         }
@@ -372,7 +372,7 @@ class DataViewModel(var application: Application) : ViewModel() {
         }
     }
 
-    fun insertPersonalInfoDataWithCoroutine(personalInfo: PersonalInfo) {
+    fun insertPersonalInfoDataWithCoroutine(personalInfo: PersonalInfo, macAddressDeviceBluetooth:String) {
         val dataDeferred = viewModelScope.async {
             dbRepository.insertPersonalInfoDataWithCoroutine(personalInfo)
         }
