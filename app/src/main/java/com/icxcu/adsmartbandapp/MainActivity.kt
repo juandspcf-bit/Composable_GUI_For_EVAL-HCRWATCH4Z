@@ -57,6 +57,7 @@ import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenRoo
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityScreenRoot
 import com.icxcu.adsmartbandapp.screens.progressLoading.CircularProgressLoading
+import com.icxcu.adsmartbandapp.screens.viewModelProviders.personalInfoViewModel
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModelFactory
@@ -76,7 +77,6 @@ const val REQUEST_ENABLE_BT: Int = 500
 
 class MainActivity : ComponentActivity() {
     private lateinit var dataViewModel: DataViewModel
-    //private lateinit var personalInfoViewModel: PersonalInfoViewModel
     private lateinit var bluetoothLEManager: BluetoothManager
     private lateinit var bluetoothScannerViewModel: BluetoothScannerViewModel
     private lateinit var permissionsViewModel: PermissionsViewModel
@@ -129,14 +129,7 @@ class MainActivity : ComponentActivity() {
                         )
                     )
 
-/*                    personalInfoViewModel = viewModel(
-                        it,
-                        "PersonalInfoViewModel",
-                        PersonalInfoViewModelFactory(
-                            LocalContext.current.applicationContext
-                                    as Application
-                        )
-                    )*/
+
 
 
                 }
@@ -242,17 +235,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-
-            val navLambdaBackToBluetoothScanner =
-                remember(bluetoothScannerViewModel, navMainController) {
-                    {
-                        navMainController.popBackStack()
-                        bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
-                        bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
-                            ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
-                    }
-                }
-
             val navLambdaBackToMainNavigationBar = remember(dataViewModel, navMainController) {
                 {
                     dataViewModel.statusReadingDbForDashboard =
@@ -264,8 +246,6 @@ class MainActivity : ComponentActivity() {
 
                 }
             }
-
-
 
             val getFetchingDataFromSWStatus = remember(dataViewModel) {
                 {
@@ -716,30 +696,6 @@ class MainActivity : ComponentActivity() {
         dataViewModel.nameDeviceBluetooth = ""
     }
 }
-
-
-@Composable
-inline fun<reified T: ViewModel> NavBackStackEntry.personalInfoViewModel(navController: NavController): T{
-    val navGraphRoute = destination.parent?.route ?: return viewModel()
-    val parentEntry = remember (this){
-        navController.getBackStackEntry(navGraphRoute)
-    }
-
-    val personalInfoViewModel: PersonalInfoViewModel?
-
-    personalInfoViewModel = viewModel(
-    parentEntry,
-    "PersonalInfoViewModel",
-    PersonalInfoViewModelFactory(
-        LocalContext.current.applicationContext
-                as Application
-    ),
-
-    )
-    return personalInfoViewModel as T
-}
-
-
 
 @Preview(showBackground = true)
 @Composable
