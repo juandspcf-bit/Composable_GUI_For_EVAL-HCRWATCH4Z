@@ -6,6 +6,6 @@ import androidx.lifecycle.ViewModelProvider
 
 class DataViewModelFactory(var application: Application) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return DataViewModel(application = application) as T
+        return MainNavigationViewModel(application = application) as T
     }
 }

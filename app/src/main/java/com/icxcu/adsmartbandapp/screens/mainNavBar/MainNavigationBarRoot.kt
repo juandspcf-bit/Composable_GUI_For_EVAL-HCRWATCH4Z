@@ -3,11 +3,11 @@ package com.icxcu.adsmartbandapp.screens.mainNavBar
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import com.icxcu.adsmartbandapp.viewModels.DataViewModel
+import com.icxcu.adsmartbandapp.viewModels.MainNavigationViewModel
 
 @Composable
 fun MainNavigationBarRoot(
-    dataViewModel: DataViewModel,
+    mainNavigationViewModel: MainNavigationViewModel,
     getFetchingDataFromSWStatus: () -> SWReadingStatus,
     bluetoothAddress: String,
     bluetoothName: String,
@@ -22,38 +22,38 @@ fun MainNavigationBarRoot(
 
             Log.d("DATAX", "Routes.DataHome.route: STOPPED")
 
-            dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.IN_PROGRESS
+            mainNavigationViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.IN_PROGRESS
 
-            dataViewModel.macAddressDeviceBluetooth =
+            mainNavigationViewModel.macAddressDeviceBluetooth =
                 bluetoothAddress
-            dataViewModel.nameDeviceBluetooth = bluetoothName
+            mainNavigationViewModel.nameDeviceBluetooth = bluetoothName
 
-            dataViewModel.listenDataFromSmartWatch()
-            dataViewModel.requestSmartWatchData(
+            mainNavigationViewModel.listenDataFromSmartWatch()
+            mainNavigationViewModel.requestSmartWatchData(
                 bluetoothName,
                 bluetoothAddress
             )
 
 
-            dataViewModel.statusStartedReadingDataLasThreeDaysData = true
+            mainNavigationViewModel.statusStartedReadingDataLasThreeDaysData = true
 
         }
 
         SWReadingStatus.IN_PROGRESS -> {
 
 
-            dataViewModel.macAddressDeviceBluetooth =
+            mainNavigationViewModel.macAddressDeviceBluetooth =
                 bluetoothAddress
-            dataViewModel.nameDeviceBluetooth = bluetoothName
+            mainNavigationViewModel.nameDeviceBluetooth = bluetoothName
         }
 
         SWReadingStatus.READ -> {
 
             Log.d("DATAX", "Routes.DataHome.route: READ")
 
-            dataViewModel.macAddressDeviceBluetooth =
+            mainNavigationViewModel.macAddressDeviceBluetooth =
                 bluetoothAddress
-            dataViewModel.nameDeviceBluetooth = bluetoothName
+            mainNavigationViewModel.nameDeviceBluetooth = bluetoothName
         }
     }
 
@@ -64,7 +64,7 @@ fun MainNavigationBarRoot(
     MainNavigationBarWithSwValues(
         bluetoothName = bluetoothName,
         bluetoothAddress = bluetoothAddress,
-        dataViewModel = dataViewModel,
+        mainNavigationViewModel = mainNavigationViewModel,
         getFetchingDataFromSWStatus = getFetchingDataFromSWStatus,
         navMainController = navMainController
     )

@@ -6,13 +6,13 @@ import com.icxcu.adsmartbandapp.data.entities.BloodPressure
 import com.icxcu.adsmartbandapp.data.entities.Field
 import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
-import com.icxcu.adsmartbandapp.viewModels.DataViewModel
+import com.icxcu.adsmartbandapp.viewModels.MainNavigationViewModel
 
 fun integerFieldUpdateOrInsert(
     dataFieldFromSW: List<Int>,
     dataFieldFromDB: List<Field>,
     fieldListState: List<Int>,
-    dataViewModel: DataViewModel,
+    mainNavigationViewModel: MainNavigationViewModel,
     setFieldListState: (List<Int>) -> Unit,
     isDayFieldListAlreadyInsertedInDB: Boolean,
     isDayFieldListInDBAlreadyUpdated: Boolean,
@@ -70,7 +70,7 @@ if(dataFieldFromSW.isEmpty().not() && dataFieldFromDB.isEmpty().not()){
             setFieldListState(dataFieldFromSW)
             tableToUpdateSelector(
                 typesTableToModify,
-                dataViewModel,
+                mainNavigationViewModel,
                 dataFieldFromDB
             )
 
@@ -90,7 +90,7 @@ if(dataFieldFromSW.isEmpty().not() && dataFieldFromDB.isEmpty().not()){
         tableToInsertSelector(
             dataFieldFromSW,
             typesTableToModify,
-            dataViewModel,
+            mainNavigationViewModel,
             dateData
         )
 
@@ -103,7 +103,7 @@ fun doubleFieldUpdateOrInsert(
     dataFieldFromSW: List<Double>,
     dataFieldFromDB: List<Field>,
     fieldListState: List<Double>,
-    dataViewModel: DataViewModel,
+    mainNavigationViewModel: MainNavigationViewModel,
     setFieldListState: (List<Double>) -> Unit,
     isDayFieldListAlreadyInsertedInDB: Boolean,
     isDayFieldListInDBAlreadyUpdated: Boolean,
@@ -138,7 +138,7 @@ fun doubleFieldUpdateOrInsert(
             setFieldListState(dataFieldFromSW)
             tableToUpdateSelector(
                 typesTableToModify,
-                dataViewModel,
+                mainNavigationViewModel,
                 dataFieldFromDB
             )
             setIsDayFieldListInDBAlreadyUpdated(true)
@@ -160,7 +160,7 @@ fun doubleFieldUpdateOrInsert(
         tableToInsertSelector(
             dataFieldFromSW,
         typesTableToModify,
-        dataViewModel,
+        mainNavigationViewModel,
             dateData
         )
         setIsDayFieldListAlreadyInsertedInDB(true)
@@ -170,16 +170,16 @@ fun doubleFieldUpdateOrInsert(
 
 fun tableToUpdateSelector(
     typesTableToModify: TypesTable,
-    dataViewModel: DataViewModel,
+    mainNavigationViewModel: MainNavigationViewModel,
     dayFromTableData: List<Field>,
 ) {
     when (typesTableToModify) {
-        TypesTable.STEPS -> dataViewModel.updatePhysicalActivityData(dayFromTableData[0] as PhysicalActivity)
-        TypesTable.DISTANCE -> dataViewModel.updatePhysicalActivityData(dayFromTableData[1] as PhysicalActivity)
-        TypesTable.CALORIES -> dataViewModel.updatePhysicalActivityData(dayFromTableData[2] as PhysicalActivity)
-        TypesTable.SYSTOLIC -> dataViewModel.updateBloodPressureData(dayFromTableData[0] as BloodPressure)
-        TypesTable.DIASTOLIC -> dataViewModel.updateBloodPressureData(dayFromTableData[1] as BloodPressure)
-        TypesTable.HEART_RATE -> dataViewModel.updateHeartRateData(dayFromTableData[0] as HeartRate)
+        TypesTable.STEPS -> mainNavigationViewModel.updatePhysicalActivityData(dayFromTableData[0] as PhysicalActivity)
+        TypesTable.DISTANCE -> mainNavigationViewModel.updatePhysicalActivityData(dayFromTableData[1] as PhysicalActivity)
+        TypesTable.CALORIES -> mainNavigationViewModel.updatePhysicalActivityData(dayFromTableData[2] as PhysicalActivity)
+        TypesTable.SYSTOLIC -> mainNavigationViewModel.updateBloodPressureData(dayFromTableData[0] as BloodPressure)
+        TypesTable.DIASTOLIC -> mainNavigationViewModel.updateBloodPressureData(dayFromTableData[1] as BloodPressure)
+        TypesTable.HEART_RATE -> mainNavigationViewModel.updateHeartRateData(dayFromTableData[0] as HeartRate)
         else -> {}
     }
 }
@@ -187,7 +187,7 @@ fun tableToUpdateSelector(
 fun tableToInsertSelector(
     valuesReadFromSW: List<Number>,
     typesTableToModify: TypesTable,
-    dataViewModel: DataViewModel,
+    mainNavigationViewModel: MainNavigationViewModel,
     currentDateData: String
 ) {
 
@@ -196,7 +196,7 @@ fun tableToInsertSelector(
 
 
             val physicalActivity = PhysicalActivity().apply {
-                macAddress = dataViewModel.macAddressDeviceBluetooth
+                macAddress = mainNavigationViewModel.macAddressDeviceBluetooth
 
                 dateData = currentDateData
                 typesTable = typesTableToModify
@@ -206,12 +206,12 @@ fun tableToInsertSelector(
                 }
                 data = newValuesList.toString()
             }
-            dataViewModel.insertPhysicalActivityData(physicalActivity)
+            mainNavigationViewModel.insertPhysicalActivityData(physicalActivity)
         }
 
         TypesTable.DISTANCE -> {
             val physicalActivity = PhysicalActivity().apply {
-                macAddress = dataViewModel.macAddressDeviceBluetooth
+                macAddress = mainNavigationViewModel.macAddressDeviceBluetooth
 
                 dateData = currentDateData
                 typesTable = typesTableToModify
@@ -221,11 +221,11 @@ fun tableToInsertSelector(
                 }
                 data = newValuesList.toString()
             }
-            dataViewModel.insertPhysicalActivityData(physicalActivity)
+            mainNavigationViewModel.insertPhysicalActivityData(physicalActivity)
         }
         TypesTable.CALORIES -> {
             val physicalActivity = PhysicalActivity().apply {
-                macAddress = dataViewModel.macAddressDeviceBluetooth
+                macAddress = mainNavigationViewModel.macAddressDeviceBluetooth
 
                 dateData = currentDateData
                 typesTable = typesTableToModify
@@ -235,11 +235,11 @@ fun tableToInsertSelector(
                 }
                 data = newValuesList.toString()
             }
-            dataViewModel.insertPhysicalActivityData(physicalActivity)
+            mainNavigationViewModel.insertPhysicalActivityData(physicalActivity)
         }
         TypesTable.SYSTOLIC -> {
             val bloodPressure = BloodPressure().apply {
-                macAddress = dataViewModel.macAddressDeviceBluetooth
+                macAddress = mainNavigationViewModel.macAddressDeviceBluetooth
 
                 dateData = currentDateData
                 typesTable = typesTableToModify
@@ -249,11 +249,11 @@ fun tableToInsertSelector(
                 }
                 data = newValuesList.toString()
             }
-            dataViewModel.insertBloodPressureData(bloodPressure)
+            mainNavigationViewModel.insertBloodPressureData(bloodPressure)
         }
         TypesTable.DIASTOLIC -> {
             val bloodPressure = BloodPressure().apply {
-                macAddress = dataViewModel.macAddressDeviceBluetooth
+                macAddress = mainNavigationViewModel.macAddressDeviceBluetooth
 
                 dateData = currentDateData
                 typesTable = typesTableToModify
@@ -263,12 +263,12 @@ fun tableToInsertSelector(
                 }
                 data = newValuesList.toString()
             }
-            dataViewModel.insertBloodPressureData(bloodPressure)
+            mainNavigationViewModel.insertBloodPressureData(bloodPressure)
         }
 
         TypesTable.HEART_RATE -> {
             val heartRate = HeartRate().apply {
-                macAddress = dataViewModel.macAddressDeviceBluetooth
+                macAddress = mainNavigationViewModel.macAddressDeviceBluetooth
 
                 dateData = currentDateData
                 typesTable = typesTableToModify
@@ -278,7 +278,7 @@ fun tableToInsertSelector(
                 }
                 data = newValuesList.toString()
             }
-            dataViewModel.insertHeartRateData(heartRate)
+            mainNavigationViewModel.insertHeartRateData(heartRate)
         }
 
         else -> {}

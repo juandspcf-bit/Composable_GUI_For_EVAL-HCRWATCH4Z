@@ -36,7 +36,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class DataViewModel(var application: Application) : ViewModel() {
+class MainNavigationViewModel(var application: Application) : ViewModel() {
 
 
     private val myFormatObj: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
@@ -124,7 +124,7 @@ class DataViewModel(var application: Application) : ViewModel() {
                             it,
                             todayFormattedDate,
                             macAddressDeviceBluetooth,
-                            this@DataViewModel,
+                            this@MainNavigationViewModel,
                             dbRepository
                         )
 
@@ -132,7 +132,7 @@ class DataViewModel(var application: Application) : ViewModel() {
                             it,
                             todayFormattedDate,
                             macAddressDeviceBluetooth,
-                            this@DataViewModel,
+                            this@MainNavigationViewModel,
                             dbRepository
                         )
 
@@ -140,7 +140,7 @@ class DataViewModel(var application: Application) : ViewModel() {
                             it,
                             todayFormattedDate,
                             macAddressDeviceBluetooth,
-                            this@DataViewModel,
+                            this@MainNavigationViewModel,
                             dbRepository
                         )
 
@@ -153,7 +153,7 @@ class DataViewModel(var application: Application) : ViewModel() {
                             it,
                             yesterdayFormattedDate,
                             macAddressDeviceBluetooth,
-                            this@DataViewModel,
+                            this@MainNavigationViewModel,
                             dbRepository
                         )
 
@@ -161,7 +161,7 @@ class DataViewModel(var application: Application) : ViewModel() {
                             it,
                             yesterdayFormattedDate,
                             macAddressDeviceBluetooth,
-                            this@DataViewModel,
+                            this@MainNavigationViewModel,
                             dbRepository
                         )
 
@@ -169,7 +169,7 @@ class DataViewModel(var application: Application) : ViewModel() {
                             it,
                             yesterdayFormattedDate,
                             macAddressDeviceBluetooth,
-                            this@DataViewModel,
+                            this@MainNavigationViewModel,
                             dbRepository
                         )
 

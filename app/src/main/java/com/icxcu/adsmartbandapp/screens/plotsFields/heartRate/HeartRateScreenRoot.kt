@@ -7,12 +7,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.navigation.NavController
 import com.icxcu.adsmartbandapp.data.TypesTable
-import com.icxcu.adsmartbandapp.data.entities.HeartRate
-import com.icxcu.adsmartbandapp.screens.BloodPressureNestedRoute
 import com.icxcu.adsmartbandapp.screens.HeartRateNestedRoute
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.ValidatorsPersonalField
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.getDoubleListFromStringMap
-import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 import com.icxcu.adsmartbandapp.viewModels.HeartRateViewModel
 import java.text.SimpleDateFormat
 import java.time.LocalDate

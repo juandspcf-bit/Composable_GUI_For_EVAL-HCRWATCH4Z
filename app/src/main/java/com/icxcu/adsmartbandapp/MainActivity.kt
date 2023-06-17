@@ -62,7 +62,7 @@ import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
 import com.icxcu.adsmartbandapp.viewModels.BloodPressureViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModelFactory
-import com.icxcu.adsmartbandapp.viewModels.DataViewModel
+import com.icxcu.adsmartbandapp.viewModels.MainNavigationViewModel
 import com.icxcu.adsmartbandapp.viewModels.DataViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.HeartRateViewModel
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModel
@@ -78,7 +78,7 @@ import java.time.format.DateTimeFormatter
 const val REQUEST_ENABLE_BT: Int = 500
 
 class MainActivity : ComponentActivity() {
-    private lateinit var dataViewModel: DataViewModel
+    private lateinit var mainNavigationViewModel: MainNavigationViewModel
     private lateinit var bluetoothLEManager: BluetoothManager
     private lateinit var bluetoothScannerViewModel: BluetoothScannerViewModel
     private lateinit var permissionsViewModel: PermissionsViewModel
@@ -122,7 +122,7 @@ class MainActivity : ComponentActivity() {
                         PermissionsViewModelFactory()
                     )
 
-                    dataViewModel = viewModel(
+                    mainNavigationViewModel = viewModel(
                         it,
                         "DataViewModel",
                         DataViewModelFactory(
@@ -205,10 +205,10 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Log.d(
                                 "DATAX",
-                                "MainContent-1: ${dataViewModel.smartWatchState.todayDateValuesReadFromSW.stepList.sum()}"
+                                "MainContent-1: ${mainNavigationViewModel.smartWatchState.todayDateValuesReadFromSW.stepList.sum()}"
                             )
 
-                            dataViewModel.stateEnabledDatePickerMainScaffold = false
+                            mainNavigationViewModel.stateEnabledDatePickerMainScaffold = false
                             navMainController.navigate(
                                 Routes.DataHomeFromBluetoothScannerScreen
                                     .route + "/${name}/${address}"
@@ -238,19 +238,19 @@ class MainActivity : ComponentActivity() {
             }
 
 
-            val getFetchingDataFromSWStatus = remember(dataViewModel) {
+            val getFetchingDataFromSWStatus = remember(mainNavigationViewModel) {
                 {
-                    dataViewModel.smartWatchState.fetchingDataFromSWStatus
+                    mainNavigationViewModel.smartWatchState.fetchingDataFromSWStatus
                 }
             }
 
-            val setFetchingDataFromSWStatusSTOPPED = remember(dataViewModel) {
+            val setFetchingDataFromSWStatusSTOPPED = remember(mainNavigationViewModel) {
                 {
                     Log.d("DATAX", "MainContent setFetchingDataFromSWStatusSTOPPED STOPPED")
 
-                    dataViewModel.stateBluetoothListScreenNavigationStatus =
+                    mainNavigationViewModel.stateBluetoothListScreenNavigationStatus =
                         BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_MAIN_NAV_SCREEN
-                    dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.STOPPED
+                    mainNavigationViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.STOPPED
                 }
             }
 
@@ -310,9 +310,9 @@ class MainActivity : ComponentActivity() {
                     }) {
                     Log.d("DATAX", "Routes.BluetoothScanner.route: ENTER")
 
-                    when (dataViewModel.stateBluetoothListScreenNavigationStatus) {
+                    when (mainNavigationViewModel.stateBluetoothListScreenNavigationStatus) {
                         BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_BLUETOOTH_SCREEN -> {
-                            clearStateSW(dataViewModel)
+                            clearStateSW(mainNavigationViewModel)
                         }
 
                         BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_MAIN_NAV_SCREEN -> {
@@ -374,16 +374,16 @@ class MainActivity : ComponentActivity() {
                     bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
                     bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
                         ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
-                    if (dataViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.NoRead
-                        && dataViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
+                    if (mainNavigationViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.NoRead
+                        && mainNavigationViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
                     ) {
-                        dataViewModel.statusReadingDbForDashboard =
+                        mainNavigationViewModel.statusReadingDbForDashboard =
                             StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
                     }
 
 
                     MainNavigationBarRoot(
-                        dataViewModel,
+                        mainNavigationViewModel,
                         getFetchingDataFromSWStatus,
                         bluetoothAddress,
                         bluetoothName,
@@ -449,15 +449,15 @@ class MainActivity : ComponentActivity() {
                     bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
                     bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
                         ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
-                    if (dataViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.NoRead
-                        && dataViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
+                    if (mainNavigationViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.NoRead
+                        && mainNavigationViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
                     ) {
-                        dataViewModel.statusReadingDbForDashboard =
+                        mainNavigationViewModel.statusReadingDbForDashboard =
                             StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
                     }
 
                     MainNavigationBarRoot(
-                        dataViewModel,
+                        mainNavigationViewModel,
                         getFetchingDataFromSWStatus,
                         bluetoothAddress,
                         bluetoothName,
@@ -499,7 +499,7 @@ class MainActivity : ComponentActivity() {
                         when(physicalActivityViewModel.physicalActivityScreenNavStatus){
                             PhysicalActivityScreenNavStatus.Leaving->{
                                 physicalActivityViewModel.physicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Started
-                                physicalActivityViewModel.starListeningDayPhysicalActivityDB(todayFormattedDate, macAddress = dataViewModel.macAddressDeviceBluetooth, )
+                                physicalActivityViewModel.starListeningDayPhysicalActivityDB(todayFormattedDate, macAddress = mainNavigationViewModel.macAddressDeviceBluetooth, )
                             }
                             else->{
 
@@ -507,7 +507,7 @@ class MainActivity : ComponentActivity() {
                         }
                         PhysicalActivityScreenRoot(
                             physicalActivityViewModel = physicalActivityViewModel,
-                            macAddressDeviceBluetooth = dataViewModel.macAddressDeviceBluetooth,
+                            macAddressDeviceBluetooth = mainNavigationViewModel.macAddressDeviceBluetooth,
                             navMainController
                         )
                     }
@@ -543,7 +543,7 @@ class MainActivity : ComponentActivity() {
                         when(bloodPressureViewModel.bloodPressureScreenNavStatus){
                             BloodPressureScreenNavStatus.Leaving->{
                                 bloodPressureViewModel.bloodPressureScreenNavStatus = BloodPressureScreenNavStatus.Started
-                                bloodPressureViewModel.starListeningBloodPressureDB(todayFormattedDate, dataViewModel.macAddressDeviceBluetooth)
+                                bloodPressureViewModel.starListeningBloodPressureDB(todayFormattedDate, mainNavigationViewModel.macAddressDeviceBluetooth)
                             }
                             else->{
 
@@ -552,7 +552,7 @@ class MainActivity : ComponentActivity() {
 
                         BloodPressureScreenRoot(
                             bloodPressureViewModel,
-                            dataViewModel.macAddressDeviceBluetooth,
+                            mainNavigationViewModel.macAddressDeviceBluetooth,
                             navMainController
                         )
                     }
@@ -588,7 +588,7 @@ class MainActivity : ComponentActivity() {
                         when(heartRateViewModel.heartRateScreenNavStatus){
                             HeartRateScreenNavStatus.Leaving->{
                                 heartRateViewModel.heartRateScreenNavStatus = HeartRateScreenNavStatus.Started
-                                heartRateViewModel.starListeningHeartRateDB(todayFormattedDate, dataViewModel.macAddressDeviceBluetooth)
+                                heartRateViewModel.starListeningHeartRateDB(todayFormattedDate, mainNavigationViewModel.macAddressDeviceBluetooth)
                             }
                             else->{
 
@@ -597,7 +597,7 @@ class MainActivity : ComponentActivity() {
 
                         HeartRateScreenRoot(
                             heartRateViewModel,
-                            dataViewModel.macAddressDeviceBluetooth,
+                            mainNavigationViewModel.macAddressDeviceBluetooth,
                             navMainController
                         )
                     }
@@ -629,7 +629,7 @@ class MainActivity : ComponentActivity() {
                         when(personalInfoViewModel.personalInfoDataScreenNavStatus){
                             PersonalInfoDataScreenNavStatus.Leaving->{
                                 personalInfoViewModel.personalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Started
-                                personalInfoViewModel.starListeningPersonalInfoDB(macAddress = dataViewModel.macAddressDeviceBluetooth)
+                                personalInfoViewModel.starListeningPersonalInfoDB(macAddress = mainNavigationViewModel.macAddressDeviceBluetooth)
                             }
                             else->{
 
@@ -638,7 +638,7 @@ class MainActivity : ComponentActivity() {
 
                         PersonalInfoDataScreenRoot(
                             personalInfoViewModel,
-                            dataViewModel.macAddressDeviceBluetooth,
+                            mainNavigationViewModel.macAddressDeviceBluetooth,
                             navMainController)
                     }
                 }
@@ -649,26 +649,26 @@ class MainActivity : ComponentActivity() {
     }
 
 
-    private fun clearStateSW(dataViewModel: DataViewModel) {
+    private fun clearStateSW(mainNavigationViewModel: MainNavigationViewModel) {
 
         val myFormatObj: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
         val todayLocalDateTime: LocalDateTime = LocalDateTime.now()
         val todayFormattedDate: String = todayLocalDateTime.format(myFormatObj)
-        dataViewModel.todayFormattedDate = todayFormattedDate
+        mainNavigationViewModel.todayFormattedDate = todayFormattedDate
 
         val yesterdayLocalDateTime: LocalDateTime = todayLocalDateTime.minusDays(1)
         val yesterdayFormattedDate: String = yesterdayLocalDateTime.format(myFormatObj)
-        dataViewModel.yesterdayFormattedDate = yesterdayFormattedDate
+        mainNavigationViewModel.yesterdayFormattedDate = yesterdayFormattedDate
 
         val pastYesterdayLocalDateTime: LocalDateTime = todayLocalDateTime.minusDays(2)
         val pastYesterdayFormattedDate: String = pastYesterdayLocalDateTime.format(myFormatObj)
-        dataViewModel.pastYesterdayFormattedDate = pastYesterdayFormattedDate
+        mainNavigationViewModel.pastYesterdayFormattedDate = pastYesterdayFormattedDate
 
-        dataViewModel.smartWatchState.progressbarForFetchingDataFromSW = false
-        dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.CLEARED
+        mainNavigationViewModel.smartWatchState.progressbarForFetchingDataFromSW = false
+        mainNavigationViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.CLEARED
 
 
-        dataViewModel.smartWatchState.todayDateValuesReadFromSW =
+        mainNavigationViewModel.smartWatchState.todayDateValuesReadFromSW =
             Values(
                 MutableList(48) { 0 }.toList(),
                 MutableList(48) { 0.0 }.toList(),
@@ -676,10 +676,10 @@ class MainActivity : ComponentActivity() {
                 MutableList(48) { 0.0 }.toList(),
                 MutableList(48) { 0.0 }.toList(),
                 MutableList(48) { 0.0 }.toList(),
-                dataViewModel.todayFormattedDate
+                mainNavigationViewModel.todayFormattedDate
             )
 
-        dataViewModel.smartWatchState.yesterdayDateValuesFromSW =
+        mainNavigationViewModel.smartWatchState.yesterdayDateValuesFromSW =
             Values(
                 MutableList(48) { 0 }.toList(),
                 MutableList(48) { 0.0 }.toList(),
@@ -687,21 +687,21 @@ class MainActivity : ComponentActivity() {
                 MutableList(48) { 0.0 }.toList(),
                 MutableList(48) { 0.0 }.toList(),
                 MutableList(48) { 0.0 }.toList(),
-                dataViewModel.todayFormattedDate
+                mainNavigationViewModel.todayFormattedDate
             )
 
-        dataViewModel.swRepository.jobSW?.cancel()
+        mainNavigationViewModel.swRepository.jobSW?.cancel()
 
-        dataViewModel.collectDataScope?.cancel()
-        dataViewModel.selectedDay = ""
+        mainNavigationViewModel.collectDataScope?.cancel()
+        mainNavigationViewModel.selectedDay = ""
 
-        dataViewModel.statusStartedReadingDataLasThreeDaysData = false
+        mainNavigationViewModel.statusStartedReadingDataLasThreeDaysData = false
 
 
-        dataViewModel.personalInfoListReadFromDB = listOf()
+        mainNavigationViewModel.personalInfoListReadFromDB = listOf()
 
-        dataViewModel.macAddressDeviceBluetooth = ""
-        dataViewModel.nameDeviceBluetooth = ""
+        mainNavigationViewModel.macAddressDeviceBluetooth = ""
+        mainNavigationViewModel.nameDeviceBluetooth = ""
     }
 }
 

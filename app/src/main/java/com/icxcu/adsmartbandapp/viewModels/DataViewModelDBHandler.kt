@@ -15,7 +15,7 @@ fun updateOrInsertPhysicalActivityDataBase(
     values: Values,
     queryDate: String,
     queryMacAddress: String,
-    dataViewModel: DataViewModel,
+    mainNavigationViewModel: MainNavigationViewModel,
     dbRepository: DBRepository
 ) {
     val scope = CoroutineScope(Dispatchers.IO)
@@ -71,7 +71,7 @@ fun updateOrInsertPhysicalActivityDataBase(
             dataFieldFromSW = values.stepList,
             dataFieldFromDB = dataCoroutineFromDB,
             fieldListState = todayStepList,
-            dataViewModel = dataViewModel,
+            mainNavigationViewModel = mainNavigationViewModel,
             typesTableToModify = TypesTable.STEPS,
             dateData = queryDate,
         )
@@ -80,7 +80,7 @@ fun updateOrInsertPhysicalActivityDataBase(
             dataFieldFromSW = values.distanceList,
             dataFieldFromDB = dataCoroutineFromDB,
             fieldListState = todayDistanceList,
-            dataViewModel = dataViewModel,
+            mainNavigationViewModel = mainNavigationViewModel,
             typesTableToModify = TypesTable.DISTANCE,
             dateData = queryDate,
         )
@@ -89,7 +89,7 @@ fun updateOrInsertPhysicalActivityDataBase(
             dataFieldFromSW = values.caloriesList,
             dataFieldFromDB = dataCoroutineFromDB,
             fieldListState = todayCaloriesList,
-            dataViewModel = dataViewModel,
+            mainNavigationViewModel = mainNavigationViewModel,
             typesTableToModify = TypesTable.CALORIES,
             dateData = queryDate,
         )
@@ -104,7 +104,7 @@ fun updateOrInsertBloodPressureDataBase(
     values: Values,
     queryDate: String,
     queryMacAddress: String,
-    dataViewModel: DataViewModel,
+    mainNavigationViewModel: MainNavigationViewModel,
     dbRepository: DBRepository
 ) {
     val scope = CoroutineScope(Dispatchers.IO)
@@ -149,7 +149,7 @@ fun updateOrInsertBloodPressureDataBase(
             dataFieldFromSW = values.systolicList,
             dataFieldFromDB = dataCoroutineFromDB,
             fieldListState = systolicList,
-            dataViewModel = dataViewModel,
+            mainNavigationViewModel = mainNavigationViewModel,
             typesTableToModify = TypesTable.SYSTOLIC,
             dateData = queryDate,
         )
@@ -158,7 +158,7 @@ fun updateOrInsertBloodPressureDataBase(
             dataFieldFromSW = values.diastolicList,
             dataFieldFromDB = dataCoroutineFromDB,
             fieldListState = diastolicList,
-            dataViewModel = dataViewModel,
+            mainNavigationViewModel = mainNavigationViewModel,
             typesTableToModify = TypesTable.DIASTOLIC,
             dateData = queryDate,
         )
@@ -173,7 +173,7 @@ fun updateOrInsertHeartRateDataBase(
     values: Values,
     queryDate: String,
     queryMacAddress: String,
-    dataViewModel: DataViewModel,
+    mainNavigationViewModel: MainNavigationViewModel,
     dbRepository: DBRepository
 ) {
     val scope = CoroutineScope(Dispatchers.IO)
@@ -206,7 +206,7 @@ fun updateOrInsertHeartRateDataBase(
             dataFieldFromSW = values.heartRateList,
             dataFieldFromDB = dataCoroutineFromDB,
             fieldListState = heartRateList,
-            dataViewModel = dataViewModel,
+            mainNavigationViewModel = mainNavigationViewModel,
             typesTableToModify = TypesTable.HEART_RATE,
             dateData = queryDate,
         )

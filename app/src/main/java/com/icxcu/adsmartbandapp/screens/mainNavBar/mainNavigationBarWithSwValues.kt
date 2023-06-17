@@ -10,14 +10,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
-import com.icxcu.adsmartbandapp.data.entities.BloodPressure
-import com.icxcu.adsmartbandapp.data.entities.HeartRate
-import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
-import com.icxcu.adsmartbandapp.viewModels.DataViewModel
+import com.icxcu.adsmartbandapp.viewModels.MainNavigationViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -27,17 +24,17 @@ import java.util.Locale
 fun MainNavigationBarWithSwValues(
     bluetoothName: String,
     bluetoothAddress: String,
-    dataViewModel: DataViewModel,
+    mainNavigationViewModel: MainNavigationViewModel,
     getFetchingDataFromSWStatus: () -> SWReadingStatus,
     navMainController: NavHostController,
 ) {
 
-    val getVisibilityProgressbarForFetchingData = remember(dataViewModel) {
-        { dataViewModel.smartWatchState.progressbarForFetchingDataFromSW }
+    val getVisibilityProgressbarForFetchingData = remember(mainNavigationViewModel) {
+        { mainNavigationViewModel.smartWatchState.progressbarForFetchingDataFromSW }
     }
 
-    val todayValuesReadFromSW = remember(dataViewModel) {
-        { dataViewModel.smartWatchState.todayDateValuesReadFromSW }
+    val todayValuesReadFromSW = remember(mainNavigationViewModel) {
+        { mainNavigationViewModel.smartWatchState.todayDateValuesReadFromSW }
     }
 
 
@@ -45,7 +42,7 @@ fun MainNavigationBarWithSwValues(
 
 
 
-    val dayHealthResultsFromDB by dataViewModel
+    val dayHealthResultsFromDB by mainNavigationViewModel
         .dayHealthDataStateForDashBoard
         .dayHealthResultsFromDBForDashBoard
         .observeAsState(
@@ -66,21 +63,21 @@ fun MainNavigationBarWithSwValues(
         }
     }
 
-    val setStateEnabledDatePickerMainScaffold = remember(dataViewModel) {
+    val setStateEnabledDatePickerMainScaffold = remember(mainNavigationViewModel) {
         { newValue: Boolean ->
-            dataViewModel.stateEnabledDatePickerMainScaffold = newValue
+            mainNavigationViewModel.stateEnabledDatePickerMainScaffold = newValue
         }
     }
 
-    val getStateEnabledDatePickerMainScaffold = remember(dataViewModel) {
+    val getStateEnabledDatePickerMainScaffold = remember(mainNavigationViewModel) {
         {
-            dataViewModel.stateEnabledDatePickerMainScaffold
+            mainNavigationViewModel.stateEnabledDatePickerMainScaffold
         }
     }
 
 
     val dayValues = remember(
-        dataViewModel,
+        mainNavigationViewModel,
         getFetchingDataFromSWStatus,
         dayHealthValuesReadFromDB,
         todayValuesReadFromSW
@@ -88,34 +85,34 @@ fun MainNavigationBarWithSwValues(
         {
             val valuesLambda: () -> Values
 
-            if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.NoRead
+            if (mainNavigationViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.NoRead
                 && getFetchingDataFromSWStatus() == SWReadingStatus.IN_PROGRESS
             ) {
                 valuesLambda = todayValuesReadFromSW
-            } else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.NoRead
+            } else if (mainNavigationViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.NoRead
                 && getFetchingDataFromSWStatus() == SWReadingStatus.READ
             ) {
                 valuesLambda = todayValuesReadFromSW
-            } else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
+            } else if (mainNavigationViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
                 && getFetchingDataFromSWStatus() == SWReadingStatus.READ
             ) {
                 valuesLambda = dayHealthValuesReadFromDB
-            }else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
+            }else if (mainNavigationViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
                 && getFetchingDataFromSWStatus() == SWReadingStatus.READ
             ) {
                 valuesLambda = todayValuesReadFromSW
-            }else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.InProgressReading
+            }else if (mainNavigationViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.InProgressReading
                 && getFetchingDataFromSWStatus() == SWReadingStatus.READ && dayHealthValuesReadFromDB().stepList.sum() == 0
             ) {
                 valuesLambda = dayHealthValuesReadFromDB
-            } else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.InProgressReading
+            } else if (mainNavigationViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.InProgressReading
                 && getFetchingDataFromSWStatus() == SWReadingStatus.READ && dayHealthValuesReadFromDB().stepList.sum() != 0
             ) {
                 valuesLambda = dayHealthValuesReadFromDB
-                dataViewModel.statusReadingDbForDashboard =
+                mainNavigationViewModel.statusReadingDbForDashboard =
                     StatusReadingDbForDashboard.NewValuesRead
 
-            } else if (dataViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.NewValuesRead
+            } else if (mainNavigationViewModel.statusReadingDbForDashboard == StatusReadingDbForDashboard.NewValuesRead
                 && getFetchingDataFromSWStatus() == SWReadingStatus.READ
             ) {
                 valuesLambda = dayHealthValuesReadFromDB
@@ -128,9 +125,9 @@ fun MainNavigationBarWithSwValues(
     }
 
 
-    val getMyHeartRateAlertDialogDataHandler = remember(dataViewModel) {
+    val getMyHeartRateAlertDialogDataHandler = remember(mainNavigationViewModel) {
         {
-            dataViewModel.getMyHeartRateAlertDialogDataHandler()
+            mainNavigationViewModel.getMyHeartRateAlertDialogDataHandler()
         }
     }
 
@@ -142,9 +139,9 @@ fun MainNavigationBarWithSwValues(
     }
 
 
-    val getMyBloodPressureDialogDataHandler = remember(dataViewModel) {
+    val getMyBloodPressureDialogDataHandler = remember(mainNavigationViewModel) {
         {
-            dataViewModel.getMyBloodPressureAlertDialogDataHandler()
+            mainNavigationViewModel.getMyBloodPressureAlertDialogDataHandler()
         }
     }
 
@@ -163,9 +160,9 @@ fun MainNavigationBarWithSwValues(
     }
 
 
-    val getMySpO2AlertDialogDataHandler = remember(dataViewModel) {
+    val getMySpO2AlertDialogDataHandler = remember(mainNavigationViewModel) {
         {
-            dataViewModel.getMySpO2AlertDialogDataHandler()
+            mainNavigationViewModel.getMySpO2AlertDialogDataHandler()
         }
     }
 
@@ -175,9 +172,9 @@ fun MainNavigationBarWithSwValues(
         { spO2 }
     }
 
-    val getMyTemperatureAlertDialogDataHandler = remember(dataViewModel) {
+    val getMyTemperatureAlertDialogDataHandler = remember(mainNavigationViewModel) {
         {
-            dataViewModel.getMyTemperatureAlertDialogDataHandler()
+            mainNavigationViewModel.getMyTemperatureAlertDialogDataHandler()
         }
     }
 
@@ -195,11 +192,11 @@ fun MainNavigationBarWithSwValues(
         { temperature }
     }
 
-    val clearState = remember(dataViewModel) {
+    val clearState = remember(mainNavigationViewModel) {
         {
             setStateEnabledDatePickerMainScaffold(false)
-            dataViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.CLEARED
-            dataViewModel.stateBluetoothListScreenNavigationStatus =
+            mainNavigationViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.CLEARED
+            mainNavigationViewModel.stateBluetoothListScreenNavigationStatus =
                 BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_BLUETOOTH_SCREEN
 
         }
@@ -207,44 +204,44 @@ fun MainNavigationBarWithSwValues(
 
 
     //DialogDatePicker State
-    val stateShowDialogDatePickerValue = remember(dataViewModel) {
+    val stateShowDialogDatePickerValue = remember(mainNavigationViewModel) {
         {
-            dataViewModel.stateShowDialogDatePicker
+            mainNavigationViewModel.stateShowDialogDatePicker
         }
     }
 
-    val setStateShowDialogDatePickerValue = remember(dataViewModel) {
+    val setStateShowDialogDatePickerValue = remember(mainNavigationViewModel) {
         { newValue:StatusMainTitleScaffold ->
-            dataViewModel.stateShowMainTitleScaffold = newValue
+            mainNavigationViewModel.stateShowMainTitleScaffold = newValue
         }
     }
 
-    val stateShowMainTitleScaffold = remember(dataViewModel) {
+    val stateShowMainTitleScaffold = remember(mainNavigationViewModel) {
         {
-            dataViewModel.stateShowMainTitleScaffold
+            mainNavigationViewModel.stateShowMainTitleScaffold
         }
     }
 
-    val stateShowDialogDatePickerSetter = remember(dataViewModel) {
+    val stateShowDialogDatePickerSetter = remember(mainNavigationViewModel) {
         { value: Boolean ->
-            dataViewModel.stateShowDialogDatePicker = value
+            mainNavigationViewModel.stateShowDialogDatePicker = value
         }
     }
 
-    val stateMiliSecondsDateDialogDatePickerSetter = remember(dataViewModel) {
+    val stateMiliSecondsDateDialogDatePickerSetter = remember(mainNavigationViewModel) {
         { value: Long ->
-            dataViewModel.stateMiliSecondsDateDialogDatePicker = value
+            mainNavigationViewModel.stateMiliSecondsDateDialogDatePicker = value
 
             val date = Date(value)
             val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             val dateData = formattedDate.format(date)
 
-            dataViewModel.statusReadingDbForDashboard =
+            mainNavigationViewModel.statusReadingDbForDashboard =
                 StatusReadingDbForDashboard.InProgressReading
 
-            dataViewModel.getDayHealthData(
+            mainNavigationViewModel.getDayHealthData(
                 dateData,
-                dataViewModel.macAddressDeviceBluetooth
+                mainNavigationViewModel.macAddressDeviceBluetooth
             )
         }
     }
