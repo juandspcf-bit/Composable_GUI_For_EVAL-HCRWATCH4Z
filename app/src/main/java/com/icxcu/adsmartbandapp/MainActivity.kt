@@ -208,7 +208,6 @@ class MainActivity : ComponentActivity() {
                                 "MainContent-1: ${mainNavigationViewModel.smartWatchState.todayDateValuesReadFromSW.stepList.sum()}"
                             )
 
-                            mainNavigationViewModel.stateEnabledDatePickerMainScaffold = false
                             navMainController.navigate(
                                 Routes.DataHomeFromBluetoothScannerScreen
                                     .route + "/${name}/${address}"
@@ -237,18 +236,9 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-
-            val getFetchingDataFromSWStatus = remember(mainNavigationViewModel) {
-                {
-                    mainNavigationViewModel.smartWatchState.fetchingDataFromSWStatus
-                }
-            }
-
             val setFetchingDataFromSWStatusSTOPPED = remember(mainNavigationViewModel) {
                 {
-                    Log.d("DATAX", "MainContent setFetchingDataFromSWStatusSTOPPED STOPPED")
-
-                    mainNavigationViewModel.stateBluetoothListScreenNavigationStatus =
+                    bluetoothScannerViewModel.stateBluetoothListScreenNavigationStatus =
                         BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_MAIN_NAV_SCREEN
                     mainNavigationViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.STOPPED
                 }
@@ -310,7 +300,7 @@ class MainActivity : ComponentActivity() {
                     }) {
                     Log.d("DATAX", "Routes.BluetoothScanner.route: ENTER")
 
-                    when (mainNavigationViewModel.stateBluetoothListScreenNavigationStatus) {
+                    when (bluetoothScannerViewModel.stateBluetoothListScreenNavigationStatus) {
                         BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_BLUETOOTH_SCREEN -> {
                             clearStateSW(mainNavigationViewModel)
                         }
@@ -384,7 +374,7 @@ class MainActivity : ComponentActivity() {
 
                     MainNavigationBarRoot(
                         mainNavigationViewModel,
-                        getFetchingDataFromSWStatus,
+                        bluetoothScannerViewModel,
                         bluetoothAddress,
                         bluetoothName,
                         navMainController
@@ -458,12 +448,11 @@ class MainActivity : ComponentActivity() {
 
                     MainNavigationBarRoot(
                         mainNavigationViewModel,
-                        getFetchingDataFromSWStatus,
+                        bluetoothScannerViewModel,
                         bluetoothAddress,
                         bluetoothName,
                         navMainController
                     )
-
                 }
 
 
@@ -707,6 +696,7 @@ class MainActivity : ComponentActivity() {
 
         mainNavigationViewModel.statusStartedReadingDataLasThreeDaysData = false
 
+        mainNavigationViewModel.stateEnabledDatePickerMainScaffold = false
 
         mainNavigationViewModel.personalInfoListReadFromDB = listOf()
 

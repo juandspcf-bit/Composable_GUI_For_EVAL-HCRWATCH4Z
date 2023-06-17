@@ -77,9 +77,6 @@ class MainNavigationViewModel(var application: Application) : ViewModel() {
     var collectDataScope: Job? = null
 
 
-    var stateBluetoothListScreenNavigationStatus by mutableStateOf(
-        BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_BLUETOOTH_SCREEN
-    )
 
     var statusReadingDbForDashboard: StatusReadingDbForDashboard =
         StatusReadingDbForDashboard.NoRead

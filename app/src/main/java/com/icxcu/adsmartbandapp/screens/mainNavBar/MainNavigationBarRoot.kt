@@ -2,17 +2,25 @@ package com.icxcu.adsmartbandapp.screens.mainNavBar
 
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
+import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.MainNavigationViewModel
 
 @Composable
 fun MainNavigationBarRoot(
     mainNavigationViewModel: MainNavigationViewModel,
-    getFetchingDataFromSWStatus: () -> SWReadingStatus,
+    bluetoothScannerViewModel: BluetoothScannerViewModel,
     bluetoothAddress: String,
     bluetoothName: String,
     navMainController: NavHostController
 ){
+
+    val getFetchingDataFromSWStatus = remember(mainNavigationViewModel) {
+        {
+            mainNavigationViewModel.smartWatchState.fetchingDataFromSWStatus
+        }
+    }
 
     when (getFetchingDataFromSWStatus()) {
         SWReadingStatus.CLEARED -> {
@@ -64,6 +72,7 @@ fun MainNavigationBarRoot(
         bluetoothName = bluetoothName,
         bluetoothAddress = bluetoothAddress,
         mainNavigationViewModel = mainNavigationViewModel,
+        bluetoothScannerViewModel = bluetoothScannerViewModel,
         getFetchingDataFromSWStatus = getFetchingDataFromSWStatus,
         navMainController = navMainController
     )
