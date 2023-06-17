@@ -279,15 +279,6 @@ fun MainNavigationBarWithSwValues(
 }
 
 
-class DayHealthDataState {
-
-
-
-
-
-    var dayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
-    var dayHeartRateListFromDB by mutableStateOf(listOf<Double>())
-}
 
 class DayHealthDataStateForDashBoard {
     var dayHealthResultsFromDBForDashBoard = MutableLiveData<Values>()

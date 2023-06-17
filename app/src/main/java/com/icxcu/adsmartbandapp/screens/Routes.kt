@@ -26,10 +26,18 @@ sealed class PhysicalActivityNestedRoute(){
 
 }
 
-sealed class BloodPressureNestedRoute(){
+sealed class BloodPressureNestedRoute{
     class BloodPressureMainRoute(var route: String = "BLOOD_PRESSURE") :
         BloodPressureNestedRoute()
     class BloodPressureScreen(var route: String = "blood_pressure"):
+        BloodPressureNestedRoute()
+
+}
+
+sealed class HeartRateNestedRoute{
+    class HeartRateMainRoute(var route: String = "HEART_RATE") :
+        BloodPressureNestedRoute()
+    class HeartRateScreen(var route: String = "heart_rate"):
         BloodPressureNestedRoute()
 
 }

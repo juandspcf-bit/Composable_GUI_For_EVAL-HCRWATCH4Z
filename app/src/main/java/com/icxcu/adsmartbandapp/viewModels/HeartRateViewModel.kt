@@ -7,16 +7,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
+import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.database.SWRoomDatabase
 import com.icxcu.adsmartbandapp.repositories.DBRepository
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityScreenNavStatus
+import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenNavStatus
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
-class PhysicalActivityViewModel (var application: Application) : ViewModel() {
-
+class HeartRateViewModel (var application: Application) : ViewModel() {
     var selectedDay by mutableStateOf("")
 
     private var dbRepository: DBRepository
@@ -24,13 +23,13 @@ class PhysicalActivityViewModel (var application: Application) : ViewModel() {
     var stateShowDialogDatePicker by mutableStateOf(false)
     var stateMiliSecondsDateDialogDatePicker by mutableStateOf(0L)
 
-    var dayPhysicalActivityState by mutableStateOf<List<PhysicalActivity>>(listOf())
-    var jobPhysicalActivityState: Job? = null
-    var physicalActivityScreenNavStatus: PhysicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Leaving
+    var dayHeartRateState by mutableStateOf<List<HeartRate>>(listOf())
+    var jobHeartRateState: Job? = null
+    var heartRateScreenNavStatus: HeartRateScreenNavStatus =
+        HeartRateScreenNavStatus.Leaving
 
-    var dayStepListFromDB by mutableStateOf(listOf<Int>())
-    var dayDistanceListFromDB by mutableStateOf(listOf<Double>())
-    var dayCaloriesListFromDB by mutableStateOf(listOf<Double>())
+    var dayHeartRateListFromDB by mutableStateOf(listOf<Double>())
+
 
     init {
         val swDb = SWRoomDatabase.getInstance(application)
@@ -46,15 +45,14 @@ class PhysicalActivityViewModel (var application: Application) : ViewModel() {
         )
     }
 
-    fun starListeningDayPhysicalActivityDB(dateData: String="", macAddress: String = "", ) {
-        jobPhysicalActivityState = viewModelScope.launch {
-            dbRepository.getDayPhysicalActivityWithFlow(dateData, macAddress)
+    fun starListeningHeartRateDB(dateData: String = "", macAddress: String = "") {
+        jobHeartRateState = viewModelScope.launch {
+            dbRepository.getDayHeartRateWithFlow(dateData, macAddress)
                 .distinctUntilChanged()
                 .collect {
                     Log.d("DB_FLOW", "starListeningDB of $macAddress: $it")
-                    dayPhysicalActivityState = it
+                    dayHeartRateState = it
                 }
         }
     }
-
 }

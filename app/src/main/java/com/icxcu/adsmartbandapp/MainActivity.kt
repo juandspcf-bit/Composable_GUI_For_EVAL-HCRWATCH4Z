@@ -37,6 +37,7 @@ import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.BloodPressureNestedRoute
 import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
 import com.icxcu.adsmartbandapp.screens.BluetoothScanScreen
+import com.icxcu.adsmartbandapp.screens.HeartRateNestedRoute
 import com.icxcu.adsmartbandapp.screens.PhysicalActivityNestedRoute
 import com.icxcu.adsmartbandapp.screens.PermissionsScreen
 import com.icxcu.adsmartbandapp.screens.PersonalInfoNestedRoute
@@ -54,6 +55,7 @@ import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalAct
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityScreenRoot
 import com.icxcu.adsmartbandapp.screens.progressLoading.CircularProgressLoading
 import com.icxcu.adsmartbandapp.screens.viewModelProviders.bloodPressureViewModel
+import com.icxcu.adsmartbandapp.screens.viewModelProviders.heartRateViewModel
 import com.icxcu.adsmartbandapp.screens.viewModelProviders.personalInfoViewModel
 import com.icxcu.adsmartbandapp.screens.viewModelProviders.physicalActivityViewModel
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
@@ -62,6 +64,7 @@ import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.DataViewModel
 import com.icxcu.adsmartbandapp.viewModels.DataViewModelFactory
+import com.icxcu.adsmartbandapp.viewModels.HeartRateViewModel
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModel
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.PersonalInfoViewModel
@@ -234,15 +237,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            val navLambdaBackToMainNavigationBar = remember(dataViewModel, navMainController) {
-                {
-                    dataViewModel.statusReadingDbForDashboard =
-                        StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
-                    navMainController.popBackStack()
-                    dataViewModel.jobHeartRateState?.cancel()
-
-                }
-            }
 
             val getFetchingDataFromSWStatus = remember(dataViewModel) {
                 {
@@ -388,8 +382,6 @@ class MainActivity : ComponentActivity() {
                     }
 
 
-                    dataViewModel.heartRateScreenNavStatus = HeartRateScreenNavStatus.Leaving
-
                     MainNavigationBarRoot(
                         dataViewModel,
                         getFetchingDataFromSWStatus,
@@ -464,8 +456,6 @@ class MainActivity : ComponentActivity() {
                             StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
                     }
 
-                    dataViewModel.heartRateScreenNavStatus = HeartRateScreenNavStatus.Leaving
-
                     MainNavigationBarRoot(
                         dataViewModel,
                         getFetchingDataFromSWStatus,
@@ -528,7 +518,7 @@ class MainActivity : ComponentActivity() {
                     route = BloodPressureNestedRoute.BloodPressureMainRoute().route//"PHYSICAL_ACTIVITY"
                 ){
                     composable(
-                        Routes.BloodPressurePlots.route,
+                        BloodPressureNestedRoute.BloodPressureScreen().route,
                         enterTransition = {
                             when (initialState.destination.route) {
                                 Routes.DataHome.route ->
@@ -568,42 +558,48 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
+                navigation(
+                    startDestination = HeartRateNestedRoute.HeartRateScreen().route,
+                    route = HeartRateNestedRoute.HeartRateMainRoute().route,
+                ){
+                    composable(
+                        HeartRateNestedRoute.HeartRateScreen().route,
+                        enterTransition = {
+                            when (initialState.destination.route) {
+                                Routes.DataHome.route ->
+                                    EnterTransition.None
 
-
-
-                composable(
-                    Routes.HeartRatePlot.route,
-                    enterTransition = {
-                        when (initialState.destination.route) {
-                            Routes.DataHome.route ->
-                                EnterTransition.None
-
-                            else -> null
+                                else -> null
+                            }
+                        },
+                        exitTransition = {
+                            when (targetState.destination.route) {
+                                Routes.DataHome.route -> ExitTransition.None
+                                else -> null
+                            }
                         }
-                    },
-                    exitTransition = {
-                        when (targetState.destination.route) {
-                            Routes.DataHome.route -> ExitTransition.None
-                            else -> null
-                        }
-                    }
-                ) {
-                    val myDateObj = LocalDateTime.now()
-                    val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-                    val todayFormattedDate = myDateObj.format(myFormatObj)
+                    ) {
+                        val heartRateViewModel = it.heartRateViewModel<HeartRateViewModel>(navController = navMainController)
 
-                    when(dataViewModel.heartRateScreenNavStatus){
-                        HeartRateScreenNavStatus.Leaving->{
-                            dataViewModel.heartRateScreenNavStatus = HeartRateScreenNavStatus.Started
-                            dataViewModel.starListeningHeartRateDB(todayFormattedDate, dataViewModel.macAddressDeviceBluetooth)
-                        }
-                        else->{
+                        val myDateObj = LocalDateTime.now()
+                        val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                        val todayFormattedDate = myDateObj.format(myFormatObj)
 
-                        }
-                    }
+                        when(heartRateViewModel.heartRateScreenNavStatus){
+                            HeartRateScreenNavStatus.Leaving->{
+                                heartRateViewModel.heartRateScreenNavStatus = HeartRateScreenNavStatus.Started
+                                heartRateViewModel.starListeningHeartRateDB(todayFormattedDate, dataViewModel.macAddressDeviceBluetooth)
+                            }
+                            else->{
 
-                    HeartRateScreenRoot(dataViewModel = dataViewModel) {
-                        navLambdaBackToMainNavigationBar()
+                            }
+                        }
+
+                        HeartRateScreenRoot(
+                            heartRateViewModel,
+                            dataViewModel.macAddressDeviceBluetooth,
+                            navMainController
+                        )
                     }
                 }
 
@@ -640,18 +636,12 @@ class MainActivity : ComponentActivity() {
                             }
                         }
 
-
                         PersonalInfoDataScreenRoot(
                             personalInfoViewModel,
                             dataViewModel.macAddressDeviceBluetooth,
                             navMainController)
                     }
-
-
                 }
-
-
-
             }
 
 

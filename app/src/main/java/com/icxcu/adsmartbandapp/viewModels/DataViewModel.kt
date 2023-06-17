@@ -22,18 +22,16 @@ import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.SWRepository
 import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
-import com.icxcu.adsmartbandapp.screens.mainNavBar.DayHealthDataState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.DayHealthDataStateForDashBoard
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SmartWatchState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusMainTitleScaffold
 import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusReadingDbForDashboard
 
-import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureScreenNavStatus
-import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenNavStatus
+
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.distinctUntilChanged
+
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -55,7 +53,7 @@ class DataViewModel(var application: Application) : ViewModel() {
     var selectedDay by mutableStateOf("")
 
     var statusStartedReadingDataLasThreeDaysData by mutableStateOf(false)
-    var dayHealthDataState = DayHealthDataState()
+
     var dayHealthDataStateForDashBoard = DayHealthDataStateForDashBoard()
 
     var personalInfoListReadFromDB = listOf<PersonalInfo>()
@@ -94,14 +92,6 @@ class DataViewModel(var application: Application) : ViewModel() {
     private var physicalActivityDao: PhysicalActivityDao
     private var bloodPressureDao: BloodPressureDao
 
-
-
-
-    var dayHeartRateState by mutableStateOf<List<HeartRate>>(listOf())
-    var jobHeartRateState: Job? = null
-    var heartRateScreenNavStatus: HeartRateScreenNavStatus = HeartRateScreenNavStatus.Leaving
-
-
     init {
         val swDb = SWRoomDatabase.getInstance(application)
         physicalActivityDao = swDb.physicalActivityDao()
@@ -116,8 +106,6 @@ class DataViewModel(var application: Application) : ViewModel() {
         )
 
         dbHelper = DatabaseHelperImpl(swDb)
-
-       dayHealthDataState.dayHeartRateResultsFromDB = dbRepository.dayHeartRateResultsFromDB
 
         dayHealthDataStateForDashBoard.dayHealthResultsFromDBForDashBoard =
             dbRepository.dayHealthResultsFromDBFForDashBoard
@@ -192,21 +180,6 @@ class DataViewModel(var application: Application) : ViewModel() {
             }
         }
     }
-
-
-
-
-    fun starListeningHeartRateDB(dateData: String = "", macAddress: String = "") {
-        jobHeartRateState = viewModelScope.launch {
-            dbRepository.getDayHeartRateWithFlow(dateData, macAddress)
-                .distinctUntilChanged()
-                .collect {
-                    Log.d("DB_FLOW", "starListeningDB of $macAddress: $it")
-                    dayHeartRateState = it
-                }
-        }
-    }
-
 
     fun requestSmartWatchData(name: String = "", macAddress: String = "") {
         swRepository.requestSmartWatchData()
