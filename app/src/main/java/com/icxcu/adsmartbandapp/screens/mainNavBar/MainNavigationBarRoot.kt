@@ -24,8 +24,7 @@ fun MainNavigationBarRoot(
 
             mainNavigationViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.IN_PROGRESS
 
-            mainNavigationViewModel.macAddressDeviceBluetooth =
-                bluetoothAddress
+            mainNavigationViewModel.macAddressDeviceBluetooth = bluetoothAddress
             mainNavigationViewModel.nameDeviceBluetooth = bluetoothName
 
             mainNavigationViewModel.listenDataFromSmartWatch()

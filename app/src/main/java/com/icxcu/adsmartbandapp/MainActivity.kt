@@ -489,8 +489,10 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     ) {
-                        val physicalActivityViewModel = it.physicalActivityViewModel<PhysicalActivityViewModel>(navController = navMainController)
 
+                        val bluetoothAddress = splashViewModel.lastAccessedDevice[3]
+
+                        val physicalActivityViewModel = it.physicalActivityViewModel<PhysicalActivityViewModel>(navController = navMainController)
 
                         val myDateObj = LocalDateTime.now()
                         val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
@@ -499,7 +501,7 @@ class MainActivity : ComponentActivity() {
                         when(physicalActivityViewModel.physicalActivityScreenNavStatus){
                             PhysicalActivityScreenNavStatus.Leaving->{
                                 physicalActivityViewModel.physicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Started
-                                physicalActivityViewModel.starListeningDayPhysicalActivityDB(todayFormattedDate, macAddress = mainNavigationViewModel.macAddressDeviceBluetooth, )
+                                physicalActivityViewModel.starListeningDayPhysicalActivityDB(todayFormattedDate, bluetoothAddress, )
                             }
                             else->{
 
@@ -507,7 +509,7 @@ class MainActivity : ComponentActivity() {
                         }
                         PhysicalActivityScreenRoot(
                             physicalActivityViewModel = physicalActivityViewModel,
-                            macAddressDeviceBluetooth = mainNavigationViewModel.macAddressDeviceBluetooth,
+                            bluetoothAddress,
                             navMainController
                         )
                     }
@@ -534,6 +536,9 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     ) {
+
+                        val bluetoothAddress = splashViewModel.lastAccessedDevice[3]
+
                         val bloodPressureViewModel = it.bloodPressureViewModel<BloodPressureViewModel>(navController = navMainController)
 
                         val myDateObj = LocalDateTime.now()
@@ -543,7 +548,7 @@ class MainActivity : ComponentActivity() {
                         when(bloodPressureViewModel.bloodPressureScreenNavStatus){
                             BloodPressureScreenNavStatus.Leaving->{
                                 bloodPressureViewModel.bloodPressureScreenNavStatus = BloodPressureScreenNavStatus.Started
-                                bloodPressureViewModel.starListeningBloodPressureDB(todayFormattedDate, mainNavigationViewModel.macAddressDeviceBluetooth)
+                                bloodPressureViewModel.starListeningBloodPressureDB(todayFormattedDate, bluetoothAddress)
                             }
                             else->{
 
@@ -552,7 +557,7 @@ class MainActivity : ComponentActivity() {
 
                         BloodPressureScreenRoot(
                             bloodPressureViewModel,
-                            mainNavigationViewModel.macAddressDeviceBluetooth,
+                            bluetoothAddress,
                             navMainController
                         )
                     }
@@ -579,6 +584,9 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     ) {
+
+                        val bluetoothAddress = splashViewModel.lastAccessedDevice[3]
+
                         val heartRateViewModel = it.heartRateViewModel<HeartRateViewModel>(navController = navMainController)
 
                         val myDateObj = LocalDateTime.now()
@@ -588,7 +596,7 @@ class MainActivity : ComponentActivity() {
                         when(heartRateViewModel.heartRateScreenNavStatus){
                             HeartRateScreenNavStatus.Leaving->{
                                 heartRateViewModel.heartRateScreenNavStatus = HeartRateScreenNavStatus.Started
-                                heartRateViewModel.starListeningHeartRateDB(todayFormattedDate, mainNavigationViewModel.macAddressDeviceBluetooth)
+                                heartRateViewModel.starListeningHeartRateDB(todayFormattedDate, bluetoothAddress)
                             }
                             else->{
 
@@ -597,7 +605,7 @@ class MainActivity : ComponentActivity() {
 
                         HeartRateScreenRoot(
                             heartRateViewModel,
-                            mainNavigationViewModel.macAddressDeviceBluetooth,
+                            bluetoothAddress,
                             navMainController
                         )
                     }
@@ -624,12 +632,14 @@ class MainActivity : ComponentActivity() {
                         }
                     ) {
 
+                        val bluetoothAddress = splashViewModel.lastAccessedDevice[3]
+
                         val personalInfoViewModel = it.personalInfoViewModel<PersonalInfoViewModel>(navController = navMainController)
 
                         when(personalInfoViewModel.personalInfoDataScreenNavStatus){
                             PersonalInfoDataScreenNavStatus.Leaving->{
                                 personalInfoViewModel.personalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Started
-                                personalInfoViewModel.starListeningPersonalInfoDB(macAddress = mainNavigationViewModel.macAddressDeviceBluetooth)
+                                personalInfoViewModel.starListeningPersonalInfoDB(bluetoothAddress)
                             }
                             else->{
 
@@ -638,7 +648,7 @@ class MainActivity : ComponentActivity() {
 
                         PersonalInfoDataScreenRoot(
                             personalInfoViewModel,
-                            mainNavigationViewModel.macAddressDeviceBluetooth,
+                            bluetoothAddress,
                             navMainController)
                     }
                 }
@@ -700,8 +710,8 @@ class MainActivity : ComponentActivity() {
 
         mainNavigationViewModel.personalInfoListReadFromDB = listOf()
 
-        mainNavigationViewModel.macAddressDeviceBluetooth = ""
-        mainNavigationViewModel.nameDeviceBluetooth = ""
+/*        mainNavigationViewModel.macAddressDeviceBluetooth = ""
+        mainNavigationViewModel.nameDeviceBluetooth = ""*/
     }
 }
 
