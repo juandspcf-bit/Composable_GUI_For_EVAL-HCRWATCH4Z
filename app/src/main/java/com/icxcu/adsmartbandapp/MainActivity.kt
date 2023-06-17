@@ -63,7 +63,7 @@ import com.icxcu.adsmartbandapp.viewModels.BloodPressureViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.MainNavigationViewModel
-import com.icxcu.adsmartbandapp.viewModels.DataViewModelFactory
+import com.icxcu.adsmartbandapp.viewModels.MainNavigationModelFactory
 import com.icxcu.adsmartbandapp.viewModels.HeartRateViewModel
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModel
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModelFactory
@@ -125,7 +125,7 @@ class MainActivity : ComponentActivity() {
                     mainNavigationViewModel = viewModel(
                         it,
                         "DataViewModel",
-                        DataViewModelFactory(
+                        MainNavigationModelFactory(
                             LocalContext.current.applicationContext
                                     as Application
                         )

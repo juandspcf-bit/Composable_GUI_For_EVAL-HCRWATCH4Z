@@ -12,6 +12,8 @@ import com.icxcu.adsmartbandapp.viewModels.BloodPressureViewModel
 import com.icxcu.adsmartbandapp.viewModels.BloodPressureViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.HeartRateViewModel
 import com.icxcu.adsmartbandapp.viewModels.HeartRateViewModelFactory
+import com.icxcu.adsmartbandapp.viewModels.MainNavigationModelFactory
+import com.icxcu.adsmartbandapp.viewModels.MainNavigationViewModel
 import com.icxcu.adsmartbandapp.viewModels.PersonalInfoViewModel
 import com.icxcu.adsmartbandapp.viewModels.PersonalInformationViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.PhysicalActivityViewModel
@@ -93,6 +95,27 @@ inline fun<reified T: ViewModel> NavBackStackEntry.heartRateViewModel(navControl
         parentEntry,
         "BloodPressureViewModel",
         HeartRateViewModelFactory(
+            LocalContext.current.applicationContext
+                    as Application
+        ),
+
+        )
+    return viewModel as T
+}
+
+@Composable
+inline fun<reified T: ViewModel> NavBackStackEntry.mainNavigationViewModel(navController: NavController): T{
+    val navGraphRoute = destination.parent?.route ?: return viewModel()
+    val parentEntry = remember (this){
+        navController.getBackStackEntry(navGraphRoute)
+    }
+
+    val viewModel: MainNavigationViewModel?
+
+    viewModel = viewModel(
+        parentEntry,
+        "BloodPressureViewModel",
+        MainNavigationModelFactory(
             LocalContext.current.applicationContext
                     as Application
         ),
