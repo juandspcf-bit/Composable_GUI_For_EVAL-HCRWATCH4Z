@@ -13,11 +13,20 @@ import androidx.compose.runtime.setValue
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import com.icxcu.adsmartbandapp.data.BasicBluetoothAdapter
+import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class BluetoothScannerViewModel(var application: Application) : ViewModel() {
+
+    var selectedBluetoothDeviceName = ""
+    var selectedBluetoothDeviceAddress = ""
+
+    var stateBluetoothListScreenNavigationStatus by mutableStateOf(
+        BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_BLUETOOTH_SCREEN
+    )
+
     var bluetoothAdaptersList by mutableStateOf<List<BasicBluetoothAdapter>>(
         mutableListOf()
     )

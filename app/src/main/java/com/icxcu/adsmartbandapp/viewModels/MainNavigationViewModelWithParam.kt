@@ -21,22 +21,18 @@ import com.icxcu.adsmartbandapp.repositories.MyHeartRateAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.SWRepository
-import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.DayHealthDataStateForDashBoard
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SmartWatchState
 import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusMainTitleScaffold
 import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusReadingDbForDashboard
-
-
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class MainNavigationViewModel(var application: Application) : ViewModel() {
+class MainNavigationViewModelWithParam (var application: Application) : ViewModel() {
 
 
     private val myFormatObj: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
@@ -116,7 +112,7 @@ class MainNavigationViewModel(var application: Application) : ViewModel() {
                 when (it.date) {
                     todayFormattedDate -> {
 
-                        smartWatchState.todayDateValuesReadFromSW = it
+/*                        smartWatchState.todayDateValuesReadFromSW = it
                         updateOrInsertPhysicalActivityDataBase(
                             it,
                             todayFormattedDate,
@@ -139,14 +135,14 @@ class MainNavigationViewModel(var application: Application) : ViewModel() {
                             macAddressDeviceBluetooth,
                             this@MainNavigationViewModel,
                             dbRepository
-                        )
+                        )*/
 
                     }
 
                     yesterdayFormattedDate -> {
 
                         smartWatchState.yesterdayDateValuesFromSW = it
-                        updateOrInsertPhysicalActivityDataBase(
+/*                        updateOrInsertPhysicalActivityDataBase(
                             it,
                             yesterdayFormattedDate,
                             macAddressDeviceBluetooth,
@@ -168,7 +164,7 @@ class MainNavigationViewModel(var application: Application) : ViewModel() {
                             macAddressDeviceBluetooth,
                             this@MainNavigationViewModel,
                             dbRepository
-                        )
+                        )*/
 
                         smartWatchState.progressbarForFetchingDataFromSW = false
                         smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.READ

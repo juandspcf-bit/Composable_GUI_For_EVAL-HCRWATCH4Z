@@ -38,6 +38,7 @@ import com.icxcu.adsmartbandapp.screens.BloodPressureNestedRoute
 import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
 import com.icxcu.adsmartbandapp.screens.BluetoothScanScreen
 import com.icxcu.adsmartbandapp.screens.HeartRateNestedRoute
+import com.icxcu.adsmartbandapp.screens.MainNavigationNestedRoute
 import com.icxcu.adsmartbandapp.screens.PhysicalActivityNestedRoute
 import com.icxcu.adsmartbandapp.screens.PermissionsScreen
 import com.icxcu.adsmartbandapp.screens.PersonalInfoNestedRoute
@@ -56,6 +57,7 @@ import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalAct
 import com.icxcu.adsmartbandapp.screens.progressLoading.CircularProgressLoading
 import com.icxcu.adsmartbandapp.screens.viewModelProviders.bloodPressureViewModel
 import com.icxcu.adsmartbandapp.screens.viewModelProviders.heartRateViewModel
+import com.icxcu.adsmartbandapp.screens.viewModelProviders.mainNavigationViewModel
 import com.icxcu.adsmartbandapp.screens.viewModelProviders.personalInfoViewModel
 import com.icxcu.adsmartbandapp.screens.viewModelProviders.physicalActivityViewModel
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
@@ -155,8 +157,8 @@ class MainActivity : ComponentActivity() {
                     Log.d("Route", "onCreate: Routes.DataHome.route")
                     val bluetoothName = splashViewModel.lastAccessedDevice[2]
                     val bluetoothAddress = splashViewModel.lastAccessedDevice[3]
-                    Log.d("Route", "$bluetoothName")
-                    Routes.DataHome.route
+                    Log.d("Route", "onCreate: $bluetoothName")
+                    MainNavigationNestedRoute.MainNavigationMainRoute().route
                 } else {
                     Log.d("Route", "onCreate:default")
                     Routes.CircularProgressLoading.route
@@ -206,15 +208,9 @@ class MainActivity : ComponentActivity() {
                         if (bluetoothScannerViewModel.scanningBluetoothAdaptersStatus == ScanningBluetoothAdapterStatus.SCANNING_FINISHED_WITH_RESULTS
                             || bluetoothScannerViewModel.scanningBluetoothAdaptersStatus == ScanningBluetoothAdapterStatus.SCANNING_FORCIBLY_STOPPED
                         ) {
-                            Log.d(
-                                "DATAX",
-                                "MainContent-1: ${mainNavigationViewModel.smartWatchState.todayDateValuesReadFromSW.stepList.sum()}"
-                            )
 
-                            mainNavigationViewModel.stateEnabledDatePickerMainScaffold = false
                             navMainController.navigate(
-                                Routes.DataHomeFromBluetoothScannerScreen
-                                    .route + "/${name}/${address}"
+                                MainNavigationNestedRoute.MainNavigationMainRoute().route
                             )
 
                             if (bluetoothScannerViewModel.bluetoothAdaptersList.isEmpty()) {
@@ -240,20 +236,11 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-
-            val getFetchingDataFromSWStatus = remember(mainNavigationViewModel) {
-                {
-                    mainNavigationViewModel.smartWatchState.fetchingDataFromSWStatus
-                }
-            }
-
             val setFetchingDataFromSWStatusSTOPPED = remember(mainNavigationViewModel) {
                 {
-                    Log.d("DATAX", "MainContent setFetchingDataFromSWStatusSTOPPED STOPPED")
-
-                    mainNavigationViewModel.stateBluetoothListScreenNavigationStatus =
+                    bluetoothScannerViewModel.stateBluetoothListScreenNavigationStatus =
                         BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_MAIN_NAV_SCREEN
-                    mainNavigationViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.STOPPED
+                    //mainNavigationViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.STOPPED
                 }
             }
 
@@ -313,9 +300,9 @@ class MainActivity : ComponentActivity() {
                     }) {
                     Log.d("DATAX", "Routes.BluetoothScanner.route: ENTER")
 
-                    when (mainNavigationViewModel.stateBluetoothListScreenNavigationStatus) {
+                    when (bluetoothScannerViewModel.stateBluetoothListScreenNavigationStatus) {
                         BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_BLUETOOTH_SCREEN -> {
-                            clearStateSW(mainNavigationViewModel)
+                            //clearStateSW(mainNavigationViewModel)
                         }
 
                         BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_MAIN_NAV_SCREEN -> {
@@ -327,149 +314,76 @@ class MainActivity : ComponentActivity() {
                         getLiveBasicBluetoothAdapterList,
                         setLiveBasicBluetoothAdapterList,
                         getScanningBluetoothAdaptersStatus,
-                        bluetoothScannerViewModel.leScanCallback,
+                        bluetoothScannerViewModel,
                         bluetoothLEManager,
                         this@MainActivity,
+                        splashViewModel,
+                        preferenceDataStoreHelper,
                         setFetchingDataFromSWStatusSTOPPED,
                         navLambdaToMainNavigationBar
                     )
                 }
 
-                composable(
-                    route = Routes.DataHomeFromBluetoothScannerScreen.route + "/{bluetoothName}/{bluetoothAddress}",                    // declaring placeholder in String route
-                    arguments = listOf(
-                        // declaring argument type
-                        navArgument("bluetoothName") { type = NavType.StringType },
-                        navArgument("bluetoothAddress") { type = NavType.StringType },
+                navigation(
+                    startDestination = MainNavigationNestedRoute.MainNavigationScreen().route,// "physical_activity",
+                    route = MainNavigationNestedRoute.MainNavigationMainRoute().route//"PHYSICAL_ACTIVITY"
+                ){
 
-                        ),
-                    enterTransition = {
-                        when (initialState.destination.route) {
-                            Routes.PhysicalActivity.route -> EnterTransition.None
-                            Routes.BloodPressurePlots.route -> EnterTransition.None
-                            Routes.HeartRatePlot.route -> EnterTransition.None
-                            else -> null
+                    composable(
+                        route = MainNavigationNestedRoute.MainNavigationScreen().route,                    // declaring placeholder in String route
+                          enterTransition = {
+                            when (initialState.destination.route) {
+                                Routes.PhysicalActivity.route -> EnterTransition.None
+                                Routes.BloodPressurePlots.route -> EnterTransition.None
+                                Routes.HeartRatePlot.route -> EnterTransition.None
+                                else -> null
+                            }
+                        },
+                        exitTransition = {
+                            when (targetState.destination.route) {
+                                Routes.PhysicalActivity.route -> ExitTransition.None
+                                Routes.BloodPressurePlots.route -> ExitTransition.None
+                                Routes.HeartRatePlot.route -> ExitTransition.None
+                                else -> null
+                            }
                         }
-                    },
-                    exitTransition = {
-                        when (targetState.destination.route) {
-                            Routes.PhysicalActivity.route -> ExitTransition.None
-                            Routes.BloodPressurePlots.route -> ExitTransition.None
-                            Routes.HeartRatePlot.route -> ExitTransition.None
-                            else -> null
-                        }
-                    }
-                ) { backStackEntry ->
-
-                    Log.d("DATAX", "Routes.DataHomeFromBluetoothScannerScreen.route ENTERED")
-
-                    val bluetoothName =
-                        backStackEntry.arguments?.getString("bluetoothName") ?: "no name"
-                    val bluetoothAddress =
-                        backStackEntry.arguments?.getString("bluetoothAddress") ?: "no address"
-
-                    splashViewModel.writeDataPreferences(
-                        preferenceDataStoreHelper,
-                        name = bluetoothName,
-                        address = bluetoothAddress,
-                    )
-
-                    bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
-                    bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
-                        ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
-                    if (mainNavigationViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.NoRead
-                        && mainNavigationViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
                     ) {
-                        mainNavigationViewModel.statusReadingDbForDashboard =
-                            StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
-                    }
+                        val mainNavigationViewModel =
+                            it.mainNavigationViewModel<MainNavigationViewModel>(navController = navMainController)
 
+                        Log.d("DATAX", "Routes.DataHomeFromBluetoothScannerScreen.route ENTERED")
 
-                    MainNavigationBarRoot(
-                        mainNavigationViewModel,
-                        getFetchingDataFromSWStatus,
-                        bluetoothAddress,
-                        bluetoothName,
-                        navMainController
-                    )
-                }
-
-                composable(
-                    Routes.DataHome.route,
-                    enterTransition = {
-                        when (initialState.destination.route) {
-                            Routes.PhysicalActivity.route -> EnterTransition.None
-
-                            /*                                slideIntoContainer(
-                                                                AnimatedContentTransitionScope.SlideDirection.Right,
-                                                                animationSpec = tween(300)
-                                                            )*/
-
-                            Routes.BloodPressurePlots.route -> EnterTransition.None
-                            /*                                slideIntoContainer(
-                                                                AnimatedContentTransitionScope.SlideDirection.Right,
-                                                                animationSpec = tween(300)
-                                                            )*/
-
-                            Routes.HeartRatePlot.route -> EnterTransition.None
-                            /*                                slideIntoContainer(
-                                                                AnimatedContentTransitionScope.SlideDirection.Right,
-                                                                animationSpec = tween(300)
-                                                            )*/
-
-                            else -> null
+                        val bluetoothName = if(bluetoothScannerViewModel.selectedBluetoothDeviceName!=""){
+                            bluetoothScannerViewModel.selectedBluetoothDeviceName
+                        }else{
+                            splashViewModel.lastAccessedDevice[2]
                         }
-                    },
-                    exitTransition = {
-                        when (targetState.destination.route) {
-                            Routes.PhysicalActivity.route -> ExitTransition.None
-                            /*                                slideOutOfContainer(
-                                                                AnimatedContentTransitionScope.SlideDirection.Right,
-                                                                animationSpec = tween(300)
-                                                            )*/
-
-                            Routes.BloodPressurePlots.route -> ExitTransition.None
-                            /*                                slideOutOfContainer(
-                                                                AnimatedContentTransitionScope.SlideDirection.Right,
-                                                                animationSpec = tween(300)
-                                                            )*/
-
-                            Routes.HeartRatePlot.route -> ExitTransition.None
-                            /*                                slideOutOfContainer(
-                                                                AnimatedContentTransitionScope.SlideDirection.Right,
-                                                                animationSpec = tween(300)
-                                                            )*/
-
-                            else -> null
+                        val bluetoothAddress = if(bluetoothScannerViewModel.selectedBluetoothDeviceAddress!=""){
+                            bluetoothScannerViewModel.selectedBluetoothDeviceAddress
+                        }else{
+                            splashViewModel.lastAccessedDevice[3]
                         }
+
+                        bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
+                        bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
+                            ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
+                        if (mainNavigationViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.NoRead
+                            && mainNavigationViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
+                        ) {
+                            mainNavigationViewModel.statusReadingDbForDashboard =
+                                StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
+                        }
+
+
+                        MainNavigationBarRoot(
+                            mainNavigationViewModel,
+                            bluetoothScannerViewModel,
+                            bluetoothAddress,
+                            bluetoothName,
+                            navMainController
+                        )
                     }
-                ) {
-                    Log.d("DATAX", "Routes.DataHome.route: ENTER")
-
-                    val bluetoothName = splashViewModel.lastAccessedDevice[2]
-                    val bluetoothAddress = splashViewModel.lastAccessedDevice[3]
-
-                    bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
-                    bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
-                        ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
-                    if (mainNavigationViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.NoRead
-                        && mainNavigationViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
-                    ) {
-                        mainNavigationViewModel.statusReadingDbForDashboard =
-                            StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
-                    }
-
-                    MainNavigationBarRoot(
-                        mainNavigationViewModel,
-                        getFetchingDataFromSWStatus,
-                        bluetoothAddress,
-                        bluetoothName,
-                        navMainController
-                    )
-
                 }
-
-
 
                 navigation(
                     startDestination = PhysicalActivityNestedRoute.PhysicalActivityScreen().route,// "physical_activity",
@@ -492,8 +406,10 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     ) {
-                        val physicalActivityViewModel = it.physicalActivityViewModel<PhysicalActivityViewModel>(navController = navMainController)
 
+                        val bluetoothAddress = splashViewModel.lastAccessedDevice[3]
+
+                        val physicalActivityViewModel = it.physicalActivityViewModel<PhysicalActivityViewModel>(navController = navMainController)
 
                         val myDateObj = LocalDateTime.now()
                         val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
@@ -502,7 +418,7 @@ class MainActivity : ComponentActivity() {
                         when(physicalActivityViewModel.physicalActivityScreenNavStatus){
                             PhysicalActivityScreenNavStatus.Leaving->{
                                 physicalActivityViewModel.physicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Started
-                                physicalActivityViewModel.starListeningDayPhysicalActivityDB(todayFormattedDate, macAddress = mainNavigationViewModel.macAddressDeviceBluetooth, )
+                                physicalActivityViewModel.starListeningDayPhysicalActivityDB(todayFormattedDate, bluetoothAddress, )
                             }
                             else->{
 
@@ -510,7 +426,7 @@ class MainActivity : ComponentActivity() {
                         }
                         PhysicalActivityScreenRoot(
                             physicalActivityViewModel = physicalActivityViewModel,
-                            macAddressDeviceBluetooth = mainNavigationViewModel.macAddressDeviceBluetooth,
+                            bluetoothAddress,
                             navMainController
                         )
                     }
@@ -537,6 +453,9 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     ) {
+
+                        val bluetoothAddress = splashViewModel.lastAccessedDevice[3]
+
                         val bloodPressureViewModel = it.bloodPressureViewModel<BloodPressureViewModel>(navController = navMainController)
 
                         val myDateObj = LocalDateTime.now()
@@ -546,7 +465,7 @@ class MainActivity : ComponentActivity() {
                         when(bloodPressureViewModel.bloodPressureScreenNavStatus){
                             BloodPressureScreenNavStatus.Leaving->{
                                 bloodPressureViewModel.bloodPressureScreenNavStatus = BloodPressureScreenNavStatus.Started
-                                bloodPressureViewModel.starListeningBloodPressureDB(todayFormattedDate, mainNavigationViewModel.macAddressDeviceBluetooth)
+                                bloodPressureViewModel.starListeningBloodPressureDB(todayFormattedDate, bluetoothAddress)
                             }
                             else->{
 
@@ -555,7 +474,7 @@ class MainActivity : ComponentActivity() {
 
                         BloodPressureScreenRoot(
                             bloodPressureViewModel,
-                            mainNavigationViewModel.macAddressDeviceBluetooth,
+                            bluetoothAddress,
                             navMainController
                         )
                     }
@@ -582,6 +501,9 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     ) {
+
+                        val bluetoothAddress = splashViewModel.lastAccessedDevice[3]
+
                         val heartRateViewModel = it.heartRateViewModel<HeartRateViewModel>(navController = navMainController)
 
                         val myDateObj = LocalDateTime.now()
@@ -591,7 +513,7 @@ class MainActivity : ComponentActivity() {
                         when(heartRateViewModel.heartRateScreenNavStatus){
                             HeartRateScreenNavStatus.Leaving->{
                                 heartRateViewModel.heartRateScreenNavStatus = HeartRateScreenNavStatus.Started
-                                heartRateViewModel.starListeningHeartRateDB(todayFormattedDate, mainNavigationViewModel.macAddressDeviceBluetooth)
+                                heartRateViewModel.starListeningHeartRateDB(todayFormattedDate, bluetoothAddress)
                             }
                             else->{
 
@@ -600,7 +522,7 @@ class MainActivity : ComponentActivity() {
 
                         HeartRateScreenRoot(
                             heartRateViewModel,
-                            mainNavigationViewModel.macAddressDeviceBluetooth,
+                            bluetoothAddress,
                             navMainController
                         )
                     }
@@ -627,12 +549,14 @@ class MainActivity : ComponentActivity() {
                         }
                     ) {
 
+                        val bluetoothAddress = splashViewModel.lastAccessedDevice[3]
+
                         val personalInfoViewModel = it.personalInfoViewModel<PersonalInfoViewModel>(navController = navMainController)
 
                         when(personalInfoViewModel.personalInfoDataScreenNavStatus){
                             PersonalInfoDataScreenNavStatus.Leaving->{
                                 personalInfoViewModel.personalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Started
-                                personalInfoViewModel.starListeningPersonalInfoDB(macAddress = mainNavigationViewModel.macAddressDeviceBluetooth)
+                                personalInfoViewModel.starListeningPersonalInfoDB(bluetoothAddress)
                             }
                             else->{
 
@@ -641,7 +565,7 @@ class MainActivity : ComponentActivity() {
 
                         PersonalInfoDataScreenRoot(
                             personalInfoViewModel,
-                            mainNavigationViewModel.macAddressDeviceBluetooth,
+                            bluetoothAddress,
                             navMainController)
                     }
                 }
@@ -652,60 +576,7 @@ class MainActivity : ComponentActivity() {
     }
 
 
-    private fun clearStateSW(mainNavigationViewModel: MainNavigationViewModel) {
 
-        val myFormatObj: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-        val todayLocalDateTime: LocalDateTime = LocalDateTime.now()
-        val todayFormattedDate: String = todayLocalDateTime.format(myFormatObj)
-        mainNavigationViewModel.todayFormattedDate = todayFormattedDate
-
-        val yesterdayLocalDateTime: LocalDateTime = todayLocalDateTime.minusDays(1)
-        val yesterdayFormattedDate: String = yesterdayLocalDateTime.format(myFormatObj)
-        mainNavigationViewModel.yesterdayFormattedDate = yesterdayFormattedDate
-
-        val pastYesterdayLocalDateTime: LocalDateTime = todayLocalDateTime.minusDays(2)
-        val pastYesterdayFormattedDate: String = pastYesterdayLocalDateTime.format(myFormatObj)
-        mainNavigationViewModel.pastYesterdayFormattedDate = pastYesterdayFormattedDate
-
-        mainNavigationViewModel.smartWatchState.progressbarForFetchingDataFromSW = false
-        mainNavigationViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.CLEARED
-
-
-        mainNavigationViewModel.smartWatchState.todayDateValuesReadFromSW =
-            Values(
-                MutableList(48) { 0 }.toList(),
-                MutableList(48) { 0.0 }.toList(),
-                MutableList(48) { 0.0 }.toList(),
-                MutableList(48) { 0.0 }.toList(),
-                MutableList(48) { 0.0 }.toList(),
-                MutableList(48) { 0.0 }.toList(),
-                mainNavigationViewModel.todayFormattedDate
-            )
-
-        mainNavigationViewModel.smartWatchState.yesterdayDateValuesFromSW =
-            Values(
-                MutableList(48) { 0 }.toList(),
-                MutableList(48) { 0.0 }.toList(),
-                MutableList(48) { 0.0 }.toList(),
-                MutableList(48) { 0.0 }.toList(),
-                MutableList(48) { 0.0 }.toList(),
-                MutableList(48) { 0.0 }.toList(),
-                mainNavigationViewModel.todayFormattedDate
-            )
-
-        mainNavigationViewModel.swRepository.jobSW?.cancel()
-
-        mainNavigationViewModel.collectDataScope?.cancel()
-        mainNavigationViewModel.selectedDay = ""
-
-        mainNavigationViewModel.statusStartedReadingDataLasThreeDaysData = false
-
-
-        mainNavigationViewModel.personalInfoListReadFromDB = listOf()
-
-        mainNavigationViewModel.macAddressDeviceBluetooth = ""
-        mainNavigationViewModel.nameDeviceBluetooth = ""
-    }
 }
 
 @Preview(showBackground = true)

@@ -42,6 +42,23 @@ sealed class HeartRateNestedRoute{
 
 }
 
+sealed class MainNavigationNestedRoute{
+    class MainNavigationMainRoute(var route: String = "MAIN_NAVIGATION_ROUTE") :
+        MainNavigationNestedRoute()
+    class MainNavigationScreen(var route: String = "main_navigation_route"):
+        MainNavigationNestedRoute()
+
+}
+
+sealed class MainNavigationNestedRouteWitParam{
+    class MainNavigationMainRoute(var route: String = "MAIN_NAVIGATION_ROUTE") :
+        MainNavigationNestedRouteWitParam()
+    class MainNavigationScreen(var route: String = "main_navigation_route"):
+        MainNavigationNestedRouteWitParam()
+
+}
+
+
 sealed class PersonalInfoNestedRoute{
     class PersonalInfoMainRoute(var route: String = "PERSONAL_INFO") :
         PersonalInfoNestedRoute()
