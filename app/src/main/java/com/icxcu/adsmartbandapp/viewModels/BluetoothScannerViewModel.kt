@@ -20,6 +20,9 @@ import kotlinx.coroutines.launch
 
 class BluetoothScannerViewModel(var application: Application) : ViewModel() {
 
+    var selectedBluetoothDeviceName = ""
+    var selectedBluetoothDeviceAddress = ""
+
     var stateBluetoothListScreenNavigationStatus by mutableStateOf(
         BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_BLUETOOTH_SCREEN
     )

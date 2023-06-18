@@ -31,7 +31,10 @@ import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
 import com.icxcu.adsmartbandapp.data.BasicBluetoothAdapter
+import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreHelper
+import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.ScanningBluetoothAdapterStatus
+import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -40,9 +43,11 @@ fun BluetoothScanScreen(
     getLiveBasicBluetoothAdapterList: () -> List<BasicBluetoothAdapter>,
     setLiveBasicBluetoothAdapterList: () -> Unit,
     getScanningBluetoothAdaptersStatus: () -> ScanningBluetoothAdapterStatus,
-    leScanCallback: ScanCallback,
+    bluetoothScannerViewModel: BluetoothScannerViewModel,
     bluetoothLEManager: BluetoothManager,
     activity: Activity,
+    splashViewModel: SplashViewModel,
+    preferenceDataStoreHelper: PreferenceDataStoreHelper,
     setFetchingDataFromSWStatusSTOPPED: () -> Unit,
     navigateMainNavBar: (String, String) -> Unit,
 ) {
@@ -60,7 +65,7 @@ fun BluetoothScanScreen(
         val scanLocalBluetooth = bluetoothLEManager.scanLocalBluetooth(activity)
         bluetoothLEManager.scanLeDevice(
             scanLocalBluetooth,
-            leScanCallback
+            bluetoothScannerViewModel.leScanCallback
         )
     }
 
@@ -123,8 +128,11 @@ fun BluetoothScanScreen(
                 ListAlbumDataEmpty()
                 ListAlbumData(
                     basicBluetoothAdapter = getLiveBasicBluetoothAdapterList(),
+                    bluetoothScannerViewModel,
                     modifier = Modifier
                         .fillMaxSize(),
+                    splashViewModel,
+                    preferenceDataStoreHelper,
                     setFetchingDataFromSWStatusSTOPPED,
                     navigateMainNavBar
                 )
@@ -132,8 +140,11 @@ fun BluetoothScanScreen(
                 ListAlbumDataEmpty()
                 ListAlbumData(
                     basicBluetoothAdapter = getLiveBasicBluetoothAdapterList(),
+                    bluetoothScannerViewModel,
                     modifier = Modifier
                         .fillMaxSize(),
+                    splashViewModel,
+                    preferenceDataStoreHelper,
                     setFetchingDataFromSWStatusSTOPPED,
                     navigateMainNavBar
                 )
@@ -193,7 +204,10 @@ fun BluetoothScanScreen(
 @Composable
 fun ListAlbumData(
     basicBluetoothAdapter: List<BasicBluetoothAdapter>,
+    bluetoothScannerViewModel: BluetoothScannerViewModel,
     modifier: Modifier = Modifier,
+    splashViewModel: SplashViewModel,
+    preferenceDataStoreHelper: PreferenceDataStoreHelper,
     setFetchingDataFromSWStatusSTOPPED: () -> Unit,
     navigateMainNavBar: (String, String) -> Unit
 ) {
@@ -210,6 +224,13 @@ fun ListAlbumData(
                             onLongPress = { /* Long Press Detected */ },
                             onTap = {
                                 setFetchingDataFromSWStatusSTOPPED()
+                                bluetoothScannerViewModel.selectedBluetoothDeviceName = item.name
+                                bluetoothScannerViewModel.selectedBluetoothDeviceAddress = item.address
+                                splashViewModel.writeDataPreferences(
+                                    preferenceDataStoreHelper,
+                                    name = item.name,
+                                    address = item.address,
+                                )
                                 navigateMainNavBar(item.name, item.address)
 
                             }
