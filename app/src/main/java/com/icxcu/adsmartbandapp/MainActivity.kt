@@ -46,6 +46,8 @@ import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.mainNavBar.MainNavigationBarRoot
 import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
 import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusReadingDbForDashboard
+import com.icxcu.adsmartbandapp.screens.navigationGraphs.mainNavigationGraph
+import com.icxcu.adsmartbandapp.screens.navigationGraphs.physicalActivityGraph
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenRoot
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureScreenNavStatus
@@ -324,113 +326,17 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-                navigation(
-                    startDestination = MainNavigationNestedRoute.MainNavigationScreen().route,// "physical_activity",
-                    route = MainNavigationNestedRoute.MainNavigationMainRoute().route//"PHYSICAL_ACTIVITY"
-                ){
+                mainNavigationGraph(
+                    bluetoothScannerViewModel,
+                    splashViewModel,
+                    navMainController
+                )
 
-                    composable(
-                        route = MainNavigationNestedRoute.MainNavigationScreen().route,                    // declaring placeholder in String route
-                          enterTransition = {
-                            when (initialState.destination.route) {
-                                Routes.PhysicalActivity.route -> EnterTransition.None
-                                Routes.BloodPressurePlots.route -> EnterTransition.None
-                                Routes.HeartRatePlot.route -> EnterTransition.None
-                                else -> null
-                            }
-                        },
-                        exitTransition = {
-                            when (targetState.destination.route) {
-                                Routes.PhysicalActivity.route -> ExitTransition.None
-                                Routes.BloodPressurePlots.route -> ExitTransition.None
-                                Routes.HeartRatePlot.route -> ExitTransition.None
-                                else -> null
-                            }
-                        }
-                    ) {
-                        val mainNavigationViewModel =
-                            it.mainNavigationViewModel<MainNavigationViewModel>(navController = navMainController)
+                physicalActivityGraph(
+                    bluetoothScannerViewModel,
+                    navMainController
+                )
 
-                        Log.d("DATAX", "Routes.DataHomeFromBluetoothScannerScreen.route ENTERED")
-
-                        val bluetoothName = if(bluetoothScannerViewModel.selectedBluetoothDeviceName!=""){
-                            bluetoothScannerViewModel.selectedBluetoothDeviceName
-                        }else{
-                            splashViewModel.lastAccessedDevice[2]
-                        }
-                        val bluetoothAddress = if(bluetoothScannerViewModel.selectedBluetoothDeviceAddress!=""){
-                            bluetoothScannerViewModel.selectedBluetoothDeviceAddress
-                        }else{
-                            splashViewModel.lastAccessedDevice[3]
-                        }
-
-                        bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
-                        bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
-                            ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
-                        if (mainNavigationViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.NoRead
-                            && mainNavigationViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
-                        ) {
-                            mainNavigationViewModel.statusReadingDbForDashboard =
-                                StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
-                        }
-
-
-                        MainNavigationBarRoot(
-                            mainNavigationViewModel,
-                            bluetoothScannerViewModel,
-                            bluetoothAddress,
-                            bluetoothName,
-                            navMainController
-                        )
-                    }
-                }
-
-                navigation(
-                    startDestination = PhysicalActivityNestedRoute.PhysicalActivityScreen().route,// "physical_activity",
-                    route = PhysicalActivityNestedRoute.PhysicalActivityMainRoute().route//"PHYSICAL_ACTIVITY"
-                ){
-                    composable(
-                        PhysicalActivityNestedRoute.PhysicalActivityScreen().route,
-                        enterTransition = {
-                            when (initialState.destination.route) {
-                                Routes.DataHome.route ->
-                                    EnterTransition.None
-
-                                else -> null
-                            }
-                        },
-                        exitTransition = {
-                            when (targetState.destination.route) {
-                                Routes.DataHome.route -> ExitTransition.None
-                                else -> null
-                            }
-                        }
-                    ) {
-
-                        val bluetoothAddress = splashViewModel.lastAccessedDevice[3]
-
-                        val physicalActivityViewModel = it.physicalActivityViewModel<PhysicalActivityViewModel>(navController = navMainController)
-
-                        val myDateObj = LocalDateTime.now()
-                        val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-                        val todayFormattedDate = myDateObj.format(myFormatObj)
-
-                        when(physicalActivityViewModel.physicalActivityScreenNavStatus){
-                            PhysicalActivityScreenNavStatus.Leaving->{
-                                physicalActivityViewModel.physicalActivityScreenNavStatus = PhysicalActivityScreenNavStatus.Started
-                                physicalActivityViewModel.starListeningDayPhysicalActivityDB(todayFormattedDate, bluetoothAddress, )
-                            }
-                            else->{
-
-                            }
-                        }
-                        PhysicalActivityScreenRoot(
-                            physicalActivityViewModel = physicalActivityViewModel,
-                            bluetoothAddress,
-                            navMainController
-                        )
-                    }
-                }
 
                 navigation(
                     startDestination = BloodPressureNestedRoute.BloodPressureScreen().route,// "physical_activity",
