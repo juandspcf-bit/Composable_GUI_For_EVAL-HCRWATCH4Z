@@ -333,7 +333,7 @@ class MainActivity : ComponentActivity() {
                 )
 
                 physicalActivityGraph(
-                    bluetoothScannerViewModel,
+                    splashViewModel,
                     navMainController
                 )
 

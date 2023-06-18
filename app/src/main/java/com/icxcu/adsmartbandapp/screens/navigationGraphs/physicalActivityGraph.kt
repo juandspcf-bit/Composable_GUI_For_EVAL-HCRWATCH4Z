@@ -13,11 +13,12 @@ import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalAct
 import com.icxcu.adsmartbandapp.screens.viewModelProviders.physicalActivityViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.PhysicalActivityViewModel
+import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 fun NavGraphBuilder.physicalActivityGraph(
-    bluetoothScannerViewModel: BluetoothScannerViewModel,
+    splashViewModel: SplashViewModel,
     navMainController: NavHostController
 ){
     navigation(
@@ -42,7 +43,7 @@ fun NavGraphBuilder.physicalActivityGraph(
             }
         ) {
 
-            val bluetoothAddress = bluetoothScannerViewModel.selectedBluetoothDeviceAddress
+            val bluetoothAddress = splashViewModel.lastAccessedDevice[3]
 
             val physicalActivityViewModel = it.physicalActivityViewModel<PhysicalActivityViewModel>(navController = navMainController)
 
