@@ -153,6 +153,9 @@ class MainActivity : ComponentActivity() {
                     Routes.BluetoothScanner.route
                 } else if (splashViewModel.lastAccessedDevice.isNotEmpty() && splashViewModel.lastAccessedDevice[1] == Routes.DataHome.route) {
                     Log.d("Route", "onCreate: Routes.DataHome.route")
+                    val bluetoothName = splashViewModel.lastAccessedDevice[2]
+                    val bluetoothAddress = splashViewModel.lastAccessedDevice[3]
+                    Log.d("Route", "$bluetoothName")
                     Routes.DataHome.route
                 } else {
                     Log.d("Route", "onCreate:default")
