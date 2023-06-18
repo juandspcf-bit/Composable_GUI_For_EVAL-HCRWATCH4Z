@@ -50,9 +50,7 @@ fun SettingsScreen(
 
             RowSettings(
                 navigation = {
-                    navMainController.navigate(PersonalInfoNestedRoute.PersonalInfoMainRoute().route) {
-                        popUpTo(Routes.DataHome.route)
-                    }
+                    navMainController.navigate(PersonalInfoNestedRoute.PersonalInfoMainRoute().route)
                 },
                 modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
                 text = "Personal information",
@@ -62,7 +60,9 @@ fun SettingsScreen(
             RowSettings(
                 navigation = {
                     navMainController.navigate(Routes.BluetoothScanner.route) {
-                        popUpTo(0)
+                        popUpTo(0) {
+                            inclusive = true
+                        }
                     }
                 },
                 modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),

@@ -155,7 +155,10 @@ class MainActivity : ComponentActivity() {
                     Routes.BluetoothScanner.route
                 } else if (splashViewModel.lastAccessedDevice.isNotEmpty() && splashViewModel.lastAccessedDevice[1] == Routes.DataHome.route) {
                     Log.d("Route", "onCreate: Routes.DataHome.route")
-                    MainNavigationNestedRoute.MainNavigationMainRoute().route//Routes.DataHome.route
+                    val bluetoothName = splashViewModel.lastAccessedDevice[2]
+                    val bluetoothAddress = splashViewModel.lastAccessedDevice[3]
+                    Log.d("Route", "onCreate: $bluetoothName")
+                    MainNavigationNestedRoute.MainNavigationMainRoute().route + "/${bluetoothName}/${bluetoothAddress}"
                 } else {
                     Log.d("Route", "onCreate:default")
                     Routes.CircularProgressLoading.route
@@ -385,10 +388,10 @@ class MainActivity : ComponentActivity() {
 
 
 
-                navigation(
+/*                navigation(
                     startDestination = MainNavigationNestedRoute.MainNavigationScreen().route,// "physical_activity",
                     route = MainNavigationNestedRoute.MainNavigationMainRoute().route//"PHYSICAL_ACTIVITY"
-                ){
+                ) {
 
                     composable(
                         MainNavigationNestedRoute.MainNavigationScreen().route,
@@ -396,22 +399,22 @@ class MainActivity : ComponentActivity() {
                             when (initialState.destination.route) {
                                 Routes.PhysicalActivity.route -> EnterTransition.None
 
-                                /*                                slideIntoContainer(
+                                *//*                                slideIntoContainer(
                                                                     AnimatedContentTransitionScope.SlideDirection.Right,
                                                                     animationSpec = tween(300)
-                                                                )*/
+                                                                )*//*
 
                                 Routes.BloodPressurePlots.route -> EnterTransition.None
-                                /*                                slideIntoContainer(
+                                *//*                                slideIntoContainer(
                                                                     AnimatedContentTransitionScope.SlideDirection.Right,
                                                                     animationSpec = tween(300)
-                                                                )*/
+                                                                )*//*
 
                                 Routes.HeartRatePlot.route -> EnterTransition.None
-                                /*                                slideIntoContainer(
+                                *//*                                slideIntoContainer(
                                                                     AnimatedContentTransitionScope.SlideDirection.Right,
                                                                     animationSpec = tween(300)
-                                                                )*/
+                                                                )*//*
 
                                 else -> null
                             }
@@ -419,22 +422,22 @@ class MainActivity : ComponentActivity() {
                         exitTransition = {
                             when (targetState.destination.route) {
                                 Routes.PhysicalActivity.route -> ExitTransition.None
-                                /*                                slideOutOfContainer(
+                                *//*                                slideOutOfContainer(
                                                                     AnimatedContentTransitionScope.SlideDirection.Right,
                                                                     animationSpec = tween(300)
-                                                                )*/
+                                                                )*//*
 
                                 Routes.BloodPressurePlots.route -> ExitTransition.None
-                                /*                                slideOutOfContainer(
+                                *//*                                slideOutOfContainer(
                                                                     AnimatedContentTransitionScope.SlideDirection.Right,
                                                                     animationSpec = tween(300)
-                                                                )*/
+                                                                )*//*
 
                                 Routes.HeartRatePlot.route -> ExitTransition.None
-                                /*                                slideOutOfContainer(
+                                *//*                                slideOutOfContainer(
                                                                     AnimatedContentTransitionScope.SlideDirection.Right,
                                                                     animationSpec = tween(300)
-                                                                )*/
+                                                                )*//*
 
                                 else -> null
                             }
@@ -442,7 +445,8 @@ class MainActivity : ComponentActivity() {
                     ) {
                         Log.d("DATAX", "Routes.DataHome.route: ENTER")
 
-                        val mainNavigationViewModel = it.mainNavigationViewModel<MainNavigationViewModel>(navController = navMainController)
+                        val mainNavigationViewModel =
+                            it.mainNavigationViewModel<MainNavigationViewModel>(navController = navMainController)
 
 
                         val bluetoothName = splashViewModel.lastAccessedDevice[2]
@@ -466,7 +470,7 @@ class MainActivity : ComponentActivity() {
                             navMainController
                         )
                     }
-                }
+                }*/
 
 
 
