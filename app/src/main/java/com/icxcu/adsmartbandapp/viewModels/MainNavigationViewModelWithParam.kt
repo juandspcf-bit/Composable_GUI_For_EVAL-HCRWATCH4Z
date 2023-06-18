@@ -112,7 +112,7 @@ class MainNavigationViewModelWithParam (var application: Application) : ViewMode
                 when (it.date) {
                     todayFormattedDate -> {
 
-                        smartWatchState.todayDateValuesReadFromSW = it
+/*                        smartWatchState.todayDateValuesReadFromSW = it
                         updateOrInsertPhysicalActivityDataBase(
                             it,
                             todayFormattedDate,
@@ -135,14 +135,14 @@ class MainNavigationViewModelWithParam (var application: Application) : ViewMode
                             macAddressDeviceBluetooth,
                             this@MainNavigationViewModel,
                             dbRepository
-                        )
+                        )*/
 
                     }
 
                     yesterdayFormattedDate -> {
 
                         smartWatchState.yesterdayDateValuesFromSW = it
-                        updateOrInsertPhysicalActivityDataBase(
+/*                        updateOrInsertPhysicalActivityDataBase(
                             it,
                             yesterdayFormattedDate,
                             macAddressDeviceBluetooth,
@@ -164,7 +164,7 @@ class MainNavigationViewModelWithParam (var application: Application) : ViewMode
                             macAddressDeviceBluetooth,
                             this@MainNavigationViewModel,
                             dbRepository
-                        )
+                        )*/
 
                         smartWatchState.progressbarForFetchingDataFromSW = false
                         smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.READ
