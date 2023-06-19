@@ -7,5 +7,5 @@ import android.bluetooth.le.ScanCallback
 interface BluetoothManager {
     fun scanLocalBluetooth(activity: Activity): BluetoothLeScanner?
     fun enableBluetooth()
-    fun scanLeDevice(bluetoothLeScanner: BluetoothLeScanner?, leScanCallback: ScanCallback)
+    fun scanLeDevice(activity: Activity, bluetoothLeScanner: BluetoothLeScanner?, leScanCallback: ScanCallback)
 }

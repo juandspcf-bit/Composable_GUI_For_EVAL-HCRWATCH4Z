@@ -81,6 +81,7 @@ class BluetoothLEManagerImp(
 
 
     override fun scanLeDevice(
+        activity: Activity,
         bluetoothLeScanner: BluetoothLeScanner?,
         leScanCallback: ScanCallback
     ) {

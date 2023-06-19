@@ -63,6 +63,7 @@ fun BluetoothScannerScreen(
         setLiveBasicBluetoothAdapterList()
         val scanLocalBluetooth = bluetoothLEManager.scanLocalBluetooth(activity)
         bluetoothLEManager.scanLeDevice(
+            activity,
             scanLocalBluetooth,
             bluetoothScannerViewModel.leScanCallback
         )
