@@ -43,7 +43,6 @@ fun BluetoothScannerScreen(
     setLiveBasicBluetoothAdapterList: () -> Unit,
     getScanningBluetoothAdaptersStatus: () -> ScanningBluetoothAdapterStatus,
     bluetoothScannerViewModel: BluetoothScannerViewModel,
-    bluetoothLEManager: BluetoothManager,
     activity: Activity,
     splashViewModel: SplashViewModel,
     preferenceDataStoreHelper: PreferenceDataStoreHelper,
@@ -61,11 +60,10 @@ fun BluetoothScannerScreen(
     fun refresh2() = refreshScope.launch {
         refreshing = true
         setLiveBasicBluetoothAdapterList()
-        val scanLocalBluetooth = bluetoothLEManager.scanLocalBluetooth(activity)
-        bluetoothLEManager.scanLeDevice(
+        val scanLocalBluetooth = bluetoothScannerViewModel.scanLocalBluetooth(activity)
+        bluetoothScannerViewModel.scanLeDevice(
             activity,
             scanLocalBluetooth,
-            bluetoothScannerViewModel.leScanCallback
         )
     }
 

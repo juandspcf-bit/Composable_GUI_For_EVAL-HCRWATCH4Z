@@ -55,7 +55,6 @@ const val REQUEST_ENABLE_BT: Int = 500
 
 class MainActivity : ComponentActivity() {
     private lateinit var mainNavigationViewModel: MainNavigationViewModel
-    private lateinit var bluetoothLEManager: BluetoothManager
     private lateinit var bluetoothScannerViewModel: BluetoothScannerViewModel
     private lateinit var permissionsViewModel: PermissionsViewModel
     private val splashViewModel: SplashViewModel by viewModels()
@@ -139,8 +138,6 @@ class MainActivity : ComponentActivity() {
                 }
 
 
-                bluetoothLEManager =
-                    BluetoothLEManagerImp(bluetoothScannerViewModel)
                 MainContent()
             }
         }
@@ -217,19 +214,9 @@ class MainActivity : ComponentActivity() {
                         }
                     }) {
 
-                    when (bluetoothScannerViewModel.stateBluetoothListScreenNavigationStatus) {
-                        BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_BLUETOOTH_SCREEN -> {
-                            //clearStateSW(mainNavigationViewModel)
-                        }
-
-                        BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_MAIN_NAV_SCREEN -> {
-                            Log.d("DATAX", "Routes.BluetoothScanner.route: CLEARED")
-                        }
-                    }
 
                     BluetoothScannerRoot(
                         bluetoothScannerViewModel,
-                        bluetoothLEManager,
                         this@MainActivity,
                         splashViewModel,
                         mainNavigationViewModel,

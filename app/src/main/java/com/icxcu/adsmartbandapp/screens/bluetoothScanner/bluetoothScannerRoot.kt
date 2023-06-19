@@ -15,7 +15,6 @@ import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 @Composable
 fun BluetoothScannerRoot(
     bluetoothScannerViewModel: BluetoothScannerViewModel,
-    bluetoothLEManager: BluetoothManager,
     activity: Activity,
     splashViewModel: SplashViewModel,
     mainNavigationViewModel: MainNavigationViewModel,
@@ -77,7 +76,6 @@ fun BluetoothScannerRoot(
         setLiveBasicBluetoothAdapterList,
         getScanningBluetoothAdaptersStatus,
         bluetoothScannerViewModel,
-        bluetoothLEManager,
         activity,
         splashViewModel,
         preferenceDataStoreHelper,

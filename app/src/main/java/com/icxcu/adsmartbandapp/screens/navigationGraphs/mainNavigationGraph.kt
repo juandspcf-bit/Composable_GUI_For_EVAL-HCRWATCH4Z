@@ -66,6 +66,7 @@ fun NavGraphBuilder.mainNavigationGraph(
             bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
             bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
                 ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
+
             if (mainNavigationViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.NoRead
                 && mainNavigationViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
             ) {

@@ -198,6 +198,7 @@ fun MainNavigationBarWithSwValues(
         {
             setStateEnabledDatePickerMainScaffold(false)
             mainNavigationViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.CLEARED
+
             bluetoothScannerViewModel.stateBluetoothListScreenNavigationStatus =
                 BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_BLUETOOTH_SCREEN
 
