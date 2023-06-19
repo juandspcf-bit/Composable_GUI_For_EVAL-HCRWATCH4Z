@@ -50,7 +50,7 @@ fun PersonalInfoDataScreenRoot(
         getPersonalInfoDataState().date = filter[0].birthdate
         getPersonalInfoDataState().weight = filter[0].weight.toString()
         getPersonalInfoDataState().height = filter[0].height.toString()
-        Log.d("AVATAR", "dataFromDB: ${getPersonalInfoDataState().uri}")
+        Log.d("AVATAR", "dataFromDB: ${getPersonalInfoDataState().name}")
     }
 
     val insertPersonalData= remember(personalInfoViewModel){

@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.ThumbnailUtils
+import android.net.MacAddress
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -80,7 +81,8 @@ fun PersonalInfoContent(
         Log.d("AVATAR", "Launch Effect ")
         launch(Dispatchers.IO){
             try {
-                val fin: FileInputStream = context.openFileInput("myImage.jpg")
+                val macAddress =getPersonalInfoDataState().macAddress
+                val fin: FileInputStream = context.openFileInput("${macAddress}.jpg")
                 val decodedBitmap = BitmapFactory.decodeStream(fin)
                 withContext(Dispatchers.Main){
                     initialBitmap = decodedBitmap
@@ -192,7 +194,8 @@ fun PersonalInfoContent(
 
                         scope.launch(Dispatchers.IO) {
                             selectedUri?.let { uri ->
-                                storeImageProfile(context, uri)
+                                val macAddress =getPersonalInfoDataState().macAddress
+                                storeImageProfile(context, uri, macAddress)
                             }
 
                             val personalInfo = PersonalInfo().apply {
@@ -212,7 +215,8 @@ fun PersonalInfoContent(
 
                         scope.launch(Dispatchers.IO) {
                             selectedUri?.let { uri ->
-                                storeImageProfile(context, uri)
+                                val macAddress =getPersonalInfoDataState().macAddress
+                                storeImageProfile(context, uri, macAddress)
                             }
 
                             val personalInfo = PersonalInfo().apply{
@@ -245,6 +249,7 @@ fun PersonalInfoContent(
 private fun storeImageProfile(
     context: Context,
     uri: Uri,
+    macAddress: String
 ) {
     var bitmap: Bitmap?
 
@@ -261,7 +266,7 @@ private fun storeImageProfile(
         val stream = ByteArrayOutputStream()
         bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, stream)
         val byteArray = stream.toByteArray()
-        context.openFileOutput("myImage.jpg", Context.MODE_PRIVATE).use {
+        context.openFileOutput("${macAddress}.jpg", Context.MODE_PRIVATE).use {
             it.write(byteArray)
         }
 
