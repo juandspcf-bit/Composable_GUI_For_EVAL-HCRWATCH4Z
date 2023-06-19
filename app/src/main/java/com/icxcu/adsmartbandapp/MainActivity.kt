@@ -26,14 +26,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothLEManagerImp
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
 import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreHelper
-import com.icxcu.adsmartbandapp.screens.BluetoothScannerNestedRoute
 import com.icxcu.adsmartbandapp.screens.bluetoothScanner.BluetoothListScreenNavigationStatus
-import com.icxcu.adsmartbandapp.screens.bluetoothScanner.BluetoothScannerScreen
 import com.icxcu.adsmartbandapp.screens.MainNavigationNestedRoute
 import com.icxcu.adsmartbandapp.screens.PermissionsScreen
 import com.icxcu.adsmartbandapp.screens.Routes
@@ -44,8 +41,6 @@ import com.icxcu.adsmartbandapp.screens.navigationGraphs.mainNavigationGraph
 import com.icxcu.adsmartbandapp.screens.navigationGraphs.personalInfoGraph
 import com.icxcu.adsmartbandapp.screens.navigationGraphs.physicalActivityGraph
 import com.icxcu.adsmartbandapp.screens.progressLoading.CircularProgressLoading
-import com.icxcu.adsmartbandapp.screens.viewModelProviders.bluetoothScannerViewModel
-import com.icxcu.adsmartbandapp.screens.viewModelProviders.mainNavigationViewModel
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModelFactory
@@ -53,7 +48,6 @@ import com.icxcu.adsmartbandapp.viewModels.MainNavigationViewModel
 import com.icxcu.adsmartbandapp.viewModels.MainNavigationModelFactory
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModel
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModelFactory
-import com.icxcu.adsmartbandapp.viewModels.ScanningBluetoothAdapterStatus
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import com.icxcu.adsmartbandapp.viewModels.permissionsRequired
 
@@ -146,7 +140,7 @@ class MainActivity : ComponentActivity() {
 
 
                 bluetoothLEManager =
-                    BluetoothLEManagerImp(this@MainActivity, bluetoothScannerViewModel)
+                    BluetoothLEManagerImp(bluetoothScannerViewModel)
                 MainContent()
             }
         }

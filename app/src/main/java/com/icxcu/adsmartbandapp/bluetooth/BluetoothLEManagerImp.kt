@@ -17,7 +17,6 @@ import com.icxcu.adsmartbandapp.viewModels.ScanningBluetoothAdapterStatus
 import kotlinx.coroutines.*
 
 class BluetoothLEManagerImp(
-    private var activity: Activity,
     private var mViewModel: BluetoothScannerViewModel
 ) : com.icxcu.adsmartbandapp.bluetooth.BluetoothManager {
     private var scanning = false
@@ -60,7 +59,9 @@ class BluetoothLEManagerImp(
 
     }
 
-    override fun enableBluetooth() {
+    override fun enableBluetooth(
+        activity: Activity,
+    ) {
         val bluetoothManager: BluetoothManager? =
             ContextCompat.getSystemService(activity, BluetoothManager::class.java)
         val bluetoothAdapter: BluetoothAdapter? = bluetoothManager?.adapter
