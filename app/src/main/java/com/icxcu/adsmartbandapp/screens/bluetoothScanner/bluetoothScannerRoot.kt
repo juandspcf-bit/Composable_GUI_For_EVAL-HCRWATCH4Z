@@ -17,7 +17,6 @@ fun BluetoothScannerRoot(
     bluetoothScannerViewModel: BluetoothScannerViewModel,
     activity: Activity,
     splashViewModel: SplashViewModel,
-    mainNavigationViewModel: MainNavigationViewModel,
     preferenceDataStoreHelper: PreferenceDataStoreHelper,
     navMainController: NavHostController,
     ) {
@@ -41,14 +40,6 @@ fun BluetoothScannerRoot(
                 }
 
             }
-        }
-    }
-
-    val setFetchingDataFromSWStatusSTOPPED = remember(mainNavigationViewModel) {
-        {
-            bluetoothScannerViewModel.stateBluetoothListScreenNavigationStatus =
-                BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_MAIN_NAV_SCREEN
-            //mainNavigationViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.STOPPED
         }
     }
 
@@ -79,7 +70,7 @@ fun BluetoothScannerRoot(
         activity,
         splashViewModel,
         preferenceDataStoreHelper,
-        setFetchingDataFromSWStatusSTOPPED,
+        //setFetchingDataFromSWStatusSTOPPED,
         navLambdaToMainNavigationBar,
     )
 

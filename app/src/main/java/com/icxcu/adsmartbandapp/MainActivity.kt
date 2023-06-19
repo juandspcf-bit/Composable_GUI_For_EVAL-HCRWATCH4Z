@@ -54,7 +54,6 @@ import com.icxcu.adsmartbandapp.viewModels.permissionsRequired
 const val REQUEST_ENABLE_BT: Int = 500
 
 class MainActivity : ComponentActivity() {
-    private lateinit var mainNavigationViewModel: MainNavigationViewModel
     private lateinit var bluetoothScannerViewModel: BluetoothScannerViewModel
     private lateinit var permissionsViewModel: PermissionsViewModel
     private val splashViewModel: SplashViewModel by viewModels()
@@ -96,18 +95,6 @@ class MainActivity : ComponentActivity() {
                         "PermissionsViewModel",
                         PermissionsViewModelFactory()
                     )
-
-                    mainNavigationViewModel = viewModel(
-                        it,
-                        "DataViewModel",
-                        MainNavigationModelFactory(
-                            LocalContext.current.applicationContext
-                                    as Application
-                        )
-                    )
-
-
-
 
                 }
 
@@ -219,7 +206,6 @@ class MainActivity : ComponentActivity() {
                         bluetoothScannerViewModel,
                         this@MainActivity,
                         splashViewModel,
-                        mainNavigationViewModel,
                         preferenceDataStoreHelper,
                         navMainController,
                     )

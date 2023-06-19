@@ -46,7 +46,6 @@ fun BluetoothScannerScreen(
     activity: Activity,
     splashViewModel: SplashViewModel,
     preferenceDataStoreHelper: PreferenceDataStoreHelper,
-    setFetchingDataFromSWStatusSTOPPED: () -> Unit,
     navigateMainNavBar: (String, String) -> Unit,
 ) {
     Log.d("DATAX", "BluetoothScanScreen: ENTER")
@@ -131,7 +130,6 @@ fun BluetoothScannerScreen(
                         .fillMaxSize(),
                     splashViewModel,
                     preferenceDataStoreHelper,
-                    setFetchingDataFromSWStatusSTOPPED,
                     navigateMainNavBar
                 )
             } else {
@@ -143,7 +141,6 @@ fun BluetoothScannerScreen(
                         .fillMaxSize(),
                     splashViewModel,
                     preferenceDataStoreHelper,
-                    setFetchingDataFromSWStatusSTOPPED,
                     navigateMainNavBar
                 )
             }
@@ -206,7 +203,6 @@ fun ListAlbumData(
     modifier: Modifier = Modifier,
     splashViewModel: SplashViewModel,
     preferenceDataStoreHelper: PreferenceDataStoreHelper,
-    setFetchingDataFromSWStatusSTOPPED: () -> Unit,
     navigateMainNavBar: (String, String) -> Unit
 ) {
     LazyColumn(modifier = Modifier) {
@@ -221,7 +217,6 @@ fun ListAlbumData(
                             onDoubleTap = { /* Double Tap Detected */ },
                             onLongPress = { /* Long Press Detected */ },
                             onTap = {
-                                setFetchingDataFromSWStatusSTOPPED()
                                 bluetoothScannerViewModel.selectedBluetoothDeviceName = item.name
                                 bluetoothScannerViewModel.selectedBluetoothDeviceAddress = item.address
                                 splashViewModel.writeDataPreferences(
