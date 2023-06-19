@@ -10,6 +10,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import com.icxcu.adsmartbandapp.viewModels.BloodPressureViewModel
 import com.icxcu.adsmartbandapp.viewModels.BloodPressureViewModelFactory
+import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.HeartRateViewModel
 import com.icxcu.adsmartbandapp.viewModels.HeartRateViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.MainNavigationModelFactory
@@ -116,6 +117,27 @@ inline fun<reified T: ViewModel> NavBackStackEntry.mainNavigationViewModel(navCo
         parentEntry,
         "BloodPressureViewModel",
         MainNavigationModelFactory(
+            LocalContext.current.applicationContext
+                    as Application
+        ),
+
+        )
+    return viewModel as T
+}
+
+@Composable
+inline fun<reified T: ViewModel> NavBackStackEntry.bluetoothScannerViewModel(navController: NavController): T{
+    val navGraphRoute = destination.parent?.route ?: return viewModel()
+    val parentEntry = remember (this){
+        navController.getBackStackEntry(navGraphRoute)
+    }
+
+    val viewModel: BluetoothScannerViewModel?
+
+    viewModel = viewModel(
+        parentEntry,
+        "BluetoothScannerViewModel",
+        BloodPressureViewModelFactory(
             LocalContext.current.applicationContext
                     as Application
         ),

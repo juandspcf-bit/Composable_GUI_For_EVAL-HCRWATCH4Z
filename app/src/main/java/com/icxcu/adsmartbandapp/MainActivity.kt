@@ -23,64 +23,39 @@ import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothLEManagerImp
 import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
 import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreHelper
-import com.icxcu.adsmartbandapp.repositories.Values
-import com.icxcu.adsmartbandapp.screens.BloodPressureNestedRoute
-import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
-import com.icxcu.adsmartbandapp.screens.BluetoothScanScreen
-import com.icxcu.adsmartbandapp.screens.HeartRateNestedRoute
+import com.icxcu.adsmartbandapp.screens.BluetoothScannerNestedRoute
+import com.icxcu.adsmartbandapp.screens.bluetoothScanner.BluetoothListScreenNavigationStatus
+import com.icxcu.adsmartbandapp.screens.bluetoothScanner.BluetoothScannerScreen
 import com.icxcu.adsmartbandapp.screens.MainNavigationNestedRoute
-import com.icxcu.adsmartbandapp.screens.PhysicalActivityNestedRoute
 import com.icxcu.adsmartbandapp.screens.PermissionsScreen
-import com.icxcu.adsmartbandapp.screens.PersonalInfoNestedRoute
 import com.icxcu.adsmartbandapp.screens.Routes
-import com.icxcu.adsmartbandapp.screens.mainNavBar.MainNavigationBarRoot
-import com.icxcu.adsmartbandapp.screens.mainNavBar.SWReadingStatus
-import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusReadingDbForDashboard
+import com.icxcu.adsmartbandapp.screens.bluetoothScanner.BluetoothScannerRoot
 import com.icxcu.adsmartbandapp.screens.navigationGraphs.bloodPressureGraph
 import com.icxcu.adsmartbandapp.screens.navigationGraphs.heartRateGraph
 import com.icxcu.adsmartbandapp.screens.navigationGraphs.mainNavigationGraph
 import com.icxcu.adsmartbandapp.screens.navigationGraphs.personalInfoGraph
 import com.icxcu.adsmartbandapp.screens.navigationGraphs.physicalActivityGraph
-import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenNavStatus
-import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenRoot
-import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureScreenNavStatus
-import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureScreenRoot
-import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenNavStatus
-import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenRoot
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityScreenNavStatus
-import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityScreenRoot
 import com.icxcu.adsmartbandapp.screens.progressLoading.CircularProgressLoading
-import com.icxcu.adsmartbandapp.screens.viewModelProviders.bloodPressureViewModel
-import com.icxcu.adsmartbandapp.screens.viewModelProviders.heartRateViewModel
+import com.icxcu.adsmartbandapp.screens.viewModelProviders.bluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.screens.viewModelProviders.mainNavigationViewModel
-import com.icxcu.adsmartbandapp.screens.viewModelProviders.personalInfoViewModel
-import com.icxcu.adsmartbandapp.screens.viewModelProviders.physicalActivityViewModel
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
-import com.icxcu.adsmartbandapp.viewModels.BloodPressureViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.MainNavigationViewModel
 import com.icxcu.adsmartbandapp.viewModels.MainNavigationModelFactory
-import com.icxcu.adsmartbandapp.viewModels.HeartRateViewModel
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModel
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModelFactory
-import com.icxcu.adsmartbandapp.viewModels.PersonalInfoViewModel
-import com.icxcu.adsmartbandapp.viewModels.PhysicalActivityViewModel
 import com.icxcu.adsmartbandapp.viewModels.ScanningBluetoothAdapterStatus
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import com.icxcu.adsmartbandapp.viewModels.permissionsRequired
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 const val REQUEST_ENABLE_BT: Int = 500
 
@@ -181,11 +156,7 @@ class MainActivity : ComponentActivity() {
     override fun onRestart() {
         super.onRestart()
         Log.d("OnRestart", "onRestart: ")
-        /*setContent {
-            ADSmartBandAppTheme {
-                MainContent()
-            }
-        }*/
+
     }
 
 
@@ -217,63 +188,10 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            val navLambdaToMainNavigationBar = remember(bluetoothScannerViewModel, navMainController) {
-                    { name: String, address: String ->
-                        if (bluetoothScannerViewModel.scanningBluetoothAdaptersStatus == ScanningBluetoothAdapterStatus.SCANNING_FINISHED_WITH_RESULTS
-                            || bluetoothScannerViewModel.scanningBluetoothAdaptersStatus == ScanningBluetoothAdapterStatus.SCANNING_FORCIBLY_STOPPED
-                        ) {
-
-                            navMainController.navigate(
-                                MainNavigationNestedRoute.MainNavigationMainRoute().route
-                            )
-
-                            if (bluetoothScannerViewModel.bluetoothAdaptersList.isEmpty()) {
-                                bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
-                                    ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
-                            } else {
-                                bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
-                                    ScanningBluetoothAdapterStatus.NO_SCANNING_WITH_RESULTS
-                            }
-
-                        }
-                    }
-                }
-
-
-
-
-            val setFetchingDataFromSWStatusSTOPPED = remember(mainNavigationViewModel) {
-                {
-                    bluetoothScannerViewModel.stateBluetoothListScreenNavigationStatus =
-                        BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_MAIN_NAV_SCREEN
-                    //mainNavigationViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.STOPPED
-                }
-            }
-
-            val getLiveBasicBluetoothAdapterList = remember(bluetoothScannerViewModel) {
-                {
-                    bluetoothScannerViewModel.bluetoothAdaptersList
-                }
-            }
-
-            val setLiveBasicBluetoothAdapterList = remember(bluetoothScannerViewModel) {
-                {
-                    bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
-                    bluetoothScannerViewModel.partialList = mutableListOf()
-                }
-            }
-
-            val getScanningBluetoothAdaptersStatus = remember(bluetoothScannerViewModel) {
-                {
-                    bluetoothScannerViewModel.scanningBluetoothAdaptersStatus
-                }
-            }
-
             NavHost(
                 navController = navMainController,
                 startDestination = startDestination
             ) {
-
                 composable(
                     route = Routes.CircularProgressLoading.route,
                     enterTransition = { null },
@@ -304,7 +222,6 @@ class MainActivity : ComponentActivity() {
                             else -> null
                         }
                     }) {
-                    Log.d("DATAX", "Routes.BluetoothScanner.route: ENTER")
 
                     when (bluetoothScannerViewModel.stateBluetoothListScreenNavigationStatus) {
                         BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_BLUETOOTH_SCREEN -> {
@@ -316,17 +233,14 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
-                    BluetoothScanScreen(
-                        getLiveBasicBluetoothAdapterList,
-                        setLiveBasicBluetoothAdapterList,
-                        getScanningBluetoothAdaptersStatus,
+                    BluetoothScannerRoot(
                         bluetoothScannerViewModel,
                         bluetoothLEManager,
                         this@MainActivity,
                         splashViewModel,
+                        mainNavigationViewModel,
                         preferenceDataStoreHelper,
-                        setFetchingDataFromSWStatusSTOPPED,
-                        navLambdaToMainNavigationBar
+                        navMainController,
                     )
                 }
 

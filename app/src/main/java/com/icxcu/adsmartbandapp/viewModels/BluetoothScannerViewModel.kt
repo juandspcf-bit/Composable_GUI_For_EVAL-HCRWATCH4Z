@@ -13,7 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import com.icxcu.adsmartbandapp.data.BasicBluetoothAdapter
-import com.icxcu.adsmartbandapp.screens.BluetoothListScreenNavigationStatus
+import com.icxcu.adsmartbandapp.screens.bluetoothScanner.BluetoothListScreenNavigationStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

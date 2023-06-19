@@ -50,11 +50,11 @@ sealed class MainNavigationNestedRoute{
 
 }
 
-sealed class MainNavigationNestedRouteWitParam{
-    class MainNavigationMainRoute(var route: String = "MAIN_NAVIGATION_ROUTE") :
-        MainNavigationNestedRouteWitParam()
-    class MainNavigationScreen(var route: String = "main_navigation_route"):
-        MainNavigationNestedRouteWitParam()
+sealed class BluetoothScannerNestedRoute{
+    class BluetoothScannerMainRoute(var route: String = "BLUETOOTH_SCANNER_ROUTE") :
+        BluetoothScannerNestedRoute()
+    class BluetoothScannerScreen(var route: String = "bluetooth_scanner_route"):
+        BluetoothScannerNestedRoute()
 
 }
 

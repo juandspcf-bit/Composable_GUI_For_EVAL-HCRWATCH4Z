@@ -1,8 +1,7 @@
-package com.icxcu.adsmartbandapp.screens
+package com.icxcu.adsmartbandapp.screens.bluetoothScanner
 
 
 import android.app.Activity
-import android.bluetooth.le.ScanCallback
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -39,7 +38,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun BluetoothScanScreen(
+fun BluetoothScannerScreen(
     getLiveBasicBluetoothAdapterList: () -> List<BasicBluetoothAdapter>,
     setLiveBasicBluetoothAdapterList: () -> Unit,
     getScanningBluetoothAdaptersStatus: () -> ScanningBluetoothAdapterStatus,
