@@ -13,9 +13,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
@@ -35,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -223,7 +219,6 @@ fun MainNavigationBarScaffold(
             BottomNavigationBar(
                 navController = navController,
                 setStateEnabledDatePickerMainScaffold = setStateEnabledDatePickerMainScaffold,
-                stateShowMainTitleScaffold = stateShowMainTitleScaffold,
                 setStateShowDialogDatePickerValue = setStateShowDialogDatePickerValue,
                 getStateEnabledDatePickerMainScaffold = getStateEnabledDatePickerMainScaffold,
                 getFetchingDataFromSWStatus = getFetchingDataFromSWStatus,
@@ -345,14 +340,13 @@ fun NavigationHost(
 fun BottomNavigationBar(
     navController: NavHostController,
     setStateEnabledDatePickerMainScaffold: (Boolean) -> Unit,
-    stateShowMainTitleScaffold: () -> StatusMainTitleScaffold,
     setStateShowDialogDatePickerValue: (StatusMainTitleScaffold) -> Unit,
     getStateEnabledDatePickerMainScaffold: () -> Boolean,
     getFetchingDataFromSWStatus: () -> SWReadingStatus,
 ) {
 
     NavigationBar(
-        modifier = Modifier.clip(RoundedCornerShape(30.dp)),
+        modifier = Modifier.padding(20.dp).clip(RoundedCornerShape(30.dp)),
         containerColor = Color(0xff0d1721),
         contentColor = Color(0xFFCDDC39)
     ) {
