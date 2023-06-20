@@ -54,7 +54,7 @@ fun SettingsScreen(
                 },
                 modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
                 text = "Personal information",
-                iconResource = R.drawable.baseline_person_24
+                iconResource = R.drawable.person_48px
             )
 
             RowSettings(
@@ -67,7 +67,7 @@ fun SettingsScreen(
                 },
                 modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
                 text = "Connect to other device",
-                iconResource = R.drawable.baseline_watch_24,
+                iconResource = R.drawable.watch_48px,
                 disableRow = getVisibilityProgressbarForFetchingData(),
                 optionalOperations = clearState,
             )
