@@ -145,7 +145,7 @@ fun MainNavigationBarScaffold(
                             enabled = getStateEnabledDatePickerMainScaffold()
                         ) {
                             Icon(
-                                painter = painterResource(R.drawable.baseline_date_range_24),
+                                painter = painterResource(R.drawable.calendar_month_48px),
                                 contentDescription = "Date Range",
                                 tint = Color.White,
                                 modifier = Modifier.padding(start = 2.dp, end = 2.dp)
@@ -156,7 +156,7 @@ fun MainNavigationBarScaffold(
                             onClick = {},
                         ) {
                             Icon(
-                                painter = painterResource(R.drawable.baseline_query_stats_24),
+                                painter = painterResource(R.drawable.query_stats_48px),
                                 contentDescription = "Health Statistics",
                                 tint = Color.White,
                                 modifier = Modifier.padding(start = 2.dp, end = 2.dp)
