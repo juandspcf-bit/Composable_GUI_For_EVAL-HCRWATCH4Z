@@ -78,7 +78,8 @@ fun NameTextFieldComposable(
             painter = painterResource(resourceIcon1),
             contentDescription = "Date Range",
             tint = Color.White,
-            modifier = Modifier.fillMaxWidth(1f)
+            modifier = Modifier
+                .fillMaxWidth(1f)
                 .size(50.dp)
                 .clickable {
                     onNameTextFieldVisibilityChange(!getPersonalInfoDataStateState().nameTextFieldVisibility)
@@ -137,7 +138,7 @@ fun NameTexField(
         ),
         trailingIcon = {
             Icon(
-                imageVector = Icons.Default.Person,
+                painter = painterResource(id = resourceIcon1),
                 contentDescription = "Person Icon"
             )
         },

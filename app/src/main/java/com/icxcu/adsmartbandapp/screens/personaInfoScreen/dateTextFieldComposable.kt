@@ -170,7 +170,7 @@ fun DateTexField(
         ),
         trailingIcon = {
             Icon(
-                imageVector = Icons.Default.DateRange,
+                painter = painterResource(resourceIcon1),
                 contentDescription = "Birthday Icon"
             )
         },
