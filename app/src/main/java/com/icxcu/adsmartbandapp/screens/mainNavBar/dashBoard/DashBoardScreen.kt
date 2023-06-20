@@ -19,7 +19,6 @@ import com.icxcu.adsmartbandapp.repositories.Values
 import com.icxcu.adsmartbandapp.screens.BloodPressureNestedRoute
 import com.icxcu.adsmartbandapp.screens.HeartRateNestedRoute
 import com.icxcu.adsmartbandapp.screens.PhysicalActivityNestedRoute
-import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.additionalWidgets.ArcCompose
 
 @Composable
@@ -178,12 +177,11 @@ fun DashBoardScreen(
                 fieldPlural = it.fieldPlural,
                 resource = it.resource,
                 iconPadding = it.iconPadding,
-                heightCard = it.heightCard,
-                widthCard = it.widthCard,
                 verticalChainData = it.verticalChainData,
                 isWithIconTitle = it.isWithIconTitle,
                 resourceIconTitle = it.resourceIconTitle,
-                guidelineFromBottomFraction = it.guidelineFromBottomFraction
+                heightCard = it.heightCard,
+                widthCard = it.widthCard
             )
         }
     }

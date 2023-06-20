@@ -8,6 +8,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -346,7 +347,7 @@ fun BottomNavigationBar(
 ) {
 
     NavigationBar(
-        modifier = Modifier.padding(20.dp).clip(RoundedCornerShape(30.dp)),
+        modifier = Modifier.padding(20.dp).clip(RoundedCornerShape(30.dp)).border(1.dp, Color.Green, RoundedCornerShape(30.dp)),
         containerColor = Color(0xff0d1721),
         contentColor = Color(0xFFCDDC39)
     ) {
