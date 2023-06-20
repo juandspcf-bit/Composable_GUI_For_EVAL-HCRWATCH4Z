@@ -150,6 +150,7 @@ fun NumericHeightTexField(
                 contentDescription = contentDescription,
             )
         },
+        suffix = { Text(text = "m") },
         keyboardActions = KeyboardActions(
             onDone = {
                 onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().heightTextFieldVisibility)
