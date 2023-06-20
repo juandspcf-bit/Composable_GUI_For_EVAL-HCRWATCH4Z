@@ -13,6 +13,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,8 +32,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -43,7 +49,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.icxcu.adsmartbandapp.R
-import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.SettingsScreen
 import com.icxcu.adsmartbandapp.data.MockData
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
 import com.icxcu.adsmartbandapp.repositories.MyBloodPressureAlertDialogDataHandler
@@ -52,12 +57,12 @@ import com.icxcu.adsmartbandapp.repositories.MySpO2AlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.MyTemperatureAlertDialogDataHandler
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
-import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.DashBoardScreen
 import com.icxcu.adsmartbandapp.screens.NavBarItems
 import com.icxcu.adsmartbandapp.screens.NavRoutes
-import com.icxcu.adsmartbandapp.screens.Routes
-import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
+import com.icxcu.adsmartbandapp.screens.mainNavBar.dashBoard.DashBoardScreen
+import com.icxcu.adsmartbandapp.screens.mainNavBar.settings.SettingsScreen
 import com.icxcu.adsmartbandapp.screens.mainNavBar.testHealthsScreen.TestingHealthScreen
+import com.icxcu.adsmartbandapp.screens.plotsFields.DatePickerDialogSample
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -347,6 +352,7 @@ fun BottomNavigationBar(
 ) {
 
     NavigationBar(
+        modifier = Modifier.clip(RoundedCornerShape(30.dp)),
         containerColor = Color(0xff0d1721),
         contentColor = Color(0xFFCDDC39)
     ) {
@@ -413,7 +419,7 @@ fun BottomNavigationBar(
                 label = {
                     Text(text = navItem.title, color = Color.White)
                 },
-                colors = NavigationBarItemDefaults.colors(indicatorColor = Color.Blue)
+                colors = NavigationBarItemDefaults.colors(indicatorColor = Color.DarkGray)
             )
         }
     }
@@ -446,3 +452,9 @@ fun DashBoardPreview() {
         }*/
 
 }
+
+
+
+
+
+
