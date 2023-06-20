@@ -30,8 +30,8 @@ class SplashViewModel: ViewModel() {
 
 
 
-    var lastAccessedDevice by mutableStateOf(listOf<String>())
-
+    //var lastAccessedDevice by mutableStateOf(listOf<String>())
+    var lastAccessedDevice = listOf<String>()
 
     init {
 

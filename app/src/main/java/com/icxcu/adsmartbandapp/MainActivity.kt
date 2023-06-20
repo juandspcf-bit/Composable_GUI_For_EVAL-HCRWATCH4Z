@@ -28,7 +28,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreHelper
-import com.icxcu.adsmartbandapp.screens.MainNavigationNestedRoute
 import com.icxcu.adsmartbandapp.screens.PermissionsScreen
 import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.bluetoothScanner.BluetoothScannerRoot
@@ -105,7 +104,7 @@ class MainActivity : ComponentActivity() {
 
                 startDestination = if (askPermissions.isNotEmpty()) {
                     Routes.Permissions.route
-                } else if (splashViewModel.lastAccessedDevice.isNotEmpty() && splashViewModel.lastAccessedDevice[1] == Routes.BluetoothScanner.route) {
+                } /*else if (splashViewModel.lastAccessedDevice.isNotEmpty() && splashViewModel.lastAccessedDevice[1] == Routes.BluetoothScanner.route) {
                     Log.d("Route", "onCreate: Routes.BluetoothScanner.route")
                     Routes.BluetoothScanner.route
                 } else if (splashViewModel.lastAccessedDevice.isNotEmpty() && splashViewModel.lastAccessedDevice[1] == Routes.DataHome.route) {
@@ -114,7 +113,7 @@ class MainActivity : ComponentActivity() {
                     val bluetoothAddress = splashViewModel.lastAccessedDevice[3]
                     Log.d("Route", "onCreate: $bluetoothName")
                     MainNavigationNestedRoute.MainNavigationMainRoute().route
-                } else {
+                } */else {
                     Log.d("Route", "onCreate:default")
                     Routes.CircularProgressLoading.route
                 }
@@ -167,13 +166,18 @@ class MainActivity : ComponentActivity() {
             ) {
                 composable(
                     route = Routes.CircularProgressLoading.route,
-                    enterTransition = { null },
-                    exitTransition = { null }
+                    enterTransition = { EnterTransition.None },
+                    exitTransition = { ExitTransition.None }
                 ) {
-                    CircularProgressLoading()
+                    CircularProgressLoading(
+                        navController = navMainController,
+                        askPermissions
+                    )
                 }
 
-                composable(Routes.Permissions.route) {
+                composable(Routes.Permissions.route,
+                    enterTransition = { EnterTransition.None },
+                    exitTransition = { ExitTransition.None }) {
                     PermissionsScreen(
                         activity = this@MainActivity,
                         viewModel = permissionsViewModel, navLambda = navLambdaToBlueScannerScreen
