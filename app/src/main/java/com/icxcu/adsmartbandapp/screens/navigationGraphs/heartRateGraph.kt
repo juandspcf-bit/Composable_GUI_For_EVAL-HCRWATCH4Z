@@ -54,6 +54,7 @@ fun NavGraphBuilder.heartRateGraph(
                 HeartRateScreenNavStatus.Leaving->{
                     heartRateViewModel.heartRateScreenNavStatus = HeartRateScreenNavStatus.Started
                     heartRateViewModel.starListeningHeartRateDB(todayFormattedDate, bluetoothAddress)
+                    heartRateViewModel.starListeningPersonalInfoDB(bluetoothAddress, )
                 }
                 else->{
 

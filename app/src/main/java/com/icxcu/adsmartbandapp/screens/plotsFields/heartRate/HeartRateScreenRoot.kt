@@ -21,8 +21,8 @@ import java.util.Locale
 @Composable
 fun HeartRateScreenRoot(
     heartRateViewModel: HeartRateViewModel,
-    macAddressDeviceBluetooth:String,
-    navMainController: NavController
+    macAddressDeviceBluetooth: String,
+    navMainController: NavController,
 ) {
 
     val navLambdaBackToMainNavigationBar = remember(navMainController) {
@@ -33,10 +33,18 @@ fun HeartRateScreenRoot(
     }
 
     val dayHeartRateResultsFromDB = heartRateViewModel.dayHeartRateState
+    val dateFromDB = heartRateViewModel.personalInfoDataStateC
+
+    val dateBirth = if (dateFromDB.isEmpty().not() && dateFromDB[0].id != -1) {
+        val filter = dateFromDB.filter { it.typesTable == TypesTable.PERSONAL_INFO }
+        filter[0].birthdate
+    } else {
+        ""
+    }
 
     val ageCalculated by remember(heartRateViewModel) {
         derivedStateOf {
-            val date = ValidatorsPersonalField.dateValidator("24/10/1981")
+            val date = ValidatorsPersonalField.dateValidator(dateBirth)
             val age = try {
                 val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
                 val myBirthsDate = LocalDate.parse(date, formatter)
@@ -95,12 +103,15 @@ fun HeartRateScreenRoot(
             val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
             val dateData = formattedDate.format(date)
 
-/*            dataViewModel.getDayHeartRateData(
-                dateData,
-                dataViewModel.macAddressDeviceBluetooth
-            )*/
+            /*            dataViewModel.getDayHeartRateData(
+                            dateData,
+                            dataViewModel.macAddressDeviceBluetooth
+                        )*/
             heartRateViewModel.jobHeartRateState?.cancel()
-            heartRateViewModel.starListeningHeartRateDB(dateData, macAddress = macAddressDeviceBluetooth, )
+            heartRateViewModel.starListeningHeartRateDB(
+                dateData,
+                macAddress = macAddressDeviceBluetooth,
+            )
             heartRateViewModel.selectedDay = dateData
         }
     }
@@ -118,9 +129,9 @@ fun HeartRateScreenRoot(
 
 }
 
-sealed class HeartRateScreenNavStatus{
-    object Started: HeartRateScreenNavStatus()
-    object Leaving: HeartRateScreenNavStatus()
+sealed class HeartRateScreenNavStatus {
+    object Started : HeartRateScreenNavStatus()
+    object Leaving : HeartRateScreenNavStatus()
 }
 
 

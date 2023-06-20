@@ -7,11 +7,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.HeartRate
+import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
+import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.database.SWRoomDatabase
 import com.icxcu.adsmartbandapp.repositories.DBRepository
 import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenNavStatus
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
@@ -25,6 +29,8 @@ class HeartRateViewModel (var application: Application) : ViewModel() {
 
     var dayHeartRateState by mutableStateOf<List<HeartRate>>(listOf())
     var jobHeartRateState: Job? = null
+    var personalInfoDataStateC by mutableStateOf<List<PersonalInfo>>(listOf())
+    var jobPersonalInfoDataState: Job? = null
     var heartRateScreenNavStatus: HeartRateScreenNavStatus =
         HeartRateScreenNavStatus.Leaving
 
@@ -55,4 +61,28 @@ class HeartRateViewModel (var application: Application) : ViewModel() {
                 }
         }
     }
+
+
+    fun starListeningPersonalInfoDB(macAddress: String = "") {
+        jobPersonalInfoDataState = viewModelScope.launch {
+
+            val dataDeferred = async {
+                dbRepository.getPersonalInfoWithCoroutine(macAddress)
+            }
+
+            val dataCoroutineFromDB = dataDeferred.await()
+
+            personalInfoDataStateC = dataCoroutineFromDB.ifEmpty {
+                MutableList(1) { PersonalInfo(
+                    id = -1,
+                    macAddress = macAddress,
+                    typesTable= TypesTable.PERSONAL_INFO,
+                    name = "",
+                    birthdate = "",
+                    weight = 0.0,
+                    height = 0.0 ) }.toList()
+            }
+        }
+    }
+
 }
