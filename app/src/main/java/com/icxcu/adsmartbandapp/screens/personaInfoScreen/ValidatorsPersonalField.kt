@@ -12,7 +12,7 @@ class ValidatorsPersonalField {
             var numberS: String = number
             try {
                 numberD = number.toDouble()
-                if (numberD < 0) {
+                if (numberD <= 0) {
                     numberS = ""
                 }
             } catch (e: NumberFormatException) {
@@ -26,7 +26,7 @@ class ValidatorsPersonalField {
             var numberS: String = number
             try {
                 numberD = number.toDouble()
-                if (numberD < 0) {
+                if (numberD <= 0) {
                     numberS = ""
                 }
             } catch (e: NumberFormatException) {
