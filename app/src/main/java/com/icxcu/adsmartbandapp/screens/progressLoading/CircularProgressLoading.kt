@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.icxcu.adsmartbandapp.screens.MainNavigationNestedRoute
+import com.icxcu.adsmartbandapp.screens.Routes
 import kotlinx.coroutines.delay
 
 @Composable
@@ -33,7 +34,11 @@ fun CircularProgressLoading(navController: NavHostController, askPermissions: Ar
 
         LaunchedEffect(key1 = true, ){
             delay(500)
-            navController.navigate(MainNavigationNestedRoute.MainNavigationMainRoute().route)
+            if (askPermissions.isNotEmpty()) {
+                navController.navigate(Routes.Permissions.route)
+            }else{
+                navController.navigate(MainNavigationNestedRoute.MainNavigationMainRoute().route)
+            }
         }
 
     }

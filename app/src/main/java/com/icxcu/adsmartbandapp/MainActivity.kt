@@ -102,23 +102,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                startDestination = if (askPermissions.isNotEmpty()) {
-                    Routes.Permissions.route
-                } /*else if (splashViewModel.lastAccessedDevice.isNotEmpty() && splashViewModel.lastAccessedDevice[1] == Routes.BluetoothScanner.route) {
-                    Log.d("Route", "onCreate: Routes.BluetoothScanner.route")
-                    Routes.BluetoothScanner.route
-                } else if (splashViewModel.lastAccessedDevice.isNotEmpty() && splashViewModel.lastAccessedDevice[1] == Routes.DataHome.route) {
-                    Log.d("Route", "onCreate: Routes.DataHome.route")
-                    val bluetoothName = splashViewModel.lastAccessedDevice[2]
-                    val bluetoothAddress = splashViewModel.lastAccessedDevice[3]
-                    Log.d("Route", "onCreate: $bluetoothName")
-                    MainNavigationNestedRoute.MainNavigationMainRoute().route
-                } */else {
-                    Log.d("Route", "onCreate:default")
-                    Routes.CircularProgressLoading.route
-                }
-
-
+                startDestination = Routes.CircularProgressLoading.route
                 MainContent()
             }
         }
