@@ -27,10 +27,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.icxcu.adsmartbandapp.bluetooth.BluetoothLEManagerImp
-import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
 import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreHelper
-import com.icxcu.adsmartbandapp.screens.bluetoothScanner.BluetoothListScreenNavigationStatus
 import com.icxcu.adsmartbandapp.screens.MainNavigationNestedRoute
 import com.icxcu.adsmartbandapp.screens.PermissionsScreen
 import com.icxcu.adsmartbandapp.screens.Routes
@@ -44,8 +41,6 @@ import com.icxcu.adsmartbandapp.screens.progressLoading.CircularProgressLoading
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModelFactory
-import com.icxcu.adsmartbandapp.viewModels.MainNavigationViewModel
-import com.icxcu.adsmartbandapp.viewModels.MainNavigationModelFactory
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModel
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
@@ -234,6 +229,7 @@ class MainActivity : ComponentActivity() {
 
                 personalInfoGraph(
                     splashViewModel,
+                    bluetoothScannerViewModel,
                     navMainController
                 )
 

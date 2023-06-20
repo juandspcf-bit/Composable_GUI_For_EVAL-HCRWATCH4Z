@@ -11,11 +11,13 @@ import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenRoot
 import com.icxcu.adsmartbandapp.screens.viewModelProviders.personalInfoViewModel
+import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.PersonalInfoViewModel
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 
 fun NavGraphBuilder.personalInfoGraph(
     splashViewModel: SplashViewModel,
+    bluetoothScannerViewModel: BluetoothScannerViewModel,
     navMainController: NavHostController
 ){
     navigation(
@@ -39,7 +41,11 @@ fun NavGraphBuilder.personalInfoGraph(
             }
         ) {
 
-            val bluetoothAddress = splashViewModel.lastAccessedDevice[3]
+            val bluetoothAddress = if(bluetoothScannerViewModel.selectedBluetoothDeviceAddress!=""){
+                bluetoothScannerViewModel.selectedBluetoothDeviceAddress
+            }else{
+                splashViewModel.lastAccessedDevice[3]
+            }
 
             val personalInfoViewModel = it.personalInfoViewModel<PersonalInfoViewModel>(navController = navMainController)
 

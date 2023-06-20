@@ -56,6 +56,7 @@ import java.io.IOException
 
 @Composable
 fun PersonalInfoContent(
+    macAddressDeviceBluetooth: String,
     getPersonalInfoDataState: () -> PersonalInfoDataState,
     getPersonalInfoListReadFromDB: () -> List<PersonalInfo>,
     validatePersonalInfo: () -> List<String> = { listOf() },
@@ -81,8 +82,7 @@ fun PersonalInfoContent(
         Log.d("AVATAR", "Launch Effect ")
         launch(Dispatchers.IO){
             try {
-                val macAddress =getPersonalInfoDataState().macAddress
-                val fin: FileInputStream = context.openFileInput("${macAddress}.jpg")
+                val fin: FileInputStream = context.openFileInput("${macAddressDeviceBluetooth}.jpg")
                 val decodedBitmap = BitmapFactory.decodeStream(fin)
                 withContext(Dispatchers.Main){
                     initialBitmap = decodedBitmap
@@ -190,12 +190,9 @@ fun PersonalInfoContent(
                     val personalInfoListReadFromDB = getPersonalInfoListReadFromDB()
                     if (personalInfoListReadFromDB[0].id != -1) {
 
-
-
                         scope.launch(Dispatchers.IO) {
                             selectedUri?.let { uri ->
-                                val macAddress =getPersonalInfoDataState().macAddress
-                                storeImageProfile(context, uri, macAddress)
+                                storeImageProfile(context, uri, macAddressDeviceBluetooth)
                             }
 
                             val personalInfo = PersonalInfo().apply {
@@ -215,8 +212,7 @@ fun PersonalInfoContent(
 
                         scope.launch(Dispatchers.IO) {
                             selectedUri?.let { uri ->
-                                val macAddress =getPersonalInfoDataState().macAddress
-                                storeImageProfile(context, uri, macAddress)
+                                storeImageProfile(context, uri, macAddressDeviceBluetooth)
                             }
 
                             val personalInfo = PersonalInfo().apply{
@@ -266,6 +262,8 @@ private fun storeImageProfile(
         val stream = ByteArrayOutputStream()
         bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, stream)
         val byteArray = stream.toByteArray()
+        val nameFile = "${macAddress}.jpg"
+        Log.d("STORE_IMAGE", "storeImageProfile: $nameFile")
         context.openFileOutput("${macAddress}.jpg", Context.MODE_PRIVATE).use {
             it.write(byteArray)
         }
@@ -299,6 +297,7 @@ private fun storeImageProfile(
 @Composable
 fun PersonalInfoContentPreview() {
     PersonalInfoContent(
+        macAddressDeviceBluetooth = "",
         getPersonalInfoDataState = { PersonalInfoDataState() },
         getPersonalInfoListReadFromDB = { listOf(PersonalInfo()) },
         validatePersonalInfo = { listOf() },

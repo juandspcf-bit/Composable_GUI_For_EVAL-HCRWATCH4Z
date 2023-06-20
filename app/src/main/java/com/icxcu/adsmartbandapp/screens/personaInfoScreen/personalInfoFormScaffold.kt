@@ -25,6 +25,7 @@ import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PersonalInfoFormScaffold(
+    macAddressDeviceBluetooth: String,
     navLambda: () -> Unit,
     getPersonalInfoDataStateState: () -> PersonalInfoDataState,
     getPersonalInfoListReadFromDB: () -> List<PersonalInfo>,
@@ -80,6 +81,7 @@ fun PersonalInfoFormScaffold(
                 contentAlignment = Alignment.Center
             ){
                 PersonalInfoContent(
+                    macAddressDeviceBluetooth,
                     getPersonalInfoDataStateState,
                     getPersonalInfoListReadFromDB,
                     validatePersonalInfo,
@@ -113,6 +115,7 @@ fun PersonalInfoFormScaffold(
 @Composable
 fun PersonalInfoFormScaffoldPreview() {
     PersonalInfoFormScaffold(
+        macAddressDeviceBluetooth ="",
         navLambda = {},
         getPersonalInfoDataStateState = { PersonalInfoDataState() },
         getPersonalInfoListReadFromDB = { listOf(PersonalInfo()) },

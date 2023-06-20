@@ -72,6 +72,7 @@ fun PersonalInfoDataScreenRoot(
     }
 
     PersonalInfoFormScaffold(
+        macAddressDeviceBluetooth,
         navLambdaBackToMainNavigationBarFromPersonalInfo,
         getPersonalInfoDataState,
         getPersonalInfoListReadFromDB,
