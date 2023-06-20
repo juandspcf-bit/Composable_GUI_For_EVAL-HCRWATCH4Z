@@ -115,10 +115,6 @@ fun NumericHeightTextFieldComposable(
             )
         }
     }
-
-
-
-
 }
 
 
@@ -131,9 +127,10 @@ fun NumericHeightTexField(
     resourceIcon1:Int = R.drawable.ic_launcher_foreground,
 
     ) {
-
+    val numberValidated =
+        ValidatorsPersonalField.heightValidator(getPersonalInfoDataStateState().height)
     OutlinedTextField(
-        value = getPersonalInfoDataStateState().height,
+        value = numberValidated,
         onValueChange = onNumericUnitTextChange,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number,

@@ -42,6 +42,7 @@ fun NameTextFieldComposable(
     getPersonalInfoDataStateState: () -> PersonalInfoDataState,
     onTextChange: (String) -> Unit,
     onNameTextFieldVisibilityChange: (Boolean) -> Unit,
+    resourceIcon1:Int = R.drawable.ic_launcher_foreground,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -74,7 +75,7 @@ fun NameTextFieldComposable(
         }
 
         Icon(
-            painter = painterResource(R.drawable.baseline_person_24),
+            painter = painterResource(resourceIcon1),
             contentDescription = "Date Range",
             tint = Color.White,
             modifier = Modifier.fillMaxWidth(1f)
@@ -98,6 +99,7 @@ fun NameTextFieldComposable(
                 getPersonalInfoDataStateState,
                 onTextChange = onTextChange,
                 onNameTextFieldVisibilityChange,
+                resourceIcon1
             )
         }
     }
@@ -112,6 +114,7 @@ fun NameTexField(
     getPersonalInfoDataStateState: () -> PersonalInfoDataState,
     onTextChange: (String) -> Unit,
     onNameTextFieldVisibilityChange: (Boolean) -> Unit,
+    resourceIcon1:Int = R.drawable.ic_launcher_foreground,
 ) {
 
     OutlinedTextField(

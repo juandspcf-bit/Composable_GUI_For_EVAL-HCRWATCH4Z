@@ -42,10 +42,10 @@ fun NumericWeightTextFieldComposable(
     getPersonalInfoDataStateState: () -> PersonalInfoDataState,
     onNumericUnitTextChange: (String) -> Unit,
     onNumericUnitTextFieldVisibilityChange: (Boolean) -> Unit,
-    unit:String,
-    contentDescription:String = "",
-    resourceIcon1:Int = R.drawable.ic_launcher_foreground,
-    validator: (String) -> String
+    unit: String,
+    contentDescription: String = "",
+    resourceIcon1: Int = R.drawable.ic_launcher_foreground,
+    validator: (String) -> String,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -59,7 +59,7 @@ fun NumericWeightTextFieldComposable(
                         onPress = { onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().weightTextFieldVisibility) },
                         onDoubleTap = { /* Double Tap Detected */ },
                         onLongPress = { /* Long Press Detected */ },
-                        onTap = {  }
+                        onTap = { }
                     )
                 }
                 .fillMaxWidth(0.85f)
@@ -89,7 +89,8 @@ fun NumericWeightTextFieldComposable(
             painter = painterResource(resourceIcon1),
             contentDescription = contentDescription,
             tint = Color.White,
-            modifier = Modifier.fillMaxWidth(1f)
+            modifier = Modifier
+                .fillMaxWidth(1f)
                 .size(50.dp)
                 .clickable {
                     onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().weightTextFieldVisibility)
@@ -100,7 +101,7 @@ fun NumericWeightTextFieldComposable(
     Box(
         modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.CenterStart
-    ){
+    ) {
         AnimatedVisibility(
             visible = getPersonalInfoDataStateState().weightTextFieldVisibility,
             enter = expandVertically(animationSpec = tween(durationMillis = 1000)),
@@ -117,8 +118,6 @@ fun NumericWeightTextFieldComposable(
     }
 
 
-
-
 }
 
 
@@ -127,13 +126,14 @@ fun NumericUnitTexField(
     getPersonalInfoDataStateState: () -> PersonalInfoDataState,
     onNumericUnitTextChange: (String) -> Unit,
     onNumericUnitTextFieldVisibilityChange: (Boolean) -> Unit,
-    contentDescription:String = "",
-    resourceIcon1:Int = R.drawable.ic_launcher_foreground,
+    contentDescription: String = "",
+    resourceIcon1: Int = R.drawable.ic_launcher_foreground,
 
     ) {
-
+    val numberValidated =
+        ValidatorsPersonalField.weightValidator(getPersonalInfoDataStateState().weight)
     OutlinedTextField(
-        value = getPersonalInfoDataStateState().weight,
+        value = numberValidated,
         onValueChange = onNumericUnitTextChange,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number,
@@ -141,7 +141,8 @@ fun NumericUnitTexField(
         ),
         singleLine = true,
         label = { Text("Your $contentDescription") },
-        modifier = Modifier.padding(10.dp)
+        modifier = Modifier
+            .padding(10.dp)
             .background(Color(0xff1d2a35)),
         textStyle = TextStyle(
             fontWeight = FontWeight.Bold,
@@ -153,6 +154,7 @@ fun NumericUnitTexField(
                 contentDescription = contentDescription,
             )
         },
+        suffix = { Text(text = "Kg") },
         keyboardActions = KeyboardActions(
             onDone = {
                 onNumericUnitTextFieldVisibilityChange(!getPersonalInfoDataStateState().weightTextFieldVisibility)

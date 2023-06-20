@@ -52,6 +52,8 @@ fun DateTextFieldComposable(
     getPersonalInfoDataStateState: () -> PersonalInfoDataState,
     onDateTextChange: (String) -> Unit,
     onDateTextFieldVisibilityChange: (Boolean) -> Unit,
+    resourceIcon1:Int = R.drawable.ic_launcher_foreground,
+
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -108,7 +110,7 @@ fun DateTextFieldComposable(
         }
 
         Icon(
-            painter = painterResource(R.drawable.baseline_date_range_24),
+            painter = painterResource(resourceIcon1),
             contentDescription = "Date Range",
             tint = Color.White,
             modifier = Modifier
@@ -133,6 +135,7 @@ fun DateTextFieldComposable(
                 getPersonalInfoDataStateState,
                 onDateTextChange = onDateTextChange,
                 onDateTextFieldVisibilityChange,
+                resourceIcon1
             )
         }
     }
@@ -146,6 +149,7 @@ fun DateTexField(
     getPersonalInfoDataStateState: () -> PersonalInfoDataState,
     onDateTextChange: (String) -> Unit,
     onDateTextFieldVisibilityChange: (Boolean) -> Unit,
+    resourceIcon1:Int = R.drawable.ic_launcher_foreground,
 ) {
 
     OutlinedTextField(

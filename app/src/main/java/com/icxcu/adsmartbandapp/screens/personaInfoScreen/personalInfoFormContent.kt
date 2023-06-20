@@ -146,13 +146,15 @@ fun PersonalInfoContent(
             NameTextFieldComposable(
                 getPersonalInfoDataStateState = getPersonalInfoDataState,
                 onTextChange = getPersonalInfoDataState().onTextChange,
-                onNameTextFieldVisibilityChange = getPersonalInfoDataState().onNameTextFieldVisibilityChange
+                onNameTextFieldVisibilityChange = getPersonalInfoDataState().onNameTextFieldVisibilityChange,
+                resourceIcon1 = R.drawable.person_48px
             )
 
             DateTextFieldComposable(
                 getPersonalInfoDataStateState = getPersonalInfoDataState,
                 onDateTextChange = getPersonalInfoDataState().onDateTextChange,
-                onDateTextFieldVisibilityChange = getPersonalInfoDataState().onDateTextFieldVisibilityChange
+                onDateTextFieldVisibilityChange = getPersonalInfoDataState().onDateTextFieldVisibilityChange,
+                resourceIcon1 = R.drawable.calendar_month_48px,
             )
 
             NumericWeightTextFieldComposable(
@@ -161,7 +163,7 @@ fun PersonalInfoContent(
                 onNumericUnitTextFieldVisibilityChange = getPersonalInfoDataState().onWeightTextFieldVisibilityChange,
                 unit = "Kg",
                 contentDescription = "weight",
-                resourceIcon1 = R.drawable.baseline_point_of_sale_24,
+                resourceIcon1 = R.drawable.monitor_weight_48px,
                 validator = ValidatorsPersonalField.weightValidator
             )
 
@@ -171,7 +173,7 @@ fun PersonalInfoContent(
                 onNumericUnitTextFieldVisibilityChange = getPersonalInfoDataState().onHeightTextFieldVisibilityChange,
                 unit = "m",
                 contentDescription = "height",
-                resourceIcon1 = R.drawable.baseline_boy_24,
+                resourceIcon1 = R.drawable.boy_48px,
                 validator = ValidatorsPersonalField.heightValidator
             )
 
