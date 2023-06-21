@@ -28,7 +28,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreHelper
-import com.icxcu.adsmartbandapp.screens.PermissionsScreen
+import com.icxcu.adsmartbandapp.screens.BluetoothScannerNestedRoute
+import com.icxcu.adsmartbandapp.screens.permissionScreen.PermissionsScreen
 import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.bluetoothScanner.BluetoothScannerRoot
 import com.icxcu.adsmartbandapp.screens.navigationGraphs.bloodPressureGraph
@@ -36,6 +37,7 @@ import com.icxcu.adsmartbandapp.screens.navigationGraphs.heartRateGraph
 import com.icxcu.adsmartbandapp.screens.navigationGraphs.mainNavigationGraph
 import com.icxcu.adsmartbandapp.screens.navigationGraphs.personalInfoGraph
 import com.icxcu.adsmartbandapp.screens.navigationGraphs.physicalActivityGraph
+import com.icxcu.adsmartbandapp.screens.permissionScreen.PermissionsScreenRoot
 import com.icxcu.adsmartbandapp.screens.progressLoading.CircularProgressLoading
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
@@ -134,16 +136,6 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
-            val navLambdaToBlueScannerScreen = remember(navMainController) {
-                {
-                    navMainController.navigate(Routes.BluetoothScanner.route) {
-                        popUpTo(navMainController.graph.id) {
-                            inclusive = true
-                        }
-                    }
-                }
-            }
-
             NavHost(
                 navController = navMainController,
                 startDestination = startDestination
@@ -162,13 +154,15 @@ class MainActivity : ComponentActivity() {
                 composable(Routes.Permissions.route,
                     enterTransition = { EnterTransition.None },
                     exitTransition = { ExitTransition.None }) {
-                    PermissionsScreen(
+                    PermissionsScreenRoot(
                         activity = this@MainActivity,
-                        viewModel = permissionsViewModel, navLambda = navLambdaToBlueScannerScreen
+                        permissionsViewModel = permissionsViewModel,
+                        navMainController = navMainController
                     )
                 }
 
-                composable(Routes.BluetoothScanner.route,
+                composable(
+                    BluetoothScannerNestedRoute.BluetoothScannerScreen().route,
                     enterTransition = {
                         when (initialState.destination.route) {
                             Routes.Permissions.route -> EnterTransition.None
@@ -183,7 +177,6 @@ class MainActivity : ComponentActivity() {
                             else -> null
                         }
                     }) {
-
 
                     BluetoothScannerRoot(
                         bluetoothScannerViewModel,

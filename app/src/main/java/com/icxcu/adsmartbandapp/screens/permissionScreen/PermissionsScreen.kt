@@ -1,4 +1,4 @@
-package com.icxcu.adsmartbandapp.screens
+package com.icxcu.adsmartbandapp.screens.permissionScreen
 
 import android.Manifest
 import android.app.Activity
