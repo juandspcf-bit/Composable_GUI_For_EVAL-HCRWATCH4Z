@@ -1,16 +1,11 @@
 package com.icxcu.adsmartbandapp.screens.permissionScreen
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.provider.Settings
-import android.widget.Toast
 import androidx.activity.compose.ManagedActivityResultLauncher
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
@@ -30,19 +24,16 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModel
 
 
 @Composable
 fun PermissionsScreen(
     activity: Activity?,
-    viewModel: PermissionsViewModel,
-    navLambda: () ->Unit
+    permissionDataTypeList: MutableList<PermissionDataType>,
+    navLambda: () ->Unit,
+    allPermissionsGranted: Boolean
 ) {
 
-    var allPermissionsGranted by remember {
-        mutableStateOf(false)
-    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -51,117 +42,14 @@ fun PermissionsScreen(
     ) {
 
 
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
-            viewModel.permissionAccessFineLocationGranted =
-                isPermissionGranted(
-                    activity,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                )
-
-            val permissionAccessFineLocationLauncher =
-                rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { permissionGranted_ ->
-                    // this is called when the user selects allow or deny
-                    Toast.makeText(
-                        activity,
-                        "Permission Granted $permissionGranted_",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    viewModel.permissionAccessFineLocationGranted = permissionGranted_
-                }
-
+        repeat(permissionDataTypeList.size){
             PermissionType(
-                message = "Permission to scan Bluetooth devices to know its physical location",
-                permissionType = Manifest.permission.ACCESS_FINE_LOCATION,
-                permissionAccessFineLocationLauncher,
-                viewModel.permissionAccessFineLocationGranted
+                permissionDataTypeList[it].message,
+                permissionDataTypeList[it].permissionType,
+                permissionDataTypeList[it].permissionLauncher,
+                permissionDataTypeList[it].permissionGranted,
             )
-
-            allPermissionsGranted=viewModel.permissionAccessFineLocationGranted
-
-
         }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-
-            viewModel.permissionAccessFineLocationGranted =
-                isPermissionGranted(
-                    activity,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                )
-
-
-            val permissionAccessFineLocationLauncher =
-                rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { permissionGranted_ ->
-
-                    // this is called when the user selects allow or deny
-                    Toast.makeText(
-                        activity,
-                        "Permission Granted $permissionGranted_",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    viewModel.permissionAccessFineLocationGranted = permissionGranted_
-                }
-            PermissionType(
-                message = "Permission to scan Bluetooth devices to know its physical location",
-                permissionType = Manifest.permission.ACCESS_FINE_LOCATION,
-                permissionAccessFineLocationLauncher,
-                viewModel.permissionAccessFineLocationGranted
-            )
-
-
-            viewModel.permissionBluetoothScanGranted =
-                isPermissionGranted(
-                    activity,
-                    Manifest.permission.BLUETOOTH_SCAN
-                )
-            val permissionBluetoothScanLauncher =
-                rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { permissionGranted_ ->
-                    // this is called when the user selects allow or deny
-                    Toast.makeText(
-                        activity,
-                        "Permission Granted $permissionGranted_",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    viewModel.permissionBluetoothScanGranted = permissionGranted_
-                }
-            PermissionType(
-                message = "Permission to scan bluetooth devices",
-                permissionType = Manifest.permission.BLUETOOTH_SCAN,
-                permissionBluetoothScanLauncher,
-                viewModel.permissionBluetoothScanGranted
-            )
-
-
-
-
-            viewModel.permissionBluetoothConnectGranted =
-                isPermissionGranted(
-                    activity,
-                    Manifest.permission.BLUETOOTH_CONNECT
-                )
-            val permissionBluetoothConnectLauncher =
-                rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { permissionGranted_ ->
-                    // this is called when the user selects allow or deny
-                    Toast.makeText(
-                        activity,
-                        "Permission Granted $permissionGranted_",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    viewModel.permissionBluetoothConnectGranted = permissionGranted_
-                }
-            PermissionType(
-                message = "Permission to communicate with already-paired Bluetooth devices",
-                permissionType = Manifest.permission.BLUETOOTH_CONNECT,
-                permissionBluetoothConnectLauncher,
-                viewModel.permissionBluetoothConnectGranted
-            )
-
-            allPermissionsGranted=viewModel.permissionAccessFineLocationGranted
-                    && viewModel.permissionBluetoothConnectGranted
-                    && viewModel.permissionBluetoothScanGranted
-        }
-
 
         val annotatedText = buildAnnotatedString {
             withStyle(
