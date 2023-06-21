@@ -18,6 +18,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 fun NavGraphBuilder.physicalActivityGraph(
+    bluetoothScannerViewModel: BluetoothScannerViewModel,
     splashViewModel: SplashViewModel,
     navMainController: NavHostController
 ){
@@ -43,7 +44,11 @@ fun NavGraphBuilder.physicalActivityGraph(
             }
         ) {
 
-            val bluetoothAddress = splashViewModel.lastAccessedDevice[3]
+            val bluetoothAddress = if(bluetoothScannerViewModel.selectedBluetoothDeviceAddress!=""){
+                bluetoothScannerViewModel.selectedBluetoothDeviceAddress
+            }else{
+                splashViewModel.lastAccessedDevice[3]
+            }
 
             val physicalActivityViewModel = it.physicalActivityViewModel<PhysicalActivityViewModel>(navController = navMainController)
 

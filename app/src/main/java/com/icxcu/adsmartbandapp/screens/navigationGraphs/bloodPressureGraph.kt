@@ -12,11 +12,13 @@ import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureS
 import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureScreenRoot
 import com.icxcu.adsmartbandapp.screens.viewModelProviders.bloodPressureViewModel
 import com.icxcu.adsmartbandapp.viewModels.BloodPressureViewModel
+import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 fun NavGraphBuilder.bloodPressureGraph(
+    bluetoothScannerViewModel: BluetoothScannerViewModel,
     splashViewModel: SplashViewModel,
     navMainController: NavHostController
 ){
@@ -42,7 +44,11 @@ fun NavGraphBuilder.bloodPressureGraph(
             }
         ) {
 
-            val bluetoothAddress = splashViewModel.lastAccessedDevice[3]
+            val bluetoothAddress = if(bluetoothScannerViewModel.selectedBluetoothDeviceAddress!=""){
+                bluetoothScannerViewModel.selectedBluetoothDeviceAddress
+            }else{
+                splashViewModel.lastAccessedDevice[3]
+            }
 
             val bloodPressureViewModel = it.bloodPressureViewModel<BloodPressureViewModel>(navController = navMainController)
 

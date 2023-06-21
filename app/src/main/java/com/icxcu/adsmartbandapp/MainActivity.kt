@@ -41,7 +41,9 @@ import com.icxcu.adsmartbandapp.screens.permissionScreen.PermissionsScreenRoot
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataInitScreenRoot
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenRoot
+import com.icxcu.adsmartbandapp.screens.plotsFields.bloodPressure.BloodPressureScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.progressLoading.CircularProgressLoading
+import com.icxcu.adsmartbandapp.screens.progressLoading.CircularProgressScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.viewModelProviders.personalInfoViewModel
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
@@ -155,15 +157,30 @@ class MainActivity : ComponentActivity() {
                 navController = navMainController,
                 startDestination = startDestination
             ) {
+
+
                 composable(
                     route = Routes.CircularProgressLoading.route,
                     enterTransition = { EnterTransition.None },
                     exitTransition = { ExitTransition.None }
                 ) {
+
+
+                    when(circularProgressViewModel.circularProgressScreenNavStatus){
+                        CircularProgressScreenNavStatus.Leaving->{
+                            circularProgressViewModel.circularProgressScreenNavStatus = CircularProgressScreenNavStatus.Started
+                            circularProgressViewModel.starListeningPersonalInfoDB()
+                        }
+                        else->{
+
+                        }
+                    }
+
                     CircularProgressLoading(
                         navMainController,
                         askPermissions,
-                        circularProgressViewModel
+                        circularProgressViewModel,
+                        splashViewModel
                     )
                 }
 
@@ -216,16 +233,19 @@ class MainActivity : ComponentActivity() {
                 )
 
                 physicalActivityGraph(
+                    bluetoothScannerViewModel,
                     splashViewModel,
                     navMainController
                 )
 
                 bloodPressureGraph(
+                    bluetoothScannerViewModel,
                     splashViewModel,
                     navMainController
                 )
 
                 heartRateGraph(
+                    bluetoothScannerViewModel,
                     splashViewModel,
                     navMainController
                 )

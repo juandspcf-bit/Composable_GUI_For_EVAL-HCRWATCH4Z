@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.icxcu.adsmartbandapp.R
+import com.icxcu.adsmartbandapp.screens.BluetoothScannerNestedRoute
 import com.icxcu.adsmartbandapp.screens.PersonalInfoNestedRoute
 import com.icxcu.adsmartbandapp.screens.Routes
 
@@ -59,7 +60,7 @@ fun SettingsScreen(
 
             RowSettings(
                 navigation = {
-                    navMainController.navigate(Routes.BluetoothScanner.route) {
+                    navMainController.navigate(BluetoothScannerNestedRoute.BluetoothScannerScreen().route) {
                         popUpTo(0) {
                             inclusive = true
                         }

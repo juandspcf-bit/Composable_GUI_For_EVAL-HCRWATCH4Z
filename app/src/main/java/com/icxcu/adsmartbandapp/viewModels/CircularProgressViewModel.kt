@@ -11,6 +11,7 @@ import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 import com.icxcu.adsmartbandapp.database.SWRoomDatabase
 import com.icxcu.adsmartbandapp.repositories.DBRepository
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenNavStatus
+import com.icxcu.adsmartbandapp.screens.progressLoading.CircularProgressScreenNavStatus
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -35,7 +36,7 @@ class CircularProgressViewModel(var application: Application) : ViewModel(){
 
     var personalInfoDataStateC by mutableStateOf<List<PersonalInfo>>(listOf())
     var jobPersonalInfoDataState: Job? = null
-    var personalInfoDataScreenNavStatus: PersonalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Leaving
+    var circularProgressScreenNavStatus: CircularProgressScreenNavStatus = CircularProgressScreenNavStatus.Leaving
 
     fun starListeningPersonalInfoDB() {
         jobPersonalInfoDataState = viewModelScope.launch {

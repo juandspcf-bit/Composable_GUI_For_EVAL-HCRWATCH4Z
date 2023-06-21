@@ -9,10 +9,13 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.icxcu.adsmartbandapp.ui.theme.DialogsTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun UpdateAlertDialog(
@@ -76,8 +79,10 @@ fun UpdateAlertDialog(
 @Composable
 fun InsertAlertDialog(
     setVisibilityAlertDialogStatusPersonalInfo: (Boolean) -> Unit,
+    optionalNavigation:()->Unit = {},
 ) {
 
+    val scope = rememberCoroutineScope()
     DialogsTheme(
     ){
         AlertDialog(
@@ -85,6 +90,11 @@ fun InsertAlertDialog(
                 // Dismiss the dialog when the user clicks outside the dialog or on the back button.
                 // If you want to disable that functionality, simply leave this block empty.
                 setVisibilityAlertDialogStatusPersonalInfo(false)
+                scope.launch {
+                    delay(500)
+                    optionalNavigation()
+                }
+
             },
             confirmButton = {
                 TextButton(
@@ -92,6 +102,7 @@ fun InsertAlertDialog(
                         // perform the confirm action and
                         // close the dialog
                         setVisibilityAlertDialogStatusPersonalInfo(false)
+                        optionalNavigation()
                     }
                 ) {
                     Text(
@@ -105,6 +116,7 @@ fun InsertAlertDialog(
                     onClick = {
                         // close the dialog
                         setVisibilityAlertDialogStatusPersonalInfo(false)
+                        optionalNavigation()
                     }
                 ) {
                     Text(

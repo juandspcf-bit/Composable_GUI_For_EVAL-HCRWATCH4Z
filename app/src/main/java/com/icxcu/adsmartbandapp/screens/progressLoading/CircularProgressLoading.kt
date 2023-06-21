@@ -12,16 +12,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.icxcu.adsmartbandapp.screens.BluetoothScannerNestedRoute
 import com.icxcu.adsmartbandapp.screens.MainNavigationNestedRoute
+import com.icxcu.adsmartbandapp.screens.PersonalInfoInitNestedRoute
 import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.viewModels.CircularProgressViewModel
+import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import kotlinx.coroutines.delay
 
 @Composable
 fun CircularProgressLoading(
     navController: NavHostController,
     askPermissions: ArrayList<String>,
-    circularProgressViewModel: CircularProgressViewModel
+    circularProgressViewModel: CircularProgressViewModel,
+    splashViewModel: SplashViewModel
 ) {
 
     Box(
@@ -43,6 +47,10 @@ fun CircularProgressLoading(
             delay(500)
             if (askPermissions.isNotEmpty()) {
                 navController.navigate(Routes.Permissions.route)
+            }else if(askPermissions.isEmpty() && circularProgressViewModel.personalInfoDataStateC[0].id==-1){
+                navController.navigate(PersonalInfoInitNestedRoute.PersonalInfoInitMainRoute().route)
+            }else if (splashViewModel.lastAccessedDevice.size==2){
+                navController.navigate(BluetoothScannerNestedRoute.BluetoothScannerScreen().route)
             }else{
                 navController.navigate(MainNavigationNestedRoute.MainNavigationMainRoute().route)
             }
@@ -51,4 +59,9 @@ fun CircularProgressLoading(
     }
 
 
+}
+
+sealed class CircularProgressScreenNavStatus{
+    object Started: CircularProgressScreenNavStatus()
+    object Leaving: CircularProgressScreenNavStatus()
 }
