@@ -34,3 +34,9 @@ fun PermissionsScreenRoot(
     )
 
 }
+
+data class PermissionDataType(
+    val message:String,
+    val permissionType:String,
+
+    )

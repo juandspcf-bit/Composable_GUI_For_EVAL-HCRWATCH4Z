@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
@@ -220,7 +221,7 @@ fun PermissionsScreen(
                 navLambda()
             }
         ) {
-            Text(text = "scan devices")
+            Text(text = "collect your data")
         }
 
 
@@ -287,5 +288,9 @@ fun isPermissionGranted(activity: Activity?, permissionType: String): Boolean {
 @Composable
 fun PermissionsScreenPreview() {
 
-    //PermissionType("ddddddddddd", )
+/*    PermissionsScreen(
+        LocalContext.current as Activity,
+    viewModel: PermissionsViewModel,
+    navLambda: () ->Unit
+    )*/
 }
