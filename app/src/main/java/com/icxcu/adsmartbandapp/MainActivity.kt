@@ -42,6 +42,8 @@ import com.icxcu.adsmartbandapp.screens.progressLoading.CircularProgressLoading
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModelFactory
+import com.icxcu.adsmartbandapp.viewModels.CircularProgressViewModel
+import com.icxcu.adsmartbandapp.viewModels.CircularProgressViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModel
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
@@ -52,6 +54,7 @@ const val REQUEST_ENABLE_BT: Int = 500
 class MainActivity : ComponentActivity() {
     private lateinit var bluetoothScannerViewModel: BluetoothScannerViewModel
     private lateinit var permissionsViewModel: PermissionsViewModel
+    private lateinit var circularProgressViewModel: CircularProgressViewModel
     private val splashViewModel: SplashViewModel by viewModels()
     private lateinit var startDestination: String
     private lateinit var preferenceDataStoreHelper: PreferenceDataStoreHelper
@@ -90,6 +93,13 @@ class MainActivity : ComponentActivity() {
                         it,
                         "PermissionsViewModel",
                         PermissionsViewModelFactory()
+                    )
+
+                    circularProgressViewModel = viewModel(
+                        it,
+                        "PermissionsViewModel",
+                        CircularProgressViewModelFactory(LocalContext.current.applicationContext
+                                as Application)
                     )
 
                 }
@@ -146,8 +156,9 @@ class MainActivity : ComponentActivity() {
                     exitTransition = { ExitTransition.None }
                 ) {
                     CircularProgressLoading(
-                        navController = navMainController,
-                        askPermissions
+                        navMainController,
+                        askPermissions,
+                        circularProgressViewModel
                     )
                 }
 

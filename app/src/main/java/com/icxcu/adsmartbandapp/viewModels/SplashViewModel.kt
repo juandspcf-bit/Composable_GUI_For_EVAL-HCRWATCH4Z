@@ -5,10 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.icxcu.adsmartbandapp.data.TypesTable
+import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreConstants.LAST_DEVICE_ACCESSED_ADDRESS
 import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreConstants.LAST_DEVICE_ACCESSED_NAME
 import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreHelper
 import com.icxcu.adsmartbandapp.screens.Routes
+import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenNavStatus
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

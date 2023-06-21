@@ -14,10 +14,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.icxcu.adsmartbandapp.screens.MainNavigationNestedRoute
 import com.icxcu.adsmartbandapp.screens.Routes
+import com.icxcu.adsmartbandapp.viewModels.CircularProgressViewModel
 import kotlinx.coroutines.delay
 
 @Composable
-fun CircularProgressLoading(navController: NavHostController, askPermissions: ArrayList<String>) {
+fun CircularProgressLoading(
+    navController: NavHostController,
+    askPermissions: ArrayList<String>,
+    circularProgressViewModel: CircularProgressViewModel
+) {
 
     Box(
         modifier = Modifier
@@ -33,6 +38,8 @@ fun CircularProgressLoading(navController: NavHostController, askPermissions: Ar
         )
 
         LaunchedEffect(key1 = true, ){
+
+
             delay(500)
             if (askPermissions.isNotEmpty()) {
                 navController.navigate(Routes.Permissions.route)
