@@ -64,5 +64,12 @@ sealed class PersonalInfoNestedRoute{
         PersonalInfoNestedRoute()
     class PersonalInfoScreen(var route: String = "personal_info") :
         PersonalInfoNestedRoute()
+}
+
+sealed class PersonalInfoInitNestedRoute{
+    class PersonalInfoInitMainRoute(var route: String = "PERSONAL_INIT_INFO") :
+        PersonalInfoNestedRoute()
+    class PersonalInfoInitScreen(var route: String = "personal_init_info") :
+        PersonalInfoNestedRoute()
 
 }

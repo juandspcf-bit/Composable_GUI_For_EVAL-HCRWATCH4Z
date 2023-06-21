@@ -6,23 +6,25 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.icxcu.adsmartbandapp.screens.PersonalInfoInitNestedRoute
 import com.icxcu.adsmartbandapp.screens.PersonalInfoNestedRoute
 import com.icxcu.adsmartbandapp.screens.Routes
+import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataInitScreenRoot
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenRoot
 import com.icxcu.adsmartbandapp.screens.viewModelProviders.personalInfoViewModel
 import com.icxcu.adsmartbandapp.viewModels.PersonalInfoViewModel
 
-fun NavGraphBuilder.personalInfoGraph(
+fun NavGraphBuilder.personalInfoInitGraph(
     navMainController: NavHostController
 ){
     navigation(
-        startDestination = PersonalInfoNestedRoute.PersonalInfoScreen().route,
-        route = PersonalInfoNestedRoute.PersonalInfoMainRoute().route
+        startDestination = PersonalInfoInitNestedRoute.PersonalInfoInitScreen().route,
+        route = PersonalInfoInitNestedRoute.PersonalInfoInitMainRoute().route
     ){
 
         composable(
-            PersonalInfoNestedRoute.PersonalInfoScreen().route,
+            PersonalInfoInitNestedRoute.PersonalInfoInitScreen().route,
             enterTransition = {
                 when (initialState.destination.route) {
                     Routes.DataHome.route -> EnterTransition.None
@@ -49,7 +51,7 @@ fun NavGraphBuilder.personalInfoGraph(
                 }
             }
 
-            PersonalInfoDataScreenRoot(
+            PersonalInfoDataInitScreenRoot(
                 personalInfoViewModel,
                 navMainController
             )

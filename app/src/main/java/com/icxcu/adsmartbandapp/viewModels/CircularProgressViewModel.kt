@@ -37,7 +37,7 @@ class CircularProgressViewModel(var application: Application) : ViewModel(){
     var jobPersonalInfoDataState: Job? = null
     var personalInfoDataScreenNavStatus: PersonalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Leaving
 
-    fun starListeningPersonalInfoDB(macAddress: String = "") {
+    fun starListeningPersonalInfoDB() {
         jobPersonalInfoDataState = viewModelScope.launch {
 
             val dataDeferred = async {

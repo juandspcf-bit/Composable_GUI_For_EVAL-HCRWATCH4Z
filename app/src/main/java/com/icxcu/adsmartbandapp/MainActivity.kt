@@ -14,7 +14,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -29,16 +28,21 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreHelper
 import com.icxcu.adsmartbandapp.screens.BluetoothScannerNestedRoute
-import com.icxcu.adsmartbandapp.screens.permissionScreen.PermissionsScreen
+import com.icxcu.adsmartbandapp.screens.PersonalInfoNestedRoute
 import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.bluetoothScanner.BluetoothScannerRoot
 import com.icxcu.adsmartbandapp.screens.navigationGraphs.bloodPressureGraph
 import com.icxcu.adsmartbandapp.screens.navigationGraphs.heartRateGraph
 import com.icxcu.adsmartbandapp.screens.navigationGraphs.mainNavigationGraph
 import com.icxcu.adsmartbandapp.screens.navigationGraphs.personalInfoGraph
+import com.icxcu.adsmartbandapp.screens.navigationGraphs.personalInfoInitGraph
 import com.icxcu.adsmartbandapp.screens.navigationGraphs.physicalActivityGraph
 import com.icxcu.adsmartbandapp.screens.permissionScreen.PermissionsScreenRoot
+import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataInitScreenRoot
+import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenNavStatus
+import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenRoot
 import com.icxcu.adsmartbandapp.screens.progressLoading.CircularProgressLoading
+import com.icxcu.adsmartbandapp.screens.viewModelProviders.personalInfoViewModel
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModelFactory
@@ -46,6 +50,7 @@ import com.icxcu.adsmartbandapp.viewModels.CircularProgressViewModel
 import com.icxcu.adsmartbandapp.viewModels.CircularProgressViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModel
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModelFactory
+import com.icxcu.adsmartbandapp.viewModels.PersonalInfoViewModel
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import com.icxcu.adsmartbandapp.viewModels.permissionsRequired
 
@@ -172,6 +177,12 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
+                personalInfoInitGraph(
+                    navMainController
+                )
+
+
+
                 composable(
                     BluetoothScannerNestedRoute.BluetoothScannerScreen().route,
                     enterTransition = {
@@ -220,8 +231,6 @@ class MainActivity : ComponentActivity() {
                 )
 
                 personalInfoGraph(
-                    splashViewModel,
-                    bluetoothScannerViewModel,
                     navMainController
                 )
 

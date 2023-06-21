@@ -56,6 +56,7 @@ import java.io.IOException
 
 @Composable
 fun PersonalInfoContent(
+    modifier: Modifier = Modifier,
     getPersonalInfoDataState: () -> PersonalInfoDataState,
     getPersonalInfoListReadFromDB: () -> List<PersonalInfo>,
     validatePersonalInfo: () -> List<String> = { listOf() },
@@ -96,9 +97,7 @@ fun PersonalInfoContent(
 
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xff1d2a35)),
+        modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
 

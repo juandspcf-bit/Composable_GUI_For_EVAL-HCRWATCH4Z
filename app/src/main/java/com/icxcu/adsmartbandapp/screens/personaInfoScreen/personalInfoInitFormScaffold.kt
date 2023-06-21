@@ -1,10 +1,14 @@
 package com.icxcu.adsmartbandapp.screens.personaInfoScreen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,11 +24,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PersonalInfoFormScaffold(
+fun PersonalInfoInitFormScaffold(
     navLambda: () -> Unit,
     getPersonalInfoDataStateState: () -> PersonalInfoDataState,
     getPersonalInfoListReadFromDB: () -> List<PersonalInfo>,
@@ -48,21 +53,6 @@ fun PersonalInfoFormScaffold(
                         style = MaterialTheme.typography.bodyLarge
                     )
                 },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        getPersonalInfoDataStateState().nameTextFieldVisibility = false
-                        getPersonalInfoDataStateState().dateTextFieldVisibility = false
-                        getPersonalInfoDataStateState().heightTextFieldVisibility = false
-                        getPersonalInfoDataStateState().weightTextFieldVisibility = false
-                        navLambda()
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Go Back",
-                            tint = Color.White
-                        )
-                    }
-                },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = Color(0xff0d1721),
                 ),
@@ -73,16 +63,16 @@ fun PersonalInfoFormScaffold(
         content = { padding ->
             padding
 
-            Box(
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color(0xff1d2a35)),
-                contentAlignment = Alignment.Center
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+
             ){
                 PersonalInfoContent(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color(0xff1d2a35)),
+                    modifier = Modifier,
                     getPersonalInfoDataStateState,
                     getPersonalInfoListReadFromDB,
                     validatePersonalInfo,
@@ -90,6 +80,18 @@ fun PersonalInfoFormScaffold(
                     updatePersonalData,
                     insertPersonalData,
                 )
+
+                Button(
+                    modifier = Modifier.padding(top = 10.dp),
+                    onClick = {
+                        getPersonalInfoDataStateState().nameTextFieldVisibility = false
+                        getPersonalInfoDataStateState().dateTextFieldVisibility = false
+                        getPersonalInfoDataStateState().heightTextFieldVisibility = false
+                        getPersonalInfoDataStateState().weightTextFieldVisibility = false
+                        navLambda() },
+                ) {
+                    Text(text = "Scanning devices")
+                }
 
                 if (getInvalidAlertDialogState().alertDialogPersonalFieldVisibility) {
                     ValidationAlertDialog(
@@ -112,20 +114,3 @@ fun PersonalInfoFormScaffold(
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun PersonalInfoFormScaffoldPreview() {
-    PersonalInfoFormScaffold(
-        navLambda = {},
-        getPersonalInfoDataStateState = { PersonalInfoDataState() },
-        getPersonalInfoListReadFromDB = { listOf(PersonalInfo()) },
-        validatePersonalInfo = { listOf() },
-        getInvalidAlertDialogState = { InvalidAlertDialogState() },
-        getUpdateAlertDialogVisibilityState = { UpdateAlertDialogPersonalFieldVisibilityState() },
-        getInsertAlertDialogVisibilityState = { InsertAlertDialogPersonalFieldVisibilityState() },
-        updatePersonalData = {},
-        insertPersonalData = {},
-    )
-
-
-}

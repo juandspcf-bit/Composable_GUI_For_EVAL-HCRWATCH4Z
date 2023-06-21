@@ -5,6 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavController
 import com.icxcu.adsmartbandapp.screens.BluetoothScannerNestedRoute
+import com.icxcu.adsmartbandapp.screens.PersonalInfoInitNestedRoute
+import com.icxcu.adsmartbandapp.screens.PersonalInfoNestedRoute
 import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModel
 
@@ -17,8 +19,8 @@ fun PermissionsScreenRoot(
 
     val navLambdaToBlueScannerScreen = remember(navMainController) {
         {
-            navMainController.navigate(BluetoothScannerNestedRoute.BluetoothScannerScreen().route) {
-                popUpTo(navMainController.graph.id) {
+            navMainController.navigate( PersonalInfoInitNestedRoute.PersonalInfoInitMainRoute().route) {
+                popUpTo(0) {
                     inclusive = true
                 }
             }
