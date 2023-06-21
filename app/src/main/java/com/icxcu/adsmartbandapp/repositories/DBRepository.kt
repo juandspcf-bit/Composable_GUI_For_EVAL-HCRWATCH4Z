@@ -65,10 +65,8 @@ class DBRepository(
         return heartRateDao.getDayHeartRateWithCoroutine(queryDate, queryMacAddress)
     }
 
-    suspend fun getPersonalInfoWithCoroutine(
-        macAddress: String
-    ): List<PersonalInfo>{
-        return personalInfoDao.getPersonalInfoWithCoroutine(macAddress)
+    suspend fun getPersonalInfoWithCoroutine(): List<PersonalInfo>{
+        return personalInfoDao.getPersonalInfoWithCoroutine()
     }
 
 

@@ -41,18 +41,12 @@ fun NavGraphBuilder.personalInfoGraph(
             }
         ) {
 
-            val bluetoothAddress = if(bluetoothScannerViewModel.selectedBluetoothDeviceAddress!=""){
-                bluetoothScannerViewModel.selectedBluetoothDeviceAddress
-            }else{
-                splashViewModel.lastAccessedDevice[3]
-            }
-
             val personalInfoViewModel = it.personalInfoViewModel<PersonalInfoViewModel>(navController = navMainController)
 
             when(personalInfoViewModel.personalInfoDataScreenNavStatus){
                 PersonalInfoDataScreenNavStatus.Leaving->{
                     personalInfoViewModel.personalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Started
-                    personalInfoViewModel.starListeningPersonalInfoDB(bluetoothAddress)
+                    personalInfoViewModel.starListeningPersonalInfoDB()
                 }
                 else->{
 
@@ -61,8 +55,8 @@ fun NavGraphBuilder.personalInfoGraph(
 
             PersonalInfoDataScreenRoot(
                 personalInfoViewModel,
-                bluetoothAddress,
-                navMainController)
+                navMainController
+            )
         }
     }
 }

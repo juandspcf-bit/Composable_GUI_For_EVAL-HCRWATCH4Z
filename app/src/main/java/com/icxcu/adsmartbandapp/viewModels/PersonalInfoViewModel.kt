@@ -47,11 +47,11 @@ class PersonalInfoViewModel (var application: Application) : ViewModel() {
     var jobPersonalInfoDataState: Job? = null
     var personalInfoDataScreenNavStatus: PersonalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Leaving
 
-    fun starListeningPersonalInfoDB(macAddress: String = "") {
+    fun starListeningPersonalInfoDB() {
         jobPersonalInfoDataState = viewModelScope.launch {
 
             val dataDeferred = async {
-                dbRepository.getPersonalInfoWithCoroutine(macAddress)
+                dbRepository.getPersonalInfoWithCoroutine()
             }
 
             val dataCoroutineFromDB = dataDeferred.await()
@@ -59,7 +59,6 @@ class PersonalInfoViewModel (var application: Application) : ViewModel() {
             personalInfoDataStateC = dataCoroutineFromDB.ifEmpty {
                 MutableList(1) { PersonalInfo(
                     id = -1,
-                    macAddress = macAddress,
                     typesTable= TypesTable.PERSONAL_INFO,
                     name = "",
                     birthdate = "",
@@ -79,7 +78,7 @@ class PersonalInfoViewModel (var application: Application) : ViewModel() {
 
 
 
-    fun updatePersonalInfoDataWithCoroutine(personalInfo: PersonalInfo, macAddressDeviceBluetooth:String) {
+    fun updatePersonalInfoDataWithCoroutine(personalInfo: PersonalInfo) {
         val dataDeferred = viewModelScope.async {
             dbRepository.updatePersonalInfoDataWithCoroutine(personalInfo = personalInfo)
         }
@@ -87,11 +86,11 @@ class PersonalInfoViewModel (var application: Application) : ViewModel() {
         viewModelScope.launch {
             updateAlertDialogPersonalFieldVisibilityState
                 .updateAlertDialogPersonalFieldVisibility = dataDeferred.await()
-            starListeningPersonalInfoDB(macAddressDeviceBluetooth)
+            starListeningPersonalInfoDB()
         }
     }
 
-    fun insertPersonalInfoDataWithCoroutine(personalInfo: PersonalInfo, macAddressDeviceBluetooth:String) {
+    fun insertPersonalInfoDataWithCoroutine(personalInfo: PersonalInfo) {
         val dataDeferred = viewModelScope.async {
             dbRepository.insertPersonalInfoDataWithCoroutine(personalInfo)
         }
@@ -99,7 +98,7 @@ class PersonalInfoViewModel (var application: Application) : ViewModel() {
         viewModelScope.launch {
             insertAlertDialogPersonalFieldVisibilityState
                 .insertAlertDialogPersonalFieldVisibility = dataDeferred.await()
-            starListeningPersonalInfoDB(macAddressDeviceBluetooth)
+            starListeningPersonalInfoDB()
         }
 
 

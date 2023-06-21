@@ -13,9 +13,6 @@ class PersonalInfo {
     @ColumnInfo(name = "personalInfoId")
     var id: Int = 0
 
-    @ColumnInfo(name = "mac_address")
-    var macAddress: String = ""
-
     @ColumnInfo(name = "types_table")
     var typesTable: TypesTable = TypesTable.PERSONAL_INFO
 
@@ -34,7 +31,6 @@ class PersonalInfo {
     constructor()
     constructor(
         id: Int,
-        macAddress: String,
         typesTable: TypesTable,
         name: String,
         birthdate: String,
@@ -42,7 +38,6 @@ class PersonalInfo {
         height: Double
     ) {
         this.id = id
-        this.macAddress = macAddress
         this.typesTable = typesTable
         this.name = name
         this.birthdate = birthdate
@@ -51,9 +46,8 @@ class PersonalInfo {
     }
 
     override fun toString(): String {
-        return "PersonalInfo(id=$id, macAddress='$macAddress', typesTable=$typesTable, name='$name', birthdate='$birthdate', weight=$weight, height=$height)"
+        return "PersonalInfo(id=$id, typesTable=$typesTable, name='$name', birthdate='$birthdate', weight=$weight, height=$height)"
     }
-
 
 
 }

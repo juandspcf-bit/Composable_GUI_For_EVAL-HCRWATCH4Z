@@ -10,7 +10,6 @@ import androidx.lifecycle.viewModelScope
 import com.icxcu.adsmartbandapp.data.TypesTable
 import com.icxcu.adsmartbandapp.data.entities.HeartRate
 import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
-import com.icxcu.adsmartbandapp.data.entities.PhysicalActivity
 import com.icxcu.adsmartbandapp.database.SWRoomDatabase
 import com.icxcu.adsmartbandapp.repositories.DBRepository
 import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenNavStatus
@@ -63,11 +62,11 @@ class HeartRateViewModel (var application: Application) : ViewModel() {
     }
 
 
-    fun starListeningPersonalInfoDB(macAddress: String = "") {
+    fun starListeningPersonalInfoDB() {
         jobPersonalInfoDataState = viewModelScope.launch {
 
             val dataDeferred = async {
-                dbRepository.getPersonalInfoWithCoroutine(macAddress)
+                dbRepository.getPersonalInfoWithCoroutine()
             }
 
             val dataCoroutineFromDB = dataDeferred.await()
@@ -75,7 +74,6 @@ class HeartRateViewModel (var application: Application) : ViewModel() {
             personalInfoDataStateC = dataCoroutineFromDB.ifEmpty {
                 MutableList(1) { PersonalInfo(
                     id = -1,
-                    macAddress = macAddress,
                     typesTable= TypesTable.PERSONAL_INFO,
                     name = "",
                     birthdate = "",

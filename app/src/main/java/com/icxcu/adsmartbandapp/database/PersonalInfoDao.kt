@@ -12,11 +12,10 @@ interface PersonalInfoDao {
     fun insertPersonalInfoData(personalInfo: PersonalInfo)
 
 
-    @Query("SELECT * FROM PersonalInfo WHERE mac_address=:macAddress")
-    fun getPersonalInfo(macAddress: String): List<PersonalInfo>
 
-    @Query("SELECT * FROM PersonalInfo WHERE mac_address=:macAddress")
-    suspend fun getPersonalInfoWithCoroutine(macAddress: String): List<PersonalInfo>
+
+    @Query("SELECT * FROM PersonalInfo")
+    suspend fun getPersonalInfoWithCoroutine(): List<PersonalInfo>
 
 
     @Insert

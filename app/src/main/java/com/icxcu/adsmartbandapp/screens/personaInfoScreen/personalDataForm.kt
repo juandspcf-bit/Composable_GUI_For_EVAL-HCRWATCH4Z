@@ -15,7 +15,6 @@ import com.icxcu.adsmartbandapp.viewModels.PersonalInfoViewModel
 @Composable
 fun PersonalInfoDataScreenRoot(
     personalInfoViewModel: PersonalInfoViewModel,
-    macAddressDeviceBluetooth: String,
     navMainController: NavHostController
 ) {
 
@@ -46,7 +45,6 @@ fun PersonalInfoDataScreenRoot(
         val filter = dataFromDB.filter { it.typesTable == TypesTable.PERSONAL_INFO }
         getPersonalInfoDataState().id = filter[0].id
         getPersonalInfoDataState().name = filter[0].name
-        getPersonalInfoDataState().macAddress = filter[0].macAddress
         getPersonalInfoDataState().date = filter[0].birthdate
         getPersonalInfoDataState().weight = filter[0].weight.toString()
         getPersonalInfoDataState().height = filter[0].height.toString()
@@ -57,7 +55,6 @@ fun PersonalInfoDataScreenRoot(
         { personalInfo: PersonalInfo ->
             personalInfoViewModel.insertPersonalInfoDataWithCoroutine(
                 personalInfo,
-                macAddressDeviceBluetooth
             )
         }
     }
@@ -66,13 +63,11 @@ fun PersonalInfoDataScreenRoot(
         { personalInfo: PersonalInfo ->
             personalInfoViewModel.updatePersonalInfoDataWithCoroutine(
                 personalInfo,
-                macAddressDeviceBluetooth
             )
         }
     }
 
     PersonalInfoFormScaffold(
-        macAddressDeviceBluetooth,
         navLambdaBackToMainNavigationBarFromPersonalInfo,
         getPersonalInfoDataState,
         getPersonalInfoListReadFromDB,

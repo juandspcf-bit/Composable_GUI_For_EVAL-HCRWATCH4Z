@@ -41,7 +41,7 @@ class CircularProgressViewModel(var application: Application) : ViewModel(){
         jobPersonalInfoDataState = viewModelScope.launch {
 
             val dataDeferred = async {
-                dbRepository.getPersonalInfoWithCoroutine(macAddress)
+                dbRepository.getPersonalInfoWithCoroutine()
             }
 
             val dataCoroutineFromDB = dataDeferred.await()
@@ -49,7 +49,6 @@ class CircularProgressViewModel(var application: Application) : ViewModel(){
             personalInfoDataStateC = dataCoroutineFromDB.ifEmpty {
                 MutableList(1) { PersonalInfo(
                     id = -1,
-                    macAddress = macAddress,
                     typesTable= TypesTable.PERSONAL_INFO,
                     name = "",
                     birthdate = "",
