@@ -62,7 +62,7 @@ fun PersonalInfoInitFormScaffold(
                 horizontalAlignment = Alignment.CenterHorizontally
 
             ){
-                PersonalInfoInitContent(
+                PersonalInfoContent(
                     modifier = Modifier,
                     getPersonalInfoDataStateState,
                     getPersonalInfoListReadFromDB,

@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.navigation.NavHostController
 import com.icxcu.adsmartbandapp.data.TypesTable
@@ -12,6 +13,8 @@ import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 import com.icxcu.adsmartbandapp.screens.BluetoothScannerNestedRoute
 import com.icxcu.adsmartbandapp.screens.PersonalInfoNestedRoute
 import com.icxcu.adsmartbandapp.viewModels.PersonalInfoViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun PersonalInfoDataInitScreenRoot(
@@ -19,13 +22,20 @@ fun PersonalInfoDataInitScreenRoot(
     navMainController: NavHostController
 ) {
 
+    val scope = rememberCoroutineScope()
+
     val navLambdaBackToMainNavigationBarFromPersonalInfo = remember(navMainController) {
         {
-            navMainController.navigate(BluetoothScannerNestedRoute.BluetoothScannerScreen().route){
-                popUpTo(0) {
-                    inclusive = true
+            scope.launch {
+                delay(500)
+                navMainController.navigate(BluetoothScannerNestedRoute.BluetoothScannerScreen().route){
+                    popUpTo(0) {
+                        inclusive = true
+                    }
                 }
             }
+            Unit
+
         }
     }
 

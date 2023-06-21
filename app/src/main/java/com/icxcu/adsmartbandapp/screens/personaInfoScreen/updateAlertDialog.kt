@@ -82,7 +82,6 @@ fun InsertAlertDialog(
     optionalNavigation:()->Unit = {},
 ) {
 
-    val scope = rememberCoroutineScope()
     DialogsTheme(
     ){
         AlertDialog(
@@ -90,10 +89,7 @@ fun InsertAlertDialog(
                 // Dismiss the dialog when the user clicks outside the dialog or on the back button.
                 // If you want to disable that functionality, simply leave this block empty.
                 setVisibilityAlertDialogStatusPersonalInfo(false)
-                scope.launch {
-                    delay(500)
-                    optionalNavigation()
-                }
+                optionalNavigation()
 
             },
             confirmButton = {
