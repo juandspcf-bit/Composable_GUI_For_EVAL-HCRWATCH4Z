@@ -18,7 +18,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class DBRepository(
     private val physicalActivityDao: PhysicalActivityDao,
@@ -30,13 +29,6 @@ class DBRepository(
     var dayHealthResultsFromDBFForDashBoard = MutableLiveData<Values>()
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
-    var dayPhysicalActivityResultsFromDB = MutableLiveData<List<PhysicalActivity>>()
-
-    var dayBloodPressureResultsFromDB = MutableLiveData<List<BloodPressure>>()
-
-    var dayHeartRateResultsFromDB = MutableLiveData<List<HeartRate>>()
-
-    var personalInfoFromDB = MutableLiveData<List<PersonalInfo>>()
 
     val myHeartRateAlertDialogDataHandler = MyHeartRateAlertDialogDataHandler()
     val myBloodPressureAlertDialogDataHandler = MyBloodPressureAlertDialogDataHandler()
@@ -90,8 +82,7 @@ class DBRepository(
         coroutineScope.launch(Dispatchers.Main) {
             val resultsPhysicalActivityFromDb =
                 asyncDayPhysicalActivityData(queryDate, queryMacAddress)
-            val resultsPhysicalActivity = if (resultsPhysicalActivityFromDb != null
-                && resultsPhysicalActivityFromDb.isEmpty().not()
+            val resultsPhysicalActivity = if (resultsPhysicalActivityFromDb.isEmpty().not()
             ) {
                 resultsPhysicalActivityFromDb
             } else {
@@ -295,7 +286,7 @@ class DBRepository(
     private suspend fun asyncDayPhysicalActivityData(
         date: String,
         macAddress: String
-    ): List<PhysicalActivity>? =
+    ): List<PhysicalActivity> =
         coroutineScope.async(Dispatchers.IO) {
             return@async physicalActivityDao.getDayPhysicalActivityData(date, macAddress)
         }.await()
@@ -337,16 +328,6 @@ class DBRepository(
             return@async heartRateDao.getDayHeartRateData(date, macAddress)
         }.await()
 
-
-    fun insertPersonalInfo(personalInfo: PersonalInfo) {
-        coroutineScope.launch(Dispatchers.IO) {
-            personalInfoDao.insertPersonalInfoData(personalInfo = personalInfo)
-            withContext(Dispatchers.Main) {
-/*                personalInfoAlertDialogUVStateLiveData.value =
-                    !(personalInfoAlertDialogUVStateLiveData.value ?: true)*/
-            }
-        }
-    }
 
     suspend fun updatePersonalInfoDataWithCoroutine(personalInfo: PersonalInfo):Boolean {
         personalInfoDao.updatePersonalInfoDataWithCoroutine(personalInfo)
