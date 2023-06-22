@@ -22,6 +22,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -245,6 +246,9 @@ fun PersonalInfoContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 20.dp, top = 50.dp, end = 20.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFFFB74D),
+                ),
                 onClick = {
 
                     if (validatePersonalInfo().isNotEmpty()) {
@@ -290,7 +294,7 @@ fun PersonalInfoContent(
                     }
                 }
             ) {
-                Text(text = "Save info", color = Color.White, textAlign = TextAlign.Center)
+                Text(text = "Save info", color = Color.Black, textAlign = TextAlign.Center)
 
             }
 

@@ -4,7 +4,9 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -47,8 +49,14 @@ fun RowPersonalInfoComposable(
                     onFieldVisibilityChange(!getVisibilityState())
                 }
                 .fillMaxWidth(0.85f)
+
                 .clip(shape = RoundedCornerShape(size = 12.dp))
-                .background(color = Color(0xFFE91E63))
+                .background(color = Color.DarkGray)
+                .border(
+                    BorderStroke(width = 1.dp, color = Color.Green),
+                    shape = RoundedCornerShape(size = 12.dp)
+                )
+
         ) {
 
             val displayName = if (getFieldValue() == "") {
