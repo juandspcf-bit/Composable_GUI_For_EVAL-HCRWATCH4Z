@@ -43,7 +43,6 @@ class PersonalInfoViewModel (var application: Application) : ViewModel() {
         )
     }
 
-    var personalInfoDataStateC by mutableStateOf<List<PersonalInfo>>(listOf())
     var jobPersonalInfoDataState: Job? = null
     var personalInfoDataScreenNavStatus: PersonalInfoDataScreenNavStatus = PersonalInfoDataScreenNavStatus.Leaving
 
@@ -56,7 +55,7 @@ class PersonalInfoViewModel (var application: Application) : ViewModel() {
 
             val dataCoroutineFromDB = dataDeferred.await()
 
-            personalInfoDataStateC = dataCoroutineFromDB.ifEmpty {
+            val personalInfoDataStateC = dataCoroutineFromDB.ifEmpty {
                 MutableList(1) { PersonalInfo(
                     id = -1,
                     typesTable= TypesTable.PERSONAL_INFO,
@@ -67,6 +66,7 @@ class PersonalInfoViewModel (var application: Application) : ViewModel() {
             }
 
             personalInfoDataState.apply {
+                id = personalInfoDataStateC[0].id
                 name = personalInfoDataStateC[0].name
                 date = personalInfoDataStateC[0].birthdate
                 height = personalInfoDataStateC[0].height.toString()

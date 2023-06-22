@@ -23,7 +23,6 @@ import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 fun PersonalInfoInitFormScaffold(
     navLambdaBackToMainNavigationBarFromPersonalInfo: () -> Unit,
     getPersonalInfoDataStateState: () -> PersonalInfoDataState,
-    getPersonalInfoListReadFromDB: () -> List<PersonalInfo>,
     validatePersonalInfo: () -> List<String> = { listOf() },
     getInvalidAlertDialogState: () -> InvalidAlertDialogState,
     getUpdateAlertDialogVisibilityState: () -> UpdateAlertDialogPersonalFieldVisibilityState,
@@ -65,7 +64,6 @@ fun PersonalInfoInitFormScaffold(
                 PersonalInfoContent(
                     modifier = Modifier,
                     getPersonalInfoDataStateState,
-                    getPersonalInfoListReadFromDB,
                     validatePersonalInfo,
                     getInvalidAlertDialogState,
                     updatePersonalData,

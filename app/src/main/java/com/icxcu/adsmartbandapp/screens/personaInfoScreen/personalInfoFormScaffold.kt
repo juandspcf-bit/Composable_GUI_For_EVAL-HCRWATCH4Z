@@ -27,7 +27,6 @@ import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 fun PersonalInfoFormScaffold(
     navLambda: () -> Unit,
     getPersonalInfoDataStateState: () -> PersonalInfoDataState,
-    getPersonalInfoListReadFromDB: () -> List<PersonalInfo>,
     validatePersonalInfo: () -> List<String> = { listOf() },
     getInvalidAlertDialogState: () -> InvalidAlertDialogState,
     getUpdateAlertDialogVisibilityState: () -> UpdateAlertDialogPersonalFieldVisibilityState,
@@ -84,7 +83,6 @@ fun PersonalInfoFormScaffold(
                         .fillMaxSize()
                         .background(Color(0xff1d2a35)),
                     getPersonalInfoDataStateState,
-                    getPersonalInfoListReadFromDB,
                     validatePersonalInfo,
                     getInvalidAlertDialogState,
                     updatePersonalData,
@@ -118,14 +116,12 @@ fun PersonalInfoFormScaffoldPreview() {
     PersonalInfoFormScaffold(
         navLambda = {},
         getPersonalInfoDataStateState = { PersonalInfoDataState() },
-        getPersonalInfoListReadFromDB = { listOf(PersonalInfo()) },
         validatePersonalInfo = { listOf() },
         getInvalidAlertDialogState = { InvalidAlertDialogState() },
         getUpdateAlertDialogVisibilityState = { UpdateAlertDialogPersonalFieldVisibilityState() },
         getInsertAlertDialogVisibilityState = { InsertAlertDialogPersonalFieldVisibilityState() },
         updatePersonalData = {},
-        insertPersonalData = {},
-    )
+    ) {}
 
 
 }

@@ -58,7 +58,6 @@ import java.time.format.DateTimeParseException
 fun PersonalInfoContent(
     modifier: Modifier = Modifier,
     getPersonalInfoDataState: () -> PersonalInfoDataState,
-    getPersonalInfoListReadFromDB: () -> List<PersonalInfo>,
     validatePersonalInfo: () -> List<String> = { listOf() },
     getInvalidAlertDialogState: () -> InvalidAlertDialogState,
     updatePersonalData: (PersonalInfo) -> Unit = {},
@@ -254,8 +253,7 @@ fun PersonalInfoContent(
                         return@Button
                     }
 
-                    val personalInfoListReadFromDB = getPersonalInfoListReadFromDB()
-                    if (personalInfoListReadFromDB[0].id != -1) {
+                    if (getPersonalInfoDataState().id != -1) {
 
                         scope.launch(Dispatchers.IO) {
                             selectedUri?.let { uri ->
@@ -335,10 +333,8 @@ private fun storeImageProfile(
 fun PersonalInfoContentPreview() {
     PersonalInfoContent(
         getPersonalInfoDataState = { PersonalInfoDataState() },
-        getPersonalInfoListReadFromDB = { listOf(PersonalInfo()) },
         validatePersonalInfo = { listOf() },
         getInvalidAlertDialogState = { InvalidAlertDialogState() },
         updatePersonalData = {},
-        insertPersonalData = {},
-    )
+    ) {}
 }
