@@ -155,7 +155,7 @@ fun PermissionType(
                 }
             }
         ) {
-            Text(text = "request")
+            Text(text = "request", color = Color.Black)
         }
     }
 }
