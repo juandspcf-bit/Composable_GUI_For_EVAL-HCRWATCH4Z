@@ -49,10 +49,6 @@ fun PersonalInfoFormScaffold(
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        getPersonalInfoDataStateState().nameTextFieldVisibility = false
-                        getPersonalInfoDataStateState().dateTextFieldVisibility = false
-                        getPersonalInfoDataStateState().heightTextFieldVisibility = false
-                        getPersonalInfoDataStateState().weightTextFieldVisibility = false
                         navLambda()
                     }) {
                         Icon(
