@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.ThumbnailUtils
-import android.net.MacAddress
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -51,8 +50,9 @@ import java.io.ByteArrayOutputStream
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.IOException
-
-
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 @Composable
 fun PersonalInfoContent(
@@ -65,7 +65,7 @@ fun PersonalInfoContent(
     insertPersonalData: (PersonalInfo) -> Unit = {},
 ) {
 
-    var selectedUri by rememberSaveable { mutableStateOf<Uri?>( null) }
+    var selectedUri by rememberSaveable { mutableStateOf<Uri?>(null) }
     var initialBitmap by rememberSaveable { mutableStateOf<Bitmap?>(null) }
 
     val scope = rememberCoroutineScope()
@@ -78,20 +78,19 @@ fun PersonalInfoContent(
         }
 
 
-    LaunchedEffect(key1 = true,){
+    LaunchedEffect(key1 = true) {
         Log.d("AVATAR", "Launch Effect ")
-        launch(Dispatchers.IO){
+        launch(Dispatchers.IO) {
             try {
                 val fin: FileInputStream = context.openFileInput("myProfile.jpg")
                 val decodedBitmap = BitmapFactory.decodeStream(fin)
-                withContext(Dispatchers.Main){
+                withContext(Dispatchers.Main) {
                     initialBitmap = decodedBitmap
                 }
                 fin.close()
-            }catch (e: FileNotFoundException){
+            } catch (e: FileNotFoundException) {
                 Log.d("AVATAR", "PersonalInfoContent: not profile image found")
             }
-
         }
     }
 
@@ -123,16 +122,15 @@ fun PersonalInfoContent(
             ) {
 
                 AsyncImage(
-                    modifier = Modifier.fillMaxSize()
-                    ,
+                    modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop,
                     model = ImageRequest.Builder(context)
                         .data(
-                            if(selectedUri!=null){
+                            if (selectedUri != null) {
                                 selectedUri
-                            }else if(initialBitmap!=null){
+                            } else if (initialBitmap != null) {
                                 initialBitmap
-                            }else{
+                            } else {
                                 R.drawable.user
                             }
                         )
@@ -141,39 +139,108 @@ fun PersonalInfoContent(
                 )
             }
 
-            NameTextFieldComposable(
-                getPersonalInfoDataStateState = getPersonalInfoDataState,
-                onTextChange = getPersonalInfoDataState().onTextChange,
-                onNameTextFieldVisibilityChange = getPersonalInfoDataState().onNameTextFieldVisibilityChange,
+            RowPersonalInfoComposable(
+                getFieldValue = { getPersonalInfoDataState().name },
+                getVisibilityState = { getPersonalInfoDataState().nameTextFieldVisibility },
+                placeHolder = "Your Name",
+                onFieldVisibilityChange = getPersonalInfoDataState().onNameTextFieldVisibilityChange,
                 resourceIcon1 = R.drawable.person_48px
-            )
+            ) {
+                NameTexField(
+                    getPersonalInfoDataState,
+                    onTextChange = getPersonalInfoDataState().onNameTextChange,
+                    getPersonalInfoDataState().onNameTextFieldVisibilityChange,
+                    R.drawable.person_48px
+                )
+            }
 
-            DateTextFieldComposable(
-                getPersonalInfoDataStateState = getPersonalInfoDataState,
-                onDateTextChange = getPersonalInfoDataState().onDateTextChange,
-                onDateTextFieldVisibilityChange = getPersonalInfoDataState().onDateTextFieldVisibilityChange,
-                resourceIcon1 = R.drawable.calendar_month_48px,
-            )
+            RowPersonalInfoComposable(
+                getFieldValue = { if (getPersonalInfoDataState().date == "") {
+                    ""
+                } else {
+                    val trimmed =
+                        if (getPersonalInfoDataState().date.length >= 8) getPersonalInfoDataState().date.substring(
+                            0..7
+                        ) else getPersonalInfoDataState().date
+                    var out = ""
+                    for (i in trimmed.indices) {
+                        out += trimmed[i]
+                        if (i % 2 == 1 && i < 4) out += "/"
+                    }
 
-            NumericWeightTextFieldComposable(
-                getPersonalInfoDataStateState = getPersonalInfoDataState,
-                onNumericUnitTextChange = getPersonalInfoDataState().onWeightTextChange,
-                onNumericUnitTextFieldVisibilityChange = getPersonalInfoDataState().onWeightTextFieldVisibilityChange,
-                unit = "Kg",
-                contentDescription = "weight",
-                resourceIcon1 = R.drawable.monitor_weight_48px,
-                validator = ValidatorsPersonalField.weightValidator
-            )
+                    try {
+                        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                        LocalDate.parse(out, formatter)
+                    } catch (e: DateTimeParseException) {
+                        out = ""
+                    }
+                    out
+                } },
+                getVisibilityState = { getPersonalInfoDataState().dateTextFieldVisibility },
+                placeHolder = "Your birthdate",
+                onFieldVisibilityChange = getPersonalInfoDataState().onDateTextFieldVisibilityChange,
+                resourceIcon1 = R.drawable.calendar_month_48px
+            ) {
+                DateTexField(
+                    getPersonalInfoDataState,
+                    onDateTextChange = getPersonalInfoDataState().onDateTextChange,
+                    getPersonalInfoDataState().onDateTextFieldVisibilityChange,
+                    contentDescription = "Your birthdate",
+                    R.drawable.calendar_month_48px,
+                )
+            }
 
-            NumericHeightTextFieldComposable(
-                getPersonalInfoDataStateState = getPersonalInfoDataState,
-                onNumericUnitTextChange = getPersonalInfoDataState().onHeightTextChange,
-                onNumericUnitTextFieldVisibilityChange = getPersonalInfoDataState().onHeightTextFieldVisibilityChange,
-                unit = "m",
-                contentDescription = "height",
-                resourceIcon1 = R.drawable.boy_48px,
-                validator = ValidatorsPersonalField.heightValidator
-            )
+            RowPersonalInfoComposable(
+                getFieldValue = {
+                    val numberValidated =
+                        ValidatorsPersonalField.weightValidator(getPersonalInfoDataState().weight)
+                    if(numberValidated!=""){
+                        "$numberValidated Kg"
+                    }else{
+                        ""
+                    }
+                },
+                getVisibilityState = { getPersonalInfoDataState().weightTextFieldVisibility },
+                placeHolder = "Your weight",
+                onFieldVisibilityChange = getPersonalInfoDataState().onWeightTextFieldVisibilityChange,
+                resourceIcon1 = R.drawable.monitor_weight_48px
+            ) {
+                NumericUnitTexField(
+                    getFieldValue = { getPersonalInfoDataState().weight },
+                    getVisibilityState = { getPersonalInfoDataState().weightTextFieldVisibility },
+                    onNumericUnitTextChange = getPersonalInfoDataState().onWeightTextChange,
+                    onNumericUnitTextFieldVisibilityChange = getPersonalInfoDataState().onWeightTextFieldVisibilityChange,
+                    contentDescription = "Your weight",
+                    suffix = "Kg",
+                    resourceIcon1 = R.drawable.monitor_weight_48px
+                )
+            }
+
+            RowPersonalInfoComposable(
+                getFieldValue = {
+                    val numberValidated =
+                        ValidatorsPersonalField.heightValidator(getPersonalInfoDataState().height)
+                    if(numberValidated!=""){
+                        "$numberValidated m"
+                    }else{
+                        ""
+                    }
+                },
+                getVisibilityState = { getPersonalInfoDataState().heightTextFieldVisibility },
+                placeHolder = "Your height",
+                onFieldVisibilityChange = getPersonalInfoDataState().onHeightTextFieldVisibilityChange,
+                resourceIcon1 = R.drawable.boy_48px
+            ) {
+                NumericUnitTexField(
+                    getFieldValue = { getPersonalInfoDataState().height },
+                    getVisibilityState = { getPersonalInfoDataState().heightTextFieldVisibility },
+                    onNumericUnitTextChange = getPersonalInfoDataState().onHeightTextChange,
+                    onNumericUnitTextFieldVisibilityChange = getPersonalInfoDataState().onHeightTextFieldVisibilityChange,
+                    contentDescription = "Your height",
+                    suffix = "m",
+                    resourceIcon1 = R.drawable.boy_48px
+                )
+            }
 
             Button(
                 modifier = Modifier
@@ -214,7 +281,7 @@ fun PersonalInfoContent(
                                 storeImageProfile(context, uri)
                             }
 
-                            val personalInfo = PersonalInfo().apply{
+                            val personalInfo = PersonalInfo().apply {
                                 name = getPersonalInfoDataState().name
                                 birthdate = getPersonalInfoDataState().date
                                 weight = getPersonalInfoDataState().weight.toDouble()
@@ -248,7 +315,7 @@ private fun storeImageProfile(
             bitmap = BitmapFactory.decodeStream(it)
         }
 
-        bitmap = ThumbnailUtils.extractThumbnail(bitmap, 256,256)
+        bitmap = ThumbnailUtils.extractThumbnail(bitmap, 256, 256)
 
         val stream = ByteArrayOutputStream()
         bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, stream)
@@ -256,25 +323,6 @@ private fun storeImageProfile(
         context.openFileOutput("myProfile.jpg", Context.MODE_PRIVATE).use {
             it.write(byteArray)
         }
-
-/*        val contentValues = ContentValues()
-        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "myImage.jpg")
-        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
-        //contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.getDataDirectory().absolutePath)
-        imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-
-        fos = imageUri?.let {
-            resolver.openOutputStream(it,"wt")
-        }
-
-
-        bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, fos)
-        Objects.requireNonNull(fos)
-
-        Log.d("AVATAR", "PersonalInfoContent: $imageUri")*/
-
-/*        */
-
 
     } catch (e: IOException) {
         Log.d("AVATAR", "PersonalInfoContent: failed  $e")

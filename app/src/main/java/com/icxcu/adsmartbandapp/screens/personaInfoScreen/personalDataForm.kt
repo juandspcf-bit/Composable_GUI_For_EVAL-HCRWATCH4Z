@@ -25,8 +25,6 @@ fun PersonalInfoDataScreenRoot(
         }
     }
 
-    Log.d("PERSONAL_INFO_SCREEN", "PersonalInfoDataScreenRoot: ")
-
     val getPersonalInfoDataState = remember(personalInfoViewModel) {{personalInfoViewModel.personalInfoDataState}}
     val getInvalidAlertDialogState = remember(personalInfoViewModel) {{personalInfoViewModel.invalidAlertDialogState}}
     val validatePersonalInfo = remember(personalInfoViewModel, getPersonalInfoDataState) {{personalInfoViewModel.validatePersonalInfo( getPersonalInfoDataState )}}
@@ -48,7 +46,6 @@ fun PersonalInfoDataScreenRoot(
         getPersonalInfoDataState().date = filter[0].birthdate
         getPersonalInfoDataState().weight = filter[0].weight.toString()
         getPersonalInfoDataState().height = filter[0].height.toString()
-        Log.d("AVATAR", "dataFromDB: ${getPersonalInfoDataState().name}")
     }
 
     val insertPersonalData= remember(personalInfoViewModel){
@@ -86,8 +83,6 @@ fun PersonalInfoDataScreenRoot(
 class PersonalInfoDataState {
     var id by mutableStateOf(0)
 
-    var uri by mutableStateOf("")
-
     var name by mutableStateOf("")
     var nameTextFieldVisibility by mutableStateOf(false)
 
@@ -102,8 +97,11 @@ class PersonalInfoDataState {
     var height by mutableStateOf("")
     var heightTextFieldVisibility by mutableStateOf(false)
 
-    val onTextChange = { valueFromTextField: String ->
+    val onNameTextChange = { valueFromTextField: String ->
+        Log.d("ChangedText", "$valueFromTextField")
         name = valueFromTextField
+        Log.d("ChangedText", "$name")
+        Unit
     }
 
     val onNameTextFieldVisibilityChange = { visibility: Boolean ->
