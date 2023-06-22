@@ -80,22 +80,19 @@ class PersonalInfoDataState {
     var heightTextFieldVisibility by mutableStateOf(false)
 
     val onNameTextChange = { valueFromTextField: String ->
-        Log.d("ChangedText", "$valueFromTextField")
         name = valueFromTextField
-        Log.d("ChangedText", "$name")
-        Unit
     }
 
-    val onNameTextFieldVisibilityChange = { visibility: Boolean ->
-        nameTextFieldVisibility = visibility
+    val onNameTextFieldVisibilityChange = {
+        nameTextFieldVisibility = !nameTextFieldVisibility
     }
 
     val onDateTextChange = { valueFromDateTextField: String ->
         date = valueFromDateTextField
     }
 
-    val onDateTextFieldVisibilityChange = { visibility: Boolean ->
-        dateTextFieldVisibility = visibility
+    val onDateTextFieldVisibilityChange = {
+        dateTextFieldVisibility = !dateTextFieldVisibility
     }
 
     val onWeightTextChange = { valueFromWeightTextField: String ->
@@ -104,8 +101,8 @@ class PersonalInfoDataState {
 
 
 
-    val onWeightTextFieldVisibilityChange = { visibility: Boolean ->
-        weightTextFieldVisibility = visibility
+    val onWeightTextFieldVisibilityChange = {
+        weightTextFieldVisibility = !weightTextFieldVisibility
     }
 
 
@@ -115,8 +112,9 @@ class PersonalInfoDataState {
     }
 
 
-    val onHeightTextFieldVisibilityChange = { visibility: Boolean ->
-        heightTextFieldVisibility = visibility
+    val onHeightTextFieldVisibilityChange = {
+        heightTextFieldVisibility = !heightTextFieldVisibility
+
     }
 
 }

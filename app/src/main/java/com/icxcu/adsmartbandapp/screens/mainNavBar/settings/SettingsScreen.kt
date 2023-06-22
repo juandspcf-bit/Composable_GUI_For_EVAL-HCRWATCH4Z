@@ -2,6 +2,7 @@ package com.icxcu.adsmartbandapp.screens.mainNavBar.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,7 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,7 +31,7 @@ import androidx.navigation.compose.rememberNavController
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.screens.BluetoothScannerNestedRoute
 import com.icxcu.adsmartbandapp.screens.PersonalInfoNestedRoute
-import com.icxcu.adsmartbandapp.screens.Routes
+import com.icxcu.adsmartbandapp.screens.personaInfoScreen.RowOptionComposable
 
 @Composable
 fun SettingsScreen(
@@ -38,6 +41,8 @@ fun SettingsScreen(
 
     ) {
 
+    val scrollState = rememberScrollState()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -45,33 +50,43 @@ fun SettingsScreen(
         contentAlignment = Alignment.Center
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .verticalScroll(scrollState)
+                .padding(start = 15.dp, end = 15.dp),
+            verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            RowSettings(
-                navigation = {
+            RowOptionComposable(
+                getFieldValue = { "Personal information" },
+                getVisibilityState = { false },
+                placeHolder = "",
+                onClick = {
                     navMainController.navigate(PersonalInfoNestedRoute.PersonalInfoMainRoute().route)
                 },
-                modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
-                text = "Personal information",
-                iconResource = R.drawable.person_48px
-            )
+                resourceIcon1 = R.drawable.person_48px,
+                disableRow = false,
+            ) {
 
-            RowSettings(
-                navigation = {
+            }
+
+            RowOptionComposable(
+                getFieldValue = { "Connect to other device" },
+                getVisibilityState = { false },
+                placeHolder = "",
+                onClick = {
+                    clearState()
                     navMainController.navigate(BluetoothScannerNestedRoute.BluetoothScannerScreen().route) {
                         popUpTo(0) {
                             inclusive = true
                         }
                     }
                 },
-                modifier = Modifier.padding(top = 10.dp, bottom = 10.dp),
-                text = "Connect to other device",
-                iconResource = R.drawable.watch_48px,
+                resourceIcon1 = R.drawable.watch_48px,
                 disableRow = getVisibilityProgressbarForFetchingData(),
-                optionalOperations = clearState,
-            )
+            ) {
+
+            }
 
         }
     }
@@ -130,7 +145,8 @@ fun RowSettings(
                 Modifier.clickable {
                     optionalOperations()
                     navigation()
-            }} else {
+                }
+            } else {
                 Modifier
             }.size(50.dp)
 

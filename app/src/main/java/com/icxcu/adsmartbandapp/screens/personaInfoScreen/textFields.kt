@@ -28,7 +28,7 @@ import com.icxcu.adsmartbandapp.R
 fun NameTexField(
     getPersonalInfoDataStateState: () -> PersonalInfoDataState,
     onTextChange: (String) -> Unit,
-    onNameTextFieldVisibilityChange: (Boolean) -> Unit,
+    onNameTextFieldVisibilityChange: () -> Unit,
     resourceIcon1:Int = R.drawable.ic_launcher_foreground,
 ) {
 
@@ -58,7 +58,7 @@ fun NameTexField(
         },
         keyboardActions = KeyboardActions(
             onDone = {
-                onNameTextFieldVisibilityChange(!getPersonalInfoDataStateState().nameTextFieldVisibility)
+                onNameTextFieldVisibilityChange()
             }
         ),
         colors = TextFieldDefaults.colors(
@@ -79,9 +79,8 @@ fun NameTexField(
 @Composable
 fun NumericUnitTexField(
     getFieldValue: () -> String,
-    getVisibilityState: () -> Boolean,
     onNumericUnitTextChange: (String) -> Unit,
-    onNumericUnitTextFieldVisibilityChange: (Boolean) -> Unit,
+    onNumericUnitTextFieldVisibilityChange: () -> Unit,
     contentDescription: String = "",
     suffix: String,
     resourceIcon1: Int = R.drawable.ic_launcher_foreground,
@@ -114,7 +113,7 @@ fun NumericUnitTexField(
         suffix = { Text(text = suffix) },
         keyboardActions = KeyboardActions(
             onDone = {
-                onNumericUnitTextFieldVisibilityChange(!getVisibilityState())
+                onNumericUnitTextFieldVisibilityChange()
             }
         ),
         colors = TextFieldDefaults.colors(
@@ -138,7 +137,7 @@ fun NumericUnitTexField(
 fun DateTexField(
     getPersonalInfoDataStateState: () -> PersonalInfoDataState,
     onDateTextChange: (String) -> Unit,
-    onDateTextFieldVisibilityChange: (Boolean) -> Unit,
+    onDateTextFieldVisibilityChange: () -> Unit,
     contentDescription: String = "",
     resourceIcon1:Int = R.drawable.ic_launcher_foreground,
 ) {
@@ -167,7 +166,7 @@ fun DateTexField(
         },
         keyboardActions = KeyboardActions(
             onDone = {
-                onDateTextFieldVisibilityChange(!getPersonalInfoDataStateState().dateTextFieldVisibility)
+                onDateTextFieldVisibilityChange()
             }
         ),
         visualTransformation = DateTransformation(),

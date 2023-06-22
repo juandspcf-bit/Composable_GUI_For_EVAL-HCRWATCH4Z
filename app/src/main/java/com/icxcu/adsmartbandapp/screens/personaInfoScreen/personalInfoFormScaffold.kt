@@ -75,9 +75,6 @@ fun PersonalInfoFormScaffold(
                 contentAlignment = Alignment.Center
             ){
                 PersonalInfoContent(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color(0xff1d2a35)),
                     getPersonalInfoDataStateState,
                     validatePersonalInfo,
                     getInvalidAlertDialogState,

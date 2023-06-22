@@ -57,7 +57,6 @@ import java.time.format.DateTimeParseException
 
 @Composable
 fun PersonalInfoContent(
-    modifier: Modifier = Modifier,
     getPersonalInfoDataState: () -> PersonalInfoDataState,
     validatePersonalInfo: () -> List<String> = { listOf() },
     getInvalidAlertDialogState: () -> InvalidAlertDialogState,
@@ -96,7 +95,9 @@ fun PersonalInfoContent(
 
 
     Box(
-        modifier = modifier,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xff1d2a35)),
         contentAlignment = Alignment.Center
     ) {
 
@@ -139,11 +140,11 @@ fun PersonalInfoContent(
                 )
             }
 
-            RowPersonalInfoComposable(
+            RowOptionComposable(
                 getFieldValue = { getPersonalInfoDataState().name },
                 getVisibilityState = { getPersonalInfoDataState().nameTextFieldVisibility },
                 placeHolder = "Your Name",
-                onFieldVisibilityChange = getPersonalInfoDataState().onNameTextFieldVisibilityChange,
+                onClick = getPersonalInfoDataState().onNameTextFieldVisibilityChange,
                 resourceIcon1 = R.drawable.person_48px
             ) {
                 NameTexField(
@@ -154,7 +155,7 @@ fun PersonalInfoContent(
                 )
             }
 
-            RowPersonalInfoComposable(
+            RowOptionComposable(
                 getFieldValue = { if (getPersonalInfoDataState().date == "") {
                     ""
                 } else {
@@ -178,7 +179,7 @@ fun PersonalInfoContent(
                 } },
                 getVisibilityState = { getPersonalInfoDataState().dateTextFieldVisibility },
                 placeHolder = "Your birthdate",
-                onFieldVisibilityChange = getPersonalInfoDataState().onDateTextFieldVisibilityChange,
+                onClick = getPersonalInfoDataState().onDateTextFieldVisibilityChange,
                 resourceIcon1 = R.drawable.calendar_month_48px
             ) {
                 DateTexField(
@@ -190,7 +191,7 @@ fun PersonalInfoContent(
                 )
             }
 
-            RowPersonalInfoComposable(
+            RowOptionComposable(
                 getFieldValue = {
                     val numberValidated =
                         ValidatorsPersonalField.weightValidator(getPersonalInfoDataState().weight)
@@ -202,12 +203,11 @@ fun PersonalInfoContent(
                 },
                 getVisibilityState = { getPersonalInfoDataState().weightTextFieldVisibility },
                 placeHolder = "Your weight",
-                onFieldVisibilityChange = getPersonalInfoDataState().onWeightTextFieldVisibilityChange,
+                onClick = getPersonalInfoDataState().onWeightTextFieldVisibilityChange,
                 resourceIcon1 = R.drawable.monitor_weight_48px
             ) {
                 NumericUnitTexField(
                     getFieldValue = { getPersonalInfoDataState().weight },
-                    getVisibilityState = { getPersonalInfoDataState().weightTextFieldVisibility },
                     onNumericUnitTextChange = getPersonalInfoDataState().onWeightTextChange,
                     onNumericUnitTextFieldVisibilityChange = getPersonalInfoDataState().onWeightTextFieldVisibilityChange,
                     contentDescription = "Your weight",
@@ -216,7 +216,7 @@ fun PersonalInfoContent(
                 )
             }
 
-            RowPersonalInfoComposable(
+            RowOptionComposable(
                 getFieldValue = {
                     val numberValidated =
                         ValidatorsPersonalField.heightValidator(getPersonalInfoDataState().height)
@@ -228,12 +228,11 @@ fun PersonalInfoContent(
                 },
                 getVisibilityState = { getPersonalInfoDataState().heightTextFieldVisibility },
                 placeHolder = "Your height",
-                onFieldVisibilityChange = getPersonalInfoDataState().onHeightTextFieldVisibilityChange,
+                onClick = getPersonalInfoDataState().onHeightTextFieldVisibilityChange,
                 resourceIcon1 = R.drawable.boy_48px
             ) {
                 NumericUnitTexField(
                     getFieldValue = { getPersonalInfoDataState().height },
-                    getVisibilityState = { getPersonalInfoDataState().heightTextFieldVisibility },
                     onNumericUnitTextChange = getPersonalInfoDataState().onHeightTextChange,
                     onNumericUnitTextFieldVisibilityChange = getPersonalInfoDataState().onHeightTextFieldVisibilityChange,
                     contentDescription = "Your height",

@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -30,34 +31,50 @@ import androidx.compose.ui.unit.dp
 import com.icxcu.adsmartbandapp.R
 
 @Composable
-fun RowPersonalInfoComposable(
+fun RowOptionComposable(
     getFieldValue: () -> String,
     getVisibilityState: () -> Boolean,
     placeHolder: String,
-    onFieldVisibilityChange: (Boolean) -> Unit,
+    onClick: () -> Unit,
     resourceIcon1: Int = R.drawable.ic_launcher_foreground,
+    disableRow: Boolean = false,
     textField: @Composable () -> Unit,
 ) {
     Row(
+        modifier = Modifier.alpha(
+            if (disableRow.not()) {
+                1f
+            } else {
+                0.5f
+            }
+        ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
 
+        val boxModifier = Modifier
+            .fillMaxWidth(0.85f)
+            .clip(shape = RoundedCornerShape(size = 12.dp))
+            .background(color = Color.DarkGray)
+            .border(
+                BorderStroke(width = 1.dp, color = Color.Green),
+                shape = RoundedCornerShape(size = 12.dp)
+            )
+
         Box(
-            modifier = Modifier
-                .clickable {
-                    onFieldVisibilityChange(!getVisibilityState())
-                }
-                .fillMaxWidth(0.85f)
+            modifier =
+            if (disableRow.not()) {
+                boxModifier
+                    .clickable {
+                        onClick()
+                    }
 
-                .clip(shape = RoundedCornerShape(size = 12.dp))
-                .background(color = Color.DarkGray)
-                .border(
-                    BorderStroke(width = 1.dp, color = Color.Green),
-                    shape = RoundedCornerShape(size = 12.dp)
-                )
+            } else {
+                boxModifier
+            },
 
-        ) {
+
+            ) {
 
             val displayName = if (getFieldValue() == "") {
                 placeHolder
@@ -74,16 +91,24 @@ fun RowPersonalInfoComposable(
             )
         }
 
+        val iconModifier = Modifier
+            .fillMaxWidth(1f)
+            .size(50.dp)
+
         Icon(
             painter = painterResource(resourceIcon1),
             contentDescription = "Date Range",
             tint = Color.White,
-            modifier = Modifier
-                .fillMaxWidth(1f)
-                .size(50.dp)
-                .clickable {
-                    onFieldVisibilityChange(!getVisibilityState())
-                }
+            modifier =
+            if (disableRow.not()) {
+                iconModifier
+                    .clickable {
+                        onClick()
+                    }
+            } else {
+                iconModifier
+            }
+
         )
     }
 
@@ -105,7 +130,7 @@ fun RowPersonalInfoComposable(
 @Preview
 @Composable
 fun RowPersonalInfoComposablePreview() {
-    RowPersonalInfoComposable(
+    RowOptionComposable(
         { "data field" },
         { false },
         "data field",

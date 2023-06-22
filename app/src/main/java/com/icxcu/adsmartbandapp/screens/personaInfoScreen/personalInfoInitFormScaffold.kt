@@ -62,7 +62,6 @@ fun PersonalInfoInitFormScaffold(
 
             ){
                 PersonalInfoContent(
-                    modifier = Modifier,
                     getPersonalInfoDataStateState,
                     validatePersonalInfo,
                     getInvalidAlertDialogState,
