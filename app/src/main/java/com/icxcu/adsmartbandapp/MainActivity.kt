@@ -46,6 +46,7 @@ import com.icxcu.adsmartbandapp.viewModels.CircularProgressViewModel
 import com.icxcu.adsmartbandapp.viewModels.CircularProgressViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModel
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModelFactory
+import com.icxcu.adsmartbandapp.viewModels.SharedViewModel
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import com.icxcu.adsmartbandapp.viewModels.permissionsRequired
 
@@ -56,6 +57,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var permissionsViewModel: PermissionsViewModel
     private lateinit var circularProgressViewModel: CircularProgressViewModel
     private val splashViewModel: SplashViewModel by viewModels()
+    private val sharedViewModel: SharedViewModel by viewModels()
     private lateinit var startDestination: String
     private lateinit var preferenceDataStoreHelper: PreferenceDataStoreHelper
 

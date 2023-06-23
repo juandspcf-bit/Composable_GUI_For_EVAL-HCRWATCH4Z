@@ -48,7 +48,7 @@ fun BluetoothScannerScreen(
     preferenceDataStoreHelper: PreferenceDataStoreHelper,
     navigateMainNavBar: (String, String) -> Unit,
 ) {
-    Log.d("DATAX", "BluetoothScanScreen: ENTER")
+
     var textState by remember {
         mutableStateOf("Swipe  down to scan devices")
     }
