@@ -50,8 +50,6 @@ fun NavGraphBuilder.mainNavigationGraph(
             val mainNavigationViewModel =
                 it.mainNavigationViewModel<MainNavigationViewModel>(navController = navMainController)
 
-            Log.d("DATAX", "Routes.DataHomeFromBluetoothScannerScreen.route ENTERED")
-
             val bluetoothName = if(bluetoothScannerViewModel.selectedBluetoothDeviceName!=""){
                 bluetoothScannerViewModel.selectedBluetoothDeviceName
             }else{

@@ -9,18 +9,18 @@ import com.icxcu.adsmartbandapp.R
 object NavBarItems {
     val BarItems = listOf(
         BarItem(
-            title = "Home",
-            image = R.drawable.baseline_directions_run_24,
+            title = "dashboard",
+            image = R.drawable.directions_run_24px,
             route = "fields"
         ),
         BarItem(
-            title = "Check your Health",
-            image = R.drawable.baseline_vibration_24,
+            title = "vital signals",
+            image = R.drawable.vital_signs_24px,
             route = "CheckHealth"
         ),
         BarItem(
-            title = "Settings",
-            image = R.drawable.baseline_settings_24,
+            title = "settings",
+            image = R.drawable.settings_24px,
             route = "settings"
         )
     )

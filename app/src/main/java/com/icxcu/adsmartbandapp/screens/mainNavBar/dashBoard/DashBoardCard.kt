@@ -49,7 +49,9 @@ fun DashBoardCard(
         shape = RoundedCornerShape(size = 26.dp),
         border = BorderStroke(width = 1.dp, color = Color.Green),
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
-        colors = CardDefaults.cardColors(),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.DarkGray
+        ),
 
         ) {
 
@@ -102,7 +104,7 @@ fun DashBoardCard(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .background(Color.DarkGray)
             ) {
 
                 Box(

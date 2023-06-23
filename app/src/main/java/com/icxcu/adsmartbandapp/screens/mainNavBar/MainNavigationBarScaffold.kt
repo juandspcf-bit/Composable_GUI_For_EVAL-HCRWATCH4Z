@@ -9,8 +9,12 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,6 +25,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
@@ -39,6 +44,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -106,7 +112,8 @@ fun MainNavigationBarScaffold(
                                 maxLines = 2,
                                 overflow = TextOverflow.Ellipsis,
                                 color = Color.White,
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Center,
+                                fontSize = 20.sp
                             )
                         }
 
@@ -116,7 +123,8 @@ fun MainNavigationBarScaffold(
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                                 color = Color.White,
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Center,
+                                fontSize = 20.sp
                             )
                         }
 
@@ -126,7 +134,8 @@ fun MainNavigationBarScaffold(
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                                 color = Color.White,
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Center,
+                                fontSize = 20.sp
                             )
                         }
                     }
@@ -134,6 +143,7 @@ fun MainNavigationBarScaffold(
 
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color(0xff0d1721)
                 ),
                 modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                 scrollBehavior = scrollBehavior,
@@ -148,7 +158,7 @@ fun MainNavigationBarScaffold(
                                 painter = painterResource(R.drawable.calendar_month_48px),
                                 contentDescription = "Date Range",
                                 tint = Color.White,
-                                modifier = Modifier.padding(start = 2.dp, end = 2.dp)
+                                modifier = Modifier.scale(0.7f)
                             )
                         }
 
@@ -159,10 +169,9 @@ fun MainNavigationBarScaffold(
                                 painter = painterResource(R.drawable.query_stats_48px),
                                 contentDescription = "Health Statistics",
                                 tint = Color.White,
-                                modifier = Modifier.padding(start = 2.dp, end = 2.dp)
+                                modifier = Modifier.scale(0.7f)
                             )
                         }
-
                     }
 
 
@@ -347,20 +356,17 @@ fun BottomNavigationBar(
 ) {
 
     NavigationBar(
-        modifier = Modifier.padding(20.dp).clip(RoundedCornerShape(30.dp)).border(1.dp, Color.Green, RoundedCornerShape(30.dp)),
+        modifier = Modifier
+            .background(Color(0xff1d2a35))
+            .padding(top = 20.dp, bottom = 20.dp, start = 10.dp, end = 10.dp)
+            .clip(RoundedCornerShape(30.dp))
+            .border(1.dp, Color.Green, RoundedCornerShape(30.dp)),
         containerColor = Color(0xff0d1721),
-        contentColor = Color(0xFFCDDC39)
+        contentColor = Color(0xFFCDDC39),
+        //windowInsets= NavigationBarDefaults.windowInsets.add(WindowInsets(top = 10.dp, bottom = 0.dp)),
     ) {
-
-
         val backStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = backStackEntry?.destination?.route
-
-        Log.d(
-            "FetchingDataFromSWStatusX",
-            "BottomNavigationBar: ${currentRoute}, ${getFetchingDataFromSWStatus()}, ${getStateEnabledDatePickerMainScaffold()}"
-        )
-
         if (currentRoute == "CheckHealth" || currentRoute == "settings") {
             setStateEnabledDatePickerMainScaffold(false)
         } else if (currentRoute == "fields"
@@ -391,7 +397,8 @@ fun BottomNavigationBar(
         NavBarItems.BarItems.forEach { navItem ->
 
             NavigationBarItem(
-
+                modifier = Modifier
+                    .align(Alignment.CenterVertically),
                 selected = currentRoute == navItem.route,
                 onClick = {
                     navController.navigate(navItem.route) {
@@ -405,7 +412,7 @@ fun BottomNavigationBar(
 
                 icon = {
                     Icon(
-                        modifier = Modifier.scale(1.2f),
+                        modifier = Modifier.scale(1f),
                         painter = painterResource(navItem.image),
                         contentDescription = navItem.title,
                         tint = Color.White
@@ -424,27 +431,31 @@ fun BottomNavigationBar(
 @Preview(showBackground = true)
 @Composable
 fun DashBoardPreview() {
-    /*    DashBoardScaffold(
-            getVisibilityProgressbarForFetchingData = { true },
-            requestRealTimeHeartRate = {},
-            getRealTimeHeartRate = { 0 },
-            stopRequestRealTimeHeartRate = {},
-            getRealTimeBloodPressure = {
-                BloodPressureData(0, 0)
-            },
-            requestRealTimeBloodPressure = {},
-            stopRequestRealTimeBloodPressure = {},
-            getCircularProgressBloodPressure = { 5 },
+    MainNavigationBarScaffold(
 
-            getRealTimeTemperature = {
-                TemperatureData(0.0,0.0)
-            },
-            requestRealTimeTemperature = {},
-            stopRequestRealTimeTemperature = {},
-            getCircularProgressTemperature = { 5 }
-        ) {
-
-        }*/
+    dayValues = { MockData.valuesToday },
+    setStateEnabledDatePickerMainScaffold ={ },
+    getStateEnabledDatePickerMainScaffold={true},
+    getVisibilityProgressbarForFetchingData = { false },
+    stateShowMainTitleScaffold={ StatusMainTitleScaffold.Fields },
+    setStateShowDialogDatePickerValue = { },
+    getFetchingDataFromSWStatus = { SWReadingStatus.READ },
+    getMyHeartRateAlertDialogDataHandler = { MyHeartRateAlertDialogDataHandler() },
+    getMyHeartRate = { 0 },
+    getMyBloodPressureDialogDataHandler= { MyBloodPressureAlertDialogDataHandler()},
+    getRealTimeBloodPressure = { BloodPressureData(0, 0) },
+    getCircularProgressBloodPressure={ 0 },
+    getMySpO2AlertDialogDataHandler = { MySpO2AlertDialogDataHandler() },
+    getMySpO2={ 0.0 },
+    getMyTemperatureAlertDialogDataHandler= { MyTemperatureAlertDialogDataHandler() },
+    getRealTimeTemperature={TemperatureData(0.0,0.0)},
+    getCircularProgressTemperature={0},
+    clearState ={},
+    stateShowDialogDatePickerSetter={},
+    stateShowDialogDatePickerValue = { false },
+    stateMiliSecondsDateDialogDatePickerSetter = { },
+    navMainController = rememberNavController(),
+    )
 
 }
 
