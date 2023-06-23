@@ -1,8 +1,9 @@
 package com.icxcu.adsmartbandapp.screens.navigationGraphs
 
-import android.util.Log
+import android.app.Application
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -11,8 +12,9 @@ import com.icxcu.adsmartbandapp.screens.MainNavigationNestedRoute
 import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.mainNavBar.MainNavigationBarRoot
 import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusReadingDbForDashboard
-import com.icxcu.adsmartbandapp.screens.viewModelProviders.mainNavigationViewModel
+import com.icxcu.adsmartbandapp.screens.viewModelProviders.scopedViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
+import com.icxcu.adsmartbandapp.viewModels.MainNavigationModelFactory
 import com.icxcu.adsmartbandapp.viewModels.MainNavigationViewModel
 import com.icxcu.adsmartbandapp.viewModels.ScanningBluetoothAdapterStatus
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
@@ -47,8 +49,16 @@ fun NavGraphBuilder.mainNavigationGraph(
                 }
             }
         ) {
+
             val mainNavigationViewModel =
-                it.mainNavigationViewModel<MainNavigationViewModel>(navController = navMainController)
+                it.scopedViewModel<MainNavigationViewModel, MainNavigationModelFactory>(
+                    navMainController,
+                    "MainNavViewModel",
+                    MainNavigationModelFactory(
+                        LocalContext.current.applicationContext
+                                as Application
+                    )
+                )
 
             val bluetoothName = if(bluetoothScannerViewModel.selectedBluetoothDeviceName!=""){
                 bluetoothScannerViewModel.selectedBluetoothDeviceName

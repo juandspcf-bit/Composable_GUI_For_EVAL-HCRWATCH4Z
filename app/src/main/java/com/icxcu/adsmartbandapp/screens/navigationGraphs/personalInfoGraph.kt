@@ -1,7 +1,9 @@
 package com.icxcu.adsmartbandapp.screens.navigationGraphs
 
+import android.app.Application
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -10,8 +12,9 @@ import com.icxcu.adsmartbandapp.screens.PersonalInfoNestedRoute
 import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.personaInfoScreen.PersonalInfoDataScreenRoot
-import com.icxcu.adsmartbandapp.screens.viewModelProviders.personalInfoViewModel
+import com.icxcu.adsmartbandapp.screens.viewModelProviders.scopedViewModel
 import com.icxcu.adsmartbandapp.viewModels.PersonalInfoViewModel
+import com.icxcu.adsmartbandapp.viewModels.PersonalInformationViewModelFactory
 
 fun NavGraphBuilder.personalInfoGraph(
     navMainController: NavHostController
@@ -37,7 +40,15 @@ fun NavGraphBuilder.personalInfoGraph(
             }
         ) {
 
-            val personalInfoViewModel = it.personalInfoViewModel<PersonalInfoViewModel>(navController = navMainController)
+            val personalInfoViewModel =
+                it.scopedViewModel<PersonalInfoViewModel, PersonalInformationViewModelFactory>(
+                    navMainController,
+                    "PersonalInfoViewModel",
+                    PersonalInformationViewModelFactory(
+                        LocalContext.current.applicationContext
+                                as Application
+                    )
+                )
 
             when(personalInfoViewModel.personalInfoDataScreenNavStatus){
                 PersonalInfoDataScreenNavStatus.Leaving->{

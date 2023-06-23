@@ -1,7 +1,9 @@
 package com.icxcu.adsmartbandapp.screens.navigationGraphs
 
+import android.app.Application
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -10,9 +12,10 @@ import com.icxcu.adsmartbandapp.screens.HeartRateNestedRoute
 import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenRoot
-import com.icxcu.adsmartbandapp.screens.viewModelProviders.heartRateViewModel
+import com.icxcu.adsmartbandapp.screens.viewModelProviders.scopedViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.HeartRateViewModel
+import com.icxcu.adsmartbandapp.viewModels.HeartRateViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -50,7 +53,15 @@ fun NavGraphBuilder.heartRateGraph(
                 splashViewModel.lastAccessedDevice[3]
             }
 
-            val heartRateViewModel = it.heartRateViewModel<HeartRateViewModel>(navController = navMainController)
+            val heartRateViewModel =
+                it.scopedViewModel<HeartRateViewModel, HeartRateViewModelFactory>(
+                    navMainController,
+                    "HeartRateViewModel",
+                    HeartRateViewModelFactory(
+                        LocalContext.current.applicationContext
+                                as Application
+                    )
+                )
 
             val myDateObj = LocalDateTime.now()
             val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")

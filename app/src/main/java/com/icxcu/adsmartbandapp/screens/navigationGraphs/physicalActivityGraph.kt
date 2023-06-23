@@ -1,7 +1,9 @@
 package com.icxcu.adsmartbandapp.screens.navigationGraphs
 
+import android.app.Application
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -10,9 +12,10 @@ import com.icxcu.adsmartbandapp.screens.PhysicalActivityNestedRoute
 import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.plotsFields.physicalActivity.PhysicalActivityScreenRoot
-import com.icxcu.adsmartbandapp.screens.viewModelProviders.physicalActivityViewModel
+import com.icxcu.adsmartbandapp.screens.viewModelProviders.scopedViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.PhysicalActivityViewModel
+import com.icxcu.adsmartbandapp.viewModels.PhysicalActivityViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -50,7 +53,16 @@ fun NavGraphBuilder.physicalActivityGraph(
                 splashViewModel.lastAccessedDevice[3]
             }
 
-            val physicalActivityViewModel = it.physicalActivityViewModel<PhysicalActivityViewModel>(navController = navMainController)
+            val physicalActivityViewModel =
+                it.scopedViewModel<PhysicalActivityViewModel, PhysicalActivityViewModelFactory>(
+                    navMainController,
+                    "PhysicalActivityViewModel",
+                    PhysicalActivityViewModelFactory(
+                        LocalContext.current.applicationContext
+                                as Application
+                    )
+                )
+
 
             val myDateObj = LocalDateTime.now()
             val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
