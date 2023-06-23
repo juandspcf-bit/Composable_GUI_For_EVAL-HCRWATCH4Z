@@ -11,29 +11,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class SplashViewModel: ViewModel() {
-
-
-    val myFormatObj = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-    val todayLocalDateTime = LocalDateTime.now()
-    val todayFormattedDate = todayLocalDateTime.format(myFormatObj)
-    val yesterdayLocalDateTime = todayLocalDateTime.minusDays(1)
-    val yesterdayFormattedDate = yesterdayLocalDateTime.format(myFormatObj)
-    val pastYesterdayLocalDateTime = todayLocalDateTime.minusDays(2)
-    val pastYesterdayFormattedDate = pastYesterdayLocalDateTime.format(myFormatObj)
-
-
-
     //var lastAccessedDevice by mutableStateOf(listOf<String>())
     var lastAccessedDevice = listOf<String>()
-
-    init {
-
-    }
-
 
     private val _stateFlow = MutableStateFlow(false)
     val stateFlow = _stateFlow.asStateFlow()
