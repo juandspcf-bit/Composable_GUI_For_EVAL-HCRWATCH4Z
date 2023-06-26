@@ -4,13 +4,11 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
-import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.MainNavigationViewModel
 
 @Composable
 fun MainNavigationBarRoot(
     mainNavigationViewModel: MainNavigationViewModel,
-    bluetoothScannerViewModel: BluetoothScannerViewModel,
     bluetoothAddress: String,
     bluetoothName: String,
     navMainController: NavHostController
@@ -64,15 +62,10 @@ fun MainNavigationBarRoot(
         }
     }
 
-/*    PersonalInfoDBHandler(
-        dataViewModel
-    )*/
-
     MainNavigationBarWithSwValues(
         bluetoothName = bluetoothName,
         bluetoothAddress = bluetoothAddress,
         mainNavigationViewModel = mainNavigationViewModel,
-        bluetoothScannerViewModel = bluetoothScannerViewModel,
         getFetchingDataFromSWStatus = getFetchingDataFromSWStatus,
         navMainController = navMainController
     )

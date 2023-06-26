@@ -10,11 +10,13 @@ import com.icxcu.adsmartbandapp.screens.MainNavigationNestedRoute
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.MainNavigationViewModel
 import com.icxcu.adsmartbandapp.viewModels.ScanningBluetoothAdapterStatus
+import com.icxcu.adsmartbandapp.viewModels.SharedViewModel
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 
 @Composable
 fun BluetoothScannerRoot(
     bluetoothScannerViewModel: BluetoothScannerViewModel,
+    sharedViewModel: SharedViewModel,
     activity: Activity,
     splashViewModel: SplashViewModel,
     preferenceDataStoreHelper: PreferenceDataStoreHelper,
@@ -67,6 +69,7 @@ fun BluetoothScannerRoot(
         setLiveBasicBluetoothAdapterList,
         getScanningBluetoothAdaptersStatus,
         bluetoothScannerViewModel,
+        sharedViewModel,
         activity,
         splashViewModel,
         preferenceDataStoreHelper,

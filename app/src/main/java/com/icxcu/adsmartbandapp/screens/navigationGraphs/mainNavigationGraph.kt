@@ -13,15 +13,14 @@ import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.mainNavBar.MainNavigationBarRoot
 import com.icxcu.adsmartbandapp.screens.mainNavBar.StatusReadingDbForDashboard
 import com.icxcu.adsmartbandapp.screens.viewModelProviders.scopedViewModel
-import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.MainNavigationModelFactory
 import com.icxcu.adsmartbandapp.viewModels.MainNavigationViewModel
-import com.icxcu.adsmartbandapp.viewModels.ScanningBluetoothAdapterStatus
+import com.icxcu.adsmartbandapp.viewModels.SharedViewModel
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 
 fun NavGraphBuilder.mainNavigationGraph(
-    bluetoothScannerViewModel: BluetoothScannerViewModel,
     splashViewModel: SplashViewModel,
+    sharedViewModel: SharedViewModel,
     navMainController:NavHostController
 ) {
 
@@ -60,20 +59,16 @@ fun NavGraphBuilder.mainNavigationGraph(
                     )
                 )
 
-            val bluetoothName = if(bluetoothScannerViewModel.selectedBluetoothDeviceName!=""){
-                bluetoothScannerViewModel.selectedBluetoothDeviceName
+            val bluetoothName = if(sharedViewModel.selectedBluetoothDeviceName!=""){
+                sharedViewModel.selectedBluetoothDeviceName
             }else{
                 splashViewModel.lastAccessedDevice[2]
             }
-            val bluetoothAddress = if(bluetoothScannerViewModel.selectedBluetoothDeviceAddress!=""){
-                bluetoothScannerViewModel.selectedBluetoothDeviceAddress
+            val bluetoothAddress = if(sharedViewModel.selectedBluetoothDeviceAddress!=""){
+                sharedViewModel.selectedBluetoothDeviceAddress
             }else{
                 splashViewModel.lastAccessedDevice[3]
             }
-
-            bluetoothScannerViewModel.bluetoothAdaptersList = mutableListOf()
-            bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
-                ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
 
             if (mainNavigationViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.NoRead
                 && mainNavigationViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.ReadyForNewReadFromFieldsPlot
@@ -82,10 +77,8 @@ fun NavGraphBuilder.mainNavigationGraph(
                     StatusReadingDbForDashboard.ReadyForNewReadFromDashBoard
             }
 
-
             MainNavigationBarRoot(
                 mainNavigationViewModel,
-                bluetoothScannerViewModel,
                 bluetoothAddress,
                 bluetoothName,
                 navMainController

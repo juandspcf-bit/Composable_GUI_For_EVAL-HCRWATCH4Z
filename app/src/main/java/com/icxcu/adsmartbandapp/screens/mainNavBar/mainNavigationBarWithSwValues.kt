@@ -13,8 +13,6 @@ import androidx.navigation.NavHostController
 import com.icxcu.adsmartbandapp.repositories.BloodPressureData
 import com.icxcu.adsmartbandapp.repositories.TemperatureData
 import com.icxcu.adsmartbandapp.repositories.Values
-import com.icxcu.adsmartbandapp.screens.bluetoothScanner.BluetoothListScreenNavigationStatus
-import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.MainNavigationViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -26,7 +24,6 @@ fun MainNavigationBarWithSwValues(
     bluetoothName: String,
     bluetoothAddress: String,
     mainNavigationViewModel: MainNavigationViewModel,
-    bluetoothScannerViewModel: BluetoothScannerViewModel,
     getFetchingDataFromSWStatus: () -> SWReadingStatus,
     navMainController: NavHostController,
 ) {
@@ -198,10 +195,6 @@ fun MainNavigationBarWithSwValues(
         {
             setStateEnabledDatePickerMainScaffold(false)
             mainNavigationViewModel.smartWatchState.fetchingDataFromSWStatus = SWReadingStatus.CLEARED
-
-            bluetoothScannerViewModel.stateBluetoothListScreenNavigationStatus =
-                BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_BLUETOOTH_SCREEN
-
         }
     }
 

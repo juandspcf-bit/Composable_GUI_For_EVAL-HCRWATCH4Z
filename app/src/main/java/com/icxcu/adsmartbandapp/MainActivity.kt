@@ -27,10 +27,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreHelper
-import com.icxcu.adsmartbandapp.screens.BluetoothScannerNestedRoute
 import com.icxcu.adsmartbandapp.screens.Routes
-import com.icxcu.adsmartbandapp.screens.bluetoothScanner.BluetoothScannerRoot
 import com.icxcu.adsmartbandapp.screens.navigationGraphs.bloodPressureGraph
+import com.icxcu.adsmartbandapp.screens.navigationGraphs.bluetoothScannerGraph
 import com.icxcu.adsmartbandapp.screens.navigationGraphs.heartRateGraph
 import com.icxcu.adsmartbandapp.screens.navigationGraphs.mainNavigationGraph
 import com.icxcu.adsmartbandapp.screens.navigationGraphs.personalInfoGraph
@@ -53,7 +52,6 @@ import com.icxcu.adsmartbandapp.viewModels.permissionsRequired
 const val REQUEST_ENABLE_BT: Int = 500
 
 class MainActivity : ComponentActivity() {
-    private lateinit var bluetoothScannerViewModel: BluetoothScannerViewModel
     private lateinit var permissionsViewModel: PermissionsViewModel
     private lateinit var circularProgressViewModel: CircularProgressViewModel
     private val splashViewModel: SplashViewModel by viewModels()
@@ -66,11 +64,10 @@ class MainActivity : ComponentActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        preferenceDataStoreHelper = PreferenceDataStoreHelper(this)
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
-
         splashScreen.setKeepOnScreenCondition {
-            preferenceDataStoreHelper = PreferenceDataStoreHelper(this)
             splashViewModel.startDelay(preferenceDataStoreHelper)
             splashViewModel.stateFlow.value
         }
@@ -82,14 +79,7 @@ class MainActivity : ComponentActivity() {
                 val owner = LocalViewModelStoreOwner.current
 
                 owner?.let {
-                    bluetoothScannerViewModel = viewModel(
-                        it,
-                        "BluetoothScannerViewModel",
-                        BluetoothScannerViewModelFactory(
-                            LocalContext.current.applicationContext
-                                    as Application
-                        )
-                    )
+
 
                     permissionsViewModel = viewModel(
                         it,
@@ -193,54 +183,34 @@ class MainActivity : ComponentActivity() {
                     navMainController
                 )
 
-
-
-                composable(
-                    BluetoothScannerNestedRoute.BluetoothScannerScreen().route,
-                    enterTransition = {
-                        when (initialState.destination.route) {
-                            Routes.Permissions.route -> EnterTransition.None
-                            Routes.DataHome.route -> EnterTransition.None
-                            else -> null
-                        }
-                    },
-                    exitTransition = {
-                        when (targetState.destination.route) {
-                            Routes.Permissions.route -> ExitTransition.None
-                            Routes.DataHome.route -> ExitTransition.None
-                            else -> null
-                        }
-                    }) {
-
-                    BluetoothScannerRoot(
-                        bluetoothScannerViewModel,
-                        this@MainActivity,
-                        splashViewModel,
-                        preferenceDataStoreHelper,
-                        navMainController,
-                    )
-                }
+                bluetoothScannerGraph(
+                    sharedViewModel,
+                    splashViewModel,
+                    this@MainActivity,
+                    preferenceDataStoreHelper,
+                    navMainController,
+                )
 
                 mainNavigationGraph(
-                    bluetoothScannerViewModel,
                     splashViewModel,
+                    sharedViewModel,
                     navMainController
                 )
 
                 physicalActivityGraph(
-                    bluetoothScannerViewModel,
+                    sharedViewModel,
                     splashViewModel,
                     navMainController
                 )
 
                 bloodPressureGraph(
-                    bluetoothScannerViewModel,
+                    sharedViewModel,
                     splashViewModel,
                     navMainController
                 )
 
                 heartRateGraph(
-                    bluetoothScannerViewModel,
+                    sharedViewModel,
                     splashViewModel,
                     navMainController
                 )

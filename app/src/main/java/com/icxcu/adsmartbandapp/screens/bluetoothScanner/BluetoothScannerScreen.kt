@@ -33,6 +33,7 @@ import com.icxcu.adsmartbandapp.data.BasicBluetoothAdapter
 import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreHelper
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.ScanningBluetoothAdapterStatus
+import com.icxcu.adsmartbandapp.viewModels.SharedViewModel
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import kotlinx.coroutines.launch
 
@@ -43,6 +44,7 @@ fun BluetoothScannerScreen(
     setLiveBasicBluetoothAdapterList: () -> Unit,
     getScanningBluetoothAdaptersStatus: () -> ScanningBluetoothAdapterStatus,
     bluetoothScannerViewModel: BluetoothScannerViewModel,
+    sharedViewModel: SharedViewModel,
     activity: Activity,
     splashViewModel: SplashViewModel,
     preferenceDataStoreHelper: PreferenceDataStoreHelper,
@@ -126,6 +128,7 @@ fun BluetoothScannerScreen(
                 ListAlbumData(
                     basicBluetoothAdapter = getLiveBasicBluetoothAdapterList(),
                     bluetoothScannerViewModel,
+                    sharedViewModel,
                     modifier = Modifier
                         .fillMaxSize(),
                     splashViewModel,
@@ -137,6 +140,7 @@ fun BluetoothScannerScreen(
                 ListAlbumData(
                     basicBluetoothAdapter = getLiveBasicBluetoothAdapterList(),
                     bluetoothScannerViewModel,
+                    sharedViewModel,
                     modifier = Modifier
                         .fillMaxSize(),
                     splashViewModel,
@@ -200,6 +204,7 @@ fun BluetoothScannerScreen(
 fun ListAlbumData(
     basicBluetoothAdapter: List<BasicBluetoothAdapter>,
     bluetoothScannerViewModel: BluetoothScannerViewModel,
+    sharedViewModel: SharedViewModel,
     modifier: Modifier = Modifier,
     splashViewModel: SplashViewModel,
     preferenceDataStoreHelper: PreferenceDataStoreHelper,
@@ -219,6 +224,8 @@ fun ListAlbumData(
                             onTap = {
                                 bluetoothScannerViewModel.selectedBluetoothDeviceName = item.name
                                 bluetoothScannerViewModel.selectedBluetoothDeviceAddress = item.address
+                                sharedViewModel.selectedBluetoothDeviceName = item.name
+                                sharedViewModel.selectedBluetoothDeviceAddress = item.address
                                 splashViewModel.writeDataPreferences(
                                     preferenceDataStoreHelper,
                                     name = item.name,

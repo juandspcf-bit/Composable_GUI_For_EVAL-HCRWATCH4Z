@@ -16,12 +16,13 @@ import com.icxcu.adsmartbandapp.screens.viewModelProviders.scopedViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.PhysicalActivityViewModel
 import com.icxcu.adsmartbandapp.viewModels.PhysicalActivityViewModelFactory
+import com.icxcu.adsmartbandapp.viewModels.SharedViewModel
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 fun NavGraphBuilder.physicalActivityGraph(
-    bluetoothScannerViewModel: BluetoothScannerViewModel,
+    bluetoothScannerViewModel: SharedViewModel,
     splashViewModel: SplashViewModel,
     navMainController: NavHostController
 ){

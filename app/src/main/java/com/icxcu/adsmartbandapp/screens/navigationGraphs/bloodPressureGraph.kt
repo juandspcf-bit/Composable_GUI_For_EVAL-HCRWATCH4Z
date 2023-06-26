@@ -16,12 +16,13 @@ import com.icxcu.adsmartbandapp.screens.viewModelProviders.scopedViewModel
 import com.icxcu.adsmartbandapp.viewModels.BloodPressureViewModel
 import com.icxcu.adsmartbandapp.viewModels.BloodPressureViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
+import com.icxcu.adsmartbandapp.viewModels.SharedViewModel
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 fun NavGraphBuilder.bloodPressureGraph(
-    bluetoothScannerViewModel: BluetoothScannerViewModel,
+    bluetoothScannerViewModel: SharedViewModel,
     splashViewModel: SplashViewModel,
     navMainController: NavHostController
 ){

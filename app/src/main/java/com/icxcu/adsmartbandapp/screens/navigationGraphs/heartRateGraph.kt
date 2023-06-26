@@ -16,12 +16,13 @@ import com.icxcu.adsmartbandapp.screens.viewModelProviders.scopedViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.HeartRateViewModel
 import com.icxcu.adsmartbandapp.viewModels.HeartRateViewModelFactory
+import com.icxcu.adsmartbandapp.viewModels.SharedViewModel
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 fun NavGraphBuilder.heartRateGraph(
-    bluetoothScannerViewModel: BluetoothScannerViewModel,
+    bluetoothScannerViewModel: SharedViewModel,
     splashViewModel: SplashViewModel,
     navMainController: NavHostController
 ){

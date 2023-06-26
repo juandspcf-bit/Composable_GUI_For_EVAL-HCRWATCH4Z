@@ -33,10 +33,6 @@ class BluetoothScannerViewModel(var application: Application) : ViewModel() {
     var selectedBluetoothDeviceName = ""
     var selectedBluetoothDeviceAddress = ""
 
-    var stateBluetoothListScreenNavigationStatus by mutableStateOf(
-        BluetoothListScreenNavigationStatus.IN_PROGRESS_TO_BLUETOOTH_SCREEN
-    )
-
     var bluetoothAdaptersList by mutableStateOf<List<BasicBluetoothAdapter>>(
         mutableListOf()
     )
@@ -216,16 +212,6 @@ class BluetoothScannerViewModel(var application: Application) : ViewModel() {
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
 
 }
 
