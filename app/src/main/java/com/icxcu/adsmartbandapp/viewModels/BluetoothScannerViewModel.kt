@@ -29,9 +29,12 @@ import kotlinx.coroutines.launch
 
 class BluetoothScannerViewModel(var application: Application) : ViewModel() {
 
+    var refresh by mutableStateOf(false)
     var bluetoothAdaptersList by mutableStateOf<List<BasicBluetoothAdapter>>(
         mutableListOf()
     )
+
+    var  title by mutableStateOf("Swipe  down to scan devices")
     var scanningBluetoothAdaptersStatus by mutableStateOf(ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN)
     var partialList: MutableList<BasicBluetoothAdapter> = mutableListOf()
 

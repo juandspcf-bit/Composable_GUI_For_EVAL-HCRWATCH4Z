@@ -68,7 +68,35 @@ fun BluetoothScannerRoot(
         }
     }
 
+    val setTextTitle = remember(bluetoothScannerViewModel) {
+        { newTitle:String ->
+            bluetoothScannerViewModel.title = newTitle
+        }
+    }
+
+    val getTextTitle = remember(bluetoothScannerViewModel) {
+        {
+            bluetoothScannerViewModel.title
+        }
+    }
+
+    val setRefresh = remember(bluetoothScannerViewModel) {
+        {   value:Boolean ->
+            bluetoothScannerViewModel.refresh = value
+        }
+    }
+
+    val getRefresh = remember(bluetoothScannerViewModel) {
+        {
+            bluetoothScannerViewModel.refresh
+        }
+    }
+
     BluetoothScannerScreen(
+        setTextTitle,
+        getTextTitle,
+        setRefresh,
+        getRefresh,
         getLiveBasicBluetoothAdapterList,
         setLiveBasicBluetoothAdapterList,
         getScanningBluetoothAdaptersStatus,

@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Divider
@@ -32,6 +33,10 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BluetoothScannerScreen(
+    setTextTitle: (String) -> Unit,
+    getTextTitle: () -> String,
+    setRefresh:(Boolean)-> Unit,
+    getRefresh:()-> Boolean,
     getLiveBasicBluetoothAdapterList: () -> List<BasicBluetoothAdapter>,
     setLiveBasicBluetoothAdapterList: () -> Unit,
     getScanningBluetoothAdaptersStatus: () -> ScanningBluetoothAdapterStatus,
@@ -39,20 +44,17 @@ fun BluetoothScannerScreen(
     onClickAction: (BasicBluetoothAdapter) -> Unit,
 ) {
 
-    var textState by remember {
-        mutableStateOf("Swipe  down to scan devices")
-    }
     val refreshScope = rememberCoroutineScope()
-    var refreshing by remember { mutableStateOf(false) }
+    //var refreshing by remember { mutableStateOf(false) }
 
 
     fun refresh2() = refreshScope.launch {
-        refreshing = true
+        setRefresh(true)
         setLiveBasicBluetoothAdapterList()
         scanDevices()
     }
 
-    val state = rememberPullRefreshState(refreshing, ::refresh2, refreshingOffset = 100.dp)
+    val state = rememberPullRefreshState(getRefresh(), ::refresh2, refreshingOffset = 100.dp)
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -65,7 +67,7 @@ fun BluetoothScannerScreen(
                 .fillMaxWidth()
                 .background(Color(0xff0d1721))) {
             Text(
-                text = textState,
+                text = getTextTitle(),
                 style = MaterialTheme.typography.displayMedium,
                 color = Color.White,
                 modifier = Modifier
@@ -98,7 +100,7 @@ fun BluetoothScannerScreen(
             )
 
             PullRefreshIndicator(
-                refreshing,
+                getRefresh(),
                 state,
                 Modifier
                     .align(Alignment.TopCenter)
@@ -108,24 +110,24 @@ fun BluetoothScannerScreen(
 
             when (getScanningBluetoothAdaptersStatus()) {
                 ScanningBluetoothAdapterStatus.SCANNING -> {
-                    textState = "scanning"
+                    setTextTitle("scanning")
                     //accessed when there is a bluetooth scanning
                 }
 
                 ScanningBluetoothAdapterStatus.SCANNING_FINISHED_WITH_RESULTS -> {
                     //accessed when there are results from the bluetooth scan
-                    refreshing = false
-                    textState = "Swipe  down to scan devices"
+                    setRefresh(false)
+                    setTextTitle("Swipe  down to scan devices")
                 }
 
                 ScanningBluetoothAdapterStatus.SCANNING_FORCIBLY_STOPPED -> {
                     //accessed when the bluetooth scanning is running and should be stopped
-                    textState = "Swipe  down to scan devices"
+                    setTextTitle("Swipe  down to scan devices")
                 }
 
                 ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN -> {
                     //accessed when the bluetooth screen is accessed
-                    textState = "Swipe  down to scan devices"
+                    setTextTitle("Swipe  down to scan devices")
                     Icon(
                         painter = painterResource(R.drawable.baseline_bluetooth_24),
                         contentDescription = "bluetooth icon",
