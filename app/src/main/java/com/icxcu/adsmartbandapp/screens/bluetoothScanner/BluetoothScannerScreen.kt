@@ -53,37 +53,30 @@ fun BluetoothScannerScreen(
     }
 
     val state = rememberPullRefreshState(refreshing, ::refresh2, refreshingOffset = 100.dp)
-    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
 
-        val (rowBar, divider, listData) = createRefs()
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
 
         Box(contentAlignment = Alignment.Center,
             modifier = Modifier
-                .constrainAs(rowBar) {
-                    top.linkTo(parent.top)
-                    linkTo(parent.start, parent.end)
-                    height = Dimension.fillToConstraints
-                }
                 .fillMaxWidth()
                 .background(Color(0xff0d1721))) {
             Text(
                 text = textState,
                 style = MaterialTheme.typography.displayMedium,
-                color = Color.White, modifier = Modifier
+                color = Color.White,
+                modifier = Modifier
                     .align(Alignment.Center)
                     .padding(30.dp)
             )
-
         }
 
         Divider(
             modifier = Modifier
-                .fillMaxWidth()
-                .constrainAs(divider) {
-                    top.linkTo(rowBar.bottom)
-                    linkTo(parent.start, parent.end)
-                    height = Dimension.fillToConstraints
-                },
+                .fillMaxWidth(),
             thickness = 2.dp,
             color = Color.Black
         )
@@ -91,15 +84,10 @@ fun BluetoothScannerScreen(
 
         Box(contentAlignment = Alignment.TopCenter,
             modifier = Modifier
-                .constrainAs(listData) {
-                    linkTo(parent.start, parent.end)
-                    top.linkTo(divider.bottom)
-                    bottom.linkTo(parent.bottom)
-                    height = Dimension.fillToConstraints
-                    width = Dimension.fillToConstraints
-                }
                 .background(Color(0xff1d2a35))
-                .pullRefresh(state)) {
+                .pullRefresh(state)
+                .fillMaxSize()
+        ) {
 
             ListAlbumDataEmpty()
             ListAlbumData(
@@ -150,6 +138,7 @@ fun BluetoothScannerScreen(
 
             }
         }
+
     }
 
 }
