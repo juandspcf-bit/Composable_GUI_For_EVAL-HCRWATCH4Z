@@ -222,8 +222,8 @@ fun ListAlbumData(
                             onDoubleTap = { /* Double Tap Detected */ },
                             onLongPress = { /* Long Press Detected */ },
                             onTap = {
-                                bluetoothScannerViewModel.selectedBluetoothDeviceName = item.name
-                                bluetoothScannerViewModel.selectedBluetoothDeviceAddress = item.address
+/*                                bluetoothScannerViewModel.selectedBluetoothDeviceName = item.name
+                                bluetoothScannerViewModel.selectedBluetoothDeviceAddress = item.address*/
                                 sharedViewModel.selectedBluetoothDeviceName = item.name
                                 sharedViewModel.selectedBluetoothDeviceAddress = item.address
                                 splashViewModel.writeDataPreferences(

@@ -30,9 +30,6 @@ import kotlinx.coroutines.launch
 
 class BluetoothScannerViewModel(var application: Application) : ViewModel() {
 
-    var selectedBluetoothDeviceName = ""
-    var selectedBluetoothDeviceAddress = ""
-
     var bluetoothAdaptersList by mutableStateOf<List<BasicBluetoothAdapter>>(
         mutableListOf()
     )
