@@ -20,23 +20,9 @@ fun BluetoothScannerRoot(
 
     val navigateMainNavBar = remember(bluetoothScannerViewModel, navMainController) {
         { name: String, address: String ->
-            if (bluetoothScannerViewModel.scanningBluetoothAdaptersStatus == ScanningBluetoothAdapterStatus.SCANNING_FINISHED_WITH_RESULTS
-                || bluetoothScannerViewModel.scanningBluetoothAdaptersStatus == ScanningBluetoothAdapterStatus.SCANNING_FORCIBLY_STOPPED
-            ) {
-
-                navMainController.navigate(
-                    MainNavigationNestedRoute.MainNavigationMainRoute().route
-                )
-
-                if (bluetoothScannerViewModel.bluetoothAdaptersList.isEmpty()) {
-                    bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
-                        ScanningBluetoothAdapterStatus.NO_SCANNING_WELCOME_SCREEN
-                } else {
-                    bluetoothScannerViewModel.scanningBluetoothAdaptersStatus =
-                        ScanningBluetoothAdapterStatus.NO_SCANNING_WITH_RESULTS
-                }
-
-            }
+            navMainController.navigate(
+                MainNavigationNestedRoute.MainNavigationMainRoute().route
+            )
         }
     }
 

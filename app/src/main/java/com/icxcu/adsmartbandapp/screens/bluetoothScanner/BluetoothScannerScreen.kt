@@ -102,25 +102,12 @@ fun BluetoothScannerScreen(
                 .pullRefresh(state)) {
 
             ListAlbumDataEmpty()
-            if (getScanningBluetoothAdaptersStatus() ==
-                ScanningBluetoothAdapterStatus.NO_SCANNING_WITH_RESULTS
-                && getLiveBasicBluetoothAdapterList().isNotEmpty()) {
-                ListAlbumData(
-                    basicBluetoothAdapter = getLiveBasicBluetoothAdapterList(),
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    onClickAction
-                )
-            } else {
-                ListAlbumData(
-                    basicBluetoothAdapter = getLiveBasicBluetoothAdapterList(),
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    onClickAction
-                )
-            }
-
-
+            ListAlbumData(
+                basicBluetoothAdapter = getLiveBasicBluetoothAdapterList(),
+                modifier = Modifier
+                    .fillMaxSize(),
+                onClickAction
+            )
 
             PullRefreshIndicator(
                 refreshing,
@@ -160,10 +147,6 @@ fun BluetoothScannerScreen(
                         tint = Color.White
                     )
                 }
-                ScanningBluetoothAdapterStatus.NO_SCANNING_WITH_RESULTS->{
-
-                }
-
 
             }
         }
