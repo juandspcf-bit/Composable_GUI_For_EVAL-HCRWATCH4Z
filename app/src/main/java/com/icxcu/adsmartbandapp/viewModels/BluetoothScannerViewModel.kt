@@ -136,7 +136,6 @@ class BluetoothScannerViewModel(var application: Application) : ViewModel() {
                 null
             )
         }
-
     }
 
 
