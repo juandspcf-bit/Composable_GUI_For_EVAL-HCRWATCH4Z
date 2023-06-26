@@ -20,7 +20,6 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import com.icxcu.adsmartbandapp.REQUEST_ENABLE_BT
 import com.icxcu.adsmartbandapp.data.BasicBluetoothAdapter
-import com.icxcu.adsmartbandapp.screens.bluetoothScanner.BluetoothListScreenNavigationStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

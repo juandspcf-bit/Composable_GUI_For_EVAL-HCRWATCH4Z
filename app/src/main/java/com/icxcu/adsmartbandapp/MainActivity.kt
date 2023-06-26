@@ -39,14 +39,11 @@ import com.icxcu.adsmartbandapp.screens.permissionScreen.PermissionsScreenRoot
 import com.icxcu.adsmartbandapp.screens.progressLoading.CircularProgressLoading
 import com.icxcu.adsmartbandapp.screens.progressLoading.CircularProgressScreenNavStatus
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
-import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
-import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.CircularProgressViewModel
 import com.icxcu.adsmartbandapp.viewModels.CircularProgressViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModel
 import com.icxcu.adsmartbandapp.viewModels.PermissionsViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.SharedViewModel
-import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import com.icxcu.adsmartbandapp.viewModels.permissionsRequired
 
 const val REQUEST_ENABLE_BT: Int = 500
@@ -54,22 +51,22 @@ const val REQUEST_ENABLE_BT: Int = 500
 class MainActivity : ComponentActivity() {
     private lateinit var permissionsViewModel: PermissionsViewModel
     private lateinit var circularProgressViewModel: CircularProgressViewModel
-    private val splashViewModel: SplashViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by viewModels()
     private lateinit var startDestination: String
-    private lateinit var preferenceDataStoreHelper: PreferenceDataStoreHelper
+    //private lateinit var preferenceDataStoreHelper: PreferenceDataStoreHelper
 
 
     private var askPermissions = arrayListOf<String>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        preferenceDataStoreHelper = PreferenceDataStoreHelper(this)
+        //preferenceDataStoreHelper = PreferenceDataStoreHelper(this)
+        sharedViewModel.preferenceDataStoreHelper = PreferenceDataStoreHelper(this)
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         splashScreen.setKeepOnScreenCondition {
-            splashViewModel.startDelay(preferenceDataStoreHelper)
-            splashViewModel.stateFlow.value
+            sharedViewModel.startDelay()
+            sharedViewModel.stateFlow.value
         }
 
 
@@ -165,7 +162,7 @@ class MainActivity : ComponentActivity() {
                         navMainController,
                         askPermissions,
                         circularProgressViewModel,
-                        splashViewModel
+                        sharedViewModel
                     )
                 }
 
@@ -185,33 +182,27 @@ class MainActivity : ComponentActivity() {
 
                 bluetoothScannerGraph(
                     sharedViewModel,
-                    splashViewModel,
                     this@MainActivity,
-                    preferenceDataStoreHelper,
                     navMainController,
                 )
 
                 mainNavigationGraph(
-                    splashViewModel,
                     sharedViewModel,
                     navMainController
                 )
 
                 physicalActivityGraph(
                     sharedViewModel,
-                    splashViewModel,
                     navMainController
                 )
 
                 bloodPressureGraph(
                     sharedViewModel,
-                    splashViewModel,
                     navMainController
                 )
 
                 heartRateGraph(
                     sharedViewModel,
-                    splashViewModel,
                     navMainController
                 )
 

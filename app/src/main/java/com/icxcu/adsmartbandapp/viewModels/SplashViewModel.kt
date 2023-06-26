@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class SplashViewModel: ViewModel() {
     //var lastAccessedDevice by mutableStateOf(listOf<String>())
-    var lastAccessedDevice = listOf<String>()
+    var lastSelectedBluetoothDeviceAddress = listOf<String>()
 
     private val _stateFlow = MutableStateFlow(false)
     val stateFlow = _stateFlow.asStateFlow()
@@ -40,7 +40,7 @@ fun startDelay(preferenceDataStoreHelper: PreferenceDataStoreHelper){
     }
 
     viewModelScope.launch {
-        lastAccessedDevice = deferred.await()
+        lastSelectedBluetoothDeviceAddress = deferred.await()
         delay(3000)
         _stateFlow.value = true
 

@@ -4,22 +4,16 @@ import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
-import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
-import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreHelper
 import com.icxcu.adsmartbandapp.screens.MainNavigationNestedRoute
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
-import com.icxcu.adsmartbandapp.viewModels.MainNavigationViewModel
 import com.icxcu.adsmartbandapp.viewModels.ScanningBluetoothAdapterStatus
 import com.icxcu.adsmartbandapp.viewModels.SharedViewModel
-import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 
 @Composable
 fun BluetoothScannerRoot(
     bluetoothScannerViewModel: BluetoothScannerViewModel,
     sharedViewModel: SharedViewModel,
     activity: Activity,
-    splashViewModel: SplashViewModel,
-    preferenceDataStoreHelper: PreferenceDataStoreHelper,
     navMainController: NavHostController,
     ) {
 
@@ -71,9 +65,6 @@ fun BluetoothScannerRoot(
         bluetoothScannerViewModel,
         sharedViewModel,
         activity,
-        splashViewModel,
-        preferenceDataStoreHelper,
-        //setFetchingDataFromSWStatusSTOPPED,
         navLambdaToMainNavigationBar,
     )
 

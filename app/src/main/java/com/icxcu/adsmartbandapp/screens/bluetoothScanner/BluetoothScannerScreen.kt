@@ -2,7 +2,6 @@ package com.icxcu.adsmartbandapp.screens.bluetoothScanner
 
 
 import android.app.Activity
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -17,7 +16,6 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,13 +26,10 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.R
-import com.icxcu.adsmartbandapp.bluetooth.BluetoothManager
 import com.icxcu.adsmartbandapp.data.BasicBluetoothAdapter
-import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreHelper
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.ScanningBluetoothAdapterStatus
 import com.icxcu.adsmartbandapp.viewModels.SharedViewModel
-import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -46,8 +41,6 @@ fun BluetoothScannerScreen(
     bluetoothScannerViewModel: BluetoothScannerViewModel,
     sharedViewModel: SharedViewModel,
     activity: Activity,
-    splashViewModel: SplashViewModel,
-    preferenceDataStoreHelper: PreferenceDataStoreHelper,
     navigateMainNavBar: (String, String) -> Unit,
 ) {
 
@@ -127,24 +120,18 @@ fun BluetoothScannerScreen(
                 ListAlbumDataEmpty()
                 ListAlbumData(
                     basicBluetoothAdapter = getLiveBasicBluetoothAdapterList(),
-                    bluetoothScannerViewModel,
                     sharedViewModel,
                     modifier = Modifier
                         .fillMaxSize(),
-                    splashViewModel,
-                    preferenceDataStoreHelper,
                     navigateMainNavBar
                 )
             } else {
                 ListAlbumDataEmpty()
                 ListAlbumData(
                     basicBluetoothAdapter = getLiveBasicBluetoothAdapterList(),
-                    bluetoothScannerViewModel,
                     sharedViewModel,
                     modifier = Modifier
                         .fillMaxSize(),
-                    splashViewModel,
-                    preferenceDataStoreHelper,
                     navigateMainNavBar
                 )
             }
@@ -194,8 +181,6 @@ fun BluetoothScannerScreen(
 
             }
         }
-        Log.d("DATAX", "BluetoothScanScreen: OUT")
-
     }
 
 }
@@ -203,11 +188,8 @@ fun BluetoothScannerScreen(
 @Composable
 fun ListAlbumData(
     basicBluetoothAdapter: List<BasicBluetoothAdapter>,
-    bluetoothScannerViewModel: BluetoothScannerViewModel,
     sharedViewModel: SharedViewModel,
     modifier: Modifier = Modifier,
-    splashViewModel: SplashViewModel,
-    preferenceDataStoreHelper: PreferenceDataStoreHelper,
     navigateMainNavBar: (String, String) -> Unit
 ) {
     LazyColumn(modifier = Modifier) {
@@ -222,12 +204,10 @@ fun ListAlbumData(
                             onDoubleTap = { /* Double Tap Detected */ },
                             onLongPress = { /* Long Press Detected */ },
                             onTap = {
-/*                                bluetoothScannerViewModel.selectedBluetoothDeviceName = item.name
-                                bluetoothScannerViewModel.selectedBluetoothDeviceAddress = item.address*/
                                 sharedViewModel.selectedBluetoothDeviceName = item.name
                                 sharedViewModel.selectedBluetoothDeviceAddress = item.address
-                                splashViewModel.writeDataPreferences(
-                                    preferenceDataStoreHelper,
+                                sharedViewModel.writeDataPreferences(
+                                    sharedViewModel.preferenceDataStoreHelper,
                                     name = item.name,
                                     address = item.address,
                                 )
@@ -260,7 +240,6 @@ fun ListAlbumData(
 @Composable
 fun ListAlbumDataEmpty(
     modifier: Modifier = Modifier,
-
     ) {
     LazyColumn(modifier = Modifier) {
         items(5) {
@@ -288,7 +267,3 @@ fun ListAlbumDataEmpty(
 
 }
 
-enum class BluetoothListScreenNavigationStatus {
-    IN_PROGRESS_TO_MAIN_NAV_SCREEN,
-    IN_PROGRESS_TO_BLUETOOTH_SCREEN,
-}

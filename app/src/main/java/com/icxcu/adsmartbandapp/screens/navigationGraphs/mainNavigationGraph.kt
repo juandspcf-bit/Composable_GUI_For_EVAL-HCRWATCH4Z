@@ -19,7 +19,6 @@ import com.icxcu.adsmartbandapp.viewModels.SharedViewModel
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 
 fun NavGraphBuilder.mainNavigationGraph(
-    splashViewModel: SplashViewModel,
     sharedViewModel: SharedViewModel,
     navMainController:NavHostController
 ) {
@@ -62,12 +61,12 @@ fun NavGraphBuilder.mainNavigationGraph(
             val bluetoothName = if(sharedViewModel.selectedBluetoothDeviceName!=""){
                 sharedViewModel.selectedBluetoothDeviceName
             }else{
-                splashViewModel.lastAccessedDevice[2]
+                sharedViewModel.lastSelectedBluetoothDeviceAddress[2]
             }
             val bluetoothAddress = if(sharedViewModel.selectedBluetoothDeviceAddress!=""){
                 sharedViewModel.selectedBluetoothDeviceAddress
             }else{
-                splashViewModel.lastAccessedDevice[3]
+                sharedViewModel.lastSelectedBluetoothDeviceAddress[3]
             }
 
             if (mainNavigationViewModel.statusReadingDbForDashboard != StatusReadingDbForDashboard.NoRead

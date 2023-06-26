@@ -17,6 +17,7 @@ import com.icxcu.adsmartbandapp.screens.MainNavigationNestedRoute
 import com.icxcu.adsmartbandapp.screens.PersonalInfoInitNestedRoute
 import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.viewModels.CircularProgressViewModel
+import com.icxcu.adsmartbandapp.viewModels.SharedViewModel
 import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import kotlinx.coroutines.delay
 
@@ -25,7 +26,7 @@ fun CircularProgressLoading(
     navController: NavHostController,
     askPermissions: ArrayList<String>,
     circularProgressViewModel: CircularProgressViewModel,
-    splashViewModel: SplashViewModel
+    splashViewModel: SharedViewModel
 ) {
 
     Box(
@@ -49,7 +50,7 @@ fun CircularProgressLoading(
                 navController.navigate(Routes.Permissions.route)
             }else if(askPermissions.isEmpty() && circularProgressViewModel.personalInfoDataStateC[0].id==-1){
                 navController.navigate(PersonalInfoInitNestedRoute.PersonalInfoInitMainRoute().route)
-            }else if (splashViewModel.lastAccessedDevice.size==2){
+            }else if (splashViewModel.lastSelectedBluetoothDeviceAddress.size==2){
                 navController.navigate(BluetoothScannerNestedRoute.BluetoothScannerScreen().route)
             }else{
                 navController.navigate(MainNavigationNestedRoute.MainNavigationMainRoute().route)

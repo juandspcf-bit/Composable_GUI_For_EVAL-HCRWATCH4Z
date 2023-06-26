@@ -9,7 +9,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.icxcu.adsmartbandapp.data.local.dataPrefrerences.PreferenceDataStoreHelper
 import com.icxcu.adsmartbandapp.screens.BluetoothScannerNestedRoute
 import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.bluetoothScanner.BluetoothScannerRoot
@@ -17,13 +16,10 @@ import com.icxcu.adsmartbandapp.screens.viewModelProviders.scopedViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.SharedViewModel
-import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 
 fun NavGraphBuilder.bluetoothScannerGraph(
     sharedViewModel: SharedViewModel,
-    splashViewModel: SplashViewModel,
     activity: Activity,
-    preferenceDataStoreHelper: PreferenceDataStoreHelper,
     navMainController: NavHostController,
 ){
     navigation(
@@ -62,8 +58,6 @@ fun NavGraphBuilder.bluetoothScannerGraph(
                 bluetoothScannerViewModel,
                 sharedViewModel,
                 activity,
-                splashViewModel,
-                preferenceDataStoreHelper,
                 navMainController,
             )
         }

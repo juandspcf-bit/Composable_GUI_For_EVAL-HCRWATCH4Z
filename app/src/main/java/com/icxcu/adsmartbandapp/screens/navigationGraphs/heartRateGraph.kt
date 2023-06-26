@@ -13,17 +13,14 @@ import com.icxcu.adsmartbandapp.screens.Routes
 import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenNavStatus
 import com.icxcu.adsmartbandapp.screens.plotsFields.heartRate.HeartRateScreenRoot
 import com.icxcu.adsmartbandapp.screens.viewModelProviders.scopedViewModel
-import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.HeartRateViewModel
 import com.icxcu.adsmartbandapp.viewModels.HeartRateViewModelFactory
 import com.icxcu.adsmartbandapp.viewModels.SharedViewModel
-import com.icxcu.adsmartbandapp.viewModels.SplashViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 fun NavGraphBuilder.heartRateGraph(
-    bluetoothScannerViewModel: SharedViewModel,
-    splashViewModel: SplashViewModel,
+    sharedViewModel: SharedViewModel,
     navMainController: NavHostController
 ){
     navigation(
@@ -48,10 +45,10 @@ fun NavGraphBuilder.heartRateGraph(
             }
         ) {
 
-            val bluetoothAddress = if(bluetoothScannerViewModel.selectedBluetoothDeviceAddress!=""){
-                bluetoothScannerViewModel.selectedBluetoothDeviceAddress
+            val bluetoothAddress = if(sharedViewModel.selectedBluetoothDeviceAddress!=""){
+                sharedViewModel.selectedBluetoothDeviceAddress
             }else{
-                splashViewModel.lastAccessedDevice[3]
+                sharedViewModel.lastSelectedBluetoothDeviceAddress[3]
             }
 
             val heartRateViewModel =
