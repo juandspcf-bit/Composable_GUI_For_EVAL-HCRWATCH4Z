@@ -4,6 +4,7 @@ import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
+import com.icxcu.adsmartbandapp.data.BasicBluetoothAdapter
 import com.icxcu.adsmartbandapp.screens.MainNavigationNestedRoute
 import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.ScanningBluetoothAdapterStatus
@@ -17,7 +18,7 @@ fun BluetoothScannerRoot(
     navMainController: NavHostController,
     ) {
 
-    val navLambdaToMainNavigationBar = remember(bluetoothScannerViewModel, navMainController) {
+    val navigateMainNavBar = remember(bluetoothScannerViewModel, navMainController) {
         { name: String, address: String ->
             if (bluetoothScannerViewModel.scanningBluetoothAdaptersStatus == ScanningBluetoothAdapterStatus.SCANNING_FINISHED_WITH_RESULTS
                 || bluetoothScannerViewModel.scanningBluetoothAdaptersStatus == ScanningBluetoothAdapterStatus.SCANNING_FORCIBLY_STOPPED
@@ -58,14 +59,35 @@ fun BluetoothScannerRoot(
         }
     }
 
+    val onClickAction = remember{
+        { basicBluetoothAdapter: BasicBluetoothAdapter ->
+            sharedViewModel.selectedBluetoothDeviceName = basicBluetoothAdapter.name
+            sharedViewModel.selectedBluetoothDeviceAddress = basicBluetoothAdapter.address
+            sharedViewModel.writeDataPreferences(
+                sharedViewModel.preferenceDataStoreHelper,
+                name = basicBluetoothAdapter.name,
+                address = basicBluetoothAdapter.address,
+            )
+            navigateMainNavBar(basicBluetoothAdapter.name, basicBluetoothAdapter.address)
+        }
+    }
+
+    val scanDevices = remember {
+        {
+            val scanLocalBluetooth = bluetoothScannerViewModel.scanLocalBluetooth(activity)
+            bluetoothScannerViewModel.scanLeDevice(
+                activity,
+                scanLocalBluetooth,
+            )
+        }
+    }
+
     BluetoothScannerScreen(
         getLiveBasicBluetoothAdapterList,
         setLiveBasicBluetoothAdapterList,
         getScanningBluetoothAdaptersStatus,
-        bluetoothScannerViewModel,
-        sharedViewModel,
-        activity,
-        navLambdaToMainNavigationBar,
+        scanDevices,
+        onClickAction
     )
 
 }

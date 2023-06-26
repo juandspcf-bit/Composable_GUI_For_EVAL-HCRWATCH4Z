@@ -1,7 +1,6 @@
 package com.icxcu.adsmartbandapp.screens.bluetoothScanner
 
 
-import android.app.Activity
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -27,9 +26,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.icxcu.adsmartbandapp.R
 import com.icxcu.adsmartbandapp.data.BasicBluetoothAdapter
-import com.icxcu.adsmartbandapp.viewModels.BluetoothScannerViewModel
 import com.icxcu.adsmartbandapp.viewModels.ScanningBluetoothAdapterStatus
-import com.icxcu.adsmartbandapp.viewModels.SharedViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -38,10 +35,8 @@ fun BluetoothScannerScreen(
     getLiveBasicBluetoothAdapterList: () -> List<BasicBluetoothAdapter>,
     setLiveBasicBluetoothAdapterList: () -> Unit,
     getScanningBluetoothAdaptersStatus: () -> ScanningBluetoothAdapterStatus,
-    bluetoothScannerViewModel: BluetoothScannerViewModel,
-    sharedViewModel: SharedViewModel,
-    activity: Activity,
-    navigateMainNavBar: (String, String) -> Unit,
+    scanDevices: () -> Unit,
+    onClickAction: (BasicBluetoothAdapter) -> Unit,
 ) {
 
     var textState by remember {
@@ -54,11 +49,7 @@ fun BluetoothScannerScreen(
     fun refresh2() = refreshScope.launch {
         refreshing = true
         setLiveBasicBluetoothAdapterList()
-        val scanLocalBluetooth = bluetoothScannerViewModel.scanLocalBluetooth(activity)
-        bluetoothScannerViewModel.scanLeDevice(
-            activity,
-            scanLocalBluetooth,
-        )
+        scanDevices()
     }
 
     val state = rememberPullRefreshState(refreshing, ::refresh2, refreshingOffset = 100.dp)
@@ -120,19 +111,17 @@ fun BluetoothScannerScreen(
                 ListAlbumDataEmpty()
                 ListAlbumData(
                     basicBluetoothAdapter = getLiveBasicBluetoothAdapterList(),
-                    sharedViewModel,
                     modifier = Modifier
                         .fillMaxSize(),
-                    navigateMainNavBar
+                    onClickAction
                 )
             } else {
                 ListAlbumDataEmpty()
                 ListAlbumData(
                     basicBluetoothAdapter = getLiveBasicBluetoothAdapterList(),
-                    sharedViewModel,
                     modifier = Modifier
                         .fillMaxSize(),
-                    navigateMainNavBar
+                    onClickAction
                 )
             }
 
@@ -188,9 +177,8 @@ fun BluetoothScannerScreen(
 @Composable
 fun ListAlbumData(
     basicBluetoothAdapter: List<BasicBluetoothAdapter>,
-    sharedViewModel: SharedViewModel,
     modifier: Modifier = Modifier,
-    navigateMainNavBar: (String, String) -> Unit
+    onClickAction: (BasicBluetoothAdapter) -> Unit
 ) {
     LazyColumn(modifier = Modifier) {
         items(basicBluetoothAdapter) { item ->
@@ -204,15 +192,7 @@ fun ListAlbumData(
                             onDoubleTap = { /* Double Tap Detected */ },
                             onLongPress = { /* Long Press Detected */ },
                             onTap = {
-                                sharedViewModel.selectedBluetoothDeviceName = item.name
-                                sharedViewModel.selectedBluetoothDeviceAddress = item.address
-                                sharedViewModel.writeDataPreferences(
-                                    sharedViewModel.preferenceDataStoreHelper,
-                                    name = item.name,
-                                    address = item.address,
-                                )
-                                navigateMainNavBar(item.name, item.address)
-
+                                onClickAction(item)
                             }
                         )
                     },
