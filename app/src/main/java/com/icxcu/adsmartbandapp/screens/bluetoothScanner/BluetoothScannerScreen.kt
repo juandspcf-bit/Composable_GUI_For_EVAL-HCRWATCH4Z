@@ -128,7 +128,7 @@ fun BluetoothScannerScreen(
                     textState = "Swipe  down to scan devices"
                     Icon(
                         painter = painterResource(R.drawable.baseline_bluetooth_24),
-                        contentDescription = "frost",
+                        contentDescription = "bluetooth icon",
                         modifier = Modifier
                             .align(Alignment.Center)
                             .size(80.dp),
