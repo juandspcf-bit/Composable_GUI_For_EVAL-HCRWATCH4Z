@@ -363,17 +363,16 @@ fun BottomNavigationBar(
             .border(1.dp, Color.Green, RoundedCornerShape(30.dp)),
         containerColor = Color(0xff0d1721),
         contentColor = Color(0xFFCDDC39),
-        //windowInsets= NavigationBarDefaults.windowInsets.add(WindowInsets(top = 10.dp, bottom = 0.dp)),
     ) {
         val backStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = backStackEntry?.destination?.route
-        if (currentRoute == "CheckHealth" || currentRoute == "settings") {
+        if (currentRoute == NavRoutes.CheckHealth.route || currentRoute == NavRoutes.Settings.route) {
             setStateEnabledDatePickerMainScaffold(false)
-        } else if (currentRoute == "fields"
+        } else if (currentRoute == NavRoutes.Fields.route
             && getFetchingDataFromSWStatus() == SWReadingStatus.IN_PROGRESS
         ) {
             setStateEnabledDatePickerMainScaffold(false)
-        } else if (currentRoute == "fields" &&
+        } else if (currentRoute == NavRoutes.Fields.route &&
             getFetchingDataFromSWStatus() == SWReadingStatus.READ
             && getStateEnabledDatePickerMainScaffold().not()
         ) {

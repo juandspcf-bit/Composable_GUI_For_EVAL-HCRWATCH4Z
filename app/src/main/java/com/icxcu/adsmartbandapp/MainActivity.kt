@@ -38,6 +38,7 @@ import com.icxcu.adsmartbandapp.screens.navigationGraphs.physicalActivityGraph
 import com.icxcu.adsmartbandapp.screens.permissionScreen.PermissionsScreenRoot
 import com.icxcu.adsmartbandapp.screens.progressLoading.CircularProgressLoading
 import com.icxcu.adsmartbandapp.screens.progressLoading.CircularProgressScreenNavStatus
+import com.icxcu.adsmartbandapp.screens.progressLoading.PleaseEnableBluetoothComposable
 import com.icxcu.adsmartbandapp.ui.theme.ADSmartBandAppTheme
 import com.icxcu.adsmartbandapp.viewModels.CircularProgressViewModel
 import com.icxcu.adsmartbandapp.viewModels.CircularProgressViewModelFactory
@@ -173,6 +174,14 @@ class MainActivity : ComponentActivity() {
                         activity = this@MainActivity,
                         permissionsViewModel = permissionsViewModel,
                         navMainController = navMainController
+                    )
+                }
+
+                composable(Routes.EnableBluetoothPortScreen.route,
+                    enterTransition = { EnterTransition.None },
+                    exitTransition = { ExitTransition.None }) {
+                    PleaseEnableBluetoothComposable(
+
                     )
                 }
 
