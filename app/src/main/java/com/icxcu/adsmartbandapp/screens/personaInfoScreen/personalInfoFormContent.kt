@@ -1,12 +1,14 @@
 package com.icxcu.adsmartbandapp.screens.personaInfoScreen
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.ThumbnailUtils
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -57,6 +59,7 @@ import java.time.format.DateTimeParseException
 
 @Composable
 fun PersonalInfoContent(
+    getLauncherActivity: () -> ActivityResultLauncher<Intent>?,
     getPersonalInfoDataState: () -> PersonalInfoDataState,
     validatePersonalInfo: () -> List<String> = { listOf() },
     getInvalidAlertDialogState: () -> InvalidAlertDialogState,
@@ -335,6 +338,7 @@ private fun storeImageProfile(
 @Composable
 fun PersonalInfoContentPreview() {
     PersonalInfoContent(
+        getLauncherActivity = { null },
         getPersonalInfoDataState = { PersonalInfoDataState() },
         validatePersonalInfo = { listOf() },
         getInvalidAlertDialogState = { InvalidAlertDialogState() },

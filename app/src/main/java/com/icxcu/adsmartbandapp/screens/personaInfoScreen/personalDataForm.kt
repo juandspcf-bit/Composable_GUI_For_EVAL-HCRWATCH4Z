@@ -1,6 +1,8 @@
 package com.icxcu.adsmartbandapp.screens.personaInfoScreen
 
+import android.content.Intent
 import android.util.Log
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -14,6 +16,7 @@ import com.icxcu.adsmartbandapp.viewModels.PersonalInfoViewModel
 
 @Composable
 fun PersonalInfoDataScreenRoot(
+    startForResult: ActivityResultLauncher<Intent>,
     personalInfoViewModel: PersonalInfoViewModel,
     navMainController: NavHostController
 ) {
@@ -47,7 +50,14 @@ fun PersonalInfoDataScreenRoot(
         }
     }
 
+    val getLauncherActivity = remember(startForResult) {
+        {
+                startForResult
+        }
+    }
+
     PersonalInfoFormScaffold(
+        getLauncherActivity,
         navLambdaBackToMainNavigationBarFromPersonalInfo,
         getPersonalInfoDataState,
         validatePersonalInfo,

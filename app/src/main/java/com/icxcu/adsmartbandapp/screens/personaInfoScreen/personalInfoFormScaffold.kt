@@ -1,5 +1,7 @@
 package com.icxcu.adsmartbandapp.screens.personaInfoScreen
 
+import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,6 +27,7 @@ import com.icxcu.adsmartbandapp.data.entities.PersonalInfo
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PersonalInfoFormScaffold(
+    getLauncherActivity: () -> ActivityResultLauncher<Intent>?,
     navLambda: () -> Unit,
     getPersonalInfoDataStateState: () -> PersonalInfoDataState,
     validatePersonalInfo: () -> List<String> = { listOf() },
@@ -75,6 +78,7 @@ fun PersonalInfoFormScaffold(
                 contentAlignment = Alignment.Center
             ){
                 PersonalInfoContent(
+                    getLauncherActivity,
                     getPersonalInfoDataStateState,
                     validatePersonalInfo,
                     getInvalidAlertDialogState,
@@ -107,6 +111,7 @@ fun PersonalInfoFormScaffold(
 @Composable
 fun PersonalInfoFormScaffoldPreview() {
     PersonalInfoFormScaffold(
+        getLauncherActivity = { null },
         navLambda = {},
         getPersonalInfoDataStateState = { PersonalInfoDataState() },
         validatePersonalInfo = { listOf() },

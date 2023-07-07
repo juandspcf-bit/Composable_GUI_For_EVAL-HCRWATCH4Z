@@ -12,6 +12,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class SharedViewModel: ViewModel() {
+
+    var enableBluetoothPortNextRoute = ""
+
     lateinit var preferenceDataStoreHelper: PreferenceDataStoreHelper
 
     var selectedBluetoothDeviceName = ""

@@ -1,6 +1,8 @@
 package com.icxcu.adsmartbandapp.screens.navigationGraphs
 
 import android.app.Application
+import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.ui.platform.LocalContext
@@ -17,7 +19,8 @@ import com.icxcu.adsmartbandapp.viewModels.PersonalInfoViewModel
 import com.icxcu.adsmartbandapp.viewModels.PersonalInformationViewModelFactory
 
 fun NavGraphBuilder.personalInfoGraph(
-    navMainController: NavHostController
+    navMainController: NavHostController,
+    startForResult: ActivityResultLauncher<Intent>,
 ){
     navigation(
         startDestination = PersonalInfoNestedRoute.PersonalInfoScreen().route,
@@ -61,6 +64,7 @@ fun NavGraphBuilder.personalInfoGraph(
             }
 
             PersonalInfoDataScreenRoot(
+                startForResult,
                 personalInfoViewModel,
                 navMainController
             )

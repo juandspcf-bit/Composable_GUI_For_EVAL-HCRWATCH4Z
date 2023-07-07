@@ -1,11 +1,15 @@
 package com.icxcu.adsmartbandapp
 
+import android.app.Activity
 import android.app.Application
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -22,6 +26,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -54,11 +59,18 @@ class MainActivity : ComponentActivity() {
     private lateinit var circularProgressViewModel: CircularProgressViewModel
     private val sharedViewModel: SharedViewModel by viewModels()
     private lateinit var startDestination: String
+    private lateinit var navMainController: NavHostController
     //private lateinit var preferenceDataStoreHelper: PreferenceDataStoreHelper
 
 
     private var askPermissions = arrayListOf<String>()
-
+    private val startForResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()) {
+            result: ActivityResult ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            navMainController.navigate(sharedViewModel.enableBluetoothPortNextRoute)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         //preferenceDataStoreHelper = PreferenceDataStoreHelper(this)
@@ -127,7 +139,7 @@ class MainActivity : ComponentActivity() {
         ) {
 
             val systemUiController = rememberSystemUiController()
-            val navMainController = rememberNavController()
+            navMainController = rememberNavController()
 
             LaunchedEffect(key1 = Unit) {
                 systemUiController.setStatusBarColor(
@@ -181,7 +193,7 @@ class MainActivity : ComponentActivity() {
                     enterTransition = { EnterTransition.None },
                     exitTransition = { ExitTransition.None }) {
                     PleaseEnableBluetoothComposable(
-
+                        startForResult
                     )
                 }
 
@@ -216,7 +228,8 @@ class MainActivity : ComponentActivity() {
                 )
 
                 personalInfoGraph(
-                    navMainController
+                    navMainController,
+                    startForResult
                 )
 
             }
